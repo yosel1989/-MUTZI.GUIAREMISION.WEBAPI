@@ -1,0 +1,12 @@
+﻿[data-theme="dark"] .sl-text-warning {
+    color: #f39769 !important;
+}
+
+[data-theme="dark"] .token.string {
+    color: rgb(142 195 255) !important;
+}
+
+[data-theme="dark"] .token.property {
+    color: rgb(154 157 167) !important;
+}
+
