@@ -1,6 +1,6 @@
 ﻿using GuiaRemision.DTOs.GuiaRemitente;
 using GuiaRemision.DTOs.GuiaRemitente.Conductor;
-using GuiaRemision.DTOs.GuiaRemitente.DatosDestino;
+using GuiaRemision.DTOs.GuiaRemitente.Destinatario;
 using GuiaRemision.DTOs.GuiaRemitente.DatosEnvio;
 using GuiaRemision.DTOs.GuiaRemitente.Destino;
 using GuiaRemision.DTOs.GuiaRemitente.Origen;
@@ -102,6 +102,7 @@ namespace GuiaRemision.Mappings
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 ;
             CreateMap<RemitenteCreateDTO, Remitente>();
+            CreateMap<RemitenteUpdateDTO, Remitente>();
 
             //Remite transportista
             CreateMap<Models.DBMS.RemiteTransportista, RemiteTransportistaDTO>()
@@ -118,6 +119,7 @@ namespace GuiaRemision.Mappings
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 ;
             CreateMap<DestinatarioCreateDTO, Models.DBMS.Destinatario>();
+            CreateMap<DestinatarioUpdateDTO, Models.DBMS.Destinatario>();
             //Proveedor
             CreateMap<Models.DBMS.Proveedor, ProveedorDTO>()
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))
@@ -125,6 +127,7 @@ namespace GuiaRemision.Mappings
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 ;
             CreateMap<ProveedorCreateDTO, Models.DBMS.Proveedor>();
+            CreateMap<ProveedorUpdateDTO, Models.DBMS.Proveedor>();
             //Productos
             CreateMap<Models.DBMS.GuiaDetalle, ProductosDTO>()
                 .ForMember(dest => dest.DescripcionUM, opt => opt.MapFrom(src => src.UnidadMedida.Descripcion));
@@ -132,9 +135,13 @@ namespace GuiaRemision.Mappings
             //Conductor
             CreateMap<Models.DBMS.Conductor, ConductorDTO>();
             CreateMap<ConductorCreateDTO, Models.DBMS.Conductor>();
+            CreateMap<ConductorUpdateDTO, Models.DBMS.Conductor>();
+
             //Unidad de transporte
             CreateMap<Models.DBMS.Transporte, UnidadTransporteDTO>();
             CreateMap<UnidadTransporteCreateDTO, Models.DBMS.Transporte>();
+            CreateMap<UnidadTransporteUpdateDTO, Models.DBMS.Transporte>();
+
             //Ubicación origen
             CreateMap<Models.DBMS.Origen, OrigenDTO>()
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))

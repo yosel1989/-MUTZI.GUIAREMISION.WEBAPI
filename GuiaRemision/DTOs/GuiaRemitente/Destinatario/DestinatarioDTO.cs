@@ -1,7 +1,7 @@
 ﻿using GuiaRemision.DTOs.GuiaRemitente.Destino;
 using System.ComponentModel.DataAnnotations;
 
-namespace GuiaRemision.DTOs.GuiaRemitente.DatosDestino
+namespace GuiaRemision.DTOs.GuiaRemitente.Destinatario
 {
     public class DestinatarioDTO
     {

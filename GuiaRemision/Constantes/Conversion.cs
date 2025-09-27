@@ -1,4 +1,7 @@
-﻿namespace GuiaRemision.Constantes
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace GuiaRemision.Constantes
 {
     public class Conversion
     {
@@ -100,5 +103,24 @@
             return num2Text;
 
         }
+        public class PeruTimeZoneConverter : JsonConverter<DateTime>
+        {
+            private static readonly TimeZoneInfo PeruTimeZone =
+                TimeZoneInfo.FindSystemTimeZoneById("SA Pacific Standard Time"); // "America/Lima" en Linux
+
+            public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                // Se asume que lo que viene es hora local, lo convertimos a UTC
+                var localTime = DateTime.Parse(reader.GetString());
+                return TimeZoneInfo.ConvertTimeToUtc(localTime, PeruTimeZone);
+            }
+
+            public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+            {
+                var peruTime = TimeZoneInfo.ConvertTimeFromUtc(value, PeruTimeZone);
+                writer.WriteStringValue(peruTime.ToString("yyyy-MM-ddTHH:mm:ss"));
+            }
+        }
+
     }
 }

@@ -3,7 +3,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace GuiaRemision.DTOs.GuiaRemitente.DatosDestino
+namespace GuiaRemision.DTOs.GuiaRemitente.Destinatario
 {
     [SwaggerSchema("Recibe un objeto destinatario, si es nuevo destinatario la api crea un nuevo destinatario en la bbdd", Nullable = false)]
     public class DestinatarioCreateDTO

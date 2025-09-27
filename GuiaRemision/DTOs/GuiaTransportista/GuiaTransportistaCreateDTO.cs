@@ -1,5 +1,5 @@
 ﻿using GuiaRemision.Constantes;
-using GuiaRemision.DTOs.GuiaRemitente.DatosDestino;
+using GuiaRemision.DTOs.GuiaRemitente.Destinatario;
 using GuiaRemision.DTOs.GuiaRemitente.DatosEnvio;
 using GuiaRemision.DTOs.GuiaRemitente.Destino;
 using GuiaRemision.DTOs.GuiaRemitente.Origen;

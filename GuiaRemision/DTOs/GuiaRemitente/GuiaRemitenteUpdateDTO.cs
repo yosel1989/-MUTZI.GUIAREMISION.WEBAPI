@@ -1,4 +1,4 @@
-﻿using GuiaRemision.DTOs.GuiaRemitente.DatosDestino;
+﻿using GuiaRemision.DTOs.GuiaRemitente.Destinatario;
 using GuiaRemision.DTOs.GuiaRemitente.DatosEnvio;
 using GuiaRemision.DTOs.GuiaRemitente.Productos;
 

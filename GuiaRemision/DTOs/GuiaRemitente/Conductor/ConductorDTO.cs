@@ -7,5 +7,6 @@
         public string Apellidos { get; set; }
         public string Cargo { get; set; }
         public string Licencia { get; set; }
+        public DateTime FechaCreacion { get; set; }
     }
 }

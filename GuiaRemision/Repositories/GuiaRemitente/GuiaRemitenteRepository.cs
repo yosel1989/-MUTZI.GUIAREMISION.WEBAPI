@@ -313,7 +313,7 @@ namespace GuiaRemision.Repositories.GuiaRemitente
         {
             return await _context.Transportes.FirstOrDefaultAsync(t => t.Placa == placa);
         }
-        public async Task<Transporte> CreateTransporteAsync(Transporte transporte)
+        public async Task<Models.DBMS.Transporte> CreateTransporteAsync(Models.DBMS.Transporte transporte)
         {
             if (transporte == null)
             {

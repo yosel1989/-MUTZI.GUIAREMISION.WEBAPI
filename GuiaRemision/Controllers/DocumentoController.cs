@@ -30,7 +30,7 @@ namespace GuiaRemision.Controllers
             var token = await _ventaConfigService.ObtenerTokenAsync(ruc);
             if (string.IsNullOrEmpty(token.AccessToken))
                 return Unauthorized("No se pudo obtener un token válido para EFACT.");
-            var guid = await _documentService.ObtenerGuidDesdeTicketAsync(ruc + "-" + tipoGuia + "-" + numeroGuia, token.AccessToken);
+            var guid = await _documentService.ObtenerGuidDesdeTicketAsync(ruc + "-" + tipoGuia + "-" + numeroGuia, token.AccessToken); 
             var pdfBytes = await _documentService.ObtenerPdfAsync(guid, token.AccessToken);
             return File(pdfBytes, "application/pdf", $"{numeroGuia}.pdf");
         }
