@@ -4,5 +4,6 @@
     {
         public string Placa { get; set; }
         public string Tarjeta { get; set; }
+        public DateTime FechaCreacion { get; set; }
     }
 }

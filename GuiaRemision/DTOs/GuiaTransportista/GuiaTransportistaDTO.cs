@@ -31,6 +31,7 @@ namespace GuiaRemision.DTOs.GuiaTransportista
         public OrigenDTO Origen { get; set; }
         public List<DestinoDTO> Destino { get; set; }
         public List<ProductosDTO> Productos { get; set; }
+        public DateTime FechaCreacion { get; set; }
         public string DocumentoAdicinalTipo()
         {
             if (string.IsNullOrEmpty(this.TipoDocRef))
