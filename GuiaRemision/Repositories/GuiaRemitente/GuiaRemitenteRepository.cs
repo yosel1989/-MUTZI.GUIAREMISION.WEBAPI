@@ -13,7 +13,24 @@ namespace GuiaRemision.Repositories.GuiaRemitente
         }
         public async Task<List<Models.DBMS.GuiaRemision>> GetAllAsync()
         {
-            return await _context.GuiaRemisions.ToListAsync();
+            return await _context.GuiaRemisions
+                .Include(r => r.Remitente)
+                    .ThenInclude(rem => rem.Ubigeo)
+                .Include(d => d.Destinatario)
+                    .ThenInclude(des => des.Ubigeo)
+                .Include(p => p.Proveedor)
+                    .ThenInclude(pro => pro.Ubigeo)
+                .Include(dest => dest.Destinos)
+                    .ThenInclude(de => de.Ubigeo)
+                .Include(o => o.Origens)
+                    .ThenInclude(or => or.Ubigeo)
+                .Include(env => env.DatosEnvios)
+                    .ThenInclude(de => de.Conductor)
+                .Include(env => env.DatosEnvios)
+                    .ThenInclude(de => de.Transporte)
+                .Include(det => det.GuiaDetalles)
+                    .ThenInclude(gd => gd.UnidadMedida)
+                .ToListAsync();
         }
         public async Task<Models.DBMS.GuiaRemision> GetByTicketAsync(string ticket)
         {
@@ -24,24 +41,24 @@ namespace GuiaRemision.Repositories.GuiaRemitente
         public async Task<Models.DBMS.GuiaRemision> GetByIdAsync(int id)
         {
             return await _context.GuiaRemisions
-                .Include(r=>r.Remitente)
-                    .ThenInclude(rem=>rem.Ubigeo)
-                .Include(d=>d.Destinatario)
-                    .ThenInclude(des=>des.Ubigeo)
-                .Include(p=>p.Proveedor)
-                    .ThenInclude(pro=>pro.Ubigeo)
-                .Include(dest=>dest.Destinos)
+                .Include(r => r.Remitente)
+                    .ThenInclude(rem => rem.Ubigeo)
+                .Include(d => d.Destinatario)
+                    .ThenInclude(des => des.Ubigeo)
+                .Include(p => p.Proveedor)
+                    .ThenInclude(pro => pro.Ubigeo)
+                .Include(dest => dest.Destinos)
                     .ThenInclude(de => de.Ubigeo)
-                .Include(o=>o.Origens)
+                .Include(o => o.Origens)
                     .ThenInclude(or => or.Ubigeo)
                 .Include(env => env.DatosEnvios)
                     .ThenInclude(de => de.Conductor)
-                .Include(env=>env.DatosEnvios)
+                .Include(env => env.DatosEnvios)
                     .ThenInclude(de => de.Transporte)
-                .Include(det=>det.GuiaDetalles)
+                .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.UnidadMedida)
-                .FirstOrDefaultAsync(g => g.GuiaId == id)
-                ?? throw new KeyNotFoundException("Guia de remisión no encontrada");
+                .FirstOrDefaultAsync(g => g.GuiaId == id);
+                //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
         public async Task<int> CreateGuiaRemisionTransactionalAsync(
             Models.DBMS.Remitente remitente,

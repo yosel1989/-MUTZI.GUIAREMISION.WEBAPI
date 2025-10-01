@@ -56,14 +56,39 @@ namespace GuiaRemision.Controllers
                 })
             };
         }
-            [HttpGet]
-        [Route("listar-por-id/{id}")]
+        [HttpGet]
+        [Route("buscar-por-id/{id}")]
+        [SwaggerOperation(
+        Summary = "Buscar guía de remisión transportista por ID",
+        Description = "Busca guía de remisión transportista por ID desde la bbdd",
+        OperationId = "buscar_guia_transportista")]
+        [ProducesResponseType(typeof(GuiaTransportistaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDto), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDto), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GuiaTransportistaDTO>> GetById(int id)
         {
-            var result = await _guiaTransportistaBDService.GetByIdAsync(id);
-            if (result == null)
-                return NotFound($"No se encontró la guía transportista con ID {id}.");
-            return Ok(result);
+            try
+            {
+                var result = await _guiaTransportistaBDService.GetByIdAsync(id);
+                if (result == null)
+                {
+                    return BadRequest(new BadRequestResponseDto
+                    {
+                        Error = "Error al obtener la guía de remisión transportista.",
+                        Detalle = $"No se encontró la guía transportista con guiaID: {id}."
+                    });
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDto
+                {
+                    Error = "Error al buscar guía de remisión transportista.",
+                    Detalle = errorMsg
+                });
+            }
         }
     }
 }

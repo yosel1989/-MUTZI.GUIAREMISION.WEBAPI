@@ -7,21 +7,52 @@ using GuiaRemision.DTOs.GuiaRemitente.Productos;
 using GuiaRemision.DTOs.GuiaRemitente.Proveedor;
 using GuiaRemision.DTOs.GuiaRemitente.Remitente;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GuiaRemision.DTOs.GuiaRemitente
 {
     public class GuiaRemitenteDTO
     {
+        [JsonPropertyName("guia_id")]
+        [SwaggerSchema("Devuelve un entero, es el número ID de la guía.", Nullable = false)]
         public int GuiaID { get; set; }
+
+        [JsonPropertyName("tipo_transporte")]
+        [SwaggerSchema("Devuelve un texto y solo pueden ser: PUBLICO ó PRIVADO", Nullable = false)]
         public string TipoTransporte { get; set; }
+
+        [JsonPropertyName("tipo_traslado")]
+        [SwaggerSchema("Devuelve un texto y solo pueden ser: VENTA, TRASLADO ó COMPRA", Nullable = false)]
         public string TipoTraslado { get; set; }
+
+        [JsonPropertyName("serie_correlativo")]
+        [SwaggerSchema("Devuelve un texto", Nullable = false)]
         public string SerieCorrelativo { get; set; }
+
+        [JsonPropertyName("fecha")]
+        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
         public string Fecha { get; set; }
+
+        [JsonPropertyName("hora")]
+        [SwaggerSchema("Devuelve un texto de hora en formato de 24 horas(hh:mm:ss); por ejemplo: 14:35:00", Nullable = false)]
         public string Hora { get; set; }
+
+        [JsonPropertyName("observacion")]
+        [SwaggerSchema("Devuelve un texto, donde se detalla una observación o comentario sobre la guía de remisión", Nullable = false)]
         public string Observacion { get; set; }
+
         // Documento de referencia (factura/boleta vinculada)
+        [JsonPropertyName("tipo_doc_ref")]
+        [SwaggerSchema("Devuelve un texto, es el tipo de documento vinculado como referencia en la guía de remisión, los tipos definidos son: FACTURA, BOLETA, NOTA DE CREDITO Y NOTA DE DEBITO", Nullable = false)]
         public string TipoDocRef { get; set; }
+
+        [JsonPropertyName("numero_doc_ref")]
+        [SwaggerSchema("Devuelve un texto, aquí se hace referencia al numero del documento vinculado en la guía de remisión. Ejm: F025-00000003", Nullable = false)]
         public string NumeroDocRef { get; set; }
+
+        [JsonPropertyName("ruc_doc_ref")]
+        [SwaggerSchema("Devuelve un texto, aquí se coloca el ruc del documento vinculado como referencia en la guía de remisión.", Nullable = false)]
         public string RucDocRef { get; set; }
         public RemitenteDTO Remitente { get; set; }
         public DestinatarioDTO Destinatario { get; set; }

@@ -32,8 +32,8 @@ namespace GuiaRemision.Repositories.GuiaTransportista
                     .ThenInclude(de => de.Transporte)
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.UnidadMedida)
-                .FirstOrDefaultAsync(g => g.GuiaId == id)
-                ?? throw new KeyNotFoundException("Guia de remisión no encontrada");
+                .FirstOrDefaultAsync(g => g.GuiaId == id);
+                //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
         public async Task<int> CreateGuiaTransportistaTransactionalAsync(Remitente remitente,RemiteTransportista remiteTransportista, Destinatario destinatario, Conductor conductor, Transporte transporte, Models.DBMS.GuiaRemision guiaRemision, DatosEnvio datosEnvio, Origen origen, List<Destino> destino, List<GuiaDetalle> detalles)
         {

@@ -31,7 +31,7 @@ namespace GuiaRemision.DTOs.Efact
         public EfactResponseDto EfactResponse { get; set; }
     }
 
-    [SwaggerSchema("Respuesta de error estándar para bad request (400). Todos los errores que salen aquí son antes de interactuar con el facturador de guías de remisión. Es decir, el error pudo haber ocurrido en las validaciones antes de crear la info en la bbdd o después de crear la info en la bbdd, empero siempre serán antes de enviar aL FACTURADOR, ya sea, EFACT u otro facturador.", Nullable = false)]
+    [SwaggerSchema("Respuesta de error estándar para bad request (400). Este tipo de error pudo haber ocurrido en las validaciones antes de crear la info en la bbdd o después de crear la info en la bbdd, incluso al buscar o listar la información desde la bbdd.", Nullable = false)]
     public class BadRequestResponseDto
     {
         [JsonPropertyName("error")]
@@ -42,7 +42,7 @@ namespace GuiaRemision.DTOs.Efact
         public string Detalle { get; set; } = string.Empty;
     }
 
-    [SwaggerSchema("Respuesta de error interno (500). El error 500 puede salir cuando hay errores al procesar la información en el servidor o con el facturador de guías de remisión, puede ser por ejm: errores de token, errores de creación de guías en la plataforma del facturador de guías, etc.", Nullable = false)]
+    [SwaggerSchema("Respuesta de error interno (500). El error 500 puede salir cuando hay errores al procesar la información en el servidor o con el facturador de guías de remisión, puede ser por ejm: errores de token, errores de creación de guías en la plataforma del facturador de guías, etc. Estos errores normalmente son capturados desde el catch, donde la transacción no ha sido completada y retorna el mensaje de error desde el servidor.", Nullable = false)]
     public class InternalErrorResponseDto
     {
         [JsonPropertyName("error")]

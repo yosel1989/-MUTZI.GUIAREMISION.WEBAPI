@@ -8,7 +8,7 @@ namespace GuiaRemision.DTOs.GuiaRemitente.Destino
     public class DestinoCreateDTO
     {
         [JsonPropertyName("ubigeo_id")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del proveedor, ejm: 150131", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección del punto de llegada o destino, ejm: 150131", Nullable = false)]
         [Required(ErrorMessage = "EL ubigeo es obligatorio")]
         [StringLength(6, ErrorMessage = "El ubigeo debe tener 6 caracteres")]
         [RegularExpression(@"^(?!000000)\d{6}$", ErrorMessage = "El ubigeo debe tener 6 caracteres y no puede ser 000000")]
