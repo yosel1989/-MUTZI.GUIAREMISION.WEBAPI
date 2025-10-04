@@ -578,6 +578,8 @@ public partial class LogisticaContext : DbContext
 
             entity.ToTable("transporte");
 
+            entity.HasIndex(e => e.Placa, "placa_UNIQUE").IsUnique();
+
             entity.Property(e => e.TransporteId).HasColumnName("transporteID");
             entity.Property(e => e.Activo)
                 .HasMaxLength(20)

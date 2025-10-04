@@ -6,6 +6,10 @@ namespace GuiaRemision.DTOs.GuiaRemitente.Proveedor
     [SwaggerSchema("Devuelve un objeto de proveedor", Nullable = false)]
     public class ProveedorDTO
     {
+        [JsonPropertyName("id")]
+        [SwaggerSchema("Devuelve un entero, el ID del proveedor en la bbdd", Nullable = false)]
+        public int ProveedorID { get; set; }
+
         [JsonPropertyName("tipo_documento")]
         [SwaggerSchema("Devuelve en texto el tipo de documento del proveedor. Valores como: DNI, CE, RUC y PASAPORTE", Nullable = false)]
         public string TipoDocumento { get; set; }

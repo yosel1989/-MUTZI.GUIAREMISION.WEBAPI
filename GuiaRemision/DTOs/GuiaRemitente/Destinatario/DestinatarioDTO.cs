@@ -7,6 +7,10 @@ namespace GuiaRemision.DTOs.GuiaRemitente.Destinatario
 {
     public class DestinatarioDTO
     {
+        [JsonPropertyName("id")]
+        [SwaggerSchema("Devuelve un entero, el ID del destinatario en la bbdd", Nullable = false)]
+        public int DestinatarioID { get; set; }
+
         [JsonPropertyName("tipo_documento")]
         [SwaggerSchema("Devuelve un texto, el tipo de documento solo pueden tener los siguientes valores: DNI, CE, RUC y PASAPORTE", Nullable = false)]
         public string TipoDocumento { get; set; }

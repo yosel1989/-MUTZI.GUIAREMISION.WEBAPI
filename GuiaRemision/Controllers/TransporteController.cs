@@ -1,7 +1,10 @@
-﻿using GuiaRemision.DTOs.GuiaRemitente.UnidadTransporte;
+﻿using GuiaRemision.DTOs.Efact;
+using GuiaRemision.DTOs.GuiaRemitente.Remitente;
+using GuiaRemision.DTOs.GuiaRemitente.UnidadTransporte;
 using GuiaRemision.Services.GuiaRemitente.Transporte;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GuiaRemision.Controllers
 {
@@ -16,35 +19,145 @@ namespace GuiaRemision.Controllers
         }
         [HttpGet]
         [Route("listar")]
+        [SwaggerOperation(
+        Summary = "Listar Unidad de Transporte",
+        Description = "Lista las unidades de transporte",
+        OperationId = "listar_transporte")]
+        [ProducesResponseType(typeof(UnidadTransporteDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<UnidadTransporteDTO>>> GetAll()
         {
-            var result = await _service.GetAllAsycn();
-            return Ok(result);
+            try
+            {
+                var result = await _service.GetAllAsycn();
+                if (result == null)
+                {
+                    return BadRequest(new BadRequestResponseDTO
+                    {
+                        Error = "No se encontraron registros",
+                        Detalle = "No se pudo obtener la lista de unidades de transporte."
+                    });
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar unidades de transporte.",
+                    Detalle = errorMsg
+                });
+            }
         }
         [HttpGet]
         [Route("buscar-por-id/{id}")]
+        [SwaggerOperation(
+        Summary = "Buscar unidad de transporte por ID",
+        Description = "Buscar objeto por transporteID",
+        OperationId = "buscar_transporte_por_id")]
+        [ProducesResponseType(typeof(UnidadTransporteDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UnidadTransporteDTO>> GetById(int id)
         {
-            var result = await _service.GetByIdAsync(id);
-            return Ok(result);
+            try
+            {
+                var result = await _service.GetByIdAsync(id);
+                if (result == null) {
+                    return BadRequest(new BadRequestResponseDTO
+                    {
+                        Error = "No se encontraron registros",
+                        Detalle = $"No se encontró la unidad de transporte con ID: {id}. Verifique si el ID existe en la bbdd."
+                    });
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al buscar transporte.",
+                    Detalle = errorMsg
+                });
+            }
         }
         [HttpPost]
+        [SwaggerOperation(
+        Summary = "Registrar unidad de transporte",
+        Description = "Registra una unidad de transporte en la bbdd",
+        OperationId = "registrar_transporte")]
+        [ProducesResponseType(typeof(CreatedDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<int>> Create(UnidadTransporteCreateDTO transporteDto)
         {
-            var newId = await _service.CreateAsync(transporteDto);
-            return Ok(newId);
+            try
+            {
+                var newId = await _service.CreateAsync(transporteDto);
+                return StatusCode(201, new CreatedDTO { Id = newId });
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al registrar unidad de transporte.",
+                    Detalle = errorMsg
+                });
+            }
         }
         [HttpPut]
+        [SwaggerOperation(
+        Summary = "Actualizar unidad de transporte",
+        Description = "Actualiza la tabla transporte en la bbdd",
+        OperationId = "actualizar_transporte")]
+        [ProducesResponseType(typeof(UnidadTransporteUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UnidadTransporteUpdateDTO>> Update(int id, UnidadTransporteUpdateDTO transporteDto)
         {
-            var updatedTransporte = await _service.UpdateAsync(id, transporteDto);
-            return Ok(updatedTransporte);
+            try
+            {
+                var updatedTransporte = await _service.UpdateAsync(id, transporteDto);
+                return Ok(updatedTransporte);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar unidad de transporte.",
+                    Detalle = errorMsg
+                });
+            }
         }
         [HttpDelete]
+        [SwaggerOperation(
+        Summary = "Eliminar unidad de transporte",
+        Description = "Elimina una unidad de transporte de la bbdd",
+        OperationId = "eliminar_transporte")]
+        [ProducesResponseType(typeof(DeletedDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Delete(int id)
         {
-            await _service.DeleteAsync(id);
-            return Ok($"Transporte con ID: {id} eliminado.");
+            try
+            {
+                await _service.DeleteAsync(id);
+                return Ok(new DeletedDTO { Id = id });
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al eliminar transporte.",
+                    Detalle = errorMsg
+                });
+            }
         }
     }
 }

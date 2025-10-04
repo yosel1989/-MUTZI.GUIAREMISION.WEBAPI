@@ -52,5 +52,14 @@ namespace GuiaRemision.DTOs.GuiaRemitente.Proveedor
         [MaxLength(3)]
         [Required]
         public string Pais { get; set; }
+
+        [JsonPropertyName("empleado_id_creacion")]
+        [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = true)]
+        public int? EmpleadoIDCreacion { get; set; }
+
+        [JsonPropertyName("empleado_nombre_creacion")]
+        [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha realizado la transacción en el sistema", Nullable = true)]
+        [MaxLength(100)]
+        public string? EmpleadoNombreCreacion { get; set; }
     }
 }

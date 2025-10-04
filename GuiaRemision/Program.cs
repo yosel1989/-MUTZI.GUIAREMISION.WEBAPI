@@ -1,3 +1,4 @@
+using GuiaRemision.DTOs.Efact;
 using GuiaRemision.Mappings;
 using GuiaRemision.Models.DBMS;
 using GuiaRemision.Repositories.GuiaRemitente;
@@ -18,6 +19,7 @@ using GuiaRemision.Services.GuiaRemitente.Remitente;
 using GuiaRemision.Services.GuiaRemitente.Transporte;
 using GuiaRemision.Services.GuiaTransportista;
 using GuiaRemision.Services.VentaConfig;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using static GuiaRemision.Constantes.Conversion;
@@ -29,6 +31,23 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new PeruTimeZoneConverter());
+    })
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var allErrors = context.ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage);
+
+            var errorResponse = new BadRequestResponseDTO
+            {
+                Error = "Error de validación.",
+                Detalle = string.Join(" | ", allErrors)
+            };
+
+            return new BadRequestObjectResult(errorResponse);
+        };
     })
     ;
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -110,7 +110,7 @@ namespace GuiaRemision.Services.Envio
                 var (esValido, error) = _guiaRemitenteBDService.ValidarDatosGuiaRemitente(doc);
                 if (!esValido)
                 {
-                    return new BadRequestResponseDto
+                    return new BadRequestResponseDTO
                     {
                         Error = "Error en datos enviados",
                         Detalle = error
@@ -132,7 +132,7 @@ namespace GuiaRemision.Services.Envio
                                     : errorMsg.Contains("String") ? "Error de longitud de campo."
                                     : "";
 
-                    return new BadRequestResponseDto
+                    return new BadRequestResponseDTO
                     {
                         Error = "Error al guardar la guía",
                         Detalle = $"{errorBox} Más detalle: {errorMsg}"
@@ -153,18 +153,18 @@ namespace GuiaRemision.Services.Envio
                     if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
 
                     EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, errorMsg);
-                    return new InternalErrorResponseDto
+                    return new InternalErrorResponseDTO
                     {
                         Error = "Error al enviar a EFACT",
                         Detalle = errorMsg
                     };
                 }
 
-                EfactResponseDto efactParsed;
+                EfactResponseDTO efactParsed;
                 try
                 {
                     var json = JsonDocument.Parse(efactRawResponse).RootElement;
-                    efactParsed = new EfactResponseDto
+                    efactParsed = new EfactResponseDTO
                     {
                         Code = json.GetProperty("code").GetString() ?? "",
                         Description = json.GetProperty("description").GetString() ?? ""
@@ -177,7 +177,7 @@ namespace GuiaRemision.Services.Envio
                 {
                     ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
                     estado = "RECHAZADO";
-                    efactParsed = new EfactResponseDto
+                    efactParsed = new EfactResponseDTO
                     {
                         Code = "-1",
                         Description = ticket
@@ -187,7 +187,7 @@ namespace GuiaRemision.Services.Envio
                 await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaCreada.GuiaID, ticket, estado);
                 EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
 
-                return new EnviarGuiaResponseDto
+                return new SendGuiaResponseDTO
                 {
                     Success = true,
                     EfactResponse = efactParsed
@@ -201,7 +201,7 @@ namespace GuiaRemision.Services.Envio
 
                 EscribirLog("GUIAREMITENTE", ruc, "NumeroDocRef:" + doc.NumeroDocRef, estado, ticket, errorMsg);
 
-                return new InternalErrorResponseDto
+                return new InternalErrorResponseDTO
                 {
                     Error = "Error inesperado",
                     Detalle = errorMsg
@@ -218,7 +218,7 @@ namespace GuiaRemision.Services.Envio
                 var (esValido, error) = _guiaTransportistaBDService.ValidarDatosGuiaTransportista(doc);
                 if (!esValido)
                 {
-                    return new BadRequestResponseDto
+                    return new BadRequestResponseDTO
                     {
                         Error = "Error en datos enviados",
                         Detalle = error
@@ -238,7 +238,7 @@ namespace GuiaRemision.Services.Envio
                                     : errorMsg.Contains("UnidadMedida") ? "Unidad de medida no válida."
                                     : errorMsg.Contains("String") ? "Error de longitud de campo."
                                     : "";
-                    return new BadRequestResponseDto
+                    return new BadRequestResponseDTO
                     {
                         Error = "Error al guardar la guía transportista",
                         Detalle = $"{errorBox} Más detalle: {errorMsg}"
@@ -262,19 +262,19 @@ namespace GuiaRemision.Services.Envio
                         errorMsg = errorMsg[..500];
                     }
                     EscribirLog("GUIATRANSPORTISTA", ruc, guiaCreada.SerieCorrelativo, estado, ticket, errorMsg);
-                    return new InternalErrorResponseDto
+                    return new InternalErrorResponseDTO
                     {
                         Error = "Error al enviar a EFACT",
                         Detalle = errorMsg
                     };
                 }
                 // Extraer el ticket
-                EfactResponseDto efactParsed;
+                EfactResponseDTO efactParsed;
                 try
                 {
                     //Si todo está correcto , efactRawResponse es un JSON con "code" y "description"
                     var json = JsonDocument.Parse(efactRawResponse).RootElement;
-                    efactParsed = new EfactResponseDto
+                    efactParsed = new EfactResponseDTO
                     {
                         Code = json.GetProperty("code").GetString() ?? "",
                         Description = json.GetProperty("description").GetString() ?? ""
@@ -287,7 +287,7 @@ namespace GuiaRemision.Services.Envio
                 {
                     ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
                     estado = "RECHAZADO";
-                    efactParsed = new EfactResponseDto
+                    efactParsed = new EfactResponseDTO
                     {
                         Code = "-1",
                         Description = ticket
@@ -297,7 +297,7 @@ namespace GuiaRemision.Services.Envio
                 await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaCreada.GuiaID, ticket, estado);
                 EscribirLog("GUIATRANSPORTISTA", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
 
-                return new EnviarGuiaResponseDto
+                return new SendGuiaResponseDTO
                 {
                     Success = true,
                     EfactResponse = efactParsed
@@ -310,7 +310,7 @@ namespace GuiaRemision.Services.Envio
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
                 EscribirLog("GUIATRANSPORTISTA", ruc, "NumeroDocRef:" + doc.NumeroDocRef, estado, ticket, errorMsg);
-                return new InternalErrorResponseDto
+                return new InternalErrorResponseDTO
                 {
                     Error = "Error inesperado",
                     Detalle = errorMsg

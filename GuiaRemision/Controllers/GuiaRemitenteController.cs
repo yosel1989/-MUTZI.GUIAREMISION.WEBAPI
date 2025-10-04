@@ -48,14 +48,14 @@ namespace GuiaRemision.Controllers
         Summary = "Registrar una guía de remisión remitente",
         Description = "Registra una nueva guía de remisión y la envía a EFACT.",
         OperationId = "enviar_guia_remitente")]
-        [ProducesResponseType(typeof(EnviarGuiaResponseDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(BadRequestResponseDto), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(InternalErrorResponseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> EnviarGuiaRemision(string ruc, [FromBody] GuiaRemitenteCreateDTO doc)
         {
             if (doc == null)
             {
-                return BadRequest(new BadRequestResponseDto
+                return BadRequest(new BadRequestResponseDTO
                 {
                     Error = "Error en datos enviados",
                     Detalle = "La guía de remisión no puede ser nula."
@@ -66,10 +66,10 @@ namespace GuiaRemision.Controllers
 
             return resultado switch
             {
-                EnviarGuiaResponseDto ok => Created(string.Empty, ok),
-                BadRequestResponseDto bad => BadRequest(bad),
-                InternalErrorResponseDto error => StatusCode(500, error),
-                _ => StatusCode(500, new InternalErrorResponseDto
+                SendGuiaResponseDTO ok => Created(string.Empty, ok),
+                BadRequestResponseDTO bad => BadRequest(bad),
+                InternalErrorResponseDTO error => StatusCode(500, error),
+                _ => StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error desconocido",
                     Detalle = "Ocurrió un error desconocido al procesar la solicitud."
@@ -84,8 +84,8 @@ namespace GuiaRemision.Controllers
         Description = "Lista guías de remisión remitente desde la bbdd",
         OperationId = "listar_guia_remitente")]
         [ProducesResponseType(typeof(GuiaTransportistaDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequestResponseDto), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(InternalErrorResponseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<GuiaRemitenteDTO>>> GetAll()
         {
             try
@@ -93,10 +93,10 @@ namespace GuiaRemision.Controllers
                 var result = await _guiasRemisionBDService.GetAllAsync();
                 if (result == null)
                 {
-                    return BadRequest(new BadRequestResponseDto
+                    return BadRequest(new BadRequestResponseDTO
                     {
-                        Error = "Error al obtener la lista de guías.",
-                        Detalle = "No se pudo encontrar guías de remisión."
+                        Error = "No se encontraron registros",
+                        Detalle = "No se pudo obtener la lista de guías de remisión."
                     });
                 }
                 return Ok(result);
@@ -104,7 +104,7 @@ namespace GuiaRemision.Controllers
             catch (Exception ex)
             {
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
-                return StatusCode(500, new InternalErrorResponseDto
+                return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al listar guías de remisión.",
                     Detalle = errorMsg
@@ -118,8 +118,8 @@ namespace GuiaRemision.Controllers
         Description = "Busca guía de remisión remitente por ID desde la bbdd",
         OperationId = "buscar_guia_remitente")]
         [ProducesResponseType(typeof(GuiaTransportistaDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequestResponseDto), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(InternalErrorResponseDto), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GuiaRemitenteDTO>> GetById(int id)
         {
             try
@@ -127,10 +127,10 @@ namespace GuiaRemision.Controllers
                 var guia = await _guiasRemisionBDService.GetByIdAsync(id);
                 if (guia == null)
                 {
-                    return BadRequest(new BadRequestResponseDto
+                    return BadRequest(new BadRequestResponseDTO
                     {
-                        Error = "Error al obtener la guía de remisión remitente.",
-                        Detalle = $"No se encontró la guía remitente con guiaID: {id}."
+                        Error = "No se encontraron registros",
+                        Detalle = $"No se pudo obtener guía de remisión con el ID: {id}. Verifique si el ID existe en la bbdd."
                     });
                 }
                 return Ok(guia);
@@ -138,7 +138,7 @@ namespace GuiaRemision.Controllers
             catch (Exception ex)
             {
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
-                return StatusCode(500, new InternalErrorResponseDto
+                return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al buscar guía de remisión remitente.",
                     Detalle = errorMsg

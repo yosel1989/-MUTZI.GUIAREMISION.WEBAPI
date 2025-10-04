@@ -6,6 +6,11 @@ namespace GuiaRemision.DTOs.GuiaRemitente.Conductor
     [SwaggerSchema("Devuelve un objeto conductor")]
     public class ConductorDTO
     {
+
+        [JsonPropertyName("id")]
+        [SwaggerSchema("Devuelve un entero, el ID del conductor en la bbdd", Nullable = false)]
+        public int ConductorID { get; set; }
+
         [JsonPropertyName("dni")]
         [SwaggerSchema("Devuelve en texto el dni del conductor", Nullable = false)]
         public string DNI { get; set; }
