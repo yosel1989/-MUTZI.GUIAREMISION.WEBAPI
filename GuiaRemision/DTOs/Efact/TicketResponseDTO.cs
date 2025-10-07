@@ -9,14 +9,14 @@ namespace GuiaRemision.DTOs.Efact
         [JsonProperty("tickets")]
         public List<string> Tickets { get; set; }
     }
-    [SwaggerSchema("Respuesta del facturador (cuando la guía fue enviada correctamente).", Nullable = false)]
+    [SwaggerSchema("Respuesta del facturador. Ejemplos de uso: 'cuando la guía fue enviada correctamente', 'cuando se consulta el pdf u otro documento al facturador.", Nullable = false)]
     public class EfactResponseDTO
     {
         [JsonPropertyName("codigo")]
-        [SwaggerSchema("Devuelve en texto un código cuando la guía fue enviada correctamente. Ejm => código: 0; indica que se envió la guía correctamente", Nullable = false)]
+        [SwaggerSchema("Devuelve un texto, es el código de respuesta cuando hubo una correcta interacción con el facturador. Ejm => código: 0; indica que se envió la guía correctamente. Ej.2 => código: -9998; indica que se ha generado la guía, pero que el documento pdf u otro aún está en proceso.", Nullable = false)]
         public string Code { get; set; } = string.Empty;
         [JsonPropertyName("descripcion")]
-        [SwaggerSchema("Devuelve en texto la descripción cuando la guía es enviada correctamente, normalmente retorna el ticket creado en la plataforma de facturación. Ejm => descripcion: 33baf32d-39f8-4151-bd48-cfadcfb9549c", Nullable = false)]
+        [SwaggerSchema("Devuelve en texto la descripción cuando hubo una correcta interacción con el facturador, normalmente retorna el ticket creado en la plataforma del facturador. Ejm cuando se crea una guía => descripcion: 33baf32d-39f8-4151-bd48-cfadcfb9549c ó cuando se consulta un pdf => Ejm: descripcion: En proceso.", Nullable = false)]
         public string Description { get; set; } = string.Empty;
     }
     [SwaggerSchema("Respuesta exitosa del endpoint enviar_guia_remision")]

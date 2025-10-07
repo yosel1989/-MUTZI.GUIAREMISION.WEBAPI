@@ -16,8 +16,7 @@ namespace GuiaRemision.Repositories.VentaConfig
         public async Task<Models.DBMS.VentaConfig> GetByRucAsync(string ruc)
         {
             return await _context.VentaConfigs
-                .FirstOrDefaultAsync(vc => vc.Ruc == ruc)
-                ?? throw new KeyNotFoundException("No encontrado"); ;
+                .FirstOrDefaultAsync(vc => vc.Ruc == ruc);
         }
     }
 }

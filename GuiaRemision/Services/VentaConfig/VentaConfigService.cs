@@ -36,15 +36,14 @@ namespace GuiaRemision.Services.VentaConfig
             var config = await _repository.GetByRucAsync(ruc);
 
             if (config == null)
-                throw new InvalidOperationException("No se encontró configuración para el RUC especificado.");
+                return null;
 
             if (string.IsNullOrEmpty(this.Url_Base_Efact))
-                throw new InvalidOperationException("La URL base de la API no está configurada.");
+                return null;
 
             if (string.IsNullOrEmpty(config.EfactApi))
-                throw new InvalidOperationException("La contraseña de la API (EfactApi) no está configurada.");
+                return null;
 
-            // credenciales fijas del proveedor
             string credentials = "client:secret";
             string base64Credentials = Helper.Base64Encode(credentials);
 
@@ -68,12 +67,12 @@ namespace GuiaRemision.Services.VentaConfig
 
             if (!response.IsSuccessStatusCode)
             {
-                throw new ApplicationException($"Error al obtener token: {response.StatusCode} - {responseContent}");
+                return null;
             }
 
             var token = JsonConvert.DeserializeObject<TokenResponseDTO>(responseContent);
 
-            return token ?? throw new ApplicationException("No se pudo deserializar la respuesta del token.");
+            return token;
         }
     }
 }

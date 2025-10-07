@@ -1,8 +1,11 @@
-﻿using GuiaRemision.Services.DocumentEfact;
+﻿using GuiaRemision.DTOs.Efact;
+using GuiaRemision.DTOs.GuiaRemitente.Conductor;
+using GuiaRemision.Services.DocumentEfact;
 using GuiaRemision.Services.GuiaRemision;
 using GuiaRemision.Services.VentaConfig;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -23,53 +26,115 @@ namespace GuiaRemision.Controllers
             _guiaRemitente = guiaRemitenteService;
         }
         [HttpGet]
-        //[Route("obtener-guia-pdf/{ruc}/{tipoGuia}/{numeroGuia}")]
-        [Route("pdf/{ruc}/{tipoGuia}/{numeroGuia}")]
-        public async Task<ActionResult> ObtenerPdf(string ruc, string tipoGuia, string numeroGuia)
-        {
-            var token = await _ventaConfigService.ObtenerTokenAsync(ruc);
-            if (string.IsNullOrEmpty(token.AccessToken))
-                return Unauthorized("No se pudo obtener un token válido para EFACT.");
-            var guid = await _documentService.ObtenerGuidDesdeTicketAsync(ruc + "-" + tipoGuia + "-" + numeroGuia, token.AccessToken); 
-            var pdfBytes = await _documentService.ObtenerPdfAsync(guid, token.AccessToken);
-            return File(pdfBytes, "application/pdf", $"{numeroGuia}.pdf");
-        }
-        [HttpGet]
-        [Route("xml/{ruc}/{tipoGuia}/{numeroGuia}")]
-        public async Task<ActionResult> ObtenerXml(string ruc, string tipoGuia, string numeroGuia)
-        {
-            var token = await _ventaConfigService.ObtenerTokenAsync(ruc);
-            if (string.IsNullOrEmpty(token.AccessToken))
-            {
-                return Unauthorized("No se pudo obtener un token válido para EFACT.");
-            }
-            var guid = await _documentService.ObtenerGuidDesdeTicketAsync(ruc + "-" + tipoGuia + "-" + numeroGuia, token.AccessToken);
-            var xmlBytes = await _documentService.ObtenerXmlAsync(guid, token.AccessToken);
-            return File(xmlBytes, "application/xml", $"{numeroGuia}.xml");
-        }
-        [HttpGet]
-        [Route("cdr/{ruc}/{tipoGuia}/{numeroGuia}")]
-        public async Task<ActionResult> ObtenerCdr(string ruc, string tipoGuia, string numeroGuia)
-        {
-            var token = await _ventaConfigService.ObtenerTokenAsync(ruc);
-            if (string.IsNullOrEmpty(token.AccessToken))
-            {
-                return Unauthorized("No se pudo obtener un token válido para EFACT.");
-            }
-            var guid = await _documentService.ObtenerGuidDesdeTicketAsync(ruc + "-" + tipoGuia + "-" + numeroGuia, token.AccessToken);
-            var cdrBytes = await _documentService.ObtenerCdrAsync(guid, token.AccessToken);
-            return File(cdrBytes, "application/cdr", $"{numeroGuia}.cdr");
-        }
-        [HttpGet]
         [Route("pdftk/{ticket}")]
+        [SwaggerOperation(
+        Summary = "Obtener PDF desde ticket",
+        Description = "Obtiene un archivo PDF de la guía emitida.",
+        OperationId = "pdf_tk_guia")]
+        [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> ObtenerPdfTicket(string ticket)
         {
             var guia = await _guiaRemitente.GetByTicketAsync(ticket);
             var token = await _ventaConfigService.ObtenerTokenAsync(guia.Ruc);
+            if (token == null || string.IsNullOrEmpty(token.AccessToken))
+            {
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Token inválido",
+                    Detalle = "No se pudo obtener un token válido para EFACT."
+                });
+            }
             if (string.IsNullOrEmpty(token.AccessToken))
                 return Unauthorized("No se pudo obtener un token válido para EFACT.");
-            var pdfBytes = await _documentService.ObtenerPdfAsync(ticket, token.AccessToken);
-            return File(pdfBytes, "application/pdf", $"{guia.NumeroGuia}.pdf");
+            //var pdfBytes = await _documentService.ObtenerPdfAsync(ticket, token.AccessToken);
+            var (pdfBytes, estadoDoc, errorDoc) = await _documentService.ObtenerDocumentoAsync("pdf", ticket, token.AccessToken);
+            if (pdfBytes != null)
+                return File(pdfBytes, "application/pdf", $"{guia.NumeroGuia}.pdf");
+            if (estadoDoc != null)
+                return StatusCode(StatusCodes.Status202Accepted, estadoDoc);
+            return StatusCode(500, new InternalErrorResponseDTO 
+            {
+                Error = "Error al obtener PDF.",
+                Detalle = errorDoc
+            });
+        }
+
+        [HttpGet("pdf/{ruc}/{tipoGuia}/{numeroGuia}")]
+        [SwaggerOperation(
+        Summary = "Obtener guía en PDF",
+        Description = "Obtiene un archivo PDF de la guía emitida.",
+        OperationId = "guia_pdf")]
+        [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> ObtenerPdf(string ruc, string tipoGuia, string numeroGuia)
+        {
+            var (exito, archivo, estado, error) = await _documentService.ObtenerDocumentoCompletoAsync("pdf", ruc, tipoGuia, numeroGuia);
+
+            if (exito && archivo != null)
+                return File(archivo, "application/pdf", $"{numeroGuia}.pdf");
+
+            if (estado != null && estado.Code == "-9998")
+                return StatusCode(StatusCodes.Status202Accepted, estado);
+
+            if (estado != null)
+                return StatusCode(StatusCodes.Status400BadRequest, estado);
+
+            return StatusCode(StatusCodes.Status500InternalServerError, error);
+        }
+
+        [HttpGet("xml/{ruc}/{tipoGuia}/{numeroGuia}")]
+        [SwaggerOperation(
+        Summary = "Obtener guía en XML",
+        Description = "Obtiene un archivo XML de la guía emitida.",
+        OperationId = "guia_xml")]
+        [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> ObtenerXml(string ruc, string tipoGuia, string numeroGuia)
+        {
+            var (exito, archivo, estado, error) = await _documentService.ObtenerDocumentoCompletoAsync("xml", ruc, tipoGuia, numeroGuia);
+
+            if (exito && archivo != null)
+                return File(archivo, "application/xml", $"{numeroGuia}.xml");
+
+            if (estado != null && estado.Code == "-9998")
+                return StatusCode(StatusCodes.Status202Accepted, estado);
+
+            if (estado != null)
+                return StatusCode(StatusCodes.Status400BadRequest, estado);
+
+            return StatusCode(StatusCodes.Status500InternalServerError, error);
+        }
+
+        [HttpGet("cdr/{ruc}/{tipoGuia}/{numeroGuia}")]
+        [SwaggerOperation(
+        Summary = "Obtener guía en CDR",
+        Description = "Obtiene un archivo CDR de la guía emitida.",
+        OperationId = "guia_cdr")]
+        [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> ObtenerCdr(string ruc, string tipoGuia, string numeroGuia)
+        {
+            var (exito, archivo, estado, error) = await _documentService.ObtenerDocumentoCompletoAsync("cdr", ruc, tipoGuia, numeroGuia);
+
+            if (exito && archivo != null)
+                return File(archivo, "application/cdr", $"{numeroGuia}.cdr");
+
+            if (estado != null && estado.Code == "-9998")
+                return StatusCode(StatusCodes.Status202Accepted, estado);
+
+            if (estado != null)
+                return StatusCode(StatusCodes.Status400BadRequest, estado);
+
+            return StatusCode(StatusCodes.Status500InternalServerError, error);
         }
     }
 }
