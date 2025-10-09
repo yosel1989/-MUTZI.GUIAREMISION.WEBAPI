@@ -30,7 +30,7 @@ namespace GuiaRemision.Controllers
         [SwaggerOperation(
         Summary = "Obtener PDF desde ticket",
         Description = "Obtiene un archivo PDF de la guía emitida.",
-        OperationId = "pdf_tk_guia")]
+        OperationId = "guia_pdf_tk")]
         [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
@@ -38,6 +38,12 @@ namespace GuiaRemision.Controllers
         public async Task<ActionResult> ObtenerPdfTicket(string ticket)
         {
             var guia = await _guiaRemitente.GetByTicketAsync(ticket);
+            if (guia == null || string.IsNullOrEmpty(guia.Ruc))
+                return NotFound(new BadRequestResponseDTO
+                {
+                    Error = "Guía no encontrada",
+                    Detalle = $"No se encontró una guía asociada al ticket: {ticket}"
+                });
             var token = await _ventaConfigService.ObtenerTokenAsync(guia.Ruc);
             if (token == null || string.IsNullOrEmpty(token.AccessToken))
             {
@@ -65,7 +71,7 @@ namespace GuiaRemision.Controllers
         [HttpGet("pdf/{ruc}/{tipoGuia}/{numeroGuia}")]
         [SwaggerOperation(
         Summary = "Obtener guía en PDF",
-        Description = "Obtiene un archivo PDF de la guía emitida.",
+        Description = "Obtiene un archivo PDF de la guía emitida. (En tipoGuia solo acepta valores de: 'REMITENTE' ó 'TRANSPORTISTA')",
         OperationId = "guia_pdf")]
         [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
@@ -90,7 +96,7 @@ namespace GuiaRemision.Controllers
         [HttpGet("xml/{ruc}/{tipoGuia}/{numeroGuia}")]
         [SwaggerOperation(
         Summary = "Obtener guía en XML",
-        Description = "Obtiene un archivo XML de la guía emitida.",
+        Description = "Obtiene un archivo XML de la guía emitida. (En tipoGuia solo acepta valores de: 'REMITENTE' ó 'TRANSPORTISTA')",
         OperationId = "guia_xml")]
         [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
@@ -115,7 +121,7 @@ namespace GuiaRemision.Controllers
         [HttpGet("cdr/{ruc}/{tipoGuia}/{numeroGuia}")]
         [SwaggerOperation(
         Summary = "Obtener guía en CDR",
-        Description = "Obtiene un archivo CDR de la guía emitida.",
+        Description = "Obtiene un archivo CDR de la guía emitida. (En tipoGuia solo acepta valores de: 'REMITENTE' ó 'TRANSPORTISTA')",
         OperationId = "guia_cdr")]
         [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]

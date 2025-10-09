@@ -35,8 +35,7 @@ namespace GuiaRemision.Repositories.GuiaRemitente
         public async Task<Models.DBMS.GuiaRemision> GetByTicketAsync(string ticket)
         {
             return await _context.GuiaRemisions.Include(r => r.Remitente)
-                .FirstOrDefaultAsync(g => g.RespuestaTicket == ticket)
-                ?? throw new KeyNotFoundException("Número de guía y/o RUC no encontrado en la BBDD");
+                .FirstOrDefaultAsync(g => g.RespuestaTicket == ticket);
         }
         public async Task<Models.DBMS.GuiaRemision> GetByIdAsync(int id)
         {
