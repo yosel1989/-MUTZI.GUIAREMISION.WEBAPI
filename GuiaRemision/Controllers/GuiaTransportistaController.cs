@@ -1,16 +1,11 @@
-﻿using GuiaRemision.DTOs.Efact;
-using GuiaRemision.DTOs.GuiaRemitente;
-using GuiaRemision.DTOs.GuiaTransportista;
-using GuiaRemision.Services.Envio;
-using GuiaRemision.Services.GuiaRemision;
-using GuiaRemision.Services.GuiaTransportista;
-using GuiaRemision.Services.VentaConfig;
-using Microsoft.AspNetCore.Http;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Text.Json;
 
-namespace GuiaRemision.Controllers
+namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

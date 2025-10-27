@@ -1,0 +1,48 @@
+﻿
+namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
+{
+    public interface IGuiaRemitenteRepository
+    {
+        Task<List<DOMAIN.Entities.GuiaRemision>> GetAllAsync();
+        Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id);
+        Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket);
+        Task <int> CreateGuiaRemisionTransactionalAsync(
+            DOMAIN.Entities.Remitente remitente,
+            DOMAIN.Entities.Destinatario destinatario,
+            DOMAIN.Entities.Proveedor proveedor,
+            DOMAIN.Entities.Conductor conductor,
+            DOMAIN.Entities.Transporte transporte,
+            DOMAIN.Entities.GuiaRemision guiaRemision,
+            DOMAIN.Entities.DatosEnvio datosEnvio,
+            DOMAIN.Entities.Origen origen,
+            List<DOMAIN.Entities.Destino> destino,
+            List<DOMAIN.Entities.GuiaDetalle> detalles
+            );
+        //Remitente
+        Task<DOMAIN.Entities.Remitente> GetRemitenteByRucAsync(string ruc);
+        Task<DOMAIN.Entities.Remitente> CreateRemitenteAsync(DOMAIN.Entities.Remitente remitente);
+        //Destinatario
+        Task<DOMAIN.Entities.Destinatario> GetDestinatarioByRucAsync(string ruc);
+        Task<DOMAIN.Entities.Destinatario> CreateDestinatarioAsync(DOMAIN.Entities.Destinatario destinatario);
+        //Proveedor
+        Task<DOMAIN.Entities.Proveedor> GetProveedorByRucAsync(string ruc);
+        Task<DOMAIN.Entities.Proveedor> CreateProveedorAsync(DOMAIN.Entities.Proveedor proveedor);
+        //Conductor
+        Task<DOMAIN.Entities.Conductor> GetConductorByLicenciaAsync(string licencia);
+        Task<DOMAIN.Entities.Conductor> CreateConductorAsync(DOMAIN.Entities.Conductor conductor);
+        //Transporte
+        Task<DOMAIN.Entities.Transporte> GetTransporteByPlacaAsync(string placa);
+        Task<DOMAIN.Entities.Transporte> CreateTransporteAsync(DOMAIN.Entities.Transporte transporte);
+        //Datos envio
+        Task<DOMAIN.Entities.DatosEnvio> CreateDatosEnvioAsync(DOMAIN.Entities.DatosEnvio datosEnvio);
+        //Ubicación origen
+        Task<DOMAIN.Entities.Origen> CreateOrigenAsync(DOMAIN.Entities.Origen origen);
+        //Ubicación destino
+        Task<DOMAIN.Entities.Destino> CreateDestinoAsync(DOMAIN.Entities.Destino destino);
+        //Guia detalle
+        Task<DOMAIN.Entities.GuiaDetalle> CreateGuiaDetalleAsync(DOMAIN.Entities.GuiaDetalle guiaDetalle);
+        Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado);
+        Task UpdateAsync(DOMAIN.Entities.GuiaRemision guiaRemision);
+        Task DeleteAsync(int id);
+    }
+}

@@ -1,28 +1,39 @@
-using GuiaRemision.DTOs.Efact;
-using GuiaRemision.Mappings;
-using GuiaRemision.Models.DBMS;
-using GuiaRemision.Repositories.GuiaRemitente;
-using GuiaRemision.Repositories.GuiaRemitente.Conductor;
-using GuiaRemision.Repositories.GuiaRemitente.Destinatario;
-using GuiaRemision.Repositories.GuiaRemitente.Proveedor;
-using GuiaRemision.Repositories.GuiaRemitente.Remitente;
-using GuiaRemision.Repositories.GuiaRemitente.Transporte;
-using GuiaRemision.Repositories.GuiaTransportista;
-using GuiaRemision.Repositories.VentaConfig;
-using GuiaRemision.Services.DocumentEfact;
-using GuiaRemision.Services.Envio;
-using GuiaRemision.Services.GuiaRemision;
-using GuiaRemision.Services.GuiaRemitente.Conductor;
-using GuiaRemision.Services.GuiaRemitente.Destinatario;
-using GuiaRemision.Services.GuiaRemitente.Proveedor;
-using GuiaRemision.Services.GuiaRemitente.Remitente;
-using GuiaRemision.Services.GuiaRemitente.Transporte;
-using GuiaRemision.Services.GuiaTransportista;
-using GuiaRemision.Services.VentaConfig;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.Mappings;
+using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Destinatario;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Transporte;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using static GuiaRemision.Constantes.Conversion;
+using MUTZI.GUIA.APPLICATION.Helpers;
+using MUTZI.GUIA.APPLICATION.Services.Documento;
+using MUTZI.GUIA.APPLICATION.Services.Envio;
+using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor;
+using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario;
+using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor;
+using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente;
+using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte;
+using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Services.VentaConfig;
+using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +41,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.Converters.Add(new PeruTimeZoneConverter());
+        options.JsonSerializerOptions.Converters.Add(new Conversion.PeruTimeZoneConverter());
     })
     .ConfigureApiBehaviorOptions(options =>
     {

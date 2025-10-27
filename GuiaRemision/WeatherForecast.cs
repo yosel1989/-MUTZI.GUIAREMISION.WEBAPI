@@ -1,4 +1,4 @@
-namespace GuiaRemision
+namespace MUTZI.GUIA.WEBAPI
 {
     public class WeatherForecast
     {
