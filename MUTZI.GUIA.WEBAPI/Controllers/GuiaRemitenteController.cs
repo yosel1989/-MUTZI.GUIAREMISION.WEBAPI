@@ -11,7 +11,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class GuiaRemitenteController : ControllerBase
     {
         private readonly IVentaConfigService _ventaConfigService;

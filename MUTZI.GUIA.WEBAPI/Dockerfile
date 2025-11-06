@@ -28,7 +28,7 @@ RUN curl -L https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/m
 COPY ["nuget.config", "./"]
 
 # Copiar todos los archivos .csproj de la solución (ajusta las rutas según tu estructura)
-COPY ["MUTZI.GUIA.REMISION/MUTZI.GUIA.WEBAPI.csproj", "MUTZI.GUIA.WEBAPI/"]
+COPY ["MUTZI.GUIA.WEBAPI/MUTZI.GUIA.WEBAPI.csproj", "MUTZI.GUIA.WEBAPI/"]
 COPY ["MUTZI.GUIA.APPLICATION/MUTZI.GUIA.APPLICATION.csproj", "MUTZI.GUIA.APPLICATION/"]
 COPY ["MUTZI.GUIA.DOMAIN/MUTZI.GUIA.DOMAIN.csproj", "MUTZI.GUIA.DOMAIN/"]
 COPY ["MUTZI.GUIA.INFRASTRUCTURE/MUTZI.GUIA.INFRASTRUCTURE.csproj", "MUTZI.GUIA.INFRASTRUCTURE/"]
