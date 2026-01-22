@@ -34,6 +34,9 @@ using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Services.VentaConfig;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
+using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Ubigeo;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Ubigeo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +88,7 @@ builder.Services.AddScoped<IDestinatarioRepository, DestinatarioRepository>();
 builder.Services.AddScoped<IConductorRepository, ConductorRepository>();
 builder.Services.AddScoped<ITransporteRepository, TransporteRepository>();
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
+builder.Services.AddScoped<IUbigeoRepository, UbigeoRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -101,6 +105,7 @@ builder.Services.AddScoped<IDestinatarioService, DestinatarioService>();
 builder.Services.AddScoped<IConductorService, ConductorService>();
 builder.Services.AddScoped<ITransporteService, TransporteService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
+builder.Services.AddScoped<IUbigeoService, UbigeoService>();
 
 //aGREGAR SWAGGER
 builder.Services.AddEndpointsApiExplorer();
@@ -120,6 +125,31 @@ builder.Services.AddSwaggerGen(c =>
     c.EnableAnnotations();
 });
 
+
+// Cors
+var env = builder.Environment;
+
+var corsPolicy = "AllowOrigin";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(corsPolicy, policy =>
+    {
+        policy.WithOrigins(
+            "http://localhost:4200",
+            "http://localhost:4201",
+            "http://localhost:5000",
+            "https://*.cloudfront.net",
+            "https://*.mutzi.pe"
+        )
+              .SetIsOriginAllowedToAllowWildcardSubdomains()
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
+
+
+
 var app = builder.Build();
 
 app.UseStaticFiles();
@@ -131,6 +161,8 @@ app.UseStaticFiles();
 //}
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseCors(corsPolicy);
 
 app.UseHttpsRedirection();
 
