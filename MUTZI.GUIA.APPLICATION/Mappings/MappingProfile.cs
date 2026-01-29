@@ -14,6 +14,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista;
 using MUTZI.GUIA.APPLICATION.DTOs.VentaConfig;
 using MUTZI.GUIA.DOMAIN.Entities;
 using System.Globalization;
+using MUTZI.GUIA.APPLICATION.DTOs.Ubigeo;
 
 namespace MUTZI.GUIA.APPLICATION.Mappings
 {
@@ -157,7 +158,13 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             CreateMap<DestinoCreateDTO, DOMAIN.Entities.Destino>();
 
-            //
+            //Ubigeo
+            CreateMap<Ubigeo, UbigeoDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UbigeoId))
+                .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Departamento))
+                .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Provincia))
+                .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Distrito))
+                ;
         }
     }
 }
