@@ -27,7 +27,7 @@ public partial class DatosEnvio
 
     public string? RegistroMtcCurrier { get; set; }
 
-    public virtual UnidadMedida UnidadMedida { get; set; } = null!;
+    public virtual UnidadMedidum CodigoUmNavigation { get; set; } = null!;
 
     public virtual Conductor? Conductor { get; set; }
 

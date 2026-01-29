@@ -67,7 +67,7 @@ public partial class GuiaRemision
 
     public virtual Proveedor? Proveedor { get; set; }
 
-    public virtual RemiteTransportista? RemiteTransportista { get; set; }
+    public virtual RemiteTransportistum? RemiteTransportista { get; set; }
 
     public virtual Remitente Remitente { get; set; } = null!;
 }

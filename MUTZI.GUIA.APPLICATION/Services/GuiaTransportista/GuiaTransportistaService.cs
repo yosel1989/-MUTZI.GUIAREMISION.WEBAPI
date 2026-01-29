@@ -19,7 +19,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
         {
             // Mapear todos los objetos
             var remitente = _mapper.Map<DOMAIN.Entities.Remitente>(dto.Remitente);
-            var remiteTransportista = _mapper.Map<DOMAIN.Entities.RemiteTransportista>(dto.RemiteTransportista);
+            var remiteTransportista = _mapper.Map<DOMAIN.Entities.RemiteTransportistum>(dto.RemiteTransportista);
             var destinatario = _mapper.Map<DOMAIN.Entities.Destinatario>(dto.Destinatario);
             var conductor = _mapper.Map<DOMAIN.Entities.Conductor>(dto.DatosEnvio.Conductor);
             var transporte = _mapper.Map<DOMAIN.Entities.Transporte>(dto.DatosEnvio.UnidadTransporte);

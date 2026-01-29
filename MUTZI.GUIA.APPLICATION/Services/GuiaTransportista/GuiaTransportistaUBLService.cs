@@ -194,7 +194,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                             // Conductor (opcional)
                             DriverPerson = guia.DatosEnvio?.Conductor == null ? null : new List<DriverPerson> {
                                 new DriverPerson {
-                                    ID = new List<ID> { new ID { _ = guia.DatosEnvio.Conductor.DNI, schemeID = EspacioNombreGuiaRemision._DocumentType01 } },
+                                    //ID = new List<ID> { new ID { _ = guia.DatosEnvio.Conductor.DNI, schemeID = EspacioNombreGuiaRemision._DocumentType01 } },
+                                    ID = new List<ID> { new ID { _ = guia.DatosEnvio.Conductor.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(guia.DatosEnvio.Conductor.TipoDocumento) } },
                                     FirstName  = new List<FirstName>  { new FirstName  { _ = guia.DatosEnvio.Conductor.Nombres } },
                                     FamilyName = new List<FamilyName> { new FamilyName { _ = guia.DatosEnvio.Conductor.Apellidos } },
                                     JobTitle   = new List<JobTitle>   { new JobTitle   { _ = "Principal" } },

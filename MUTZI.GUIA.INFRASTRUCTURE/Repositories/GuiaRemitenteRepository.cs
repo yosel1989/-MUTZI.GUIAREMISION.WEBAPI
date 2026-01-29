@@ -30,7 +30,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(env => env.DatosEnvios)
                     .ThenInclude(de => de.Transporte)
                 .Include(det => det.GuiaDetalles)
-                    .ThenInclude(gd => gd.UnidadMedida)
+                    .ThenInclude(gd => gd.CodigoUmNavigation)
                 .ToListAsync();
         }
         public async Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket)
@@ -56,7 +56,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(env => env.DatosEnvios)
                     .ThenInclude(de => de.Transporte)
                 .Include(det => det.GuiaDetalles)
-                    .ThenInclude(gd => gd.UnidadMedida)
+                    .ThenInclude(gd => gd.CodigoUmNavigation)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
                 //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }

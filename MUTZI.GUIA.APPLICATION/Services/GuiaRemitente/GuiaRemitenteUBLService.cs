@@ -210,7 +210,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             if (guia.DatosEnvio.Conductor != null)
                 root.DespatchAdvice[0].Shipment[0].ShipmentStage[0].DriverPerson = new List<DriverPerson>{
                     new DriverPerson {
-                        ID = new List<ID>{ new ID { _ = guia.DatosEnvio.Conductor.DNI , schemeID = EspacioNombreGuiaRemision._DocumentType01 }},
+                        //ID = new List<ID>{ new ID { _ = guia.DatosEnvio.Conductor.DNI , schemeID = EspacioNombreGuiaRemision._DocumentType01 }},
+                        ID = new List<ID>{ new ID { _ = guia.DatosEnvio.Conductor.NumeroDocumento , schemeID = guia.getTipoCodigoDocumento(guia.DatosEnvio.Conductor.TipoDocumento) }},
                         FirstName = new List<FirstName>{ new FirstName { _ = guia.DatosEnvio.Conductor.Nombres }},
                         FamilyName = new List<FamilyName>{ new FamilyName { _ = guia.DatosEnvio.Conductor.Apellidos }},
                         JobTitle = new List<JobTitle>{ new JobTitle {_= "Principal" } },//{ _ = guia.datosEnvio.conductor.cargo }},

@@ -5,7 +5,7 @@
         Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id);
         Task<int> CreateGuiaTransportistaTransactionalAsync(
             DOMAIN.Entities.Remitente remitente,
-            DOMAIN.Entities.RemiteTransportista remiteTransportista,
+            DOMAIN.Entities.RemiteTransportistum remiteTransportista,
             DOMAIN.Entities.Destinatario destinatario,
             DOMAIN.Entities.Conductor conductor,
             DOMAIN.Entities.Transporte transporte,
@@ -16,6 +16,6 @@
             List<DOMAIN.Entities.GuiaDetalle> detalles
             );
         //Remitente
-        Task<DOMAIN.Entities.RemiteTransportista> GetRemiteTransportistaByRucAsync(string ruc);
+        Task<DOMAIN.Entities.RemiteTransportistum> GetRemiteTransportistaByRucAsync(string ruc);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-public partial class RemiteTransportista
+public partial class RemiteTransportistum
 {
     public int RemiteTransportistaId { get; set; }
 

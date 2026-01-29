@@ -17,7 +17,7 @@ public partial class GuiaDetalle
 
     public string CodigoUm { get; set; } = null!;
 
-    public virtual UnidadMedida UnidadMedida { get; set; } = null!;
+    public virtual UnidadMedidum CodigoUmNavigation { get; set; } = null!;
 
     public virtual GuiaRemision Guia { get; set; } = null!;
 }

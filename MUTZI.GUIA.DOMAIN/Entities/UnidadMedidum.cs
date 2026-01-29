@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-public partial class UnidadMedida
+public partial class UnidadMedidum
 {
     public string CodigoUm { get; set; } = null!;
 

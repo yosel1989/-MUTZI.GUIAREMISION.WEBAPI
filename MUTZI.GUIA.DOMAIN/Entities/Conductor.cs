@@ -7,7 +7,9 @@ public partial class Conductor
 {
     public int ConductorId { get; set; }
 
-    public string Dni { get; set; } = null!;
+    public string? TipoDocumento { get; set; }
+
+    public string NumeroDocumento { get; set; } = null!;
 
     public string Nombres { get; set; } = null!;
 

@@ -34,7 +34,7 @@ public partial class LogisticaContext : DbContext
 
     public virtual DbSet<Proveedor> Proveedors { get; set; }
 
-    public virtual DbSet<RemiteTransportista> RemiteTransportista { get; set; }
+    public virtual DbSet<RemiteTransportistum> RemiteTransportista { get; set; }
 
     public virtual DbSet<Remitente> Remitentes { get; set; }
 
@@ -42,7 +42,7 @@ public partial class LogisticaContext : DbContext
 
     public virtual DbSet<Ubigeo> Ubigeos { get; set; }
 
-    public virtual DbSet<UnidadMedida> UnidadMedida { get; set; }
+    public virtual DbSet<UnidadMedidum> UnidadMedida { get; set; }
 
     public virtual DbSet<VentaConfig> VentaConfigs { get; set; }
 
@@ -75,9 +75,6 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.Cargo)
                 .HasMaxLength(100)
                 .HasColumnName("cargo");
-            entity.Property(e => e.Dni)
-                .HasMaxLength(15)
-                .HasColumnName("dni");
             entity.Property(e => e.EmpleadoIdcreacion).HasColumnName("empleadoIDCreacion");
             entity.Property(e => e.EmpleadoIdedicion).HasColumnName("empleadoIDEdicion");
             entity.Property(e => e.EmpleadoNombreCreacion)
@@ -99,6 +96,12 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.Nombres)
                 .HasMaxLength(50)
                 .HasColumnName("nombres");
+            entity.Property(e => e.NumeroDocumento)
+                .HasMaxLength(15)
+                .HasColumnName("numeroDocumento");
+            entity.Property(e => e.TipoDocumento)
+                .HasMaxLength(20)
+                .HasColumnName("tipoDocumento");
         });
 
         modelBuilder.Entity<DatosEnvio>(entity =>
@@ -139,7 +142,7 @@ public partial class LogisticaContext : DbContext
                 .HasColumnName("rucEmpresaCurrier");
             entity.Property(e => e.TransporteId).HasColumnName("transporteID");
 
-            entity.HasOne(d => d.UnidadMedida).WithMany(p => p.DatosEnvios)
+            entity.HasOne(d => d.CodigoUmNavigation).WithMany(p => p.DatosEnvios)
                 .HasForeignKey(d => d.CodigoUm)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("datosEnvio_ibfk_4");
@@ -272,7 +275,7 @@ public partial class LogisticaContext : DbContext
                 .HasColumnName("descripcion");
             entity.Property(e => e.GuiaId).HasColumnName("guiaID");
 
-            entity.HasOne(d => d.UnidadMedida).WithMany(p => p.GuiaDetalles)
+            entity.HasOne(d => d.CodigoUmNavigation).WithMany(p => p.GuiaDetalles)
                 .HasForeignKey(d => d.CodigoUm)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("guiaDetalle_ibfk_1");
@@ -468,7 +471,7 @@ public partial class LogisticaContext : DbContext
                 .HasConstraintName("proveedor_ibfk_1");
         });
 
-        modelBuilder.Entity<RemiteTransportista>(entity =>
+        modelBuilder.Entity<RemiteTransportistum>(entity =>
         {
             entity.HasKey(e => e.RemiteTransportistaId).HasName("PRIMARY");
 
@@ -645,7 +648,7 @@ public partial class LogisticaContext : DbContext
                 .UseCollation("utf8mb4_0900_ai_ci");
         });
 
-        modelBuilder.Entity<UnidadMedida>(entity =>
+        modelBuilder.Entity<UnidadMedidum>(entity =>
         {
             entity.HasKey(e => e.CodigoUm).HasName("PRIMARY");
 

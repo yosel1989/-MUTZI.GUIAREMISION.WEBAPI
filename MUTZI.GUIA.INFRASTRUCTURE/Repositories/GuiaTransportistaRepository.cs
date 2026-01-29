@@ -33,11 +33,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(env => env.DatosEnvios)
                     .ThenInclude(de => de.Transporte)
                 .Include(det => det.GuiaDetalles)
-                    .ThenInclude(gd => gd.UnidadMedida)
+                    .ThenInclude(gd => gd.CodigoUmNavigation)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
                 //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
-        public async Task<int> CreateGuiaTransportistaTransactionalAsync(Remitente remitente,RemiteTransportista remiteTransportista, Destinatario destinatario, Conductor conductor, Transporte transporte, DOMAIN.Entities.GuiaRemision guiaRemision, DatosEnvio datosEnvio, Origen origen, List<Destino> destino, List<GuiaDetalle> detalles)
+        public async Task<int> CreateGuiaTransportistaTransactionalAsync(Remitente remitente,RemiteTransportistum remiteTransportista, Destinatario destinatario, Conductor conductor, Transporte transporte, DOMAIN.Entities.GuiaRemision guiaRemision, DatosEnvio datosEnvio, Origen origen, List<Destino> destino, List<GuiaDetalle> detalles)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -185,7 +185,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 throw;
             }
         }
-        public async Task<RemiteTransportista> GetRemiteTransportistaByRucAsync(string ruc)
+        public async Task<RemiteTransportistum> GetRemiteTransportistaByRucAsync(string ruc)
         {
             return await _context.RemiteTransportista.FirstOrDefaultAsync(r => r.Ruc == ruc);
         }
