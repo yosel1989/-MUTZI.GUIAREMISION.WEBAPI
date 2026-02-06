@@ -52,8 +52,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
             {
                 _ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento);
                 _ = guia.DocumentoAdicinalTipo();
-                if (string.IsNullOrWhiteSpace(guia.Observacion))
-                    return (false, "La observación no puede estar vacía.");
+                //if (string.IsNullOrWhiteSpace(guia.Observacion))
+                //    return (false, "La observación no puede estar vacía.");
                 return (true, null);
             }
             catch (Exception ex)

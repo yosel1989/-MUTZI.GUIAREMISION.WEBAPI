@@ -201,8 +201,73 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
 
-                EscribirLog("GUIAREMITENTE", ruc, "NumeroDocRef:" + doc.NumeroDocRef, estado, ticket, errorMsg);
+                EscribirLog("GUIAREMITENTE", ruc, "Remitente Ruc:" + doc.Remitente.Ruc, estado, ticket, errorMsg);
 
+                return new InternalErrorResponseDTO
+                {
+                    Error = "Error inesperado",
+                    Detalle = errorMsg
+                };
+            }
+        }
+        public async Task<object> ReenviarGuiaRemisionAsync(string ruc, int guiaId)
+        {
+            try
+            {
+                var guiaExistente = await _guiaRemitenteBDService.GetByIdAsync(guiaId);
+                if (guiaExistente == null)
+                {
+                    return new BadRequestResponseDTO
+                    {
+                        Error = "Guía no encontrada",
+                        Detalle = $"No se encontró una guía de remisión con ID {guiaId}."
+                    };
+                }
+                var nombreArchivo = await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaExistente);
+                string efactRawResponse;
+                try
+                {
+                    efactRawResponse = await EnviarGuiaElectronicaAsync(ruc, nombreArchivo);
+                }
+                catch (Exception ex)
+                {
+                    string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                    if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
+                    return new InternalErrorResponseDTO
+                    {
+                        Error = "Error al enviar a EFACT",
+                        Detalle = errorMsg
+                    };
+                }
+                EfactResponseDTO efactParsed;
+                try
+                {
+                    var json = JsonDocument.Parse(efactRawResponse).RootElement;
+                    efactParsed = new EfactResponseDTO
+                    {
+                        Code = json.GetProperty("code").GetString() ?? "",
+                        Description = json.GetProperty("description").GetString() ?? ""
+                    };
+                }
+                catch
+                {
+                    string ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
+                    efactParsed = new EfactResponseDTO
+                    {
+                        Code = "-1",
+                        Description = ticket
+                    };
+                }
+                return new SendGuiaResponseDTO
+                {
+                    Success = true,
+                    EfactResponse = efactParsed
+                };
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
                 return new InternalErrorResponseDTO
                 {
                     Error = "Error inesperado",
@@ -318,6 +383,73 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                     Detalle = errorMsg
                 };
             }
+        }
+
+        public async Task<object> ReenviarGuiaTransportistaAsync(string ruc, int guiaId)
+        {
+            try
+            {
+                var guiaExistente = await _guiaTransportistaBDService.GetByIdAsync(guiaId);
+                if (guiaExistente == null)
+                {
+                    return new BadRequestResponseDTO
+                    {
+                        Error = "Guía no encontrada",
+                        Detalle = $"No se encontró una guía de transportista con ID {guiaId}."
+                    };
+                }
+                var nombreArchivo = await _guiaTransportistaUBLService.GenerarGuiaTransportistaJson(guiaExistente);
+                string efactRawResponse;
+                try
+                {
+                    efactRawResponse = await EnviarGuiaElectronicaAsync(ruc, nombreArchivo);
+                }
+                catch (Exception ex)
+                {
+                    string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                    if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
+                    return new InternalErrorResponseDTO
+                    {
+                        Error = "Error al enviar a EFACT",
+                        Detalle = errorMsg
+                    };
+                }
+                EfactResponseDTO efactParsed;
+                try
+                {
+                    var json = JsonDocument.Parse(efactRawResponse).RootElement;
+                    efactParsed = new EfactResponseDTO
+                    {
+                        Code = json.GetProperty("code").GetString() ?? "",
+                        Description = json.GetProperty("description").GetString() ?? ""
+                    };
+                }
+                catch
+                {
+                    string ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
+                    efactParsed = new EfactResponseDTO
+                    {
+                        Code = "-1",
+                        Description = ticket
+                    };
+                }
+                return new SendGuiaResponseDTO
+                {
+                    Success = true,
+                    EfactResponse = efactParsed
+                };
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
+                return new InternalErrorResponseDTO
+                {
+                    Error = "Error inesperado",
+                    Detalle = errorMsg
+                };
+            }
+
         }
     }
 }

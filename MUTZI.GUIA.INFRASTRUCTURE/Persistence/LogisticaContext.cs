@@ -26,6 +26,8 @@ public partial class LogisticaContext : DbContext
 
     public virtual DbSet<Destino> Destinos { get; set; }
 
+    public virtual DbSet<DocRelacionado> DocRelacionados { get; set; }
+
     public virtual DbSet<GuiaDetalle> GuiaDetalles { get; set; }
 
     public virtual DbSet<GuiaRemision> GuiaRemisions { get; set; }
@@ -48,7 +50,7 @@ public partial class LogisticaContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseMySql("server=35.171.241.179;port=3306;database=logistica;user=usrlogistica;password=teB029#6;allowpublickeyretrieval=True;sslmode=Preferred", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.44-mysql"));
+        => optionsBuilder.UseMySql("server=35.171.241.179;port=3306;database=logistica;user=usrlogistica;password=teB029#6;allowpublickeyretrieval=True;sslmode=Preferred", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.45-mysql"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -248,6 +250,36 @@ public partial class LogisticaContext : DbContext
                 .HasForeignKey(d => d.UbigeoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("destino_ibfk_2");
+        });
+
+        modelBuilder.Entity<DocRelacionado>(entity =>
+        {
+            entity.HasKey(e => e.DocRelacionadoId).HasName("PRIMARY");
+
+            entity.ToTable("docRelacionado");
+
+            entity.HasIndex(e => e.GuiaId, "guiaID");
+
+            entity.Property(e => e.DocRelacionadoId).HasColumnName("docRelacionadoID");
+            entity.Property(e => e.Estado)
+                .HasMaxLength(20)
+                .HasDefaultValueSql("'activo'")
+                .HasColumnName("estado");
+            entity.Property(e => e.GuiaId).HasColumnName("guiaID");
+            entity.Property(e => e.NumeroDocRef)
+                .HasMaxLength(30)
+                .HasColumnName("numeroDocRef");
+            entity.Property(e => e.RucDocRef)
+                .HasMaxLength(12)
+                .HasColumnName("rucDocRef");
+            entity.Property(e => e.TipoDocRef)
+                .HasMaxLength(50)
+                .HasColumnName("tipoDocRef");
+
+            entity.HasOne(d => d.Guia).WithMany(p => p.DocRelacionados)
+                .HasForeignKey(d => d.GuiaId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("docRelacionado_ibfk_1");
         });
 
         modelBuilder.Entity<GuiaDetalle>(entity =>

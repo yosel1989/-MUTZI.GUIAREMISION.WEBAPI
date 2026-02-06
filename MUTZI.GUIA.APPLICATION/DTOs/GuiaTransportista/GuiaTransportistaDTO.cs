@@ -16,7 +16,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         public string SerieCorrelativo { get; set; }
         public string Fecha { get; set; }
         public string Hora { get; set; } // HH:mm:ss
-        public string Observacion { get; set; }
+        public string? Observacion { get; set; }
 
         // Documento de referencia (factura/boleta vinculada)
         public string TipoDocRef { get; set; }

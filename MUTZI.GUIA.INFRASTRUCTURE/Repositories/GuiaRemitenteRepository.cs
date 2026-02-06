@@ -31,6 +31,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .ThenInclude(de => de.Transporte)
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
+                .Include(doc => doc.DocRelacionados)
                 .ToListAsync();
         }
         public async Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket)
@@ -57,6 +58,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .ThenInclude(de => de.Transporte)
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
+                .Include(doc => doc.DocRelacionados)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
                 //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
@@ -71,7 +73,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             DOMAIN.Entities.Origen origen,
             //DOMAIN.Entities.Destino destino,
             List<DOMAIN.Entities.Destino> destino,
-            List<DOMAIN.Entities.GuiaDetalle> detalles)
+            List<DOMAIN.Entities.GuiaDetalle> detalles,
+            List<DOMAIN.Entities.DocRelacionado> docRelacionados
+            )
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -198,13 +202,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 await _context.DatosEnvios.AddAsync(datosEnvio);
                 await _context.SaveChangesAsync();
 
-                //// Origen/Destino
-                //origen.GuiaId = guiaRemision.GuiaId;
-                //destino.GuiaId = guiaRemision.GuiaId;
-                //await _context.Origens.AddAsync(origen);
-                //await _context.Destinos.AddAsync(destino);
-                //await _context.SaveChangesAsync();
-                
+                // DocRelacionados
+                foreach (var doc in docRelacionados)
+                {
+                    doc.GuiaId = guiaRemision.GuiaId;
+                    await _context.DocRelacionados.AddAsync(doc);
+                }
+                await _context.SaveChangesAsync();
+
                 //Origen
                 origen.GuiaId = guiaRemision.GuiaId;
                 await _context.Origens.AddAsync(origen);

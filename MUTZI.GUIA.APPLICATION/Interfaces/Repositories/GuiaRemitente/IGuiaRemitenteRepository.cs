@@ -16,7 +16,8 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
             DOMAIN.Entities.DatosEnvio datosEnvio,
             DOMAIN.Entities.Origen origen,
             List<DOMAIN.Entities.Destino> destino,
-            List<DOMAIN.Entities.GuiaDetalle> detalles
+            List<DOMAIN.Entities.GuiaDetalle> detalles,
+            List<DOMAIN.Entities.DocRelacionado> docRelacionados
             );
         //Remitente
         Task<DOMAIN.Entities.Remitente> GetRemitenteByRucAsync(string ruc);
