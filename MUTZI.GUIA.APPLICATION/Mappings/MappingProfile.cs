@@ -15,6 +15,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.VentaConfig;
 using MUTZI.GUIA.DOMAIN.Entities;
 using System.Globalization;
 using MUTZI.GUIA.APPLICATION.DTOs.Ubigeo;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 
 namespace MUTZI.GUIA.APPLICATION.Mappings
 {
@@ -30,7 +31,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             //Guias de remisión
             CreateMap<DOMAIN.Entities.GuiaRemision, GuiaRemitenteDTO>()
                 .ForMember(dest => dest.SerieCorrelativo, opt => opt.MapFrom(src => src.NumeroGuia))
-                .ForMember(dest=>dest.Fecha, opt=>opt.MapFrom(src=>src.Fecha.ToString("yyyy-MM-dd")))
+                .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src => src.Fecha.ToString("yyyy-MM-dd")))
                 .ForMember(dest => dest.Remitente, opt => opt.MapFrom(src => src.Remitente))
                 .ForMember(dest => dest.Destinatario, opt => opt.MapFrom(src => src.Destinatario))
                 .ForMember(dest => dest.DatosEnvio, opt => opt.MapFrom(src => src.DatosEnvios.FirstOrDefault()))
@@ -49,6 +50,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                     .ForMember(dest => dest.Destinatario, opt => opt.Ignore())
                     .ForMember(dest => dest.Proveedor, opt => opt.Ignore())
                     ;
+            CreateMap<GuiaRemitenteUpdateDTO, DOMAIN.Entities.GuiaRemision>();
             //Guia de remisión por ticket
             CreateMap<DOMAIN.Entities.GuiaRemision, GuiaPorTicketDTO>()
                 .ForMember(dest => dest.Ruc, opt => opt.MapFrom(src => src.Remitente.Ruc))
@@ -74,12 +76,14 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.RemiteTransportista, opt => opt.Ignore())
                 .ForMember(dest => dest.Destinatario, opt => opt.Ignore());
 
-            CreateMap<GuiaRemitenteUpdateDTO, DOMAIN.Entities.GuiaRemision>();
+            //Documentos de referencia relacionados a la guía de remisión
+            CreateMap<DOMAIN.Entities.DocRelacionado, DocRelacionadoDTO>();
+            CreateMap<DocRelacionadoCreateDTO, DOMAIN.Entities.DocRelacionado>();
             //Datos de envío
             CreateMap<DOMAIN.Entities.DatosEnvio, DatosEnvioDTO>()
-                .ForMember(dest=>dest.Conductor, opt=>opt.MapFrom(src=>src.Conductor))
-                .ForMember(dest=>dest.UnidadTransporte, opt=>opt.MapFrom(src=>src.Transporte))
-                .ForMember(dest=>dest.FechaEnvio,opt=>opt.MapFrom(src=>src.FechaEnvio.ToString("yyyy-MM-dd")))
+                .ForMember(dest => dest.Conductor, opt => opt.MapFrom(src => src.Conductor))
+                .ForMember(dest => dest.UnidadTransporte, opt => opt.MapFrom(src => src.Transporte))
+                .ForMember(dest => dest.FechaEnvio, opt => opt.MapFrom(src => src.FechaEnvio.ToString("yyyy-MM-dd")))
                 ;
 
             CreateMap<DatosEnvioCreateDTO, DOMAIN.Entities.DatosEnvio>()
@@ -107,9 +111,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
 
             //Remite transportista
             CreateMap<DOMAIN.Entities.RemiteTransportistum, RemiteTransportistaDTO>()
-                .ForMember(dest=>dest.Distrito, opt=>opt.MapFrom(src=>src.Ubigeo.Distrito))
-                .ForMember(dest=>dest.Provincia, opt=>opt.MapFrom(src=>src.Ubigeo.Provincia))
-                .ForMember(dest=>dest.Departamento, opt=>opt.MapFrom(src=>src.Ubigeo.Departamento))
+                .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))
+                .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
+                .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 ;
             CreateMap<RemiteTransportistaCreateDTO, DOMAIN.Entities.RemiteTransportistum>();
 

@@ -31,10 +31,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         public string Hora { get; set; } // HH:mm:ss
 
         [JsonPropertyName("observacion")]
-        [SwaggerSchema("Recibe un texto, donde se detalla una observación o comentario sobre la guía de remisión transportista", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, donde se detalla una observación o comentario sobre la guía de remisión transportista", Nullable = true)]
         [MaxLength(100)]
-        [Required]
-        public string Observacion { get; set; }
+        public string? Observacion { get; set; }
 
         // Documento de referencia (factura/boleta vinculada)
         [JsonPropertyName("tipo_doc_ref")]

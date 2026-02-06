@@ -45,11 +45,12 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             //var destino = _mapper.Map<DOMAIN.Entities.Destino>(dto.Destino);
             var destino = dto.Destino.Select(p => _mapper.Map<DOMAIN.Entities.Destino>(p)).ToList();
             var detalles = dto.Productos.Select(p => _mapper.Map<DOMAIN.Entities.GuiaDetalle>(p)).ToList();
+            var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.DocRelacionado>(p)).ToList();
 
             // Llamar al repositorio
             var id = await _repository.CreateGuiaRemisionTransactionalAsync(
                 remitente, destinatario, proveedor, conductor, transporte,
-                guiaRemision, datosEnvio, origen, destino, detalles
+                guiaRemision, datosEnvio, origen, destino, detalles, docRelacionados
             );
             //SE obtiene la guia de remision creada
             var guiaCreada = await _repository.GetByIdAsync(id);
@@ -77,10 +78,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             {
                 _ = guia.TipoTRansporteCode18();
                 _ = guia.TipoTrasladoCode20();
-                _ = guia.DocumentoAdicinalTipo();
                 _ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento);
-                if (string.IsNullOrWhiteSpace(guia.Observacion))
-                    return (false, "La observación no puede estar vacía.");
+                //if (string.IsNullOrWhiteSpace(guia.Observacion))
+                //    return (false, "La observación no puede estar vacía.");
                 //Si tipo de transporte es PUBLICO, entonces DatosEnvio.rucEmpresaCurrier debe ser obligatorio
                 if (guia.TipoTransporte=="PUBLICO")
                 {

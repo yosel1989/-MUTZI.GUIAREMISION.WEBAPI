@@ -34,19 +34,20 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     //catálogo N°01 del anexo 8 de la SUNAT, 09 Guía de remisión remitente
                     DespatchAdviceTypeCode = new List<DespatchAdviceTypeCode>{ new DespatchAdviceTypeCode { _ = EspacioNombreGuiaRemision._DespatchAdviceTypeCode }},
                     LineCountNumeric = new List<LineCountNumeric> { new LineCountNumeric { _ = guia.Productos.Count.ToString() }},
-                    AdditionalDocumentReference = new List<AdditionalDocumentReference>{ new AdditionalDocumentReference {
-                        ID = new List<ID>{ new ID { _  = guia.NumeroDocRef }}, //DNI de quien?
-                        DocumentType = new List<DocumentType>{ new DocumentType { _ = guia.TipoDocRef}},//{ _ = EspacioNombreGuiaRemision._DocumentType01 }},
-                        DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode { _  = guia.DocumentoAdicinalTipo() } },
+                    //Agregar en lista los documentos relacionados
+                    AdditionalDocumentReference = guia.DocRelacionados.Select(docRelacionado => new AdditionalDocumentReference {
+                        ID = new List<ID>{ new ID { _ = docRelacionado.NumeroDocRef }},
+                        DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode { _ = docRelacionado.DocumentoAdicinalTipo() }},
+                        DocumentType=new List<DocumentType>{new DocumentType { _=docRelacionado.TipoDocRef} },
                         IssuerParty = new List<IssuerParty>{ new IssuerParty {
-                            PartyIdentification = new List<PartyIdentification> { new PartyIdentification {
-                                    ID = new List<ID> { new ID {
-                                            _ = guia.RucDocRef
-                                        ,   schemeID = EspacioNombreGuiaRemision._DocumentType06 }
-                                    }},
-                            },
-                        }},
-                    }},
+                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
+                                ID = new List<ID>{ new ID { _ = docRelacionado.RucDocRef , schemeID = EspacioNombreGuiaRemision._DocumentType06 }}
+                            }}
+                        }}
+                    }).ToList()
+
+
+                    ,
 
                     Signature = new List<Signature>{ new Signature{
                         ID = new List<ID>{ new ID { _ = "IDSignature" } },

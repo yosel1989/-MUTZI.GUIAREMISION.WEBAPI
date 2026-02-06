@@ -61,6 +61,8 @@ public partial class GuiaRemision
 
     public virtual ICollection<Destino> Destinos { get; set; } = new List<Destino>();
 
+    public virtual ICollection<DocRelacionado> DocRelacionados { get; set; } = new List<DocRelacionado>();
+
     public virtual ICollection<GuiaDetalle> GuiaDetalles { get; set; } = new List<GuiaDetalle>();
 
     public virtual ICollection<Origen> Origens { get; set; } = new List<Origen>();
