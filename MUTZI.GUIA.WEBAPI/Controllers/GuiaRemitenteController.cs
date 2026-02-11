@@ -135,6 +135,31 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+        [HttpPut]
+        [Route("{ruc}/{guiaId}")]
+        [SwaggerOperation(
+        Summary = "Reenviar una guía de remisión remitente",
+        Description = "Reenviar una guía existente al facturador electrónico.",
+        OperationId = "reenviar_guia_remitente")]
+        [ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ReenviarGuiaRemision(string ruc, int guiaId)
+        {
+            var resultado = await _envioService.ReenviarGuiaRemisionAsync(ruc, guiaId);
+
+            return resultado switch
+            {
+                SendGuiaResponseDTO ok => Created(string.Empty, ok),
+                BadRequestResponseDTO bad => BadRequest(bad),
+                InternalErrorResponseDTO error => StatusCode(500, error),
+                _ => StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error desconocido",
+                    Detalle = "Ocurrió un error desconocido al procesar la solicitud."
+                })
+            };
+        }
     }
 
 }

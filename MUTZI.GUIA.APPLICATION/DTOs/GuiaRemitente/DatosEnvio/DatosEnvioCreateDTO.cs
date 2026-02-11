@@ -25,9 +25,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
         public string FechaEnvio { get; set; }
 
         [JsonPropertyName("peso_bruto")]
-        [SwaggerSchema("Recibe un texto, aquí debe colocarse el peso bruto de todo el envío, Ejm: 20, 50, etc.", Nullable = false)]
+        [SwaggerSchema("Recibe un decimal, aquí debe colocarse el peso bruto de todo el envío, Ejm: 20, 50, etc.", Nullable = false)]
         [Required]
-        public string PesoBruto { get; set; }
+        public decimal PesoBruto { get; set; }
 
         [JsonPropertyName("codigo_um")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la unidad de medida del peso bruto. Ejm: KGM ó TNE", Nullable = false)]
@@ -50,9 +50,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
         public string? RegistroMtcCurrier { get; set; }
 
         [JsonPropertyName("conductor")]
-        public ConductorCreateDTO? Conductor { get; set; }
+        public List<ConductorCreateDTO?> Conductor { get; set; }
 
         [JsonPropertyName("unidad_transporte")]
-        public UnidadTransporteCreateDTO? UnidadTransporte { get; set; }
+        public List<UnidadTransporteCreateDTO?> UnidadTransporte { get; set; }
     }
 }

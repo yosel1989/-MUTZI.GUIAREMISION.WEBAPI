@@ -9,11 +9,7 @@ public partial class DatosEnvio
 
     public int GuiaId { get; set; }
 
-    public int? ConductorId { get; set; }
-
-    public int? TransporteId { get; set; }
-
-    public string MotivoEnvio { get; set; } = null!;
+    public string? MotivoEnvio { get; set; }
 
     public DateOnly FechaEnvio { get; set; }
 
@@ -29,9 +25,9 @@ public partial class DatosEnvio
 
     public virtual UnidadMedidum CodigoUmNavigation { get; set; } = null!;
 
-    public virtual Conductor? Conductor { get; set; }
+    public virtual ICollection<ConductorGuid> ConductorGuids { get; set; } = new List<ConductorGuid>();
 
     public virtual GuiaRemision Guia { get; set; } = null!;
 
-    public virtual Transporte? Transporte { get; set; }
+    public virtual ICollection<TransporteGuid> TransporteGuids { get; set; } = new List<TransporteGuid>();
 }

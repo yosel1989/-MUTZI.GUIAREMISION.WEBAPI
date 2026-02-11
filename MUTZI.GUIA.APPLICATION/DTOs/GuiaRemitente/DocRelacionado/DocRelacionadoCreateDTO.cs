@@ -13,7 +13,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado
     public class DocRelacionadoCreateDTO
     {
         [JsonPropertyName("tipo_doc_ref")]
-        [SwaggerSchema("Recibe un texto, es el tipo de documento vinculado como referencia en la guía de remisión, los tipos definidos son: FACTURA, BOLETA, NOTA DE CREDITO Y NOTA DE DEBITO", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, es el tipo de documento vinculado como referencia en la guía de remisión, los tipos definidos son: FACTURA y BOLETA", Nullable = false)]
         [MaxLength(20)]
         [Required]
         public string TipoDocRef { get; set; }

@@ -29,15 +29,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(o => o.Origens)
                     .ThenInclude(or => or.Ubigeo)
                 .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.Conductor)
+                    .ThenInclude(de => de.ConductorGuids)
+                        .ThenInclude(con=>con.Conductor)
                 .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.Transporte)
+                    .ThenInclude(de => de.TransporteGuids)
+                        .ThenInclude(tr => tr.Transporte)
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
-                //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
+            //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
-        public async Task<int> CreateGuiaTransportistaTransactionalAsync(Remitente remitente,RemiteTransportistum remiteTransportista, Destinatario destinatario, Conductor conductor, Transporte transporte, DOMAIN.Entities.GuiaRemision guiaRemision, DatosEnvio datosEnvio, Origen origen, List<Destino> destino, List<GuiaDetalle> detalles)
+        public async Task<int> CreateGuiaTransportistaTransactionalAsync(Remitente remitente, RemiteTransportistum remiteTransportista, Destinatario destinatario, List<Conductor> conductor, List<Transporte> transporte, DOMAIN.Entities.GuiaRemision guiaRemision, DatosEnvio datosEnvio, Origen origen, List<Destino> destino, List<GuiaDetalle> detalles)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -77,35 +79,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     destinatario = existingDestinatario;
                 }
 
-                // Conductor
-                var existingConductor = await _repository.GetConductorByLicenciaAsync(conductor.Licencia);
-                if (existingConductor == null)
-                {
-                    await _context.Conductors.AddAsync(conductor);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    conductor = existingConductor;
-                }
-
-                // Transporte
-                var existingTransporte = await _repository.GetTransporteByPlacaAsync(transporte.Placa);
-                if (existingTransporte == null)
-                {
-                    await _context.Transportes.AddAsync(transporte);
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    transporte = existingTransporte;
-                }
-
                 // Guía
                 guiaRemision.RemitenteId = remitente.RemitenteId;
                 guiaRemision.DestinatarioId = destinatario.DestinatarioId;
                 guiaRemision.RemiteTransportistaId = remiteTransportista.RemiteTransportistaId;
-                guiaRemision.Estado = "SEND";
+                guiaRemision.Estado = "CREADO";
 
                 string serie = guiaRemision.Serie ?? "V001";
 
@@ -128,31 +106,74 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.Correlativo = correlativoStr;
                 guiaRemision.Serie = serie;
                 guiaRemision.NumeroGuia = $"{serie}-{correlativoStr}";
-                guiaRemision.TipoTransporte= "PRIVADO"; //01 por defecto
-                guiaRemision.TipoTraslado= "VENTA"; //01 por defecto
+                guiaRemision.TipoTransporte = "PRIVADO"; //01 por defecto
+                guiaRemision.TipoTraslado = "VENTA"; //01 por defecto
 
 
                 guiaRemision.TipoGuia = "TRANSPORTISTA";
-                guiaRemision.RespuestaTicket = "tc0211446_prueba_TRANSPORTISTA";
+                guiaRemision.RespuestaTicket = "tc11446_no_enviado_TRANSPORTISTA";
                 await _context.GuiaRemisions.AddAsync(guiaRemision);
                 await _context.SaveChangesAsync();
 
                 // Datos Envío
                 datosEnvio.GuiaId = guiaRemision.GuiaId;
-                datosEnvio.ConductorId = conductor.ConductorId;
-                datosEnvio.TransporteId = transporte.TransporteId;
-                datosEnvio.MotivoEnvio = "01"; //01 por defecto
-                
-                
+                //datosEnvio.ConductorId = conductor.ConductorId;
+                //datosEnvio.TransporteId = transporte.TransporteId;
+
+
                 await _context.DatosEnvios.AddAsync(datosEnvio);
                 await _context.SaveChangesAsync();
 
-                //// Origen/Destino
-                //origen.GuiaId = guiaRemision.GuiaId;
-                //destino.GuiaId = guiaRemision.GuiaId;
-                //await _context.Origens.AddAsync(origen);
-                //await _context.Destinos.AddAsync(destino);
-                //await _context.SaveChangesAsync();
+                // Conductor
+                //Registrar en lista
+                foreach (var condu in conductor)
+                {
+                    var existingConductor = await _repository.GetConductorByLicenciaAsync(condu.Licencia);
+                    if (existingConductor == null)
+                    {
+                        condu.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
+                        condu.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
+                        await _context.Conductors.AddAsync(condu);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        condu.ConductorId = existingConductor.ConductorId;
+                    }
+                    var conductorGuia = new DOMAIN.Entities.ConductorGuid
+                    {
+                        ConductorId = condu.ConductorId,
+                        DatosEnvioId = datosEnvio.DatosEnvioId
+                    };
+                    await _context.ConductorGuids.AddAsync(conductorGuia);
+                    await _context.SaveChangesAsync();
+
+                }
+
+                // Transporte
+                //Registrar en lista
+                foreach (var tr in transporte)
+                {
+                    var existingTransporte = await _repository.GetTransporteByPlacaAsync(tr.Placa);
+                    if (existingTransporte == null)
+                    {
+                        tr.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
+                        tr.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
+                        await _context.Transportes.AddAsync(tr);
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        tr.TransporteId = existingTransporte.TransporteId;
+                    }
+                    var transporteGuia = new DOMAIN.Entities.TransporteGuid
+                    {
+                        TransporteId = tr.TransporteId,
+                        DatosEnvioId = datosEnvio.DatosEnvioId
+                    };
+                    await _context.TransporteGuids.AddAsync(transporteGuia);
+                    await _context.SaveChangesAsync();
+                }
 
                 //Origen
                 origen.GuiaId = guiaRemision.GuiaId;

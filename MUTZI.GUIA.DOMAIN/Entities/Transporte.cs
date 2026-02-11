@@ -15,7 +15,9 @@ public partial class Transporte
 
     public string Placa { get; set; } = null!;
 
-    public string Tarjeta { get; set; } = null!;
+    public string? Tarjeta { get; set; }
+
+    public string? NumeroRegistroMtc { get; set; }
 
     public DateTime? FechaCreacion { get; set; }
 
@@ -31,5 +33,5 @@ public partial class Transporte
 
     public string? Activo { get; set; }
 
-    public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
+    public virtual ICollection<TransporteGuid> TransporteGuids { get; set; } = new List<TransporteGuid>();
 }

@@ -33,5 +33,5 @@ public partial class Conductor
 
     public string? Activo { get; set; }
 
-    public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
+    public virtual ICollection<ConductorGuid> ConductorGuids { get; set; } = new List<ConductorGuid>();
 }

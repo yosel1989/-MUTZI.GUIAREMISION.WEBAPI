@@ -26,9 +26,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(o => o.Origens)
                     .ThenInclude(or => or.Ubigeo)
                 .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.Conductor)
+                    .ThenInclude(de => de.ConductorGuids)
+                        .ThenInclude(con=>con.Conductor)
                 .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.Transporte)
+                    .ThenInclude(de => de.TransporteGuids)
+                        .ThenInclude(tr=>tr.Transporte)
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .Include(doc => doc.DocRelacionados)
@@ -53,9 +55,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(o => o.Origens)
                     .ThenInclude(or => or.Ubigeo)
                 .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.Conductor)
+                    .ThenInclude(de => de.ConductorGuids)
+                        .ThenInclude(con => con.Conductor)
                 .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.Transporte)
+                    .ThenInclude(de => de.TransporteGuids)
+                        .ThenInclude(tr => tr.Transporte)
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .Include(doc => doc.DocRelacionados)
@@ -66,8 +70,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             DOMAIN.Entities.Remitente remitente,
             DOMAIN.Entities.Destinatario destinatario,
             DOMAIN.Entities.Proveedor proveedor,
-            DOMAIN.Entities.Conductor conductor,
-            DOMAIN.Entities.Transporte transporte,
+            List<DOMAIN.Entities.Conductor> conductor,
+            List<DOMAIN.Entities.Transporte> transporte,
             DOMAIN.Entities.GuiaRemision guiaRemision,
             DOMAIN.Entities.DatosEnvio datosEnvio,
             DOMAIN.Entities.Origen origen,
@@ -124,44 +128,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         proveedor = existingProveedor;
                     }
                 }
-                // Conductor
-                if (guiaRemision.TipoTransporte == "PRIVADO")
-                {
-                    var existingConductor = await GetConductorByLicenciaAsync(conductor.Licencia);
-                    if (existingConductor == null)
-                    {
-                        conductor.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
-                        conductor.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                        await _context.Conductors.AddAsync(conductor);
-                        await _context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        conductor = existingConductor;
-                    }
-                }
-
-                // Transporte
-                if (guiaRemision.TipoTransporte == "PRIVADO")
-                {
-                    var existingTransporte = await GetTransporteByPlacaAsync(transporte.Placa);
-                    if (existingTransporte == null)
-                    {
-                        transporte.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
-                        transporte.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                        await _context.Transportes.AddAsync(transporte);
-                        await _context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        transporte = existingTransporte;
-                    }
-                }
+                
 
                 // Guía
                 guiaRemision.RemitenteId = remitente.RemitenteId;
                 guiaRemision.DestinatarioId = destinatario.DestinatarioId;
-                guiaRemision.Estado = "SEND";
+                guiaRemision.Estado = "CREADO";
                 if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
 
                 string serie = guiaRemision.Serie ?? "T001";
@@ -188,19 +160,75 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
 
                 guiaRemision.TipoGuia = "REMITENTE";
-                guiaRemision.RespuestaTicket = "tc0211446_prueba";
+                guiaRemision.RespuestaTicket = "tc11446_no_enviado_REMITENTE";
                 await _context.GuiaRemisions.AddAsync(guiaRemision);
                 await _context.SaveChangesAsync();
 
                 // Datos Envío
                 datosEnvio.GuiaId = guiaRemision.GuiaId;
-                if (guiaRemision.TipoTransporte == "PRIVADO")
-                {
-                    datosEnvio.ConductorId = conductor.ConductorId;
-                    datosEnvio.TransporteId = transporte.TransporteId;
-                }
+                //if (guiaRemision.TipoTransporte == "PRIVADO")
+                //{
+                //    datosEnvio.ConductorId = conductor.ConductorId;
+                //    datosEnvio.TransporteId = transporte.TransporteId;
+                //}
                 await _context.DatosEnvios.AddAsync(datosEnvio);
                 await _context.SaveChangesAsync();
+
+                // Conductor
+                //Registrar en lista
+                foreach (var condu in conductor)
+                {
+                    if (guiaRemision.TipoTransporte == "PRIVADO")
+                    {
+                        var existingConductor = await GetConductorByLicenciaAsync(condu.Licencia);
+                        if (existingConductor == null)
+                        {
+                            condu.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
+                            condu.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
+                            await _context.Conductors.AddAsync(condu);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            condu.ConductorId = existingConductor.ConductorId;
+                        }
+                        var conductorGuia = new DOMAIN.Entities.ConductorGuid
+                        {
+                            ConductorId = condu.ConductorId,
+                            DatosEnvioId = datosEnvio.DatosEnvioId
+                        };
+                        await _context.ConductorGuids.AddAsync(conductorGuia);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                // Transporte
+                //Registrar en lista
+                foreach (var tr in transporte)
+                {
+                    if (guiaRemision.TipoTransporte == "PRIVADO")
+                    {
+                        var existingTransporte = await GetTransporteByPlacaAsync(tr.Placa);
+                        if (existingTransporte == null)
+                        {
+                            tr.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
+                            tr.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
+                            await _context.Transportes.AddAsync(tr);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            tr.TransporteId = existingTransporte.TransporteId;
+                        }
+                        var transporteGuia = new DOMAIN.Entities.TransporteGuid
+                        {
+                            TransporteId = tr.TransporteId,
+                            DatosEnvioId = datosEnvio.DatosEnvioId
+                        };
+                        await _context.TransporteGuids.AddAsync(transporteGuia);
+                        await _context.SaveChangesAsync();
+                    }
+                }
 
                 // DocRelacionados
                 foreach (var doc in docRelacionados)

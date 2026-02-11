@@ -192,18 +192,16 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                             //    }
                             //    : null,
                             // Conductor (opcional)
-                            DriverPerson = guia.DatosEnvio?.Conductor == null ? null : new List<DriverPerson> {
-                                new DriverPerson {
-                                    //ID = new List<ID> { new ID { _ = guia.DatosEnvio.Conductor.DNI, schemeID = EspacioNombreGuiaRemision._DocumentType01 } },
-                                    ID = new List<ID> { new ID { _ = guia.DatosEnvio.Conductor.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(guia.DatosEnvio.Conductor.TipoDocumento) } },
-                                    FirstName  = new List<FirstName>  { new FirstName  { _ = guia.DatosEnvio.Conductor.Nombres } },
-                                    FamilyName = new List<FamilyName> { new FamilyName { _ = guia.DatosEnvio.Conductor.Apellidos } },
-                                    JobTitle   = new List<JobTitle>   { new JobTitle   { _ = "Principal" } },
-                                    IdentityDocumentReference = new List<IdentityDocumentReference> {
-                                        new IdentityDocumentReference { ID = new List<ID> { new ID { _ = guia.DatosEnvio.Conductor.Licencia } } }
-                                    }
-                                }
-                            }
+                            DriverPerson = guia.DatosEnvio?.ConductorGuia == null ? null : guia.DatosEnvio.ConductorGuia.Select(conductor => new DriverPerson
+                                {
+                                    ID = new List<ID> { new ID { _ = conductor.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(conductor.TipoDocumento) } },
+                                    FirstName = new List<FirstName> { new FirstName { _ = conductor.Nombres } },
+                                    FamilyName = new List<FamilyName> { new FamilyName { _ = conductor.Apellidos } },
+                                    JobTitle = new List<JobTitle> { new JobTitle { _ = conductor.JobTitle } },
+                                    IdentityDocumentReference = new List<IdentityDocumentReference>{ new IdentityDocumentReference {
+                                        ID = new List<ID> { new ID { _ = conductor.Licencia  }}
+                                    }}
+                                }).ToList()
                         }
                     },
 
@@ -278,25 +276,74 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                 }
                             }
                         }
-                    },
+                    }
+                }
+            };
+            if (guia.DatosEnvio.TransporteGuia != null && guia.DatosEnvio.TransporteGuia.Any())
+            {
+                var transportes = guia.DatosEnvio.TransporteGuia.ToList();
+                var transportEquipments = new List<TransportEquipment>();
 
-                    TransportHandlingUnit =
-                        new List<TransportHandlingUnit> {
-                            new TransportHandlingUnit {
-                                TransportEquipment = new List<TransportEquipment> {
-                                    new TransportEquipment {
-                                        ID = new List<ID> { new ID { _ = "PLACA1" }}, // etiqueta (placeholder)
-                                        ShipmentDocumentReference = new List<ShipmentDocumentReference> {
-                                            new ShipmentDocumentReference {
-                                                ID = new List<ID> { new ID { _ = guia.DatosEnvio.UnidadTransporte.Placa, schemeID = "06" } }
-                                            }
-                                        }
+                // Primer transporte como TransportEquipment principal
+                transportEquipments.Add(new TransportEquipment
+                {
+                    ID = new List<ID> { new ID { _ = transportes[0].Placa } },
+                    ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0].NumeroRegistroMTC) ? null : new List<ShipmentDocumentReference>
+                        {
+                            new ShipmentDocumentReference
+                            {
+                                ID = new List<ID>
+                                {
+                                    new ID
+                                    {
+                                        _ = transportes[0].NumeroRegistroMTC,
+                                        schemeID = "06"
                                     }
                                 }
                             }
                         }
+                });
+
+                // Los siguientes como TransportEquipment con AttachedTransportEquipment
+                if (transportes.Count > 1)
+                {
+                    foreach (var t in transportes.Skip(1))
+                    {
+                        transportEquipments.Add(new TransportEquipment
+                        {
+                            AttachedTransportEquipment = new List<AttachedTransportEquipment>
+                                {
+                                    new AttachedTransportEquipment
+                                    {
+                                        ID = new List<ID> { new ID { _ = t.Placa } },
+                                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(t.NumeroRegistroMTC)?null: new List<ShipmentDocumentReference>
+                                        {
+                                            new ShipmentDocumentReference
+                                            {
+                                                ID = new List<ID>
+                                                {
+                                                    new ID
+                                                    {
+                                                        _ = t.Placa,
+                                                        schemeID = "06"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                        });
+                    }
                 }
-            };
+
+                root.DespatchAdvice[0].Shipment[0].TransportHandlingUnit = new List<TransportHandlingUnit>
+                    {
+                        new TransportHandlingUnit
+                        {
+                            TransportEquipment = transportEquipments
+                        }
+                    };
+            }
 
             // ------ Items ------
             if (guia.Productos != null)
