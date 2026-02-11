@@ -456,7 +456,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         public List<ID> ID { get; set; }
         public List<ShipmentDocumentReference> ShipmentDocumentReference { get; set; }
         public List<ApplicableTransportMean> ApplicableTransportMeans { get; set; }
-
+        public List<AttachedTransportEquipment> AttachedTransportEquipment { get; set; }
+    }
+    public class AttachedTransportEquipment
+    {
+        public List<ID> ID { get; set; }
+        public List<ShipmentDocumentReference> ShipmentDocumentReference { get; set; }
+        public List<ApplicableTransportMean> ApplicableTransportMeans { get; set; }
     }
 
     public class TransportHandlingUnit

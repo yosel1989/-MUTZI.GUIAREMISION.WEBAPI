@@ -18,7 +18,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
         public string FechaEnvio { get; set; }
         
         [JsonPropertyName("peso_bruto")]
-        [SwaggerSchema("Recibe un texto, aquí debe colocarse el peso bruto de todo el envío, Ejm: 20, 50, etc.", Nullable = false)]
+        [SwaggerSchema("Recibe un decimal, aquí debe colocarse el peso bruto de todo el envío, Ejm: 20, 50, etc.", Nullable = false)]
         [Required]
         public decimal PesoBruto { get; set; }
 
@@ -47,12 +47,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
         [JsonPropertyName("conductor")]
         [SwaggerSchema("Recibe un objeto conductor", Nullable = false)]
         [Required]
-        public ConductorCreateDTO Conductor { get; set; }
+        public List<ConductorCreateDTO> Conductor { get; set; }
 
         // Unidad de transporte
         [JsonPropertyName("unidad_transporte")]
         [SwaggerSchema("Recibe un objeto unidad_transporte", Nullable = false)]
         [Required]
-        public UnidadTransporteCreateDTO UnidadTransporte { get; set; }
+        public List<UnidadTransporteCreateDTO> UnidadTransporte { get; set; }
     }
 }

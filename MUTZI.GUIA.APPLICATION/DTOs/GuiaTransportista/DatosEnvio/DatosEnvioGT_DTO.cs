@@ -9,48 +9,38 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
     public class DatosEnvioGT_DTO
     {
         [JsonPropertyName("fecha_envio")]
-        [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
-        [StringLength(10)]
-        [MinLength(10)]
-        [Required]
+        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
         public string FechaEnvio { get; set; }
 
         [JsonPropertyName("peso_bruto")]
-        [SwaggerSchema("Recibe un texto, aquí debe colocarse el peso bruto de todo el envío, Ejm: 20, 50, etc.", Nullable = false)]
-        [Required]
+        [SwaggerSchema("Devuelve un decimal, el peso bruto de todo el envío, Ejm: 20, 50, etc.", Nullable = false)]
         public decimal PesoBruto { get; set; }
 
         [JsonPropertyName("codigo_um")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la unidad de medida del peso bruto. Ejm: KGM ó TNE", Nullable = false)]
-        [Required]
+        [SwaggerSchema("Devuelve un texto, la unidad de medida del peso bruto. Ejm: KGM ó TNE", Nullable = false)]
         public string CodigoUM { get; set; } = "KGM";
         //EN caso de subcontratista
 
         [JsonPropertyName("ruc_empresa_currier")]
-        [SwaggerSchema("Recibe un texto y es el ruc de la empresa de Currier, este campo solo se llena si el pagador del flete es un subcontratador", Nullable = false)]
-        [MaxLength(11)]
+        [SwaggerSchema("Devuelve un texto y es el ruc de la empresa de Currier, este campo solo se muestra si el pagador del flete es un subcontratador", Nullable = false)]
         public string? RucEmpresaCurrier { get; set; }
 
         [JsonPropertyName("razon_social_currier")]
-        [SwaggerSchema("Recibe un texto y es la razón social de la empresa de Currier, este campo solo se llena si el pagador del flete es un subcontratador", Nullable = false)]
-        [MaxLength(200)]
+        [SwaggerSchema("Devuelve un texto y es la razón social de la empresa de Currier, este campo solo se llena si el pagador del flete es un subcontratador", Nullable = false)]
         public string? RazonSocialCurrier { get; set; }
 
         [JsonPropertyName("registro_mtc_currier")]
-        [SwaggerSchema("Recibe un texto y es el registro MTC de la empresa de Currier, este campo solo se llena si el pagador del flete es un subcontratador", Nullable = false)]
-        [MaxLength(30)]
+        [SwaggerSchema("Devuelve un texto y es el registro MTC de la empresa de Currier, este campo solo devuelve si el pagador del flete es un subcontratador", Nullable = false)]
         public string? RegistroMtcCurrier { get; set; }
 
         // Conductor
         [JsonPropertyName("conductor")]
-        [SwaggerSchema("Recibe un objeto conductor", Nullable = false)]
-        [Required]
-        public ConductorDTO Conductor { get; set; }
+        [SwaggerSchema("Devuelve el conductor asociado a los datos de envío.", Nullable = false)]
+        public List<ConductorGuiaDTO> ConductorGuia { get; set; }
 
         // Unidad de transporte
         [JsonPropertyName("unidad_transporte")]
-        [SwaggerSchema("Recibe un objeto unidad_transporte", Nullable = false)]
-        [Required]
-        public UnidadTransporteDTO UnidadTransporte { get; set; }
+        [SwaggerSchema("Devuelve el transporte asociado a los datos de envío.", Nullable = false)]
+        public List<TransporteGuiaDTO> TransporteGuia { get; set; }
     }
 }

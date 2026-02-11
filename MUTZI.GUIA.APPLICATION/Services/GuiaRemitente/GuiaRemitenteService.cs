@@ -37,8 +37,10 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             var remitente = _mapper.Map<DOMAIN.Entities.Remitente>(dto.Remitente);
             var destinatario = _mapper.Map<DOMAIN.Entities.Destinatario>(dto.Destinatario);
             var proveedor = _mapper.Map<DOMAIN.Entities.Proveedor>(dto.Proveedor);
-            var conductor = _mapper.Map<DOMAIN.Entities.Conductor>(dto.DatosEnvio.Conductor);
-            var transporte = _mapper.Map<DOMAIN.Entities.Transporte>(dto.DatosEnvio.UnidadTransporte);
+            //var conductor = _mapper.Map<DOMAIN.Entities.Conductor>(dto.DatosEnvio.Conductor);
+            var conductor=dto.DatosEnvio.Conductor.Select(p => _mapper.Map<DOMAIN.Entities.Conductor>(p)).ToList();
+            //var transporte = _mapper.Map<DOMAIN.Entities.Transporte>(dto.DatosEnvio.UnidadTransporte);
+            var transporte=dto.DatosEnvio.UnidadTransporte.Select(p => _mapper.Map<DOMAIN.Entities.Transporte>(p)).ToList();
             var guiaRemision = _mapper.Map<DOMAIN.Entities.GuiaRemision>(dto);
             var datosEnvio = _mapper.Map<DOMAIN.Entities.DatosEnvio>(dto.DatosEnvio);
             var origen = _mapper.Map<DOMAIN.Entities.Origen>(dto.Origen);
