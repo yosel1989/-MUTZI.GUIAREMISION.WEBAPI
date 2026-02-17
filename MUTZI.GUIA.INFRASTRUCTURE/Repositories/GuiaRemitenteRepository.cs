@@ -249,6 +249,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     email.DestinatarioId = destinatario.DestinatarioId;
                     await _context.EmailDestinatarioGuids.AddAsync(email);
                 }
+                await _context.SaveChangesAsync();
+
                 //Origen
                 origen.GuiaId = guiaRemision.GuiaId;
                 await _context.Origens.AddAsync(origen);

@@ -131,20 +131,36 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                     PartyLegalEntity = new List<PartyLegalEntity> {
                                         new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.Destinatario.RazonSocial } } }
                                     },
-                                    Contact=new List<Contact>
+                                    Contact=guia.Destinatario.EmailDestinatariosGuia==null?null:
+                                    new List<Contact>
                                     {
                                         new Contact
                                         {
-                                            ElectronicMail=new List<ElectronicMail>
-                                            {
-                                                new ElectronicMail
-                                                {
-                                                    _ = guia.Destinatario.Email
-                                                    //_ = "sistemas7@carolina-peru.com"
-                                                }
-                                            }
+                                            ElectronicMail=guia.Destinatario.EmailDestinatariosGuia.Select(email => new ElectronicMail { _ = email.Email }).ToList()
+                                            //new ElectronicMail
+                                            //{
+                                            //    _ = guia.Destinatario.Email
+                                            //    //_ = "
                                         }
                                     }
+
+
+
+
+                                    //Contact=new List<Contact>
+                                    //{
+                                    //    new Contact
+                                    //    {
+                                    //        ElectronicMail=new List<ElectronicMail>
+                                    //        {
+                                    //            new ElectronicMail
+                                    //            {
+                                    //                _ = guia.Destinatario.Email
+                                    //                //_ = "sistemas7@carolina-peru.com"
+                                    //            }
+                                    //        }
+                                    //    }
+                                    //}
                                 }
                             }
                         }
@@ -257,20 +273,32 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                             PartyLegalEntity = new List<PartyLegalEntity> {
                                                 new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.RemiteTransportista.RazonSocial } } }
                                             },
-                                            Contact=new List<Contact>
+                                            Contact=guia.RemiteTransportista.EmailRemiteTransportista==null?null:
+                                            new List<Contact>
                                             {
                                                 new Contact
                                                 {
-                                                    ElectronicMail=new List<ElectronicMail>
-                                                    {
-                                                        new ElectronicMail
-                                                        {
-                                                            _ = guia.RemiteTransportista.Email
-                                                            //_ = "sistemas7@carolina-peru.com"
-                                                        }
-                                                    }
+                                                    ElectronicMail=guia.RemiteTransportista.EmailRemiteTransportista.Select(email => new ElectronicMail { _ = email.Email }).ToList()
+                                                    //new ElectronicMail
+                                                    //{
+                                                    //    _ = guia.RemiteTransportista.Email
+                                                    //    //_ = "
                                                 }
                                             }
+                                            //Contact=new List<Contact>
+                                            //{
+                                            //    new Contact
+                                            //    {
+                                            //        ElectronicMail=new List<ElectronicMail>
+                                            //        {
+                                            //            new ElectronicMail
+                                            //            {
+                                            //                _ = guia.RemiteTransportista.Email
+                                            //                //_ = "sistemas7@carolina-peru.com"
+                                            //            }
+                                            //        }
+                                            //    }
+                                            //}
                                         }
                                     }
                                 }

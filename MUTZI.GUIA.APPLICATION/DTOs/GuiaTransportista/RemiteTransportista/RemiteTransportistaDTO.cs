@@ -14,10 +14,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         public string Provincia { get; set; }
         public string Distrito { get; set; }
         public string Direccion { get; set; }
-        public string Email { get; set; }
+        //public string Email { get; set; }
         public string Pais { get; set; }
 
         [JsonPropertyName("email_remite_transportista")]
-        public List<EmailRemiteTransportistaGuiaDTO> EmailRemiteTransportista { get; set; }
+        public List<EmailRemiteTransportistaGuiaDTO>? EmailRemiteTransportista { get; set; }
     }
 }

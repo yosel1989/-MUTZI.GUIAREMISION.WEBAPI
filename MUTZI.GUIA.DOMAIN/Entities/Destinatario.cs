@@ -19,8 +19,6 @@ public partial class Destinatario
 
     public string Pais { get; set; } = null!;
 
-    public string Email { get; set; } = null!;
-
     public DateTime? FechaCreacion { get; set; }
 
     public DateTime? FechaEdicion { get; set; }

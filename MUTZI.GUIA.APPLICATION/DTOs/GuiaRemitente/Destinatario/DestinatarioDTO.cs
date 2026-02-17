@@ -44,9 +44,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         [SwaggerSchema("Devuelve en texto la dirección fiscal del destinatario", Nullable = false)]
         public string Direccion { get; set; }
 
-        [JsonPropertyName("email")]
-        [SwaggerSchema("Devuelve en texto el correo electrónico del destinatario", Nullable = false)]
-        public string Email { get; set; }
+        //[JsonPropertyName("email")]
+        //[SwaggerSchema("Devuelve en texto el correo electrónico del destinatario", Nullable = false)]
+        //public string Email { get; set; }
 
         [JsonPropertyName("pais")]
         [SwaggerSchema("Devuelve en texto el codigo de PAIS referente, ejm: PE", Nullable = false)]
@@ -54,6 +54,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         public DateTime FechaCreacion { get; set; }
 
         [JsonPropertyName("email_destinatario")]
-        public List<EmailDestinatarioGuiaDTO> EmailDestinatariosGuia { get; set; }
+        public List<EmailDestinatarioGuiaDTO>? EmailDestinatariosGuia { get; set; }
     }
 }
