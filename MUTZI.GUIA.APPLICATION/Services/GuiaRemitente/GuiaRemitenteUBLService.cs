@@ -94,20 +94,27 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                             PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity {
                                 RegistrationName = new List<RegistrationName>{ new RegistrationName { _ = guia.Destinatario.RazonSocial } }
                             }},
-                            Contact=new List<Contact>
+                            Contact=guia.Destinatario.EmailDestinatariosGuia != null ? new List<Contact>
                             {
                                 new Contact
                                 {
-                                    ElectronicMail=new List<ElectronicMail>
-                                    {
-                                        new ElectronicMail
-                                        {
-                                            _ = guia.Destinatario.Email
-                                            //_ = "sistemas7@carolina-peru.com"
-                                        }
-                                    }
+                                    ElectronicMail=guia.Destinatario.EmailDestinatariosGuia.Select(email => new ElectronicMail { _ = email.Email }).ToList()
                                 }
-                            }
+                            } : null
+                            //Contact=new List<Contact>
+                            //{
+                            //    new Contact
+                            //    {
+                            //        ElectronicMail=new List<ElectronicMail>
+                            //        {
+                            //            new ElectronicMail
+                            //            {
+                            //                _ = guia.Destinatario.Email
+                            //                //_ = "sistemas7@carolina-peru.com"
+                            //            }
+                            //        }
+                            //    }
+                            //}
                         }}
                     }},
                     //El proveedor se crea solo si el tipo de traslado es compra

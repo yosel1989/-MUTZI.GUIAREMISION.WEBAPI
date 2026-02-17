@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
@@ -9,11 +9,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
     public class GuiaTransportistaService : IGuiaTransportistaService
     {
         private readonly IGuiaTransportistaRepository _repository;
+        private readonly IVentaConfigRepository _ventaConfigRepository;
         private readonly IMapper _mapper;
-        public GuiaTransportistaService(IGuiaTransportistaRepository repository, IMapper mapper)
+        public GuiaTransportistaService(IGuiaTransportistaRepository repository, IMapper mapper, IVentaConfigRepository ventaConfigRepository)
         {
             _repository = repository;
             _mapper = mapper;
+            _ventaConfigRepository = ventaConfigRepository;
         }
         public async Task<GuiaTransportistaDTO> CreateAsync(GuiaTransportistaCreateDTO dto)
         {
@@ -48,10 +50,15 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
             return _mapper.Map<GuiaTransportistaDTO>(guia);
         }
 
-        public (bool EsValido, string Error) ValidarDatosGuiaTransportista(GuiaTransportistaCreateDTO guia)
+        public (bool EsValido, string Error) ValidarDatosGuiaTransportista(GuiaTransportistaCreateDTO guia, string ruc)
         {
             try
             {
+                var ventaConfig = _ventaConfigRepository.GetByRucAsync(ruc).Result;
+                if (ventaConfig == null || string.IsNullOrEmpty(ventaConfig.Ruc))
+                {
+                    return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador.");
+                }
                 _ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento);
                 _ = guia.DocumentoAdicinalTipo();
                 //if (string.IsNullOrWhiteSpace(guia.Observacion))

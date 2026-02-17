@@ -17,8 +17,6 @@ public partial class RemiteTransportistum
 
     public string Pais { get; set; } = null!;
 
-    public string Email { get; set; } = null!;
-
     public DateTime? FechaCreacion { get; set; }
 
     public DateTime? FechaEdicion { get; set; }
@@ -32,6 +30,8 @@ public partial class RemiteTransportistum
     public string? EmpleadoNombreEdicion { get; set; }
 
     public string? Estado { get; set; }
+
+    public virtual ICollection<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; } = new List<EmailRemiteTransportistaGuid>();
 
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 

@@ -109,7 +109,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
 
             try
             {
-                var (esValido, error) = _guiaRemitenteBDService.ValidarDatosGuiaRemitente(doc);
+                var (esValido, error) = _guiaRemitenteBDService.ValidarDatosGuiaRemitente(doc, ruc);
                 if (!esValido)
                 {
                     return new BadRequestResponseDTO
@@ -282,7 +282,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             string estado = "";
             try
             {
-                var (esValido, error) = _guiaTransportistaBDService.ValidarDatosGuiaTransportista(doc);
+                var (esValido, error) = _guiaTransportistaBDService.ValidarDatosGuiaTransportista(doc, ruc);
                 if (!esValido)
                 {
                     return new BadRequestResponseDTO

@@ -7,6 +7,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista
     {
         Task<GuiaTransportistaDTO> CreateAsync(GuiaTransportistaCreateDTO guiaTransportistaDto);
         Task<GuiaTransportistaDTO> GetByIdAsync(int id);
-        public (bool EsValido, string Error) ValidarDatosGuiaTransportista(GuiaTransportistaCreateDTO doc);
+        public (bool EsValido, string Error) ValidarDatosGuiaTransportista(GuiaTransportistaCreateDTO doc, string ruc);
     }
 }

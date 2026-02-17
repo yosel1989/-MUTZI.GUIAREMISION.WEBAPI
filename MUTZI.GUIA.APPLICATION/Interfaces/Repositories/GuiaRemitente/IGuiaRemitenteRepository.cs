@@ -17,10 +17,11 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
             DOMAIN.Entities.Origen origen,
             List<DOMAIN.Entities.Destino> destino,
             List<DOMAIN.Entities.GuiaDetalle> detalles,
-            List<DOMAIN.Entities.DocRelacionado> docRelacionados
+            List<DOMAIN.Entities.DocRelacionado> docRelacionados,
+            List<DOMAIN.Entities.EmailDestinatarioGuid> emailDestinatarioGuia
             );
         //Remitente
-        Task<DOMAIN.Entities.Remitente> GetRemitenteByRucAsync(string ruc);
+        Task<DOMAIN.Entities.Remitente> GetRemitenteByNameAsync(string name);
         Task<DOMAIN.Entities.Remitente> CreateRemitenteAsync(DOMAIN.Entities.Remitente remitente);
         //Destinatario
         Task<DOMAIN.Entities.Destinatario> GetDestinatarioByRucAsync(string ruc);

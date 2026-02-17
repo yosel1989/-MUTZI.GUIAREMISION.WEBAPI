@@ -36,12 +36,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         [Required]
         public string Direccion { get; set; }
 
-        [JsonPropertyName("email")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del remite_transportista", Nullable = false)]
-        [MaxLength(50)]
-        [Required]
-        [EmailAddress(ErrorMessage = "El formato del correo es inválido")]
-        public string Email { get; set; }
+        //[JsonPropertyName("email")]
+        //[SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del remite_transportista", Nullable = false)]
+        //[MaxLength(50)]
+        //[Required]
+        //[EmailAddress(ErrorMessage = "El formato del correo es inválido")]
+        //public string Email { get; set; }
 
         [JsonPropertyName("pais")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el codigo de PAIS referente, ejm: PE", Nullable = false)]

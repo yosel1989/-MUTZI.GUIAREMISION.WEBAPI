@@ -30,6 +30,10 @@ public partial class LogisticaContext : DbContext
 
     public virtual DbSet<DocRelacionado> DocRelacionados { get; set; }
 
+    public virtual DbSet<EmailDestinatarioGuid> EmailDestinatarioGuids { get; set; }
+
+    public virtual DbSet<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; }
+
     public virtual DbSet<GuiaDetalle> GuiaDetalles { get; set; }
 
     public virtual DbSet<GuiaRemision> GuiaRemisions { get; set; }
@@ -194,9 +198,6 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.Direccion)
                 .HasMaxLength(250)
                 .HasColumnName("direccion");
-            entity.Property(e => e.Email)
-                .HasMaxLength(50)
-                .HasColumnName("email");
             entity.Property(e => e.EmpleadoIdcreacion).HasColumnName("empleadoIDCreacion");
             entity.Property(e => e.EmpleadoIdedicion).HasColumnName("empleadoIDEdicion");
             entity.Property(e => e.EmpleadoNombreCreacion)
@@ -299,6 +300,60 @@ public partial class LogisticaContext : DbContext
                 .HasForeignKey(d => d.GuiaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("docRelacionado_ibfk_1");
+        });
+
+        modelBuilder.Entity<EmailDestinatarioGuid>(entity =>
+        {
+            entity.HasKey(e => e.EmailDestinatarioGuidId).HasName("PRIMARY");
+
+            entity.ToTable("emailDestinatarioGuid");
+
+            entity.HasIndex(e => e.DestinatarioId, "destinatarioID");
+
+            entity.HasIndex(e => e.GuiaId, "guiaID");
+
+            entity.Property(e => e.EmailDestinatarioGuidId).HasColumnName("emailDestinatarioGuidID");
+            entity.Property(e => e.DestinatarioId).HasColumnName("destinatarioID");
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .HasColumnName("email");
+            entity.Property(e => e.GuiaId).HasColumnName("guiaID");
+
+            entity.HasOne(d => d.Destinatario).WithMany(p => p.EmailDestinatarioGuids)
+                .HasForeignKey(d => d.DestinatarioId)
+                .HasConstraintName("emailDestinatarioGuid_ibfk_2");
+
+            entity.HasOne(d => d.Guia).WithMany(p => p.EmailDestinatarioGuids)
+                .HasForeignKey(d => d.GuiaId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("emailDestinatarioGuid_ibfk_1");
+        });
+
+        modelBuilder.Entity<EmailRemiteTransportistaGuid>(entity =>
+        {
+            entity.HasKey(e => e.EmailRemiteTransportistaGuidId).HasName("PRIMARY");
+
+            entity.ToTable("emailRemiteTransportistaGuid");
+
+            entity.HasIndex(e => e.GuiaId, "guiaID");
+
+            entity.HasIndex(e => e.RemiteTransportistaId, "remiteTransportistaID");
+
+            entity.Property(e => e.EmailRemiteTransportistaGuidId).HasColumnName("emailRemiteTransportistaGuidID");
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .HasColumnName("email");
+            entity.Property(e => e.GuiaId).HasColumnName("guiaID");
+            entity.Property(e => e.RemiteTransportistaId).HasColumnName("remiteTransportistaID");
+
+            entity.HasOne(d => d.Guia).WithMany(p => p.EmailRemiteTransportistaGuids)
+                .HasForeignKey(d => d.GuiaId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("emailRemiteTransportistaGuid_ibfk_1");
+
+            entity.HasOne(d => d.RemiteTransportista).WithMany(p => p.EmailRemiteTransportistaGuids)
+                .HasForeignKey(d => d.RemiteTransportistaId)
+                .HasConstraintName("emailRemiteTransportistaGuid_ibfk_2");
         });
 
         modelBuilder.Entity<GuiaDetalle>(entity =>
@@ -534,9 +589,6 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.Direccion)
                 .HasMaxLength(250)
                 .HasColumnName("direccion");
-            entity.Property(e => e.Email)
-                .HasMaxLength(50)
-                .HasColumnName("email");
             entity.Property(e => e.EmpleadoIdcreacion).HasColumnName("empleadoIDCreacion");
             entity.Property(e => e.EmpleadoIdedicion).HasColumnName("empleadoIDEdicion");
             entity.Property(e => e.EmpleadoNombreCreacion)
@@ -581,6 +633,8 @@ public partial class LogisticaContext : DbContext
 
             entity.ToTable("remitente");
 
+            entity.HasIndex(e => e.RazonSocial, "razonSocial_UNIQUE").IsUnique();
+
             entity.HasIndex(e => e.UbigeoId, "ubigeoID");
 
             entity.Property(e => e.RemitenteId).HasColumnName("remitenteID");
@@ -618,6 +672,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.Ruc)
                 .HasMaxLength(11)
                 .HasColumnName("ruc");
+            entity.Property(e => e.Serie)
+                .HasMaxLength(4)
+                .HasColumnName("serie");
             entity.Property(e => e.UbigeoId)
                 .HasMaxLength(6)
                 .HasColumnName("ubigeoID");

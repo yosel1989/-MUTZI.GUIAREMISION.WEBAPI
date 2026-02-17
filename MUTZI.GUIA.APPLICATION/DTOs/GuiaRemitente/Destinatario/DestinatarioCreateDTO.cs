@@ -1,4 +1,6 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario.Email;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
@@ -42,12 +44,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         [Required]
         public string Direccion { get; set; }
 
-        [JsonPropertyName("email")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del destinatario", Nullable = false)]
-        [MaxLength(50)]
-        [Required]
-        [EmailAddress(ErrorMessage = "El formato del correo es inválido")]
-        public string Email { get; set; }
+        //[JsonPropertyName("email")]
+        //[SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del destinatario", Nullable = false)]
+        //[MaxLength(50)]
+        //[Required]
+        //[EmailAddress(ErrorMessage = "El formato del correo es inválido")]
+        //public string Email { get; set; }
 
         [JsonPropertyName("pais")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el codigo de PAIS referente, ejm: PE", Nullable = false)]
@@ -63,5 +65,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha realizado la transacción en el sistema", Nullable = true)]
         [MaxLength(100)]
         public string? EmpleadoNombreCreacion { get; set; }
+
+        [JsonPropertyName("email_destinatario")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca hasta máximo 3 correos del destinatario", Nullable = true)]
+        public List<EmailDestinatarioGuiaCreateDTO>? EmailDestinatarioGuia { get; set; }
     }
 }
