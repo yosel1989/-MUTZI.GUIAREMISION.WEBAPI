@@ -16,6 +16,7 @@ using MUTZI.GUIA.DOMAIN.Entities;
 using System.Globalization;
 using MUTZI.GUIA.APPLICATION.DTOs.Ubigeo;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 
 namespace MUTZI.GUIA.APPLICATION.Mappings
 {
@@ -77,6 +78,10 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             //Documentos de referencia relacionados a la guía de remisión
             CreateMap<DOMAIN.Entities.DocRelacionado, DocRelacionadoDTO>();
             CreateMap<DocRelacionadoCreateDTO, DOMAIN.Entities.DocRelacionado>();
+
+            //Email de destinatarios dentro de Guía de Remisión
+            CreateMap<DOMAIN.Entities.EmailDestinatarioGuid, EmailDestinatarioGuiaDTO>();
+            CreateMap<EmailDestinatarioGuiaCreateDTO, DOMAIN.Entities.EmailDestinatarioGuid>();
             //Datos de envío para guía remitente
             CreateMap<DOMAIN.Entities.DatosEnvio, DatosEnvioDTO>()
                 //.ForMember(dest => dest.ConductorGuia, opt => opt.MapFrom(src => src.ConductorGuids))

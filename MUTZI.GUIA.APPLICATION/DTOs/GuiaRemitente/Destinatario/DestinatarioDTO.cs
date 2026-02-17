@@ -1,4 +1,5 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
@@ -51,5 +52,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         [SwaggerSchema("Devuelve en texto el codigo de PAIS referente, ejm: PE", Nullable = false)]
         public string Pais { get; set; }
         public DateTime FechaCreacion { get; set; }
+
+        [JsonPropertyName("email_destinatario")]
+        public List<EmailDestinatarioGuiaDTO> EmailDestinatariosGuia { get; set; }
     }
 }

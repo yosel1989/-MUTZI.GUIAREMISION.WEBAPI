@@ -19,6 +19,8 @@ public partial class Remitente
 
     public string Email { get; set; } = null!;
 
+    public string Serie { get; set; } = null!;
+
     public DateTime? FechaCreacion { get; set; }
 
     public DateTime? FechaEdicion { get; set; }

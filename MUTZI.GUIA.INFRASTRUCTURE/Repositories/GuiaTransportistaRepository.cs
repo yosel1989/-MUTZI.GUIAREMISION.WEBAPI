@@ -45,7 +45,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 // Remitente
-                var existingRemitente = await _repository.GetRemitenteByRucAsync(remitente.Ruc);
+                var existingRemitente = await _repository.GetRemitenteByNameAsync(remitente.RazonSocial);
                 if (existingRemitente == null)
                 {
                     await _context.Remitentes.AddAsync(remitente);
@@ -85,7 +85,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.RemiteTransportistaId = remiteTransportista.RemiteTransportistaId;
                 guiaRemision.Estado = "CREADO";
 
-                string serie = guiaRemision.Serie ?? "V001";
+                //string serie = guiaRemision.Serie ?? "V001";
+                string serie = "V" + remitente.Serie.Trim();
 
                 //Buscar el último correlativo para esa serie
                 var lastGuia = await _context.GuiaRemisions

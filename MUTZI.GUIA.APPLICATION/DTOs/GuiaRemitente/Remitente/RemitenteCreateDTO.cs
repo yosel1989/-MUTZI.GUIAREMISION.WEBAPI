@@ -50,6 +50,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         [Required]
         public string Pais { get; set; }
 
+        [JsonPropertyName("serie")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
+        [StringLength(3, ErrorMessage = "La serie requiere 3 caracteres")]
+        public string? Serie { get; set; }
+
         [JsonPropertyName("empleado_id_creacion")]
         [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = true)]
         public int? EmpleadoIDCreacion { get; set; }

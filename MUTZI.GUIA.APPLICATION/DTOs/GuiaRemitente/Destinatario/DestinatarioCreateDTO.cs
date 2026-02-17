@@ -1,4 +1,6 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario.Email;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
@@ -63,5 +65,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha realizado la transacción en el sistema", Nullable = true)]
         [MaxLength(100)]
         public string? EmpleadoNombreCreacion { get; set; }
+
+        [JsonPropertyName("email_destinatario")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca hasta máximo 3 correos del destinatario", Nullable = true)]
+        [Required]
+        public List<EmailDestinatarioGuiaCreateDTO> EmailDestinatarioGuia { get; set; }
     }
 }

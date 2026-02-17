@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
         Task<GuiaRemitenteDTO> CreateAsync(GuiaRemitenteCreateDTO guiaRemisionDto);
         Task<GuiaRemitenteUpdateDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto);
         Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado);
-        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO doc);
+        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO doc, string ruc);
         Task DeleteAsync(int id);
     }
 }

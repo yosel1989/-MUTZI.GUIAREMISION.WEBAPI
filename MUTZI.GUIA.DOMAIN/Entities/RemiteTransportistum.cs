@@ -33,6 +33,8 @@ public partial class RemiteTransportistum
 
     public string? Estado { get; set; }
 
+    public virtual ICollection<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; } = new List<EmailRemiteTransportistaGuid>();
+
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 
     public virtual Ubigeo Ubigeo { get; set; } = null!;

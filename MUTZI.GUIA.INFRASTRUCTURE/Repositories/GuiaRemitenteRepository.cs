@@ -34,6 +34,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .Include(doc => doc.DocRelacionados)
+                .Include(e=>e.EmailDestinatarioGuids)
                 .ToListAsync();
         }
         public async Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket)
@@ -63,6 +64,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .Include(doc => doc.DocRelacionados)
+                .Include(e => e.EmailDestinatarioGuids)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
                 //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
@@ -78,14 +80,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             //DOMAIN.Entities.Destino destino,
             List<DOMAIN.Entities.Destino> destino,
             List<DOMAIN.Entities.GuiaDetalle> detalles,
-            List<DOMAIN.Entities.DocRelacionado> docRelacionados
+            List<DOMAIN.Entities.DocRelacionado> docRelacionados,
+            List<DOMAIN.Entities.EmailDestinatarioGuid> emailDestinatarioGuia
             )
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 // Remitente
-                var existingRemitente = await GetRemitenteByRucAsync(remitente.Ruc);
+                var existingRemitente = await GetRemitenteByNameAsync(remitente.RazonSocial);
                 if (existingRemitente == null)
                 {
                     remitente.EmpleadoIdcreacion= guiaRemision.EmpleadoIdcreacion;
@@ -136,7 +139,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.Estado = "CREADO";
                 if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
 
-                string serie = guiaRemision.Serie ?? "T001";
+                //string serie = guiaRemision.Serie ?? "T001";
+                string serie = "T" + remitente.Serie.Trim();
 
                 //Buscar el último correlativo para esa serie
                 var lastGuia = await _context.GuiaRemisions
@@ -238,6 +242,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
                 await _context.SaveChangesAsync();
 
+                //EmailDestinatarioGuia
+                foreach (var email in emailDestinatarioGuia)
+                {
+                    email.GuiaId = guiaRemision.GuiaId;
+                    email.DestinatarioId = destinatario.DestinatarioId;
+                    await _context.EmailDestinatarioGuids.AddAsync(email);
+                }
                 //Origen
                 origen.GuiaId = guiaRemision.GuiaId;
                 await _context.Origens.AddAsync(origen);
@@ -299,9 +310,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             await _context.SaveChangesAsync();
         }
         //Remitente
-        public async Task<DOMAIN.Entities.Remitente> GetRemitenteByRucAsync(string ruc)
+        public async Task<DOMAIN.Entities.Remitente> GetRemitenteByNameAsync(string name)
         {
-            return await _context.Remitentes.FirstOrDefaultAsync(r => r.Ruc == ruc);
+            return await _context.Remitentes.FirstOrDefaultAsync(r => r.RazonSocial == name);
         }
         public async Task<DOMAIN.Entities.Remitente> CreateRemitenteAsync(DOMAIN.Entities.Remitente remitente)
         {

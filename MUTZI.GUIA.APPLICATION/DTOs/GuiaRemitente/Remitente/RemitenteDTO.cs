@@ -45,6 +45,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         [JsonPropertyName("pais")]
         [SwaggerSchema("Devuelve un texto, el codigo de PAIS referente, ejm: PE", Nullable = false)]
         public string Pais { get; set; }
+
+        [JsonPropertyName("serie")]
+        [SwaggerSchema("Devuelve un texto, la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
         public DateTime FechaCreacion { get; set; }
     }
 }

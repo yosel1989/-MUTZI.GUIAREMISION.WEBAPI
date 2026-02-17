@@ -63,6 +63,10 @@ public partial class GuiaRemision
 
     public virtual ICollection<DocRelacionado> DocRelacionados { get; set; } = new List<DocRelacionado>();
 
+    public virtual ICollection<EmailDestinatarioGuid> EmailDestinatarioGuids { get; set; } = new List<EmailDestinatarioGuid>();
+
+    public virtual ICollection<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; } = new List<EmailRemiteTransportistaGuid>();
+
     public virtual ICollection<GuiaDetalle> GuiaDetalles { get; set; } = new List<GuiaDetalle>();
 
     public virtual ICollection<Origen> Origens { get; set; } = new List<Origen>();

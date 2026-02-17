@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using System;
 using System.Text.Json;
@@ -10,10 +11,12 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
     public class GuiaRemitenteService : IGuiaRemitenteService
     {
         private readonly IGuiaRemitenteRepository _repository;
+        private readonly IVentaConfigRepository _ventaConfigRepository;
         private readonly IMapper _mapper;
-        public GuiaRemitenteService(IGuiaRemitenteRepository repository, IMapper mapper)
+        public GuiaRemitenteService(IGuiaRemitenteRepository repository, IVentaConfigRepository ventaConfigRepository, IMapper mapper)
         {
             _repository = repository;
+            _ventaConfigRepository = ventaConfigRepository;
             _mapper = mapper;
         }
         public async Task<List<GuiaRemitenteDTO>> GetAllAsync()
@@ -48,11 +51,12 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             var destino = dto.Destino.Select(p => _mapper.Map<DOMAIN.Entities.Destino>(p)).ToList();
             var detalles = dto.Productos.Select(p => _mapper.Map<DOMAIN.Entities.GuiaDetalle>(p)).ToList();
             var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.DocRelacionado>(p)).ToList();
+            var emailDestinatarioGuia = dto.Destinatario.EmailDestinatarioGuia.Select(p => _mapper.Map<DOMAIN.Entities.EmailDestinatarioGuid>(p)).ToList();
 
             // Llamar al repositorio
             var id = await _repository.CreateGuiaRemisionTransactionalAsync(
                 remitente, destinatario, proveedor, conductor, transporte,
-                guiaRemision, datosEnvio, origen, destino, detalles, docRelacionados
+                guiaRemision, datosEnvio, origen, destino, detalles, docRelacionados,emailDestinatarioGuia
             );
             //SE obtiene la guia de remision creada
             var guiaCreada = await _repository.GetByIdAsync(id);
@@ -74,10 +78,17 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
         {
             await _repository.UpdateRespuestaTicketAsync(guiaId, ticket, estado);
         }
-        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO guia)
+        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO guia, string ruc)
         {
             try
             {
+                var ventaConfig = _ventaConfigRepository.GetByRucAsync(ruc).Result;
+                if (ventaConfig == null || string.IsNullOrEmpty(ventaConfig.Ruc))
+                {
+                    return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");
+                }
+                if (guia.Remitente.Ruc != ventaConfig.Ruc)
+                    return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
                 _ = guia.TipoTRansporteCode18();
                 _ = guia.TipoTrasladoCode20();
                 _ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento);

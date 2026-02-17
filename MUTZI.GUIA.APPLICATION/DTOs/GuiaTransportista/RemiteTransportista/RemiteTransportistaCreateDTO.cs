@@ -1,4 +1,5 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.EmailRemiteTransportistaGuia;
+using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -57,5 +58,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha realizado la transacción en el sistema", Nullable = true)]
         [MaxLength(100)]
         public string? EmpleadoNombreCreacion { get; set; }
+
+        [JsonPropertyName("email_remite_transportista")]
+        [Required]
+        public List<EmailRemiteTransportistaGuiaCreateDTO> EmailRemiteTransportista { get; set; }
     }
 }
