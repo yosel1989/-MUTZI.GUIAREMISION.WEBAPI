@@ -1,4 +1,5 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using MUTZI.GUIA.APPLICATION.Helpers;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,6 +23,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado
         [SwaggerSchema("Recibe un texto, aquí se hace referencia al numero del documento vinculado en la guía de remisión. Ejm: F025-00000003", Nullable = false)]
         [MaxLength(21)]
         [Required]
+        [NumeroDocRefFormato]
         public string NumeroDocRef { get; set; }
 
         [JsonPropertyName("ruc_doc_ref")]

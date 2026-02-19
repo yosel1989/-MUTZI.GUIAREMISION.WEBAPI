@@ -633,11 +633,16 @@ public partial class LogisticaContext : DbContext
 
             entity.ToTable("remitente");
 
-            entity.HasIndex(e => e.RazonSocial, "razonSocial_UNIQUE").IsUnique();
+            entity.HasIndex(e => e.Descripcion, "razonSocial_UNIQUE").IsUnique();
+
+            entity.HasIndex(e => e.Ruc, "remitente_ibfk_2_idx");
 
             entity.HasIndex(e => e.UbigeoId, "ubigeoID");
 
             entity.Property(e => e.RemitenteId).HasColumnName("remitenteID");
+            entity.Property(e => e.Descripcion)
+                .HasMaxLength(200)
+                .HasColumnName("descripcion");
             entity.Property(e => e.Direccion)
                 .HasMaxLength(250)
                 .HasColumnName("direccion");
@@ -666,18 +671,21 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.Pais)
                 .HasMaxLength(3)
                 .HasColumnName("pais");
-            entity.Property(e => e.RazonSocial)
-                .HasMaxLength(200)
-                .HasColumnName("razonSocial");
             entity.Property(e => e.Ruc)
                 .HasMaxLength(11)
-                .HasColumnName("ruc");
+                .HasColumnName("ruc")
+                .UseCollation("utf8mb4_unicode_ci");
             entity.Property(e => e.Serie)
                 .HasMaxLength(4)
                 .HasColumnName("serie");
             entity.Property(e => e.UbigeoId)
                 .HasMaxLength(6)
                 .HasColumnName("ubigeoID");
+
+            entity.HasOne(d => d.RucNavigation).WithMany(p => p.Remitentes)
+                .HasForeignKey(d => d.Ruc)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("remitente_ibfk_2");
 
             entity.HasOne(d => d.Ubigeo).WithMany(p => p.Remitentes)
                 .HasForeignKey(d => d.UbigeoId)
@@ -818,17 +826,15 @@ public partial class LogisticaContext : DbContext
 
         modelBuilder.Entity<VentaConfig>(entity =>
         {
-            entity.HasKey(e => e.VentaConfigId).HasName("PRIMARY");
+            entity.HasKey(e => e.Ruc).HasName("PRIMARY");
 
             entity
                 .ToTable("VentaConfig")
                 .UseCollation("utf8mb4_unicode_ci");
 
-            entity.HasIndex(e => e.Ruc, "uq_Ruc").IsUnique();
+            entity.HasIndex(e => e.Ruc, "Ruc_UNIQUE").IsUnique();
 
-            entity.Property(e => e.VentaConfigId)
-                .HasMaxLength(36)
-                .HasColumnName("ventaConfigID");
+            entity.Property(e => e.Ruc).HasMaxLength(11);
             entity.Property(e => e.CodigoSunat)
                 .HasMaxLength(4)
                 .HasColumnName("CodigoSUNAT");
@@ -845,7 +851,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.RetencionDescripcion)
                 .HasMaxLength(100)
                 .HasColumnName("retencionDescripcion");
-            entity.Property(e => e.Ruc).HasMaxLength(12);
+            entity.Property(e => e.VentaConfigId)
+                .HasMaxLength(36)
+                .HasColumnName("ventaConfigID");
         });
 
         OnModelCreatingPartial(modelBuilder);

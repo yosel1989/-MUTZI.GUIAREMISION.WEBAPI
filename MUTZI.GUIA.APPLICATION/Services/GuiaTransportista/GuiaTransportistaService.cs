@@ -33,11 +33,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
             //var destino = _mapper.Map<DOMAIN.Entities.Destino>(dto.Destino);
             var destino = dto.Destino.Select(p => _mapper.Map<DOMAIN.Entities.Destino>(p)).ToList();
             var detalles = dto.Productos.Select(p => _mapper.Map<DOMAIN.Entities.GuiaDetalle>(p)).ToList();
+            var emailsDestinatarioGuia = dto.Destinatario.EmailDestinatarioGuia.Select(p => _mapper.Map<DOMAIN.Entities.EmailDestinatarioGuid>(p)).ToList();
+            var emailsRemiteTransportistaGuia = dto.RemiteTransportista.EmailRemiteTransportista.Select(p => _mapper.Map<DOMAIN.Entities.EmailRemiteTransportistaGuid>(p)).ToList();
 
             // Llamar al repositorio
             var id = await _repository.CreateGuiaTransportistaTransactionalAsync(
                 remitente, remiteTransportista, destinatario, conductor, transporte,
-                guiaRemision, datosEnvio, origen, destino, detalles
+                guiaRemision, datosEnvio, origen, destino, detalles,emailsDestinatarioGuia,emailsRemiteTransportistaGuia
             );
             //SE obtiene la guia de remision creada
             var guiaCreada = await _repository.GetByIdAsync(id);

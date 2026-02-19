@@ -64,7 +64,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                         new PartyIdentification { ID = new List<ID> { new ID { _ = guia.Remitente.Ruc } } }
                                     },
                                     PartyName = new List<PartyName> {
-                                        new PartyName { Name = new List<Name> { new Name { _ = guia.Remitente.RazonSocial } } }
+                                        new PartyName { Name = new List<Name> { new Name { _ = guia.Remitente.Descripcion } } }
                                     }
                                 }
                             },
@@ -100,7 +100,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                         }
                                     },
                                     PartyLegalEntity = new List<PartyLegalEntity> {
-                                        new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.Remitente.RazonSocial } } }
+                                        new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.Remitente.Descripcion } } }
                                     }
                                 }
                             }
@@ -131,18 +131,19 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                     PartyLegalEntity = new List<PartyLegalEntity> {
                                         new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.Destinatario.RazonSocial } } }
                                     },
-                                    Contact=guia.Destinatario.EmailDestinatariosGuia==null?null:
-                                    new List<Contact>
+                                    Contact = guia.Destinatario.EmailDestinatariosGuia != null ? new List<Contact>
                                     {
                                         new Contact
                                         {
-                                            ElectronicMail=guia.Destinatario.EmailDestinatariosGuia.Select(email => new ElectronicMail { _ = email.Email }).ToList()
-                                            //new ElectronicMail
-                                            //{
-                                            //    _ = guia.Destinatario.Email
-                                            //    //_ = "
+                                            ElectronicMail = new List<ElectronicMail>
+                                            {
+                                                new ElectronicMail
+                                                {
+                                                    _ = string.Join(", ", guia.Destinatario.EmailDestinatariosGuia.Select(email => email.Email))
+                                                }
+                                            }
                                         }
-                                    }
+                                    } : null
 
 
 
@@ -273,18 +274,19 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                             PartyLegalEntity = new List<PartyLegalEntity> {
                                                 new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.RemiteTransportista.RazonSocial } } }
                                             },
-                                            Contact=guia.RemiteTransportista.EmailRemiteTransportista==null?null:
-                                            new List<Contact>
+                                            Contact = guia.RemiteTransportista.EmailRemiteTransportista != null ? new List<Contact>
                                             {
                                                 new Contact
                                                 {
-                                                    ElectronicMail=guia.RemiteTransportista.EmailRemiteTransportista.Select(email => new ElectronicMail { _ = email.Email }).ToList()
-                                                    //new ElectronicMail
-                                                    //{
-                                                    //    _ = guia.RemiteTransportista.Email
-                                                    //    //_ = "
+                                                    ElectronicMail = new List<ElectronicMail>
+                                                    {
+                                                        new ElectronicMail
+                                                        {
+                                                            _ = string.Join(", ", guia.RemiteTransportista.EmailRemiteTransportista.Select(email => email.Email))
+                                                        }
+                                                    }
                                                 }
-                                            }
+                                            } : null    
                                             //Contact=new List<Contact>
                                             //{
                                             //    new Contact

@@ -16,12 +16,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             return await _context.Remitentes
                 .Include(r=>r.Ubigeo)
+                .Include(e=>e.RucNavigation)
                 .ToListAsync();
         }
         public async Task<DOMAIN.Entities.Remitente?> GetByIdAsync(int id)
         {
             return await _context.Remitentes
                 .Include(r => r.Ubigeo)
+                .Include(e=>e.RucNavigation)
                 .FirstOrDefaultAsync(r => r.RemitenteId == id);
         }
         public async Task CreateAsync(DOMAIN.Entities.Remitente remitente)

@@ -6,17 +6,21 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
     [SwaggerSchema("Devuelve un objeto del remitente", Nullable = false)]
     public class RemitenteDTO
     {
-        [JsonPropertyName("id")]
+        [JsonPropertyName("remitente_id")]
         [SwaggerSchema("Devuelve un entero, el ID del remitente en la bbdd", Nullable = false)]
         public int RemitenteID { get; set; }
 
+        [JsonPropertyName("nombre_empresa")]
+        [SwaggerSchema("Devuelve un texto, el nombre de la empresa asociada al remitente/sucursal.", Nullable = false)]
+        public string NombreEmpresa { get; set; }
+
         [JsonPropertyName("ruc")]
-        [SwaggerSchema("Devuelve un texto, es el ruc del remitente", Nullable = false)]
+        [SwaggerSchema("Devuelve en texto el ruc del remitente. Asimismo, ese ruc está asociado a la empresa.", Nullable = false)]
         public string Ruc { get; set; }
 
-        [JsonPropertyName("razon_social")]
-        [SwaggerSchema("Devuelve un texto, la razón social del remitente", Nullable = false)]
-        public string RazonSocial { get; set; }
+        [JsonPropertyName("descripcion")]
+        [SwaggerSchema("Devuelve en texto la descripción o nombre del remitente/sucursal.", Nullable = false)]
+        public string Descripcion { get; set; }
 
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Devuelve un texto, aquí devuelve el ubigeo de la dirección fiscal del remitente, ejm: 150131", Nullable = false)]
@@ -48,6 +52,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
 
         [JsonPropertyName("serie")]
         [SwaggerSchema("Devuelve un texto, la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
+        public string Serie { get; set; }
+
         public DateTime FechaCreacion { get; set; }
     }
 }
