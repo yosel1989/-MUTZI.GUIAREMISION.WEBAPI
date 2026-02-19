@@ -14,11 +14,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         [MinLength(11)]
         public string Ruc { get; set; }
 
-        [JsonPropertyName("razon_social")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la razón social del remitente", Nullable = false)]
+        [JsonPropertyName("descripcion")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca la descripción o nombre del remitente", Nullable = false)]
         [MaxLength(200)]
         [Required]
-        public string RazonSocial { get; set; }
+        public string Descripcion { get; set; }
 
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del remitente, ejm: 150131", Nullable = false)]

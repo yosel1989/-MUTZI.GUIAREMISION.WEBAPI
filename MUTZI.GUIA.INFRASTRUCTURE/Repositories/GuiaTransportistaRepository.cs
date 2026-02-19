@@ -39,13 +39,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
             //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
-        public async Task<int> CreateGuiaTransportistaTransactionalAsync(Remitente remitente, RemiteTransportistum remiteTransportista, Destinatario destinatario, List<Conductor> conductor, List<Transporte> transporte, DOMAIN.Entities.GuiaRemision guiaRemision, DatosEnvio datosEnvio, Origen origen, List<Destino> destino, List<GuiaDetalle> detalles)
+        public async Task<int> CreateGuiaTransportistaTransactionalAsync(Remitente remitente, RemiteTransportistum remiteTransportista, Destinatario destinatario, List<Conductor> conductor, List<Transporte> transporte, DOMAIN.Entities.GuiaRemision guiaRemision, DatosEnvio datosEnvio, Origen origen, List<Destino> destino,
+            List<GuiaDetalle> detalles,
+            List<EmailDestinatarioGuid> emailDestinatarioGuia,
+            List<EmailRemiteTransportistaGuid> emailRemiteTransportistas
+            )
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 // Remitente
-                var existingRemitente = await _repository.GetRemitenteByNameAsync(remitente.RazonSocial);
+                var existingRemitente = await _repository.GetRemitenteByNameAsync(remitente.Descripcion);
                 if (existingRemitente == null)
                 {
                     await _context.Remitentes.AddAsync(remitente);
@@ -175,6 +179,23 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     await _context.TransporteGuids.AddAsync(transporteGuia);
                     await _context.SaveChangesAsync();
                 }
+                // Email destinatario guía
+                foreach (var emailDest in emailDestinatarioGuia)
+                {
+                    emailDest.GuiaId = guiaRemision.GuiaId;
+                    emailDest.DestinatarioId = destinatario.DestinatarioId;
+                    await _context.EmailDestinatarioGuids.AddAsync(emailDest);
+                }
+                await _context.SaveChangesAsync();
+
+                //Email remite transportista
+                foreach (var emailRemite in emailRemiteTransportistas)
+                {
+                    emailRemite.GuiaId = guiaRemision.GuiaId;
+                    emailRemite.RemiteTransportistaId = remiteTransportista.RemiteTransportistaId;
+                    await _context.EmailRemiteTransportistaGuids.AddAsync(emailRemite);
+                }
+                await _context.SaveChangesAsync();
 
                 //Origen
                 origen.GuiaId = guiaRemision.GuiaId;

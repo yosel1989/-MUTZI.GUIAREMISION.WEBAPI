@@ -46,6 +46,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         [SwaggerSchema("Recibe un texto, aquí se hace referencia al numero del documento vinculado en la guía de remisión transportista. Ejm: F025-00000003", Nullable = false)]
         [MaxLength(21)]
         [Required]
+        [NumeroDocRefFormato]
         public string NumeroDocRef { get; set; }
 
         [JsonPropertyName("ruc_doc_ref")]

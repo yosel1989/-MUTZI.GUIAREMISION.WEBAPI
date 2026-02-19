@@ -20,4 +20,6 @@ public partial class VentaConfig
     public string? RetencionCuenta { get; set; }
 
     public string? RetencionDescripcion { get; set; }
+
+    public virtual ICollection<Remitente> Remitentes { get; set; } = new List<Remitente>();
 }

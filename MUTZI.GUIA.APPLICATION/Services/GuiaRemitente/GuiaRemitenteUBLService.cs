@@ -54,7 +54,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                         ID = new List<ID>{ new ID { _ = "IDSignature" } },
                         SignatoryParty = new List<SignatoryParty>{ new SignatoryParty {
                             PartyIdentification= new List<PartyIdentification>{ new PartyIdentification { ID = new List<ID> { new ID {  _ = guia.Remitente.Ruc } } }},
-                            PartyName = new List<PartyName>{ new PartyName { Name = new List<Name> { new Name {  _ = guia.Remitente.RazonSocial} } }},
+                            PartyName = new List<PartyName>{ new PartyName { Name = new List<Name> { new Name {  _ = guia.Remitente.Descripcion} } }},
                         }},
                         DigitalSignatureAttachment = new List<DigitalSignatureAttachment>{ new DigitalSignatureAttachment {
                             ExternalReference = new List<ExternalReference>{new ExternalReference { URI = new List<URI> { new URI() {_ = "IDSignature" }}}}
@@ -73,7 +73,20 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                                 District= new List<District>{ new District { _ = guia.Remitente.Distrito } },
                                 Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.Pais } }}}
                             }},
-                            PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _  = guia.Remitente.RazonSocial }}}}
+                            PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _  = guia.Remitente.Descripcion }}}},
+                            Contact=guia.Remitente.Email==null?null: new List<Contact>
+                            {
+                                new Contact
+                                {
+                                    ElectronicMail=new List<ElectronicMail>
+                                    {
+                                        new ElectronicMail
+                                        {
+                                            _ = guia.Remitente.Email
+                                        }
+                                    }
+                                }
+                            }
                         }},
                     }},
                     //Destinatario
@@ -94,27 +107,19 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                             PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity {
                                 RegistrationName = new List<RegistrationName>{ new RegistrationName { _ = guia.Destinatario.RazonSocial } }
                             }},
-                            Contact=guia.Destinatario.EmailDestinatariosGuia != null ? new List<Contact>
+                            Contact = guia.Destinatario.EmailDestinatariosGuia != null ? new List<Contact>
                             {
                                 new Contact
                                 {
-                                    ElectronicMail=guia.Destinatario.EmailDestinatariosGuia.Select(email => new ElectronicMail { _ = email.Email }).ToList()
+                                    ElectronicMail = new List<ElectronicMail>
+                                    {
+                                        new ElectronicMail
+                                        {
+                                            _ = string.Join(", ", guia.Destinatario.EmailDestinatariosGuia.Select(email => email.Email))
+                                        }
+                                    }
                                 }
                             } : null
-                            //Contact=new List<Contact>
-                            //{
-                            //    new Contact
-                            //    {
-                            //        ElectronicMail=new List<ElectronicMail>
-                            //        {
-                            //            new ElectronicMail
-                            //            {
-                            //                _ = guia.Destinatario.Email
-                            //                //_ = "sistemas7@carolina-peru.com"
-                            //            }
-                            //        }
-                            //    }
-                            //}
                         }}
                     }},
                     //El proveedor se crea solo si el tipo de traslado es compra
@@ -240,7 +245,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     transportEquipments.Add(new TransportEquipment
                     {
                         ID = new List<ID> { new ID { _ = transportes[0].Placa } },
-                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0].NumeroRegistroMTC)?null: new List<ShipmentDocumentReference>
+                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0].NumeroRegistroMTC) ? null : new List<ShipmentDocumentReference>
                         {
                             new ShipmentDocumentReference
                             {

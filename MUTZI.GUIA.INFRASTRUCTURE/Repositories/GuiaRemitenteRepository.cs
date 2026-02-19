@@ -88,7 +88,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 // Remitente
-                var existingRemitente = await GetRemitenteByNameAsync(remitente.RazonSocial);
+                var existingRemitente = await GetRemitenteByNameAsync(remitente.Descripcion);
                 if (existingRemitente == null)
                 {
                     remitente.EmpleadoIdcreacion= guiaRemision.EmpleadoIdcreacion;
@@ -314,7 +314,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         //Remitente
         public async Task<DOMAIN.Entities.Remitente> GetRemitenteByNameAsync(string name)
         {
-            return await _context.Remitentes.FirstOrDefaultAsync(r => r.RazonSocial == name);
+            return await _context.Remitentes.FirstOrDefaultAsync(r => r.Descripcion == name);
         }
         public async Task<DOMAIN.Entities.Remitente> CreateRemitenteAsync(DOMAIN.Entities.Remitente remitente)
         {

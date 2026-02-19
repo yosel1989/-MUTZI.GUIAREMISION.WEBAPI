@@ -9,7 +9,7 @@ public partial class Remitente
 
     public string Ruc { get; set; } = null!;
 
-    public string RazonSocial { get; set; } = null!;
+    public string Descripcion { get; set; } = null!;
 
     public string UbigeoId { get; set; } = null!;
 
@@ -17,7 +17,7 @@ public partial class Remitente
 
     public string Pais { get; set; } = null!;
 
-    public string Email { get; set; } = null!;
+    public string? Email { get; set; }
 
     public string Serie { get; set; } = null!;
 
@@ -36,6 +36,8 @@ public partial class Remitente
     public string? Estado { get; set; }
 
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
+
+    public virtual VentaConfig RucNavigation { get; set; } = null!;
 
     public virtual Ubigeo Ubigeo { get; set; } = null!;
 }
