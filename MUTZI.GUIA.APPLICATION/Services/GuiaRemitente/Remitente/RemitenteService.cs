@@ -19,10 +19,40 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
             var remitentes = await _repository.GetAllAsync();
             return _mapper.Map<List<RemitenteDTO>>(remitentes);
         }
-        public async Task<RemitenteDTO?> GetByIdAsync(int id)
+        public async Task<RemitenteDTO?> GetByIdAsync(int id, string tipoGuia)
         {
-            var remitente = await _repository.GetByIdAsync(id);
-            return remitente == null ? null : _mapper.Map<RemitenteDTO>(remitente);
+            var remitente = await _repository.GetByIdAsync(id, tipoGuia);
+            if (remitente == null) return null;
+
+            var dto = _mapper.Map<RemitenteDTO>(remitente);
+
+            // Calcular serie completa según tipo de guía
+            var prefix = string.Equals(tipoGuia, "TRANSPORTISTA", StringComparison.OrdinalIgnoreCase) ? "V" : "T";
+            var serieBase = remitente.Serie?.Trim();
+            if (!string.IsNullOrEmpty(serieBase))
+            {
+                var serieCompleta = prefix + serieBase;
+
+                // Obtener la última guía registrada para esa serie
+                var lastGuia = await _repository.GetLastBySerieAsync(serieCompleta);
+
+                // Calcular el siguiente correlativo (si no existe, iniciar en 1)
+                int nextCorrelativo = 1;
+                if (lastGuia != null && !string.IsNullOrWhiteSpace(lastGuia.Correlativo))
+                {
+                    if (int.TryParse(lastGuia.Correlativo, out int lastCorr))
+                        nextCorrelativo = lastCorr + 1;
+                }
+
+                // Formatear correlativo a 8 dígitos y construir número de guía
+                string correlativoStr = nextCorrelativo.ToString("D8");
+
+                dto.NuevaSerie = serieCompleta;
+                dto.NuevoCorrelativo = nextCorrelativo;
+                dto.NuevoNumeroGuia = $"{serieCompleta}-{correlativoStr}";
+            }
+
+            return dto;
         }
 
         public async Task<int> CreateAsync(RemitenteCreateDTO createDTO)
@@ -33,7 +63,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
         }
         public async Task<RemitenteUpdateDTO> UpdateAsync(int id, RemitenteUpdateDTO updateDTO)
         {
-            var existingRemitente = await _repository.GetByIdAsync(id);
+            var existingRemitente = await _repository.GetByIdAsync(id, "REMITENTE");
             if (existingRemitente == null)
             {
                 throw new KeyNotFoundException($"Remitente con ID {id} no encontrado.");
