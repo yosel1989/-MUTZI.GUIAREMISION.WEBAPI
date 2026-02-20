@@ -50,7 +50,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpGet]
-        [Route("buscar-por-id/{id}")]
+        [Route("buscar-por-id/{id}/{tipoGuia}")]
         [SwaggerOperation(
         Summary = "Buscar remitente por ID",
         Description = "Buscar objeto por remitenteID",
@@ -58,11 +58,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(RemitenteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task <ActionResult<RemitenteDTO>> GetById(int id)
+        public async Task <ActionResult<RemitenteDTO>> GetById(int id, string tipoGuia)
         {
             try
             {
-                var remitente = await _remitenteService.GetByIdAsync(id);
+                var remitente = await _remitenteService.GetByIdAsync(id, tipoGuia);
                 if (remitente == null)
                 {
                     return BadRequest(new BadRequestResponseDTO

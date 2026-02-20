@@ -19,11 +19,21 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(e=>e.RucNavigation)
                 .ToListAsync();
         }
-        public async Task<DOMAIN.Entities.Remitente?> GetByIdAsync(int id)
+        public async Task<DOMAIN.Entities.GuiaRemision?> GetLastBySerieAsync(string serie)
+        {
+            if (string.IsNullOrWhiteSpace(serie))
+                return null;
+
+            return await _context.GuiaRemisions
+                .Where(g => g.Serie == serie)
+                .OrderByDescending(g => g.Correlativo)
+                .FirstOrDefaultAsync();
+        }
+        public async Task<DOMAIN.Entities.Remitente?> GetByIdAsync(int id, string tipoGuia)
         {
             return await _context.Remitentes
                 .Include(r => r.Ubigeo)
-                .Include(e=>e.RucNavigation)
+                .Include(e => e.RucNavigation)
                 .FirstOrDefaultAsync(r => r.RemitenteId == id);
         }
         public async Task CreateAsync(DOMAIN.Entities.Remitente remitente)
