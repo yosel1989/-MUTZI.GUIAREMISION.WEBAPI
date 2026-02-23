@@ -21,10 +21,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Listar remitentes",
         Description = "Lista los remitentes",
         OperationId = "listar_remitente")]
-        [ProducesResponseType(typeof(RemitenteDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RemitenteListDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<RemitenteDTO>>> GetAll()
+        public async Task<ActionResult<List<RemitenteListDTO>>> GetAll()
         {
             try
             {
@@ -50,7 +50,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpGet]
-        [Route("buscar-por-id/{id}/{tipoGuia}")]
+        [Route("buscar-por-id/{id}")]
         [SwaggerOperation(
         Summary = "Buscar remitente por ID",
         Description = "Buscar objeto por remitenteID",
@@ -58,11 +58,45 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(RemitenteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task <ActionResult<RemitenteDTO>> GetById(int id, string tipoGuia)
+        public async Task<ActionResult<RemitenteDTO>> GetById(int id)
         {
             try
             {
-                var remitente = await _remitenteService.GetByIdAsync(id, tipoGuia);
+                var remitente = await _remitenteService.GetByIdAsync(id);
+                if (remitente == null)
+                {
+                    return BadRequest(new BadRequestResponseDTO
+                    {
+                        Error = "No se encontraron registros",
+                        Detalle = $"No se pudo obtener remitente con el ID: {id}. Verifique si el ID existe en la bbdd."
+                    });
+                }
+                return Ok(remitente);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al buscar remitente.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("buscar-por-id-para-guia/{id}/{tipoGuia}")]
+        [SwaggerOperation(
+        Summary = "Buscar remitente por ID y por tipo de guía",
+        Description = "Buscar objeto por ID y tipo de guía. En 'tipoGuia', colocar: 'REMITENTE' ó 'TRANSPORTISTA'.",
+        OperationId = "buscar_remitente_por_id_guia")]
+        [ProducesResponseType(typeof(RemitenteForGuiaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task <ActionResult<RemitenteForGuiaDTO>> GetForGuiaById(int id, string tipoGuia)
+        {
+            try
+            {
+                var remitente = await _remitenteService.GetByIdForGuiaAsync(id, tipoGuia);
                 if (remitente == null)
                 {
                     return BadRequest(new BadRequestResponseDTO

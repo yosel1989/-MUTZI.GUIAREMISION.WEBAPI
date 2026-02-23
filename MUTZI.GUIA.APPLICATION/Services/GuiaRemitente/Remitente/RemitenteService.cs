@@ -14,17 +14,23 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
             _repository = repository;
             _mapper = mapper;
         }
-        public async Task<List<RemitenteDTO>> GetAllAsync()
+        public async Task<List<RemitenteListDTO>> GetAllAsync()
         {
             var remitentes = await _repository.GetAllAsync();
-            return _mapper.Map<List<RemitenteDTO>>(remitentes);
+            return _mapper.Map<List<RemitenteListDTO>>(remitentes);
         }
-        public async Task<RemitenteDTO?> GetByIdAsync(int id, string tipoGuia)
+        public async Task<RemitenteDTO?> GetByIdAsync(int id)
         {
-            var remitente = await _repository.GetByIdAsync(id, tipoGuia);
+            var remitente = await _repository.GetByIdAsync(id);
+            if (remitente == null) return null;
+            return _mapper.Map<RemitenteDTO>(remitente);
+        }
+        public async Task<RemitenteForGuiaDTO?> GetByIdForGuiaAsync(int id, string tipoGuia)
+        {
+            var remitente = await _repository.GetByIdAsync(id);
             if (remitente == null) return null;
 
-            var dto = _mapper.Map<RemitenteDTO>(remitente);
+            var dto = _mapper.Map<RemitenteForGuiaDTO>(remitente);
 
             // Calcular serie completa según tipo de guía
             var prefix = string.Equals(tipoGuia, "TRANSPORTISTA", StringComparison.OrdinalIgnoreCase) ? "V" : "T";
@@ -54,7 +60,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
 
             return dto;
         }
-
         public async Task<int> CreateAsync(RemitenteCreateDTO createDTO)
         {
             var remitente = _mapper.Map<DOMAIN.Entities.Remitente>(createDTO);
@@ -63,7 +68,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
         }
         public async Task<RemitenteUpdateDTO> UpdateAsync(int id, RemitenteUpdateDTO updateDTO)
         {
-            var existingRemitente = await _repository.GetByIdAsync(id, "REMITENTE");
+            var existingRemitente = await _repository.GetByIdAsync(id);
             if (existingRemitente == null)
             {
                 throw new KeyNotFoundException($"Remitente con ID {id} no encontrado.");
