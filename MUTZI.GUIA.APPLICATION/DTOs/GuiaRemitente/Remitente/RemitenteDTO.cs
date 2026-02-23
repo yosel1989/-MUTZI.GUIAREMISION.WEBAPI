@@ -54,19 +54,25 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         [SwaggerSchema("Devuelve un texto, la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
         public string Serie { get; set; }
 
-        [JsonPropertyName("nueva_serie")]
-        [SwaggerSchema("Devuelve un texto, la nueva serie que se usará en las guías de remisión, ejm: T001, V001", Nullable = true)]
-        public string NuevaSerie { get; set; }
-
-        [JsonPropertyName("nuevo_correlativo")]
-        [SwaggerSchema("Devuelve un entero, el nuevo correlativo que se usará en las guías de remisión, ejm: 1, 2, 3", Nullable = true)]
-        public int? NuevoCorrelativo { get; set; }
-
-        [JsonPropertyName("nuevo_numero_guia")]
-        [SwaggerSchema("Devuelve un texto, el nuevo número de guía que se usará en las guías de remisión, ejm: T001-00000001", Nullable = true)]
-        public string NuevoNumeroGuia { get; set; }
-
         [JsonPropertyName("fecha_creacion")]
         public DateTime FechaCreacion { get; set; }
+
+        [JsonPropertyName("fecha_edicion")]
+        public DateTime? FechaEdicion { get; set; }
+
+        [JsonPropertyName("empleado_id_creacion")]
+        public int EmpleadoIdCreacion { get; set; }
+
+        [JsonPropertyName("empleado_nombre_creacion")]
+        public string EmpleadoNombreCreacion { get; set; }
+
+        [JsonPropertyName("empleado_id_edicion")]
+        public int? EmpleadoIdEdicion { get; set; }
+
+        [JsonPropertyName("empleado_nombre_edicion")]
+        public string? EmpleadoNombreEdicion { get; set; }
+
+        [JsonPropertyName("estado")]
+        public string Estado { get; set; }
     }
 }

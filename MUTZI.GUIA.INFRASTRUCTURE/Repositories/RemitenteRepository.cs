@@ -29,7 +29,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .OrderByDescending(g => g.Correlativo)
                 .FirstOrDefaultAsync();
         }
-        public async Task<DOMAIN.Entities.Remitente?> GetByIdAsync(int id, string tipoGuia)
+        public async Task<DOMAIN.Entities.Remitente?> GetByIdAsync(int id)
         {
             return await _context.Remitentes
                 .Include(r => r.Ubigeo)
