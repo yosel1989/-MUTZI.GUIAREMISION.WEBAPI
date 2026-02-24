@@ -9,7 +9,7 @@ public partial class GuiaDetalle
 
     public int GuiaId { get; set; }
 
-    public string Codigo { get; set; } = null!;
+    public string? Codigo { get; set; }
 
     public string Descripcion { get; set; } = null!;
 

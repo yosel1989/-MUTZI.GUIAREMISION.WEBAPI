@@ -7,8 +7,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
     public class ProductosDTO
     {
         [JsonPropertyName("codigo")]
-        [SwaggerSchema("Devuelve en texto el código del producto.", Nullable = false)]
-        public string codigo { get; set; }
+        [SwaggerSchema("Devuelve en texto el código del producto.", Nullable = true)]
+        public string? codigo { get; set; }
 
         [JsonPropertyName("descripcion")]
         [SwaggerSchema("Devuelve en texto la descripción del producto.", Nullable = false)]
