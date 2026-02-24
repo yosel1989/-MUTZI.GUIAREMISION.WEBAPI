@@ -38,9 +38,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
 
         [JsonPropertyName("email")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del remitente", Nullable = false)]
-        [MaxLength(50)]
-        [Required]
-        [EmailAddress(ErrorMessage = "El formato del correo es inválido")]
+        //[MaxLength(50)]
+        //[Required]
+        //[EmailAddress(ErrorMessage = "El formato del correo es inválido")]
         public string Email { get; set; }
 
         [JsonPropertyName("pais")]

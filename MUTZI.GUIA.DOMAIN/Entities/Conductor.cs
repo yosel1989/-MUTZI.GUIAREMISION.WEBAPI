@@ -15,7 +15,7 @@ public partial class Conductor
 
     public string Apellidos { get; set; } = null!;
 
-    public string Cargo { get; set; } = null!;
+    public string? Cargo { get; set; }
 
     public string Licencia { get; set; } = null!;
 
