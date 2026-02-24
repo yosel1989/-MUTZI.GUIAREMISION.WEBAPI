@@ -44,7 +44,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public string? Observacion { get; set; }
 
         [JsonPropertyName("doc_relacionado")]
-        public List<DocRelacionadoDTO> DocRelacionados { get; set; }
+        public List<DocRelacionadoDTO>? DocRelacionados { get; set; }
         public RemitenteDTO Remitente { get; set; }
         public DestinatarioDTO Destinatario { get; set; }
         public ProveedorDTO? Proveedor { get; set; }
