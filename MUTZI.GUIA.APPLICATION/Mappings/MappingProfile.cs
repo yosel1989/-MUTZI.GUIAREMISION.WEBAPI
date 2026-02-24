@@ -135,6 +135,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest=>dest.NombreEmpresa, opt=>opt.MapFrom(src=>src.RucNavigation.Empresa))
+                .ForMember(dest=>dest.EmailFacturador, opt=>opt.MapFrom(src=>src.RucNavigation.EmailPrincipal))
                 ;
             CreateMap<DOMAIN.Entities.Remitente, RemitenteForGuiaDTO>()
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))

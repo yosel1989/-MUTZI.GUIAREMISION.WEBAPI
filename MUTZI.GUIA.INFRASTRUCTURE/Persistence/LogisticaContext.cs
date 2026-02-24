@@ -647,7 +647,7 @@ public partial class LogisticaContext : DbContext
                 .HasMaxLength(250)
                 .HasColumnName("direccion");
             entity.Property(e => e.Email)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .HasColumnName("email");
             entity.Property(e => e.EmpleadoIdcreacion).HasColumnName("empleadoIDCreacion");
             entity.Property(e => e.EmpleadoIdedicion).HasColumnName("empleadoIDEdicion");
@@ -844,6 +844,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.EfactApi)
                 .HasMaxLength(256)
                 .HasColumnName("Efact_API");
+            entity.Property(e => e.EmailPrincipal)
+                .HasMaxLength(50)
+                .HasColumnName("emailPrincipal");
             entity.Property(e => e.Empresa).HasMaxLength(64);
             entity.Property(e => e.RetencionCuenta)
                 .HasMaxLength(50)

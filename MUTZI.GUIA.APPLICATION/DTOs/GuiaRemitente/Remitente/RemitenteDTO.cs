@@ -46,6 +46,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         [SwaggerSchema("Devuelve un texto, el correo electrónico del remitente", Nullable = false)]
         public string Email { get; set; }
 
+        [JsonPropertyName("emailFacturador")]
+        [SwaggerSchema("Devuelve un texto, el correo electrónico del facturador del remitente", Nullable = false)]
+        public string EmailFacturador { get; set; }
+
         [JsonPropertyName("pais")]
         [SwaggerSchema("Devuelve un texto, el codigo de PAIS referente, ejm: PE", Nullable = false)]
         public string Pais { get; set; }

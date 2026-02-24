@@ -11,6 +11,8 @@ public partial class VentaConfig
 
     public string Empresa { get; set; } = null!;
 
+    public string EmailPrincipal { get; set; } = null!;
+
     public string CodigoSunat { get; set; } = null!;
 
     public string? EfactApi { get; set; }

@@ -40,8 +40,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor
         public string Apellidos { get; set; }
 
         [JsonPropertyName("cargo")]
-        [SwaggerSchema("Devuelve en texto el cargo del conductor", Nullable = false)]
-        public string Cargo { get; set; }
+        [SwaggerSchema("Devuelve en texto el cargo del conductor", Nullable = true)]
+        public string? Cargo { get; set; }
 
         [JsonPropertyName("licencia")]
         [SwaggerSchema("Devuelve el número de licencia del conductor", Nullable = false)]
