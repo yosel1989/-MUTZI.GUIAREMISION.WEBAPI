@@ -235,12 +235,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
 
                 // DocRelacionados
-                foreach (var doc in docRelacionados)
+                if (docRelacionados is not null)
                 {
-                    doc.GuiaId = guiaRemision.GuiaId;
-                    await _context.DocRelacionados.AddAsync(doc);
+                    foreach (var doc in docRelacionados)
+                    {
+                        doc.GuiaId = guiaRemision.GuiaId;
+                        await _context.DocRelacionados.AddAsync(doc);
+                    }
+                    await _context.SaveChangesAsync();
                 }
-                await _context.SaveChangesAsync();
 
                 //EmailDestinatarioGuia
                 foreach (var email in emailDestinatarioGuia)

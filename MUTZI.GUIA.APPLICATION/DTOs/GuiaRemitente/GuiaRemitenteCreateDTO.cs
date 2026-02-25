@@ -61,7 +61,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public string EmpleadoNombreCreacion { get; set; }
 
         [JsonPropertyName("doc_relacionado")]
-        public List<DocRelacionadoCreateDTO> DocRelacionado { get; set; }
+        public List<DocRelacionadoCreateDTO>? DocRelacionado { get; set; }
 
         [JsonPropertyName("remitente")]
         [Required]
