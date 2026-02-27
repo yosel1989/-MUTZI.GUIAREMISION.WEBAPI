@@ -40,6 +40,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor
         [SwaggerSchema("Recibe un texto, se coloca el número de licencia del conductor", Nullable = false)]
         [MaxLength(10)]
         [Required]
+        [RegularExpression("^[A-Z0-9]{9,10}$", ErrorMessage = "El N° de licencia o brevete debe ser alfanumérico de 9 a 10 dígitos.")]
         public string Licencia { get; set; }
 
         [JsonPropertyName("empleado_id_creacion")]

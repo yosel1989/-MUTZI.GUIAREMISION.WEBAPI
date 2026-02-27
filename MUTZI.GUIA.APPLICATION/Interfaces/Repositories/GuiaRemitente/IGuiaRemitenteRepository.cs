@@ -30,7 +30,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<DOMAIN.Entities.Proveedor> GetProveedorByRucAsync(string ruc);
         Task<DOMAIN.Entities.Proveedor> CreateProveedorAsync(DOMAIN.Entities.Proveedor proveedor);
         //Conductor
-        Task<DOMAIN.Entities.Conductor> GetConductorByLicenciaAsync(string licencia);
+        Task<DOMAIN.Entities.Conductor> GetConductorByNumeroDocumentoAsync(string numeroDocumento);
         Task<DOMAIN.Entities.Conductor> CreateConductorAsync(DOMAIN.Entities.Conductor conductor);
         //Transporte
         Task<DOMAIN.Entities.Transporte> GetTransporteByPlacaAsync(string placa);
