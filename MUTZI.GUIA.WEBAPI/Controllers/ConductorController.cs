@@ -83,6 +83,38 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+        [HttpGet]
+        [Route("buscar-por-numero-documento/{numeroDocumento}")]
+        [SwaggerOperation(
+        Summary = "Buscar conductor por Nro documento",
+        Description = "Buscar objeto por número de documento.",
+        OperationId = "buscar_conductor_por_numero_documento")]
+        [ProducesResponseType(typeof(ConductorDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ConductorDTO>> GetByNumeroDocumento(string numeroDocumento)
+        {
+            try
+            {
+                var result = await _service.GetByNumeroDocumentoAsync(numeroDocumento);
+                if (result == null)
+                    return BadRequest(new BadRequestResponseDTO
+                    {
+                        Error = "No se encontraron registros",
+                        Detalle = $"No se pudo obtener conductor con el Nro Documento: {numeroDocumento}. Verifique si el Nro Documento existe en la bbdd."
+                    });
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al buscar conductor por Nro documento.",
+                    Detalle = errorMsg
+                });
+            }
+        }
         [HttpPost]
         [SwaggerOperation(
         Summary = "Registrar un conductor",

@@ -2,7 +2,6 @@
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
 {
@@ -23,6 +22,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
         public async Task<ConductorDTO?> GetByIdAsync(int id)
         {
             var conductor = await _repository.GetByIdAsync(id);
+            return conductor == null ? null : _mapper.Map<ConductorDTO>(conductor);
+        }
+        public async Task<ConductorDTO?> GetByNumeroDocumentoAsync(string numeroDocumento)
+        {
+            var conductor = await _repository.GetByNumeroDocumentoAsync(numeroDocumento);
             return conductor == null ? null : _mapper.Map<ConductorDTO>(conductor);
         }
         public async Task<int> CreateAsync(ConductorCreateDTO createDTO)
