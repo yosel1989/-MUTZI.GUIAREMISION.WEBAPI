@@ -26,6 +26,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
         [SwaggerSchema("Recibe un texto, se coloca la placa de la unidad_transporte", Nullable = false)]
         [MaxLength(8)]
         [Required]
+        [RegularExpression("^[A-Z0-9]{6,8}$", ErrorMessage = "La placa debe tener entre 6 y 8 caracteres alfanuméricos en mayúscula.")]
         public string Placa { get; set; }
 
         [JsonPropertyName("numero_registro_mtc")]

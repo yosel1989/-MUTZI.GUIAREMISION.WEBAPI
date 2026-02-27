@@ -133,7 +133,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //Registrar en lista
                 foreach (var condu in conductor)
                 {
-                    var existingConductor = await _repository.GetConductorByLicenciaAsync(condu.Licencia);
+                    var existingConductor = await _repository.GetConductorByNumeroDocumentoAsync(condu.NumeroDocumento);
                     if (existingConductor == null)
                     {
                         condu.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
