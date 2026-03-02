@@ -1,6 +1,7 @@
 ﻿using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
 using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -18,6 +19,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<DOMAIN.Entities.Conductor?> GetByIdAsync(int id)
         {
             return await _context.Conductors.FirstOrDefaultAsync(c => c.ConductorId == id);
+        }
+        public async Task<Conductor?> GetByNumeroDocumentoAsync(string numeroDocumento)
+        {
+            return await _context.Conductors.FirstOrDefaultAsync(c => c.NumeroDocumento == numeroDocumento);
         }
         public async Task CreateAsync(DOMAIN.Entities.Conductor conductor)
         {

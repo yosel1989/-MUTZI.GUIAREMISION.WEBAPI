@@ -184,7 +184,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     if (guiaRemision.TipoTransporte == "PRIVADO")
                     {
-                        var existingConductor = await GetConductorByLicenciaAsync(condu.Licencia);
+                        var existingConductor = await GetConductorByNumeroDocumentoAsync(condu.NumeroDocumento);
                         if (existingConductor == null)
                         {
                             condu.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
@@ -360,9 +360,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return proveedor;
         }
         //Conductor
-        public async Task<DOMAIN.Entities.Conductor> GetConductorByLicenciaAsync(string licencia)
+        public async Task<DOMAIN.Entities.Conductor> GetConductorByNumeroDocumentoAsync(string numeroDocumento)
         {
-            return await _context.Conductors.FirstOrDefaultAsync(c => c.Licencia == licencia);
+            return await _context.Conductors.FirstOrDefaultAsync(c => c.NumeroDocumento == numeroDocumento);
         }
         public async Task<DOMAIN.Entities.Conductor> CreateConductorAsync(DOMAIN.Entities.Conductor conductor)
         {
