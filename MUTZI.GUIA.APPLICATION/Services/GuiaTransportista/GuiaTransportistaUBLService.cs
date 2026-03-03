@@ -1,18 +1,24 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Helpers;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Configuration;
-using MUTZI.GUIA.APPLICATION.Helpers;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
 {
     public class GuiaTransportistaUBLService : IGuiaTransportistaUBLService
     {
         private readonly IConfiguration _config;
-        public GuiaTransportistaUBLService(IConfiguration config)
+        private readonly IS3FileService _s3FileService;
+        private readonly string _baseUrl = "";
+        public GuiaTransportistaUBLService(IConfiguration config, IS3FileService s3FileService)
         {
             _config = config;
+            _s3FileService = s3FileService;
+            _baseUrl = _config["Aws:BaseUrl"] ?? "";
         }
         public async Task<string> GenerarGuiaTransportistaJson(GuiaTransportistaDTO guia)
         {
@@ -413,7 +419,20 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
             );
 
             var nombreArchivo = getNombreDocumentoFile(guia, guia.Remitente.Ruc);
-            Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.Ruc));
+            //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.Ruc));
+
+            // Convertir el string JSON a un stream de memoria
+            var jsonBytes = System.Text.Encoding.UTF8.GetBytes(guiaJson);
+            using var stream = new MemoryStream(jsonBytes);
+
+            // Crear un IFormFile en memoria
+            var formFile = new FormFile(stream, 0, jsonBytes.Length, "file", nombreArchivo)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/json"
+            };
+
+            await _s3FileService.UploadFileWithCustomNameAsync(formFile, nombreArchivo);
             return nombreArchivo;
         }
 
