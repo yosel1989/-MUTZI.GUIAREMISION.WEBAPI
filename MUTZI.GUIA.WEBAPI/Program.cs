@@ -1,6 +1,9 @@
+using Genexs.AWS.Library;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.Mappings;
-using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Destinatario;
@@ -8,6 +11,7 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
@@ -18,28 +22,28 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using MUTZI.GUIA.APPLICATION.Helpers;
+using MUTZI.GUIA.APPLICATION.Mappings;
 using MUTZI.GUIA.APPLICATION.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Services.Envio;
+using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte;
-using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
-using MUTZI.GUIA.APPLICATION.Services.VentaConfig;
-using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
 using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.Ubigeo;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Ubigeo;
+using MUTZI.GUIA.APPLICATION.Services.VentaConfig;
+using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//AWS S3 Configuration
+builder.Services.AddSingleton<IS3Configuration, S3Configuration>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -106,6 +110,7 @@ builder.Services.AddScoped<IConductorService, ConductorService>();
 builder.Services.AddScoped<ITransporteService, TransporteService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<IUbigeoService, UbigeoService>();
+builder.Services.AddScoped<IS3FileService, S3FileService>();
 
 //aGREGAR SWAGGER
 builder.Services.AddEndpointsApiExplorer();
@@ -148,7 +153,17 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Serilog configuración
+var loggerConfig = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("System.Net.Http", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", Serilog.Events.LogEventLevel.Warning)
+    .WriteTo.Console()
+    .Enrich.FromLogContext();
 
+Log.Logger = loggerConfig.CreateLogger();
 
 var app = builder.Build();
 

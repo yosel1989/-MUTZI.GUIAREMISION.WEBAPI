@@ -21,7 +21,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
         private readonly IVentaConfigService _ventaConfigService;
         private readonly HttpClient _httpClient;
         private string Url_Base_Efact = "";
-        public EnvioService(IConfiguration config, IGuiaRemitenteService guiaRemitenteBDService, IGuiaTransportistaService guiaTransportistaBDService, IGuiaRemitenteUBLService guiaRemitenteUBLService, IGuiaTransportistaUBLService guiaTransportistaUBLService, IVentaConfigService ventaConfigService, HttpClient httpClient)
+        private readonly IS3FileService _s3FileService;
+        private readonly string _baseUrl = "";
+        public EnvioService(IConfiguration config, IGuiaRemitenteService guiaRemitenteBDService, IGuiaTransportistaService guiaTransportistaBDService, IGuiaRemitenteUBLService guiaRemitenteUBLService, IGuiaTransportistaUBLService guiaTransportistaUBLService, IVentaConfigService ventaConfigService, HttpClient httpClient, IS3FileService s3FileService)
         {
             _config = config;
             _guiaRemitenteBDService = guiaRemitenteBDService;
@@ -31,9 +33,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             _ventaConfigService = ventaConfigService;
             _httpClient = httpClient;
             Url_Base_Efact = config["AppSettings:url_base_facturador"];
+            _s3FileService = s3FileService;
+            _baseUrl = _config["Aws:BaseUrl"] ?? "";
         }
 
-        public async Task<string> EnviarGuiaElectronicaAsync(string ruc, string nombreArchivoJson)
+        public async Task<string> EnviarGuiaElectronicaAsync2(string ruc, string nombreArchivoJson)
         {
             var token = await _ventaConfigService.ObtenerTokenAsync(ruc);
 
@@ -64,43 +68,93 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
 
             return result;
         }
-
-        public void EscribirLog(string tipoGuia, string ruc, string numeroGuia, string estado, string ticket, string detalle)
+        public async Task<string> EnviarGuiaElectronicaAsync(string ruc, string nombreArchivoJson)
         {
-            try
+            var token = await _ventaConfigService.ObtenerTokenAsync(ruc);
+
+            if (token == null || string.IsNullOrEmpty(token.AccessToken))
+                throw new InvalidOperationException("No se pudo obtener un token válido de EFACT.");
+
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token.AccessToken);
+
+            // Obtener el archivo JSON desde S3/AWS
+            var s3Object = await _s3FileService.GetFileAsync(nombreArchivoJson);
+            if (s3Object?.ResponseStream == null)
+                throw new FileNotFoundException($"No se encontró el archivo JSON en S3: {nombreArchivoJson}");
+
+            var respObj = (object)s3Object.ResponseStream;
+            Stream contentStream;
+            if (respObj is Stream s)
             {
-                // Leer el path base desde la configuración
-                string pathLogBase = _config["AppSettings:path_log"];
-
-                // Validación por si está vacío o no se configuró
-                if (string.IsNullOrWhiteSpace(pathLogBase))
-                {
-                    Console.WriteLine("La ruta del log (path_log) no está configurada.");
-                    return;
-                }
-
-                // Crear subcarpeta por tipo de guía (REMITENTE o TRANSPORTISTA)
-                string carpetaTipo = Path.Combine(pathLogBase, tipoGuia);
-                if (!Directory.Exists(carpetaTipo))
-                {
-                    Directory.CreateDirectory(carpetaTipo);
-                }
-
-                // Elegir archivo de log según estado
-                string archivoLog = estado == "ENVIADO" ? "Success.txt" : "LogError.txt";
-                string pathArchivo = Path.Combine(carpetaTipo, archivoLog);
-
-                // Armar contenido del log
-                string contenido = $"Fecha: {DateTime.Now:yyyy-MM-dd HH:mm:ss}; RUC: {ruc}; Número Guía: {numeroGuia}; Ticket: {ticket}\nEstado: {estado}\nDetalle: {detalle}\n--------------------------\n";
-
-                // Escribir en el archivo
-                File.AppendAllText(pathArchivo, contenido);
+                contentStream = s;
+                if (contentStream.CanSeek)
+                    contentStream.Position = 0;
             }
-            catch (Exception ex)
+            else if (respObj is byte[] bytes)
             {
-                Console.WriteLine($"Error al escribir el log: {ex.Message}");
+                contentStream = new MemoryStream(bytes);
             }
+            else
+            {
+                throw new Exception("Tipo de ResponseStream no soportado al descargar desde S3.");
+            }
+
+            using var form = new MultipartFormDataContent();
+            using var streamContent = new StreamContent(contentStream);
+            var contentType = string.IsNullOrWhiteSpace(s3Object.ContentType) ? "application/json" : s3Object.ContentType;
+            streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
+
+            // Archivo .json
+            form.Add(streamContent, "file", nombreArchivoJson);
+
+            // POST a EFACT
+            var url = $"{Url_Base_Efact}/api-efact-ose/v1/document";
+            var response = await _httpClient.PostAsync(url, form);
+            var result = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+                throw new Exception($"Error al enviar a EFACT: {response.StatusCode} - {result}");
+
+            return result;
         }
+
+        //public void EscribirLog(string tipoGuia, string ruc, string numeroGuia, string estado, string ticket, string detalle)
+        //{
+        //    try
+        //    {
+        //        // Leer el path base desde la configuración
+        //        string pathLogBase = _config["AppSettings:path_log"];
+
+        //        // Validación por si está vacío o no se configuró
+        //        if (string.IsNullOrWhiteSpace(pathLogBase))
+        //        {
+        //            Console.WriteLine("La ruta del log (path_log) no está configurada.");
+        //            return;
+        //        }
+
+        //        // Crear subcarpeta por tipo de guía (REMITENTE o TRANSPORTISTA)
+        //        string carpetaTipo = Path.Combine(pathLogBase, tipoGuia);
+        //        if (!Directory.Exists(carpetaTipo))
+        //        {
+        //            Directory.CreateDirectory(carpetaTipo);
+        //        }
+
+        //        // Elegir archivo de log según estado
+        //        string archivoLog = estado == "ENVIADO" ? "Success.txt" : "LogError.txt";
+        //        string pathArchivo = Path.Combine(carpetaTipo, archivoLog);
+
+        //        // Armar contenido del log
+        //        string contenido = $"Fecha: {DateTime.Now:yyyy-MM-dd HH:mm:ss}; RUC: {ruc}; Número Guía: {numeroGuia}; Ticket: {ticket}\nEstado: {estado}\nDetalle: {detalle}\n--------------------------\n";
+
+        //        // Escribir en el archivo
+        //        File.AppendAllText(pathArchivo, contenido);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error al escribir el log: {ex.Message}");
+        //    }
+        //}
 
         public async Task<object> ProcesarGuiaRemisionAsync(string ruc, GuiaRemitenteCreateDTO doc)
         {
@@ -154,7 +208,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                     string errorMsg = ex.InnerException?.Message ?? ex.Message;
                     if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
 
-                    EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, errorMsg);
+                    //EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, errorMsg);
                     return new InternalErrorResponseDTO
                     {
                         Error = "Error al enviar a EFACT",
@@ -187,7 +241,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 }
 
                 await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaCreada.GuiaID, ticket, estado);
-                EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
+                //EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
 
                 return new SendGuiaResponseDTO
                 {
@@ -201,7 +255,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
 
-                EscribirLog("GUIAREMITENTE", ruc, "Remitente Ruc:" + doc.Remitente.Ruc, estado, ticket, errorMsg);
+                //EscribirLog("GUIAREMITENTE", ruc, "Remitente Ruc:" + doc.Remitente.Ruc, estado, ticket, errorMsg);
 
                 return new InternalErrorResponseDTO
                 {
@@ -328,7 +382,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                     {
                         errorMsg = errorMsg[..500];
                     }
-                    EscribirLog("GUIATRANSPORTISTA", ruc, guiaCreada.SerieCorrelativo, estado, ticket, errorMsg);
+                    //EscribirLog("GUIATRANSPORTISTA", ruc, guiaCreada.SerieCorrelativo, estado, ticket, errorMsg);
                     return new InternalErrorResponseDTO
                     {
                         Error = "Error al enviar a EFACT",
@@ -362,7 +416,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 }
 
                 await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaCreada.GuiaID, ticket, estado);
-                EscribirLog("GUIATRANSPORTISTA", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
+                //EscribirLog("GUIATRANSPORTISTA", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
 
                 return new SendGuiaResponseDTO
                 {
@@ -376,7 +430,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 estado = "RECHAZADO";
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-                EscribirLog("GUIATRANSPORTISTA", ruc, "NumeroDocRef:" + doc.NumeroDocRef, estado, ticket, errorMsg);
+                //EscribirLog("GUIATRANSPORTISTA", ruc, "NumeroDocRef:" + doc.NumeroDocRef, estado, ticket, errorMsg);
                 return new InternalErrorResponseDTO
                 {
                     Error = "Error inesperado",
