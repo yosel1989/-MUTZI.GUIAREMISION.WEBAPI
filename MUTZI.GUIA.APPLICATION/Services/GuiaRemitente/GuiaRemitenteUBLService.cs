@@ -1,18 +1,24 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using Newtonsoft.Json;
-using MUTZI.GUIA.APPLICATION.Helpers;
-using Microsoft.Extensions.Configuration;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
 {
     public class GuiaRemitenteUBLService : IGuiaRemitenteUBLService
     {
         private readonly IConfiguration _config;
-        public GuiaRemitenteUBLService(IConfiguration config)
+        private readonly IS3FileService _s3FileService;
+        private readonly string _baseUrl = "";
+        public GuiaRemitenteUBLService(IConfiguration config, IS3FileService s3FileService)
         {
             _config = config;
+            _s3FileService = s3FileService;
+            _baseUrl = _config["Aws:BaseUrl"] ?? "";
         }
         public async Task<string> GenerarGuiaRemisionJson(GuiaRemitenteDTO guia)
         {
@@ -386,10 +392,22 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
         );
 
-            //Se está guardando en la carpeta ahora mismo.
+            //Se está guardando en la carpeta ahora mismo. Actualización, se pasó a producción y ahora se guarda en AWS
             var nombreArchivo = getNombreDocumentoFile(guia, guia.Remitente.Ruc);
-            Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.Ruc));
+            //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.Ruc));//Ya no se usa
 
+            // Convertir el string JSON a un stream de memoria
+            var jsonBytes = System.Text.Encoding.UTF8.GetBytes(guiaJson);
+            using var stream = new MemoryStream(jsonBytes);
+
+            // Crear un IFormFile en memoria
+            var formFile = new FormFile(stream, 0, jsonBytes.Length, "file", nombreArchivo)
+            {
+                Headers = new HeaderDictionary(),
+                ContentType = "application/json"
+            };
+
+            await _s3FileService.UploadFileWithCustomNameAsync(formFile, nombreArchivo);
             return nombreArchivo;
         }
         public string RutaDocPendiente(GuiaRemitenteDTO guia, string ruc)

@@ -10,6 +10,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio
         Task<object> ReenviarGuiaRemisionAsync(string ruc, int guiaId);
         Task<object> ProcesarGuiaTransportistaAsync(string ruc, GuiaTransportistaCreateDTO guiaTransportistaDto);
         Task<object> ReenviarGuiaTransportistaAsync(string ruc, int guiaId);
-        void EscribirLog(string tipoGuia, string ruc, string numeroGuia, string estado, string ticket, string detalle);
+        //void EscribirLog(string tipoGuia, string ruc, string numeroGuia, string estado, string ticket, string detalle);
     }
 }
