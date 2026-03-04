@@ -58,6 +58,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         [SwaggerSchema("Devuelve un texto, la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
         public string Serie { get; set; }
 
+        [JsonPropertyName("codigoSunat")]
+        [SwaggerSchema("Devuelve un texto, el Código de establecimiento o de la Sucursal", Nullable = true)]
+        public string? CodigoSunat { get; set; }
+
         [JsonPropertyName("fecha_creacion")]
         public DateTime FechaCreacion { get; set; }
 

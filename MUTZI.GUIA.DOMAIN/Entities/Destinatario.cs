@@ -19,6 +19,8 @@ public partial class Destinatario
 
     public string Pais { get; set; } = null!;
 
+    public string? CodigoSunat { get; set; }
+
     public DateTime? FechaCreacion { get; set; }
 
     public DateTime? FechaEdicion { get; set; }

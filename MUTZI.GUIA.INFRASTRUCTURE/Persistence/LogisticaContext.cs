@@ -74,7 +74,7 @@ public partial class LogisticaContext : DbContext
 
             entity.HasIndex(e => e.Licencia, "licencia_UNIQUE").IsUnique();
 
-            entity.HasIndex(e => e.NumeroDocumento, "numeroDocumento_UNIQUE").IsUnique();
+            entity.HasIndex(e => e.NumeroDocumento, "numeroDocumento_BUSQUEDA").IsUnique();
 
             entity.Property(e => e.ConductorId).HasColumnName("conductorID");
             entity.Property(e => e.Activo)
@@ -192,9 +192,14 @@ public partial class LogisticaContext : DbContext
 
             entity.ToTable("destinatario");
 
+            entity.HasIndex(e => e.NumeroDocumento, "numeroDocumento_BUSQUEDA").IsUnique();
+
             entity.HasIndex(e => e.UbigeoId, "ubigeoID");
 
             entity.Property(e => e.DestinatarioId).HasColumnName("destinatarioID");
+            entity.Property(e => e.CodigoSunat)
+                .HasMaxLength(4)
+                .HasColumnName("codigoSunat");
             entity.Property(e => e.Direccion)
                 .HasMaxLength(250)
                 .HasColumnName("direccion");
@@ -218,7 +223,7 @@ public partial class LogisticaContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("fechaEdicion");
             entity.Property(e => e.NumeroDocumento)
-                .HasMaxLength(11)
+                .HasMaxLength(15)
                 .HasColumnName("numeroDocumento");
             entity.Property(e => e.Pais)
                 .HasMaxLength(3)
@@ -435,9 +440,6 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.Hora)
                 .HasMaxLength(10)
                 .HasColumnName("hora");
-            entity.Property(e => e.NumeroDocRef)
-                .HasMaxLength(30)
-                .HasColumnName("numeroDocRef");
             entity.Property(e => e.NumeroGuia)
                 .HasMaxLength(15)
                 .HasColumnName("numeroGuia");
@@ -450,15 +452,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.RespuestaTicket)
                 .HasMaxLength(500)
                 .HasColumnName("respuestaTicket");
-            entity.Property(e => e.RucDocRef)
-                .HasMaxLength(12)
-                .HasColumnName("rucDocRef");
             entity.Property(e => e.Serie)
                 .HasMaxLength(4)
                 .HasColumnName("serie");
-            entity.Property(e => e.TipoDocRef)
-                .HasMaxLength(50)
-                .HasColumnName("tipoDocRef");
             entity.Property(e => e.TipoGuia)
                 .HasMaxLength(20)
                 .HasColumnName("tipoGuia");
@@ -527,9 +523,14 @@ public partial class LogisticaContext : DbContext
 
             entity.ToTable("proveedor");
 
+            entity.HasIndex(e => e.NumeroDocumento, "numeroDocumento_BUSQUEDA").IsUnique();
+
             entity.HasIndex(e => e.UbigeoId, "ubigeoID");
 
             entity.Property(e => e.ProveedorId).HasColumnName("proveedorID");
+            entity.Property(e => e.CodigoSunat)
+                .HasMaxLength(4)
+                .HasColumnName("codigoSunat");
             entity.Property(e => e.Direccion)
                 .HasMaxLength(250)
                 .HasColumnName("direccion");
@@ -583,6 +584,8 @@ public partial class LogisticaContext : DbContext
 
             entity.ToTable("remiteTransportista");
 
+            entity.HasIndex(e => e.NumeroDocumento, "numeroDocumento_UNIQUE").IsUnique();
+
             entity.HasIndex(e => e.UbigeoId, "ubigeoID");
 
             entity.Property(e => e.RemiteTransportistaId).HasColumnName("remiteTransportistaID");
@@ -608,15 +611,18 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.FechaEdicion)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaEdicion");
+            entity.Property(e => e.NumeroDocumento)
+                .HasMaxLength(15)
+                .HasColumnName("numeroDocumento");
             entity.Property(e => e.Pais)
                 .HasMaxLength(3)
                 .HasColumnName("pais");
             entity.Property(e => e.RazonSocial)
                 .HasMaxLength(200)
                 .HasColumnName("razonSocial");
-            entity.Property(e => e.Ruc)
-                .HasMaxLength(11)
-                .HasColumnName("ruc");
+            entity.Property(e => e.TipoDocumento)
+                .HasMaxLength(20)
+                .HasColumnName("tipoDocumento");
             entity.Property(e => e.UbigeoId)
                 .HasMaxLength(6)
                 .HasColumnName("ubigeoID");
@@ -640,6 +646,9 @@ public partial class LogisticaContext : DbContext
             entity.HasIndex(e => e.UbigeoId, "ubigeoID");
 
             entity.Property(e => e.RemitenteId).HasColumnName("remitenteID");
+            entity.Property(e => e.CodigoSunat)
+                .HasMaxLength(4)
+                .HasColumnName("codigoSunat");
             entity.Property(e => e.Descripcion)
                 .HasMaxLength(200)
                 .HasColumnName("descripcion");
@@ -775,6 +784,8 @@ public partial class LogisticaContext : DbContext
             entity
                 .ToTable("ubigeo")
                 .UseCollation("utf8mb4_unicode_ci");
+
+            entity.HasIndex(e => e.UbigeoId, "ID_BUSQUEDA");
 
             entity.Property(e => e.UbigeoId)
                 .HasMaxLength(6)

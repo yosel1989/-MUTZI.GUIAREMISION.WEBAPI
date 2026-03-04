@@ -181,12 +181,14 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     //    AddressLine = new List<AddressLine>{ new AddressLine { Line = new List<Line> { new Line { _  = guia.Destino.Direccion }}}},
                     //    Country = new List<Country>{ new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destino.Pais } }}}
                     //}},
+                    //Punto de llegada
                     DeliveryAddress = guia.Destino.Select(destino => new DeliveryAddress {
                         ID = new List<ID>{ new ID { _ = destino.UbigeoId }},
-                        AddressTypeCode = new List<AddressTypeCode>{ new AddressTypeCode {
-                            _ = "0000",
+                        AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
+                            _ = guia.Destinatario.CodigoSunat,
                             //Si es traslado, se coloca el ruc del remitente, ya que es traslado entre sucursales nomas; si es venta o compra, el numeroDoc del destinatario
-                            listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.Ruc : guia.Destinatario.NumeroDocumento
+                            //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.Ruc : guia.Destinatario.NumeroDocumento
+                            listID=guia.Destinatario.NumeroDocumento
                         }},
                         CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},
                         CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = destino.Departamento }},
@@ -196,13 +198,24 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                         Country = new List<Country>{ new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = destino.Pais } }}}
                     }).ToList(),
                     Despatch = new List<Despatch>{ new Despatch {
+                        //Punto de partida
                          DespatchAddress = new List<DespatchAddress>{ new DespatchAddress {
                             ID = new List<ID>{ new ID { _ = guia.Origen.UbigeoId }},
-                             AddressTypeCode = new List<AddressTypeCode>{new AddressTypeCode {
-                                _ ="0001",
-                                //Si es compra, se coloca el numeroDoc del proveedor, si es venta o traslado, el ruc del remitente
-                                listID = guia.TipoTraslado=="COMPRA" ? guia.Proveedor.NumeroDocumento: guia.Remitente.Ruc
-                            }},
+                             //Se valida si tipoTrasLado es compra o no. Asimismo, se valida que no sea nulo el codSunat.
+                             AddressTypeCode=guia.TipoTraslado=="COMPRA" ? string.IsNullOrWhiteSpace(guia.Proveedor.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
+                                _ = guia.Proveedor.CodigoSunat,
+                                listID = guia.Proveedor.NumeroDocumento
+                             } } : //En caso que no sea compra, se valida el codSunat del remitente 
+                             string.IsNullOrWhiteSpace(guia.Remitente.CodigoSunat)?null: new List<AddressTypeCode>{new AddressTypeCode {
+                                _ =guia.Remitente.CodigoSunat,
+                                listID = guia.Remitente.Ruc
+                             }}
+                             ,
+                            // AddressTypeCode = string.IsNullOrWhiteSpace(guia.Remitente.CodigoSunat)?null: new List<AddressTypeCode>{new AddressTypeCode {
+                            //    _ =guia.Remitente.CodigoSunat, 
+                            //    //Si es compra, se coloca el numeroDoc del proveedor, si es venta o traslado, el ruc del remitente
+                            //    listID = guia.TipoTraslado=="COMPRA" ? guia.Proveedor.NumeroDocumento: guia.Remitente.Ruc
+                            //}},
                             CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Origen.Departamento } },
                             CityName = new List<CityName>{ new CityName { _ = guia.Origen.Provincia }},
                             District = new List<District>{ new District { _ = guia.Origen.Distrito}},

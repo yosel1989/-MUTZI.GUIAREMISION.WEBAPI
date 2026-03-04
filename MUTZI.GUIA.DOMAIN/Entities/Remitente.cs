@@ -21,6 +21,8 @@ public partial class Remitente
 
     public string Serie { get; set; } = null!;
 
+    public string? CodigoSunat { get; set; }
+
     public DateTime? FechaCreacion { get; set; }
 
     public DateTime? FechaEdicion { get; set; }
