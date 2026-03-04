@@ -7,12 +7,18 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
     [SwaggerSchema("Recibe un objeto remite_transportista para actualizar", Nullable = false)]
     public class RemiteTransportistaUpdateDTO
     {
-        [JsonPropertyName("ruc")]
-        [SwaggerSchema("Recibe un texto, es el ruc del remitente_transportista", Nullable = false)]
-        [Required(ErrorMessage = "El Nro documento del remitente_transportista es obligatoria")]
-        [StringLength(11, ErrorMessage = "El número de documento del remitente_transportista no puede exceder los 11 caracteres")]
-        [MinLength(11)]
-        public string Ruc { get; set; }
+        [JsonPropertyName("tipo_documento")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el tipo de documento del REMITE_TRANSPORTISTA. Solo recibe los siguientes valores: DNI, CE, RUC y PASAPORTE", Nullable = false)]
+        [MaxLength(20)]
+        [Required]
+        public string TipoDocumento { get; set; }
+
+        [JsonPropertyName("numero_documento")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el número de documento del REMITE_TRANSPORTISTA.", Nullable = false)]
+        [Required(ErrorMessage = "El Nro documento del REMITE_TRANSPORTISTA es obligatorio")]
+        [MaxLength(15)]
+        [MinLength(8)]
+        public string NumeroDocumento { get; set; }
 
         [JsonPropertyName("razon_social")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la razón social del remitente_transportista", Nullable = false)]

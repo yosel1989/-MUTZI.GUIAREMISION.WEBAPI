@@ -1,12 +1,13 @@
-﻿using MUTZI.GUIA.APPLICATION.Helpers;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista;
+using MUTZI.GUIA.APPLICATION.Helpers;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
@@ -36,25 +37,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         public string? Observacion { get; set; }
 
         // Documento de referencia (factura/boleta vinculada)
-        [JsonPropertyName("tipo_doc_ref")]
-        [SwaggerSchema("Recibe un texto, es el tipo de documento vinculado como referencia en la guía de remisión transportista, los tipos definidos son: FACTURA, BOLETA, NOTA DE CREDITO Y NOTA DE DEBITO", Nullable = false)]
-        [MaxLength(20)]
-        [Required]
-        public string TipoDocRef { get; set; }
-
-        [JsonPropertyName("numero_doc_ref")]
-        [SwaggerSchema("Recibe un texto, aquí se hace referencia al numero del documento vinculado en la guía de remisión transportista. Ejm: F025-00000003", Nullable = false)]
-        [MaxLength(21)]
-        [Required]
-        [NumeroDocRefFormato]
-        public string NumeroDocRef { get; set; }
-
-        [JsonPropertyName("ruc_doc_ref")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el ruc del documento vinculado como referencia en la guía de remisión transportista.", Nullable = false)]
-        [StringLength(11)]
-        [MinLength(11)]
-        [Required]
-        public string RucDocRef { get; set; }
+        [JsonPropertyName("doc_relacionado")]
+        public List<DocRelacionadoCreateDTO>? DocRelacionado { get; set; }
 
         [JsonPropertyName("empleado_id_creacion")]
         [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = false)]
@@ -96,25 +80,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         [JsonPropertyName("productos")]
         [Required]
         public List<ProductosCreateDTO> Productos { get; set; }
-        public string DocumentoAdicinalTipo()
-        {
-            if (string.IsNullOrEmpty(this.TipoDocRef))
-                throw new System.Exception("tipo_doc_ref no puede estar vacío al generar el tipo de documento adicional.");
-
-            switch (this.TipoDocRef.ToUpper())
-            {
-                case "FACTURA":
-                    return "01"; // Factura
-                case "BOLETA":
-                    return "03"; // Boleta
-                case "NOTA DE CREDITO":
-                    return "07"; // Nota de crédito
-                case "NOTA DE DEBITO":
-                    return "08"; // Nota de débito
-                default:
-                    throw new System.Exception("Catálogo No. 01: (tipo_doc_ref)Tipo de documento vinculado como referencia no definido.");
-            }
-        }
         public string getTipoCodigoDocumento(string tipo)
         {
             if (tipo == "DNI")

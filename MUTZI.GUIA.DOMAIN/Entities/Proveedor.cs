@@ -21,6 +21,8 @@ public partial class Proveedor
 
     public string Email { get; set; } = null!;
 
+    public string? CodigoSunat { get; set; }
+
     public DateTime? FechaCreacion { get; set; }
 
     public DateTime? FechaEdicion { get; set; }

@@ -95,10 +95,16 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
             switch (this.TipoTraslado)
             {
                 case "VENTA":
+                    if (this.Remitente.Ruc == this.Destinatario.NumeroDocumento)
+                        throw new System.Exception("Si el tipo de traslado es VENTA, el 'Tipo y Número de documento de identidad del destinatario' no puede ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "01";
                 case "COMPRA":
+                    if (this.Remitente.Ruc!=this.Destinatario.NumeroDocumento)
+                        throw new System.Exception("Si el tipo de traslado es COMPRA, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "02";
                 case "TRASLADO":
+                    if (this.Remitente.Ruc != this.Destinatario.NumeroDocumento)
+                        throw new System.Exception("Si el tipo de traslado es TRASLADO, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "04";
                 default:
                     throw new System.Exception("Catálogo No. 20: Códigos – Motivos de traslado no definido. Debe elegir entre: VENTA, COMPRA ó TRASLADO");

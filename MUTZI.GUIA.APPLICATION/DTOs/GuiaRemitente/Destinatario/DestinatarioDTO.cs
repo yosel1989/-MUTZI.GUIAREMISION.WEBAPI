@@ -51,6 +51,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         [JsonPropertyName("pais")]
         [SwaggerSchema("Devuelve en texto el codigo de PAIS referente, ejm: PE", Nullable = false)]
         public string Pais { get; set; }
+
+        [JsonPropertyName("codigoSunat")]
+        [SwaggerSchema("Devuelve en texto el Código de establecimiento o de la Sucursal", Nullable = true)]
+        public string? CodigoSunat { get; set; }
+
         public DateTime FechaCreacion { get; set; }
 
         [JsonPropertyName("email_destinatario")]

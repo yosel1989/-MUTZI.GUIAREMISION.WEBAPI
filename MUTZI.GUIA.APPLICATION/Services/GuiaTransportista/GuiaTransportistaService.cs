@@ -33,13 +33,14 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
             //var destino = _mapper.Map<DOMAIN.Entities.Destino>(dto.Destino);
             var destino = dto.Destino.Select(p => _mapper.Map<DOMAIN.Entities.Destino>(p)).ToList();
             var detalles = dto.Productos.Select(p => _mapper.Map<DOMAIN.Entities.GuiaDetalle>(p)).ToList();
+            var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.DocRelacionado>(p)).ToList();
             var emailsDestinatarioGuia = dto.Destinatario.EmailDestinatarioGuia.Select(p => _mapper.Map<DOMAIN.Entities.EmailDestinatarioGuid>(p)).ToList();
             var emailsRemiteTransportistaGuia = dto.RemiteTransportista.EmailRemiteTransportista.Select(p => _mapper.Map<DOMAIN.Entities.EmailRemiteTransportistaGuid>(p)).ToList();
 
             // Llamar al repositorio
             var id = await _repository.CreateGuiaTransportistaTransactionalAsync(
                 remitente, remiteTransportista, destinatario, conductor, transporte,
-                guiaRemision, datosEnvio, origen, destino, detalles,emailsDestinatarioGuia,emailsRemiteTransportistaGuia
+                guiaRemision, datosEnvio, origen, destino, detalles,docRelacionados,emailsDestinatarioGuia,emailsRemiteTransportistaGuia
             );
             //SE obtiene la guia de remision creada
             var guiaCreada = await _repository.GetByIdAsync(id);
@@ -62,7 +63,10 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                     return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador.");
                 }
                 _ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento);
-                _ = guia.DocumentoAdicinalTipo();
+                if (guia.DocRelacionado?.Count > 1)
+                {
+                    return (false, "Solo se permite un documento relacionado como referencia en la guía de remisión transportista.");
+                }
                 //if (string.IsNullOrWhiteSpace(guia.Observacion))
                 //    return (false, "La observación no puede estar vacía.");
                 return (true, null);

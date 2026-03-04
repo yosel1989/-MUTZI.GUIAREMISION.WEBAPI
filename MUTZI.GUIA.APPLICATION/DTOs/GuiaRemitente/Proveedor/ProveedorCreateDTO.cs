@@ -53,6 +53,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor
         [Required]
         public string Pais { get; set; }
 
+        [JsonPropertyName("codigoSunat")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]
+        [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
+        public string? CodigoSunat { get; set; }
+
         [JsonPropertyName("empleado_id_creacion")]
         [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = true)]
         public int? EmpleadoIDCreacion { get; set; }

@@ -82,7 +82,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
         {
             try
             {
-                var ventaConfig = _ventaConfigRepository.GetByRucAsync(ruc).Result;
+                if (guia.DocRelacionado?.Count > 3)
+                {
+                    return (false, "Solo se permite hasta 3 documentos relacionados como referencia en la guía de remisión transportista.");
+                }
+                    var ventaConfig = _ventaConfigRepository.GetByRucAsync(ruc).Result;
                 if (ventaConfig == null || string.IsNullOrEmpty(ventaConfig.Ruc))
                 {
                     return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");

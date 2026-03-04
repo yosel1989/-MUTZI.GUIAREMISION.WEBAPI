@@ -19,12 +19,6 @@ public partial class GuiaRemision
 
     public string TipoTraslado { get; set; } = null!;
 
-    public string? TipoDocRef { get; set; }
-
-    public string? NumeroDocRef { get; set; }
-
-    public string? RucDocRef { get; set; }
-
     public DateOnly Fecha { get; set; }
 
     public string Hora { get; set; } = null!;

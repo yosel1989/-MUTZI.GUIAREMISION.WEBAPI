@@ -5,15 +5,21 @@ using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
 {
-    [SwaggerSchema("Recibe un objeto remite_transportista, si es nuevo remite_transportista la api crea un nuevo remite_transportista en la bbdd, tener en cuenta que, si Carolina SAC o la empresa que esté asociada al facturador actúa como transportista este objeto pasa a ser remitente y los datos colocados aquí salen en la guía transportista como remitente.", Nullable=false)]
+    [SwaggerSchema("Recibe un objeto remite_transportista, si es nuevo remite_transportista la api crea un nuevo remite_transportista en la bbdd, tener en cuenta que, si Carolina SAC o la empresa que esté asociada al facturador actúa como transportista este objeto pasa a ser remitente y según Efact, menciona que: 'El 'Número de documento de identidad del remitente', no debe ser igual al número de RUC del transportista.'.", Nullable=false)]
     public class   RemiteTransportistaCreateDTO
     {
-        [JsonPropertyName("ruc")]
-        [SwaggerSchema("Recibe un texto, es el ruc del remitente_transportista", Nullable = false)]
-        [Required(ErrorMessage = "El Nro documento del remitente_transportista es obligatoria")]
-        [StringLength(11, ErrorMessage = "El número de documento del remitente_transportista no puede exceder los 11 caracteres")]
-        [MinLength(11)]
-        public string Ruc { get; set; }
+        [JsonPropertyName("tipo_documento")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el tipo de documento del REMITE_TRANSPORTISTA. Solo recibe los siguientes valores: DNI, CE, RUC y PASAPORTE", Nullable = false)]
+        [MaxLength(20)]
+        [Required]
+        public string TipoDocumento { get; set; }
+
+        [JsonPropertyName("numero_documento")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el número de documento del REMITE_TRANSPORTISTA.", Nullable = false)]
+        [Required(ErrorMessage = "El Nro documento del REMITE_TRANSPORTISTA es obligatorio")]
+        [MaxLength(15)]
+        [MinLength(8)]
+        public string NumeroDocumento { get; set; }
 
         [JsonPropertyName("razon_social")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la razón social del remitente_transportista", Nullable = false)]
