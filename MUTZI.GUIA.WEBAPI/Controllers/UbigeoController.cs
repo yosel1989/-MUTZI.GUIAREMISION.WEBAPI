@@ -1,8 +1,9 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.Ubigeo;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Ubigeo;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Ubigeo;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
@@ -11,11 +12,12 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
     public class UbigeoController : ControllerBase
     {
         private readonly IUbigeoService _service;
-        public UbigeoController(IUbigeoService service)
+        private readonly IMemoryCache _cache;
+        public UbigeoController(IUbigeoService service, IMemoryCache memoryCache)
         {
             _service = service;
+            _cache = memoryCache;
         }
-
         [HttpGet]
         [Route("departamentos")]
         [SwaggerOperation(
@@ -29,8 +31,13 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var result = await _service.GetDepartamentoAsync();
-                if (result == null)
+                var departamentos = await _cache.GetOrCreateAsync("departamentos", async entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
+                    return await _service.GetDepartamentoAsync();
+                });
+
+                if (departamentos == null)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {
@@ -39,7 +46,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                     });
                 }
 
-                return Ok(result);
+                return Ok(departamentos);
             }
             catch (Exception ex)
             {
@@ -51,7 +58,6 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
-
         [HttpGet]
         [Route("provincias-by-departamento/{idDepartamento}")]
         [SwaggerOperation(
@@ -65,8 +71,12 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var result = await _service.GetProvinciaAsync(idDepartamento);
-                if (result == null)
+                var provincias = await _cache.GetOrCreateAsync("provincias", async entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
+                    return await _service.GetProvinciaAsync(idDepartamento);
+                });
+                if (provincias==null)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {
@@ -74,8 +84,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                         Detalle = $"No se pudo obtener Ubigeo con el inicial del código: {idDepartamento}. Verifique si el inicial del código existe en la bbdd."
                     });
                 }
-
-                return Ok(result);
+                return Ok(provincias);
             }
             catch (Exception ex)
             {
@@ -101,8 +110,12 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var result = await _service.GetDistritoAsync(idProvincia);
-                if (result == null)
+                var distritos = await _cache.GetOrCreateAsync("distritos", async entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
+                    return await _service.GetDistritoAsync(idProvincia);
+                });
+                if (distritos == null)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {
@@ -111,7 +124,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                     });
                 }
 
-                return Ok(result);
+                return Ok(distritos);
             }
             catch (Exception ex)
             {

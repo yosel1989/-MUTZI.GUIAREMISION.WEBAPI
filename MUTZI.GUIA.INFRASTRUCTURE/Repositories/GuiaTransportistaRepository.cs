@@ -36,11 +36,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         .ThenInclude(tr => tr.Transporte)
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
+                .Include(doc => doc.DocRelacionados)
+                .Include(e=>e.EmailRemiteTransportistaGuids)
+                .Include(e => e.EmailDestinatarioGuids)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
             //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
         public async Task<int> CreateGuiaTransportistaTransactionalAsync(Remitente remitente, RemiteTransportistum remiteTransportista, Destinatario destinatario, List<Conductor> conductor, List<Transporte> transporte, DOMAIN.Entities.GuiaRemision guiaRemision, DatosEnvio datosEnvio, Origen origen, List<Destino> destino,
             List<GuiaDetalle> detalles,
+            List<DocRelacionado> docRelacionados,
             List<EmailDestinatarioGuid> emailDestinatarioGuia,
             List<EmailRemiteTransportistaGuid> emailRemiteTransportistas
             )
@@ -60,7 +64,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     remitente = existingRemitente;
                 }
                 //Agregar datos de remitente transportista
-                var existingRemiteTransportista = await GetRemiteTransportistaByRucAsync(remiteTransportista.Ruc);
+                var existingRemiteTransportista = await GetRemiteTransportistaByRucAsync(remiteTransportista.NumeroDocumento);
                 if (existingRemiteTransportista == null)
                 {
                     await _context.RemiteTransportista.AddAsync(remiteTransportista);
@@ -179,6 +183,16 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     await _context.TransporteGuids.AddAsync(transporteGuia);
                     await _context.SaveChangesAsync();
                 }
+                // DocRelacionados
+                if (docRelacionados is not null)
+                {
+                    foreach (var doc in docRelacionados)
+                    {
+                        doc.GuiaId = guiaRemision.GuiaId;
+                        await _context.DocRelacionados.AddAsync(doc);
+                    }
+                    await _context.SaveChangesAsync();
+                }
                 // Email destinatario guía
                 foreach (var emailDest in emailDestinatarioGuia)
                 {
@@ -228,9 +242,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 throw;
             }
         }
-        public async Task<RemiteTransportistum> GetRemiteTransportistaByRucAsync(string ruc)
+        public async Task<RemiteTransportistum> GetRemiteTransportistaByRucAsync(string numeroDocumento)
         {
-            return await _context.RemiteTransportista.FirstOrDefaultAsync(r => r.Ruc == ruc);
+            return await _context.RemiteTransportista.FirstOrDefaultAsync(r => r.NumeroDocumento == numeroDocumento);
         }
     }
 }

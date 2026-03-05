@@ -34,7 +34,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .Include(doc => doc.DocRelacionados)
-                .Include(e=>e.EmailDestinatarioGuids)
+                //.Include(e=>e.EmailDestinatarioGuids)
                 .ToListAsync();
         }
         public async Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket)

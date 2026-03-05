@@ -111,6 +111,7 @@ builder.Services.AddScoped<ITransporteService, TransporteService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<IUbigeoService, UbigeoService>();
 builder.Services.AddScoped<IS3FileService, S3FileService>();
+builder.Services.AddMemoryCache();
 
 //aGREGAR SWAGGER
 builder.Services.AddEndpointsApiExplorer();

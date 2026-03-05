@@ -41,22 +41,17 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                     LineCountNumeric       = new List<LineCountNumeric>       { new LineCountNumeric { _ = (guia.Productos?.Count ?? 0).ToString() }},
 
                     // Doc. de referencia (Factura/Boleta)
-                    AdditionalDocumentReference = string.IsNullOrWhiteSpace(guia.NumeroDocRef) ? null : new List<AdditionalDocumentReference> {
-                        new AdditionalDocumentReference {
-                            ID               = new List<ID>               { new ID               { _ = guia.NumeroDocRef }},
-                            DocumentType     = string.IsNullOrWhiteSpace(guia.TipoDocRef) ? null : new List<DocumentType>    { new DocumentType    { _ = guia.TipoDocRef }},
-                            DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode{ _ = guia.DocumentoAdicinalTipo() } },
-                            IssuerParty      = string.IsNullOrWhiteSpace(guia.RucDocRef)        ? null : new List<IssuerParty> {
-                                new IssuerParty {
-                                    PartyIdentification = new List<PartyIdentification> {
-                                        new PartyIdentification {
-                                            ID = new List<ID> { new ID { _ = guia.RucDocRef, schemeID = EspacioNombreGuiaRemision._DocumentType06 }}
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
+                    //Agregar en lista los documentos relacionados
+                    AdditionalDocumentReference = guia.DocRelacionados.Select(docRelacionado => new AdditionalDocumentReference {
+                        ID = new List<ID>{ new ID { _ = docRelacionado.NumeroDocRef }},
+                        DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode { _ = docRelacionado.DocumentoAdicinalTipo() }},
+                        DocumentType=new List<DocumentType>{new DocumentType { _=docRelacionado.TipoDocRef} },
+                        IssuerParty = new List<IssuerParty>{ new IssuerParty {
+                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
+                                ID = new List<ID>{ new ID { _ = docRelacionado.RucDocRef , schemeID = EspacioNombreGuiaRemision._DocumentType06 }}
+                            }}
+                        }}
+                    }).ToList(),
 
                     // Firma (emite la guía: el transportista)
                     // Edit 2: Aquí se pone quien tiene acceso a EFACT, es decir; Carolina SAC u otro con acceso
@@ -228,13 +223,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                         }
                     },
 
-                    // Direcciones de entrega y despacho (desde tu DTO)
                     Delivery = new List<Delivery> {
                         new Delivery {
+                            //Punto de llegada
                             DeliveryAddress = guia.Destino.Select(destino => new DeliveryAddress {
                         ID = new List<ID>{ new ID { _ = destino.UbigeoId }},
-                        AddressTypeCode = new List<AddressTypeCode>{ new AddressTypeCode {
-                            _ = "0000",
+                        AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
+                            _ = guia.Destinatario.CodigoSunat,
                             listID = guia.Destinatario.NumeroDocumento
                         }},
                             CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},
@@ -247,9 +242,10 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                             Despatch = guia.Origen == null ? null : new List<Despatch> {
                                 new Despatch {
                                     DespatchAddress = new List<DespatchAddress> {
+                                        //Punto de partida
                                         new DespatchAddress {
                                             ID               = new List<ID>               { new ID { _ = guia.Origen.UbigeoId }},
-                                            AddressTypeCode  = new List<AddressTypeCode>  { new AddressTypeCode { _ = "0001", listID = guia.Remitente.Ruc }},
+                                            AddressTypeCode  = string.IsNullOrWhiteSpace(guia.Remitente.CodigoSunat)?null: new List<AddressTypeCode>  { new AddressTypeCode { _ = guia.Remitente.CodigoSunat, listID = guia.Remitente.Ruc }},
                                             CitySubdivisionName = new List<CitySubdivisionName> { new CitySubdivisionName { _ = guia.Origen.Departamento }},
                                             CityName         = new List<CityName>         { new CityName         { _ = guia.Origen.Provincia }},
                                             CountrySubentity = new List<CountrySubentity> { new CountrySubentity { _ = guia.Origen.Departamento }},
@@ -263,7 +259,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                     DespatchParty = new List<DespatchParty> {
                                         new DespatchParty {
                                             PartyIdentification = new List<PartyIdentification> {
-                                                new PartyIdentification { ID = new List<ID> { new ID { _ = guia.RemiteTransportista.Ruc, schemeID = EspacioNombreGuiaRemision._DocumentType06 } } }
+                                                new PartyIdentification { ID = new List<ID> { new ID { _ = guia.RemiteTransportista.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(guia.RemiteTransportista.TipoDocumento) } } }
                                             },
                                             PostalAddress = guia.RemiteTransportista == null ? null : new List<PostalAddress> {
                                                 new PostalAddress {

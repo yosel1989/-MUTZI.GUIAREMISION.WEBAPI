@@ -14,10 +14,11 @@
             DOMAIN.Entities.Origen origen,
             List<DOMAIN.Entities.Destino> destino,
             List<DOMAIN.Entities.GuiaDetalle> detalles,
+            List<DOMAIN.Entities.DocRelacionado> docRelacionados,
             List<DOMAIN.Entities.EmailDestinatarioGuid> emailDestinatarioGuia,
             List<DOMAIN.Entities.EmailRemiteTransportistaGuid> emailRemiteTransportistas
             );
         //Remitente
-        Task<DOMAIN.Entities.RemiteTransportistum> GetRemiteTransportistaByRucAsync(string ruc);
+        Task<DOMAIN.Entities.RemiteTransportistum> GetRemiteTransportistaByRucAsync(string numeroDocumento);
     }
 }

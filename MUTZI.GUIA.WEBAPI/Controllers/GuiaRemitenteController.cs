@@ -6,6 +6,7 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using Microsoft.Extensions.Caching.Memory;
 
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -18,12 +19,14 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         private readonly IGuiaRemitenteUBLService _guiaRemisionUBLService;
         private readonly IGuiaRemitenteService _guiasRemisionBDService;
         private readonly IEnvioService _envioService;
-        public GuiaRemitenteController(IVentaConfigService ventaConfigService, IGuiaRemitenteUBLService guiaRemisionUBLService, IGuiaRemitenteService guiaRemisionBDService, IEnvioService envioService)
+        private readonly IMemoryCache _cache;
+        public GuiaRemitenteController(IVentaConfigService ventaConfigService, IGuiaRemitenteUBLService guiaRemisionUBLService, IGuiaRemitenteService guiaRemisionBDService, IEnvioService envioService, IMemoryCache memoryCache)
         {
             _ventaConfigService = ventaConfigService;
             _guiaRemisionUBLService = guiaRemisionUBLService;
             _guiasRemisionBDService = guiaRemisionBDService;
             _envioService = envioService;
+            _cache = memoryCache;
         }
         [HttpGet]
         [Route("obtener-token/{ruc}")]
@@ -53,7 +56,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
 
             var resultado = await _envioService.ProcesarGuiaRemisionAsync(ruc, doc);
-
+            _cache.Remove("guias_remision");
             return resultado switch
             {
                 SendGuiaResponseDTO ok => Created(string.Empty, ok),
@@ -66,7 +69,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 })
             };
         }
-        //Listar guias de remision desde BBDD
+        //Listar guias de remision desde BBDD y las sgtes consultas en Caché
         [HttpGet]
         [Route("listar")]
         [SwaggerOperation(
@@ -80,8 +83,12 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var result = await _guiasRemisionBDService.GetAllAsync();
-                if (result == null)
+                var guiasRemision = await _cache.GetOrCreateAsync("guias_remision", async entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
+                    return await _guiasRemisionBDService.GetAllAsync();
+                });
+                if (guiasRemision == null)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {
@@ -89,7 +96,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                         Detalle = "No se pudo obtener la lista de guías de remisión."
                     });
                 }
-                return Ok(result);
+                return Ok(guiasRemision);
             }
             catch (Exception ex)
             {

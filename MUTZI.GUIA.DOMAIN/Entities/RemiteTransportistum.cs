@@ -7,7 +7,9 @@ public partial class RemiteTransportistum
 {
     public int RemiteTransportistaId { get; set; }
 
-    public string Ruc { get; set; } = null!;
+    public string TipoDocumento { get; set; } = null!;
+
+    public string NumeroDocumento { get; set; } = null!;
 
     public string RazonSocial { get; set; } = null!;
 
