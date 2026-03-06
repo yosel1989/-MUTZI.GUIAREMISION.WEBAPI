@@ -4,6 +4,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
     public interface IGuiaRemitenteRepository
     {
         Task<List<DOMAIN.Entities.GuiaRemision>> GetAllAsync();
+        Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize);
         Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id);
         Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket);
         Task <int> CreateGuiaRemisionTransactionalAsync(
@@ -43,7 +44,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<DOMAIN.Entities.Destino> CreateDestinoAsync(DOMAIN.Entities.Destino destino);
         //Guia detalle
         Task<DOMAIN.Entities.GuiaDetalle> CreateGuiaDetalleAsync(DOMAIN.Entities.GuiaDetalle guiaDetalle);
-        Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado);
+        Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado);
         Task UpdateAsync(DOMAIN.Entities.GuiaRemision guiaRemision);
         Task DeleteAsync(int id);
     }

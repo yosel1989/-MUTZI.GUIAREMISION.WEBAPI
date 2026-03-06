@@ -55,5 +55,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor
         public string? CodigoSunat { get; set; }
 
         public DateTime FechaCreacion { get; set; }
+
+        [JsonPropertyName("estado")]
+        [SwaggerSchema("Devuelve en texto el estado del proveedor solo puede ser: ACTIVO o INACTIVO", Nullable = false)]
+        public string Estado { get; set; }
+
+        [JsonPropertyName("id_estado")]
+        [SwaggerSchema("Devuelve un entero, el ID del estado del proveedor en la bbdd", Nullable = false)]
+        public int IdEstado { get; set; }
     }
 }

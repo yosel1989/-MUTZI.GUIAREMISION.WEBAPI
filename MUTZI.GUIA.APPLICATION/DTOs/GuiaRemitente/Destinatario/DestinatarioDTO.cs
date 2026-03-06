@@ -60,5 +60,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
 
         [JsonPropertyName("email_destinatario")]
         public List<EmailDestinatarioGuiaDTO>? EmailDestinatariosGuia { get; set; }
+
+        [JsonPropertyName("estado")]
+        [SwaggerSchema("Devuelve un texto, el estado del destinatario solo puede ser: ACTIVO o INACTIVO", Nullable = false)]
+        public string Estado { get; set; }
+
+        [JsonPropertyName("id_estado")]
+        [SwaggerSchema("Devuelve un entero, el ID del estado del destinatario en la bbdd", Nullable = false)]
+        public int IdEstado { get; set; }
     }
 }

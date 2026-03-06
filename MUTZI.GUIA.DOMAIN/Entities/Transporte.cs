@@ -31,7 +31,9 @@ public partial class Transporte
 
     public string? EmpleadoNombreEdicion { get; set; }
 
-    public string? Activo { get; set; }
+    public string? Estado { get; set; }
+
+    public sbyte? IdEstado { get; set; }
 
     public virtual ICollection<TransporteGuid> TransporteGuids { get; set; } = new List<TransporteGuid>();
 }

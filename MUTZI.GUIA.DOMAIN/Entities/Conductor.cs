@@ -31,7 +31,9 @@ public partial class Conductor
 
     public string? EmpleadoNombreEdicion { get; set; }
 
-    public string? Activo { get; set; }
+    public string? Estado { get; set; }
+
+    public sbyte? IdEstado { get; set; }
 
     public virtual ICollection<ConductorGuid> ConductorGuids { get; set; } = new List<ConductorGuid>();
 }

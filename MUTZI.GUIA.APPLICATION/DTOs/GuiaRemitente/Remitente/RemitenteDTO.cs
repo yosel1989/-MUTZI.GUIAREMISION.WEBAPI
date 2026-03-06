@@ -81,6 +81,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         public string? EmpleadoNombreEdicion { get; set; }
 
         [JsonPropertyName("estado")]
+        [SwaggerSchema("Devuelve un texto, el estado del remitente solo puede ser: ACTIVO o INACTIVO", Nullable = false)]
         public string Estado { get; set; }
+
+        [JsonPropertyName("id_estado")]
+        [SwaggerSchema("Devuelve un entero, el ID del estado del remitente en la bbdd", Nullable = false)]
+        public int IdEstado { get; set; }
     }
 }

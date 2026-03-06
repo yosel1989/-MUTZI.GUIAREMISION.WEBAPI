@@ -1,12 +1,13 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
-using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using Microsoft.Extensions.Caching.Memory;
 
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -108,6 +109,46 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
+        [HttpGet]
+        [Route("listado-guias/{pageNumber}/{pageSize}")]
+        [SwaggerOperation(
+        Summary = "Listar guías de remisión y transportista",
+        Description = "Lista las guías de remisión y transportista. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el total de registros de una página 'pageSize'.",
+        OperationId = "listar_todas_las_guias")]
+        [ProducesResponseType(typeof(PagedResult<GuiaListDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+
+        public async Task<ActionResult<PagedResult<GuiaListDTO>>> GetAllGuias(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var result = await _guiasRemisionBDService.GetListAsync(pageNumber, pageSize);
+
+                if (result == null || result.Data.Count == 0)
+                {
+                    return BadRequest(new BadRequestResponseDTO
+                    {
+                        Error = "No se encontraron registros",
+                        Detalle = "No se pudo obtener la lista de guías."
+                    });
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar guías.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
         [HttpGet]
         [Route("buscar-por-id/{id}")]
         [SwaggerOperation(

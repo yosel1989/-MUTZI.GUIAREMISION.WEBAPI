@@ -124,14 +124,32 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
             }
         }
 
-        public string getTipoCodigoDocumento(string tipo)
+        public string getTipoCodigoDocumento(string tipo, string numeroDocumento)
         {
             if (tipo == "DNI")
+            {
+                if (numeroDocumento.Length != 8)
+                {
+                    throw new Exception("El DNI: '"+ numeroDocumento + "' debe tener 8 digitos.");
+                }
                 return EspacioNombreGuiaRemision._DocumentType01;
+            }
             if (tipo == "CE")
+            {
+                if (numeroDocumento.Length < 8 || numeroDocumento.Length > 15)
+                {
+                    throw new Exception("El número de CE o Pasaporte: '"+numeroDocumento+"' debe tener entre 8 y 15 dígitos.");
+                }
                 return EspacioNombreGuiaRemision._DocumentType04;
+            }
             if (tipo == "RUC")
+            {
+                if (numeroDocumento.Length != 11)
+                {
+                    throw new Exception("El RUC: '" + numeroDocumento + "' debe tener 11 digitos.");
+                }
                 return EspacioNombreGuiaRemision._DocumentType06;
+            }
             if (tipo == "PASAPORTE")
                 return EspacioNombreGuiaRemision._DocumentType07;
             throw new System.Exception("Tipo de documento de identidad no especificado, coloque entre: DNI, CE, RUC, PASAPORTE");
