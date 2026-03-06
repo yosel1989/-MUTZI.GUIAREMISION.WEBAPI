@@ -30,10 +30,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
         //    var guiaRemisions = await _repository.GetAllAsync();
         //    return _mapper.Map<List<GuiaListDTO>>(guiaRemisions);
         //}
-        public async Task<PagedResult<GuiaListDTO>> GetListAsync(int pageNumber)
+        public async Task<PagedResult<GuiaListDTO>> GetListAsync(int pageNumber, int pageSize)
         {
-            int pageSize = 10;
-
             var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize);
 
             var guiasDTO = _mapper.Map<List<GuiaListDTO>>(guias);

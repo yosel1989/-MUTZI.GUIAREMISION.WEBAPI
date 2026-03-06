@@ -111,20 +111,20 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         }
 
         [HttpGet]
-        [Route("listado-guias")]
+        [Route("listado-guias/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
         Summary = "Listar guías de remisión y transportista",
-        Description = "Lista las guías de remisión y transportista",
+        Description = "Lista las guías de remisión y transportista. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el total de registros de una página 'pageSize'.",
         OperationId = "listar_todas_las_guias")]
         [ProducesResponseType(typeof(PagedResult<GuiaListDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
 
-        public async Task<ActionResult<PagedResult<GuiaListDTO>>> GetAllGuias(int pageNumber = 1)
+        public async Task<ActionResult<PagedResult<GuiaListDTO>>> GetAllGuias(int pageNumber, int pageSize)
         {
             try
             {
-                var result = await _guiasRemisionBDService.GetListAsync(pageNumber);
+                var result = await _guiasRemisionBDService.GetListAsync(pageNumber, pageSize);
 
                 if (result == null || result.Data.Count == 0)
                 {
