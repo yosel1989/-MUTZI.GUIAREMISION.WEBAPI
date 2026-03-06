@@ -35,6 +35,8 @@ public partial class Destinatario
 
     public string? Estado { get; set; }
 
+    public sbyte? IdEstado { get; set; }
+
     public virtual ICollection<EmailDestinatarioGuid> EmailDestinatarioGuids { get; set; } = new List<EmailDestinatarioGuid>();
 
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();

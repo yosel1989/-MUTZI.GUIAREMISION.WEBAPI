@@ -37,6 +37,8 @@ public partial class Remitente
 
     public string? Estado { get; set; }
 
+    public sbyte? IdEstado { get; set; }
+
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 
     public virtual VentaConfig RucNavigation { get; set; } = null!;

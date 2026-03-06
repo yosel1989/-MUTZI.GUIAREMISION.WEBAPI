@@ -37,6 +37,8 @@ public partial class Proveedor
 
     public string? Estado { get; set; }
 
+    public sbyte? IdEstado { get; set; }
+
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 
     public virtual Ubigeo Ubigeo { get; set; } = null!;

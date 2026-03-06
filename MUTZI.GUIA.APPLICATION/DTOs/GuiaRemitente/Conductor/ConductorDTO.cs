@@ -35,5 +35,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor
         [SwaggerSchema("Devuelve el número de licencia del conductor", Nullable = false)]
         public string Licencia { get; set; }
         public DateTime FechaCreacion { get; set; }
+
+        [JsonPropertyName("estado")]
+        [SwaggerSchema("Devuelve un texto, el estado del conductor solo puede ser: ACTIVO o INACTIVO", Nullable = false)]
+        public string Estado { get; set; }
+
+        [JsonPropertyName("id_estado")]
+        [SwaggerSchema("Devuelve un entero, el ID del estado del conductor en la bbdd", Nullable = false)]
+        public int IdEstado { get; set; }
     }
 }

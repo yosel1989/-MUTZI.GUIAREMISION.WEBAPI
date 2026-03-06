@@ -160,6 +160,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
         {
             string ticket = "";
             string estado = "";
+            int idEstado = 0;
 
             try
             {
@@ -205,6 +206,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 catch (Exception ex)
                 {
                     estado = "RECHAZADO";
+                    idEstado = -1;
                     string errorMsg = ex.InnerException?.Message ?? ex.Message;
                     if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
 
@@ -228,11 +230,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
 
                     ticket = efactParsed.Description;
                     estado = "ENVIADO";
+                    idEstado = 1;
                 }
                 catch
                 {
                     ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
                     estado = "RECHAZADO";
+                    idEstado = -1;
                     efactParsed = new EfactResponseDTO
                     {
                         Code = "-1",
@@ -240,7 +244,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                     };
                 }
 
-                await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaCreada.GuiaID, ticket, estado);
+                await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaCreada.GuiaID, ticket, estado, idEstado);
                 //EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
 
                 return new SendGuiaResponseDTO
@@ -252,6 +256,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             catch (Exception ex)
             {
                 estado = "RECHAZADO";
+                idEstado = -1;
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
 
@@ -334,6 +339,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
         {
             string ticket = "";
             string estado = "";
+            int idEstado = 0;
             try
             {
                 var (esValido, error) = _guiaTransportistaBDService.ValidarDatosGuiaTransportista(doc, ruc);
@@ -377,6 +383,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 catch (Exception ex)
                 {
                     estado = "RECHAZADO";
+                    idEstado = -1;
                     string errorMsg = ex.InnerException?.Message ?? ex.Message;
                     if (errorMsg.Length > 500)
                     {
@@ -403,11 +410,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
 
                     ticket = efactParsed.Description;
                     estado = "ENVIADO";
+                    idEstado = 1;
                 }
                 catch
                 {
                     ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
                     estado = "RECHAZADO";
+                    idEstado = -1;
                     efactParsed = new EfactResponseDTO
                     {
                         Code = "-1",
@@ -415,7 +424,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                     };
                 }
 
-                await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaCreada.GuiaID, ticket, estado);
+                await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaCreada.GuiaID, ticket, estado, idEstado);
                 //EscribirLog("GUIATRANSPORTISTA", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
 
                 return new SendGuiaResponseDTO

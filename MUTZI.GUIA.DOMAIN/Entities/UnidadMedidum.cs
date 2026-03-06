@@ -19,6 +19,8 @@ public partial class UnidadMedidum
 
     public string? Estado { get; set; }
 
+    public sbyte? IdEstado { get; set; }
+
     public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
 
     public virtual ICollection<GuiaDetalle> GuiaDetalles { get; set; } = new List<GuiaDetalle>();

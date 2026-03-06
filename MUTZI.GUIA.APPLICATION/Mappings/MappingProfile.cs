@@ -42,6 +42,16 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Destino, opt => opt.MapFrom(src => src.Destinos))
                 .ForMember(dest => dest.Productos, opt => opt.MapFrom(src => src.GuiaDetalles))
                 ;
+            CreateMap<DOMAIN.Entities.GuiaRemision, GuiaListDTO>()
+                .ForMember(dest => dest.FechaEmision, opt => opt.MapFrom(src => src.Fecha.ToString("yyyy-MM-dd")))
+                //.ForMember(dest => dest.HoraEmision, opt => opt.MapFrom(src => src.Hora.ToString(@"hh\:mm\:ss")))
+                .ForMember(dest => dest.HoraEmision, opt => opt.MapFrom(src => src.Hora))
+                .ForMember(dest => dest.RazonRemitente, opt => opt.MapFrom(src => src.Remitente.Descripcion))
+                .ForMember(dest => dest.RazonDestinatario, opt => opt.MapFrom(src => src.Destinatario.RazonSocial))
+                .ForMember(dest=>dest.NroDocumentoDestinatario, opt=>opt.MapFrom(src=>src.Destinatario.NumeroDocumento))
+                .ForMember(dest => dest.Empresa, opt => opt.MapFrom(src => src.Remitente.RucNavigation.Empresa))
+                .ForMember(dest => dest.RucEmpresa, opt => opt.MapFrom(src => src.Remitente.RucNavigation.Ruc))
+                ;
             CreateMap<GuiaRemitenteCreateDTO, DOMAIN.Entities.GuiaRemision>()
                     .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src =>
                 string.IsNullOrEmpty(src.Fecha) ? (DateOnly?)null : DateOnly.Parse(src.Fecha)

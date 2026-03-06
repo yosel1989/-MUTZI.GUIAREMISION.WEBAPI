@@ -11,8 +11,6 @@ public partial class ConductorGuid
 
     public int? DatosEnvioId { get; set; }
 
-    public string? Estado { get; set; }
-
     public virtual Conductor? Conductor { get; set; }
 
     public virtual DatosEnvio? DatosEnvio { get; set; }

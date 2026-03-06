@@ -35,5 +35,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
         public string Tarjeta { get; set; }
 
         public DateTime FechaCreacion { get; set; }
+
+        [JsonPropertyName("estado")]
+        [SwaggerSchema("Devuelve un texto, el estado del transporte solo puede ser: ACTIVO o INACTIVO", Nullable = false)]
+        public string Estado { get; set; }
+
+        [JsonPropertyName("id_estado")]
+        [SwaggerSchema("Devuelve un entero, el ID del estado del transporte en la bbdd", Nullable = false)]
+        public int IdEstado { get; set; }
     }
 }

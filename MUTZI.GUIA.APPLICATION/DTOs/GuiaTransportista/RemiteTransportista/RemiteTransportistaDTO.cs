@@ -24,7 +24,19 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         //public string Email { get; set; }
         public string Pais { get; set; }
 
+        [JsonPropertyName("codigoSunat")]
+        [SwaggerSchema("Devuelve en texto el Código de establecimiento o de la Sucursal", Nullable = true)]
+        public string? CodigoSunat { get; set; }
+
         [JsonPropertyName("email_remite_transportista")]
         public List<EmailRemiteTransportistaGuiaDTO>? EmailRemiteTransportista { get; set; }
+
+        [JsonPropertyName("estado")]
+        [SwaggerSchema("Devuelve un texto, el estado del REMITE_TRANSPORTISTA solo puede ser: ACTIVO o INACTIVO", Nullable = false)]
+        public string Estado { get; set; }
+
+        [JsonPropertyName("id_estado")]
+        [SwaggerSchema("Devuelve un entero, el ID del estado del REMITE_TRANSPORTISTA en la bbdd", Nullable = false)]
+        public int IdEstado { get; set; }
     }
 }
