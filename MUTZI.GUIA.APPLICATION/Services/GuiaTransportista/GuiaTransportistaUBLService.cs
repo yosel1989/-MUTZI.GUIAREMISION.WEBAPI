@@ -245,7 +245,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                         //Punto de partida
                                         new DespatchAddress {
                                             ID               = new List<ID>               { new ID { _ = guia.Origen.UbigeoId }},
-                                            AddressTypeCode  = string.IsNullOrWhiteSpace(guia.Remitente.CodigoSunat)?null: new List<AddressTypeCode>  { new AddressTypeCode { _ = guia.Remitente.CodigoSunat, listID = guia.Remitente.Ruc }},
+                                            AddressTypeCode  = string.IsNullOrWhiteSpace(guia.RemiteTransportista.CodigoSunat)?null: new List<AddressTypeCode>  { new AddressTypeCode { _ = guia.RemiteTransportista.CodigoSunat, listID = guia.RemiteTransportista.NumeroDocumento }},
                                             CitySubdivisionName = new List<CitySubdivisionName> { new CitySubdivisionName { _ = guia.Origen.Departamento }},
                                             CityName         = new List<CityName>         { new CityName         { _ = guia.Origen.Provincia }},
                                             CountrySubentity = new List<CountrySubentity> { new CountrySubentity { _ = guia.Origen.Departamento }},

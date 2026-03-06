@@ -77,10 +77,6 @@ public partial class LogisticaContext : DbContext
             entity.HasIndex(e => e.NumeroDocumento, "numeroDocumento_BUSQUEDA").IsUnique();
 
             entity.Property(e => e.ConductorId).HasColumnName("conductorID");
-            entity.Property(e => e.Activo)
-                .HasMaxLength(20)
-                .HasDefaultValueSql("'ACTIVO'")
-                .HasColumnName("activo");
             entity.Property(e => e.Apellidos)
                 .HasMaxLength(50)
                 .HasColumnName("apellidos");
@@ -95,6 +91,10 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.EmpleadoNombreEdicion)
                 .HasMaxLength(100)
                 .HasColumnName("empleadoNombreEdicion");
+            entity.Property(e => e.Estado)
+                .HasMaxLength(20)
+                .HasDefaultValueSql("'ACTIVO'")
+                .HasColumnName("estado");
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
@@ -102,6 +102,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.FechaEdicion)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaEdicion");
+            entity.Property(e => e.IdEstado)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("idEstado");
             entity.Property(e => e.Licencia)
                 .HasMaxLength(20)
                 .HasColumnName("licencia");
@@ -129,10 +132,6 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.ConductorGuidId).HasColumnName("conductorGuidID");
             entity.Property(e => e.ConductorId).HasColumnName("conductorID");
             entity.Property(e => e.DatosEnvioId).HasColumnName("datosEnvioID");
-            entity.Property(e => e.Estado)
-                .HasMaxLength(20)
-                .HasDefaultValueSql("'ACTIVO'")
-                .HasColumnName("estado");
 
             entity.HasOne(d => d.Conductor).WithMany(p => p.ConductorGuids)
                 .HasForeignKey(d => d.ConductorId)
@@ -222,6 +221,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.FechaEdicion)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaEdicion");
+            entity.Property(e => e.IdEstado)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("idEstado");
             entity.Property(e => e.NumeroDocumento)
                 .HasMaxLength(15)
                 .HasColumnName("numeroDocumento");
@@ -286,10 +288,6 @@ public partial class LogisticaContext : DbContext
             entity.HasIndex(e => e.GuiaId, "guiaID");
 
             entity.Property(e => e.DocRelacionadoId).HasColumnName("docRelacionadoID");
-            entity.Property(e => e.Estado)
-                .HasMaxLength(20)
-                .HasDefaultValueSql("'activo'")
-                .HasColumnName("estado");
             entity.Property(e => e.GuiaId).HasColumnName("guiaID");
             entity.Property(e => e.NumeroDocRef)
                 .HasMaxLength(30)
@@ -440,6 +438,7 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.Hora)
                 .HasMaxLength(10)
                 .HasColumnName("hora");
+            entity.Property(e => e.IdEstado).HasColumnName("idEstado");
             entity.Property(e => e.NumeroGuia)
                 .HasMaxLength(15)
                 .HasColumnName("numeroGuia");
@@ -556,6 +555,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.FechaEdicion)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaEdicion");
+            entity.Property(e => e.IdEstado)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("idEstado");
             entity.Property(e => e.NumeroDocumento)
                 .HasMaxLength(20)
                 .HasColumnName("numeroDocumento");
@@ -589,6 +591,9 @@ public partial class LogisticaContext : DbContext
             entity.HasIndex(e => e.UbigeoId, "ubigeoID");
 
             entity.Property(e => e.RemiteTransportistaId).HasColumnName("remiteTransportistaID");
+            entity.Property(e => e.CodigoSunat)
+                .HasMaxLength(4)
+                .HasColumnName("codigoSunat");
             entity.Property(e => e.Direccion)
                 .HasMaxLength(250)
                 .HasColumnName("direccion");
@@ -611,6 +616,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.FechaEdicion)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaEdicion");
+            entity.Property(e => e.IdEstado)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("idEstado");
             entity.Property(e => e.NumeroDocumento)
                 .HasMaxLength(15)
                 .HasColumnName("numeroDocumento");
@@ -677,6 +685,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.FechaEdicion)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaEdicion");
+            entity.Property(e => e.IdEstado)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("idEstado");
             entity.Property(e => e.Pais)
                 .HasMaxLength(3)
                 .HasColumnName("pais");
@@ -711,10 +722,6 @@ public partial class LogisticaContext : DbContext
             entity.HasIndex(e => e.Placa, "placa_UNIQUE").IsUnique();
 
             entity.Property(e => e.TransporteId).HasColumnName("transporteID");
-            entity.Property(e => e.Activo)
-                .HasMaxLength(20)
-                .HasDefaultValueSql("'ACTIVO'")
-                .HasColumnName("activo");
             entity.Property(e => e.Descripcion)
                 .HasMaxLength(50)
                 .HasColumnName("descripcion");
@@ -726,6 +733,10 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.EmpleadoNombreEdicion)
                 .HasMaxLength(100)
                 .HasColumnName("empleadoNombreEdicion");
+            entity.Property(e => e.Estado)
+                .HasMaxLength(20)
+                .HasDefaultValueSql("'ACTIVO'")
+                .HasColumnName("estado");
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("datetime")
@@ -733,6 +744,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.FechaEdicion)
                 .HasColumnType("datetime")
                 .HasColumnName("fechaEdicion");
+            entity.Property(e => e.IdEstado)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("idEstado");
             entity.Property(e => e.Marca)
                 .HasMaxLength(20)
                 .HasColumnName("marca");
@@ -762,10 +776,6 @@ public partial class LogisticaContext : DbContext
 
             entity.Property(e => e.TransporteGuidId).HasColumnName("transporteGuidID");
             entity.Property(e => e.DatosEnvioId).HasColumnName("datosEnvioID");
-            entity.Property(e => e.Estado)
-                .HasMaxLength(20)
-                .HasDefaultValueSql("'ACTIVO'")
-                .HasColumnName("estado");
             entity.Property(e => e.TransporteId).HasColumnName("transporteID");
 
             entity.HasOne(d => d.DatosEnvio).WithMany(p => p.TransporteGuids)
@@ -833,6 +843,9 @@ public partial class LogisticaContext : DbContext
                 .HasMaxLength(20)
                 .HasDefaultValueSql("'activo'")
                 .HasColumnName("estado");
+            entity.Property(e => e.IdEstado)
+                .HasDefaultValueSql("'1'")
+                .HasColumnName("idEstado");
         });
 
         modelBuilder.Entity<VentaConfig>(entity =>

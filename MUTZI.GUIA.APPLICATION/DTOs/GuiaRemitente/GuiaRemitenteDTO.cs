@@ -62,6 +62,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, el nombre del empleado que ha registrado la transacción en el sistema", Nullable = false)]
         public string EmpleadoNombreCreacion { get; set; }
 
+        [JsonPropertyName("estado")]
+        [SwaggerSchema("Devuelve un texto, el estado de la guía de remisión.", Nullable = false)]
+        public string Estado { get; set; }
+
+        [JsonPropertyName("id_estado")]
+        [SwaggerSchema("Devuelve un entero, el ID del estado de la guía de remisión en la bbdd", Nullable = false)]
+        public int IdEstado { get; set; }
+
         public string TipoTrasladoCode20()
         {
             switch (this.TipoTraslado)

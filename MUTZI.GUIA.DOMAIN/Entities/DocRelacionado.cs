@@ -15,7 +15,5 @@ public partial class DocRelacionado
 
     public string? RucDocRef { get; set; }
 
-    public string? Estado { get; set; }
-
     public virtual GuiaRemision Guia { get; set; } = null!;
 }

@@ -2,6 +2,7 @@
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -12,11 +13,49 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             _context = context;
         }
+        public async Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.GuiaRemisions
+                .Include(r => r.Remitente)
+                    .ThenInclude(rem => rem.Ubigeo)
+                .Include(r => r.Remitente)
+                    .ThenInclude(rem => rem.RucNavigation)
+                .Include(d => d.Destinatario)
+                    .ThenInclude(des => des.Ubigeo)
+                .Include(p => p.Proveedor)
+                    .ThenInclude(pro => pro.Ubigeo)
+                .Include(dest => dest.Destinos)
+                    .ThenInclude(de => de.Ubigeo)
+                .Include(o => o.Origens)
+                    .ThenInclude(or => or.Ubigeo)
+                .Include(env => env.DatosEnvios)
+                    .ThenInclude(de => de.ConductorGuids)
+                        .ThenInclude(con => con.Conductor)
+                .Include(env => env.DatosEnvios)
+                    .ThenInclude(de => de.TransporteGuids)
+                        .ThenInclude(tr => tr.Transporte)
+                .Include(det => det.GuiaDetalles)
+                    .ThenInclude(gd => gd.CodigoUmNavigation)
+                .Include(doc => doc.DocRelacionados)
+                .OrderBy(x => x.GuiaId);
+
+            var totalRecords = await query.CountAsync();
+
+            var data = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
+        }
+
         public async Task<List<DOMAIN.Entities.GuiaRemision>> GetAllAsync()
         {
             return await _context.GuiaRemisions
                 .Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
+                .Include(r=>r.Remitente)
+                    .ThenInclude(rem=>rem.RucNavigation)
                 .Include(d => d.Destinatario)
                     .ThenInclude(des => des.Ubigeo)
                 .Include(p => p.Proveedor)
@@ -137,6 +176,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.RemitenteId = remitente.RemitenteId;
                 guiaRemision.DestinatarioId = destinatario.DestinatarioId;
                 guiaRemision.Estado = "CREADO";
+                guiaRemision.IdEstado = 0;
                 if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
 
                 //string serie = guiaRemision.Serie ?? "T001";
@@ -285,7 +325,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 throw;
             }
         }
-        public async Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado)
+        public async Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado)
         {
             var guia = await _context.GuiaRemisions.FindAsync(guiaId);
             if (guia == null)

@@ -11,8 +11,6 @@ public partial class TransporteGuid
 
     public int? DatosEnvioId { get; set; }
 
-    public string? Estado { get; set; }
-
     public virtual DatosEnvio? DatosEnvio { get; set; }
 
     public virtual Transporte? Transporte { get; set; }
