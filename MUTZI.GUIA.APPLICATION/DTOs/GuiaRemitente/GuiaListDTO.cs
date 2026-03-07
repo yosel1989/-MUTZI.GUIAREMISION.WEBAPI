@@ -62,6 +62,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, es el número de documento del destinatario de la guía de remisión", Nullable = false)]
         public string NroDocumentoDestinatario { get; set; }
 
+        [JsonPropertyName("distrito_origen")]
+        [SwaggerSchema("Devuelve en texto el distrito de origen o del punto de partida", Nullable = false)]
+        public string DistritoOrigen { get; set; }
+
+        [JsonPropertyName("distrito_destino")]
+        [SwaggerSchema("Devuelve en texto el distrito de destino o del punto de llegada", Nullable = false)]
+        public string DistritoDestino { get; set; }
+
         [JsonPropertyName("fecha_creacion")]
         [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00", Nullable = false)]
         public DateTime FechaCreacion { get; set; }

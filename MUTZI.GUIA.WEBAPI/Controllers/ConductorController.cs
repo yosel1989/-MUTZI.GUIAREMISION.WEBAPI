@@ -5,6 +5,7 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
@@ -18,20 +19,20 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             _service = service;
         }
         [HttpGet]
-        [Route("listar")]
+        [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
         Summary = "Listar conductores",
-        Description = "Lista los conductores",
+        Description = "Lista los conductores. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
         OperationId = "listar_conductor")]
-        [ProducesResponseType(typeof(ConductorDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<ConductorDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<ConductorDTO>>> GetAll()
+        public async Task<ActionResult<PagedResult<ConductorDTO>>> GetAll(int pageNumber, int pageSize)
         {
             try
             {
-                var result = await _service.GetAllAsync();
-                if (result == null)
+                var result = await _service.GetListAsync(pageNumber, pageSize);
+                if (result == null || result.Data.Count==0)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {

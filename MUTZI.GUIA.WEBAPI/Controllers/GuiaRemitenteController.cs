@@ -114,7 +114,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [Route("listado-guias/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
         Summary = "Listar guías de remisión y transportista",
-        Description = "Lista las guías de remisión y transportista. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el total de registros de una página 'pageSize'.",
+        Description = "Lista las guías de remisión y transportista. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
         OperationId = "listar_todas_las_guias")]
         [ProducesResponseType(typeof(PagedResult<GuiaListDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
