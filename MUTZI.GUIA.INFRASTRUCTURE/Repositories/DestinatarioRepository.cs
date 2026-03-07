@@ -2,6 +2,7 @@
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Destinatario;
 using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -17,6 +18,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return await _context.Destinatarios
                 .Include(d => d.Ubigeo)
                 .ToListAsync();
+        }
+        public async Task<(List<Destinatario>, int)> GetListAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Destinatarios.OrderBy(d=>d.DestinatarioId);
+            var totalRecords = await query.CountAsync();
+            var data = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
         }
         public async Task<DOMAIN.Entities.Destinatario?> GetByIdAsync(int id)
         {

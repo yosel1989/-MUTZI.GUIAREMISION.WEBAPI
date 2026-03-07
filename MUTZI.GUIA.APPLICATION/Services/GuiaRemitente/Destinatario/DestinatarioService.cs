@@ -2,7 +2,7 @@
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Destinatario;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
 {
@@ -19,6 +19,18 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
         {
             var destinatarios = await _repository.GetAllAsync();
             return _mapper.Map<List<DestinatarioDTO>>(destinatarios);
+        }
+        public async Task<PagedResult<DestinatarioDTO>> GetListAsync(int pageNumber, int pageSize)
+        {
+            var(destinatario, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
+            var destinatarioDTO = _mapper.Map<List<DestinatarioDTO>>(destinatario);
+            return new PagedResult<DestinatarioDTO>{
+                PageNumber=pageNumber,
+                PageSize=pageSize,
+                TotalRecords=totalRecords,
+                TotalPages=(int)Math.Ceiling(totalRecords/(double)pageSize),
+                Data=destinatarioDTO
+            };
         }
         public async Task<DestinatarioDTO?> GetByIdAsync(int id)
         {

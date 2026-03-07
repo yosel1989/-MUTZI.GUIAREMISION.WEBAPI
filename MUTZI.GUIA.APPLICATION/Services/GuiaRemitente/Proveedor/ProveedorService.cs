@@ -2,7 +2,7 @@
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
 {
@@ -19,6 +19,19 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
         {
             var proveedores = await _repository.GetAllAsync();
             return _mapper.Map<List<ProveedorDTO>>(proveedores);
+        }
+        public async Task<PagedResult<ProveedorDTO>> GetListAsync(int pageNumber, int pageSize)
+        {
+            var (proveedor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
+            var proveedorDTO = _mapper.Map<List<ProveedorDTO>>(proveedor);
+            return new PagedResult<ProveedorDTO>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+                Data = proveedorDTO
+            };
         }
 
         public async Task<ProveedorDTO?> GetByIdAsync(int id)
