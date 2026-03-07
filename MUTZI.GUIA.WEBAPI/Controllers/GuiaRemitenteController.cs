@@ -84,12 +84,9 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var guiasRemision = await _cache.GetOrCreateAsync("guias_remision", async entry =>
-                {
-                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(12);
-                    return await _guiasRemisionBDService.GetAllAsync();
-                });
-                if (guiasRemision == null)
+                  var result= await _guiasRemisionBDService.GetAllAsync();
+                
+                if (result == null)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {
@@ -97,7 +94,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                         Detalle = "No se pudo obtener la lista de guías de remisión."
                     });
                 }
-                return Ok(guiasRemision);
+                return Ok(result);
             }
             catch (Exception ex)
             {
