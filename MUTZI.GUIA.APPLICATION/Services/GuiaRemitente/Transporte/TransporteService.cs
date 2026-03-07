@@ -3,6 +3,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
 {
@@ -19,6 +20,19 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
         {
             var transportes = await _repository.GetAllAsync();
             return _mapper.Map<List<UnidadTransporteDTO>>(transportes);
+        }
+        public async Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize)
+        {
+            var (transporte, totalRecords)= await _repository.GetListAsync(pageNumber, pageSize);
+            var transporteDto = _mapper.Map<List<UnidadTransporteDTO>>(transporte);
+            return new PagedResult<UnidadTransporteDTO>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+                Data = transporteDto
+            };
         }
         public async Task<UnidadTransporteDTO?> GetByIdAsync(int id)
         {

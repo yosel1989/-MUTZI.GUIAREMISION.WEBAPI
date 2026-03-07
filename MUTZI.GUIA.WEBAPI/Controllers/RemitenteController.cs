@@ -3,6 +3,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
@@ -30,6 +31,40 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             {
                 var remitentes = await _remitenteService.GetAllAsync();
                 if (remitentes == null)
+                {
+                    return BadRequest(new BadRequestResponseDTO
+                    {
+                        Error = "No se encontraron registros",
+                        Detalle = "No se pudo obtener la lista de remitentes."
+                    });
+                }
+                return Ok(remitentes);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar remitentes.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("listar-por-pagina/{pageNumber}/{pageSize}")]
+        [SwaggerOperation(
+        Summary = "Listar remitentes por página",
+        Description = "Lista los remitentes por página. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
+        OperationId = "listar_remitente_por_pagina")]
+        [ProducesResponseType(typeof(PagedResult<RemitenteDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<PagedResult<RemitenteDTO>>> GetAllForPages(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var remitentes = await _remitenteService.GetListAsync(pageNumber, pageSize);
+                if (remitentes == null || remitentes.Data.Count==0)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {

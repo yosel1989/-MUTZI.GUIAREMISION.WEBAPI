@@ -1,7 +1,7 @@
-﻿
-using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+﻿using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Transporte;
 using Microsoft.EntityFrameworkCore;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -15,6 +15,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<List<DOMAIN.Entities.Transporte>> GetAllAsync()
         {
             return await _context.Transportes.ToListAsync();
+        }
+        public async Task<(List<Transporte>, int)> GetListAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Transportes.OrderBy(t => t.TransporteId);
+            var totalRecords = await query.CountAsync();
+            var data = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
         }
         public async Task<DOMAIN.Entities.Transporte?> GetByIdAsync(int id)
         {

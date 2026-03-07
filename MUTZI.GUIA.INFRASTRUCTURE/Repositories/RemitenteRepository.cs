@@ -1,7 +1,7 @@
-﻿
-using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+﻿using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
 using Microsoft.EntityFrameworkCore;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -18,6 +18,20 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(r=>r.Ubigeo)
                 .Include(e=>e.RucNavigation)
                 .ToListAsync();
+        }
+        public async Task<(List<Remitente>, int)> GetListAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Remitentes
+                .Include(r => r.Ubigeo)
+                .Include(e => e.RucNavigation)
+                .OrderBy(r=>r.RemitenteId);
+            var totalRecords = await query.CountAsync();
+            var data = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
         }
         public async Task<DOMAIN.Entities.GuiaRemision?> GetLastBySerieAsync(string serie)
         {

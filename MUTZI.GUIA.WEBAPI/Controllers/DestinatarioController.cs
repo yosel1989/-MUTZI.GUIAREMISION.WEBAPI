@@ -5,6 +5,7 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
@@ -18,20 +19,20 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             _destinatarioService = destinatarioService;
         }
         [HttpGet]
-        [Route("listar")]
+        [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
         Summary = "Listar destinatarios",
-        Description = "Lista los destinatarios",
+        Description = "Lista los destinatarios. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
         OperationId = "listar_destinatario")]
-        [ProducesResponseType(typeof(DestinatarioDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<DestinatarioDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<DestinatarioDTO>>> GetAll()
+        public async Task<ActionResult<PagedResult<DestinatarioDTO>>> GetAll(int pageNumber, int pageSize)
         {
             try
             {
-                var destinatarios = await _destinatarioService.GetAllAsync();
-                if (destinatarios == null)
+                var destinatarios = await _destinatarioService.GetListAsync(pageNumber, pageSize);
+                if (destinatarios == null || destinatarios.Data.Count==0)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {
