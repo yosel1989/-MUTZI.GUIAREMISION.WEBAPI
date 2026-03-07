@@ -65,17 +65,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         [JsonPropertyName("fecha_creacion")]
         public DateTime FechaCreacion { get; set; }
 
-        [JsonPropertyName("fecha_edicion")]
+        [JsonPropertyName("fecha_ultima_edicion")]
         public DateTime? FechaEdicion { get; set; }
-
-        [JsonPropertyName("empleado_id_creacion")]
-        public int EmpleadoIdCreacion { get; set; }
 
         [JsonPropertyName("empleado_nombre_creacion")]
         public string EmpleadoNombreCreacion { get; set; }
-
-        [JsonPropertyName("empleado_id_edicion")]
-        public int? EmpleadoIdEdicion { get; set; }
 
         [JsonPropertyName("empleado_nombre_edicion")]
         public string? EmpleadoNombreEdicion { get; set; }

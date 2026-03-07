@@ -54,10 +54,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public List<ProductosDTO> Productos { get; set; }
         public DateTime FechaCreacion { get; set; }
 
-        [JsonPropertyName("empleado_id_creacion")]
-        [SwaggerSchema("Devuelve un entero, ID del empleado que ha realizado la transacción", Nullable = false)]
-        public int EmpleadoIDCreacion { get; set; }
-
         [JsonPropertyName("empleado_nombre_creacion")]
         [SwaggerSchema("Devuelve un texto, el nombre del empleado que ha registrado la transacción en el sistema", Nullable = false)]
         public string EmpleadoNombreCreacion { get; set; }

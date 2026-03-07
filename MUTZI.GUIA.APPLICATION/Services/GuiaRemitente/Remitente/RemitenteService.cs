@@ -20,17 +20,17 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
             var remitentes = await _repository.GetAllAsync();
             return _mapper.Map<List<RemitenteListDTO>>(remitentes);
         }
-        public async Task<PagedResult<RemitenteListDTO>> GetListAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<RemitenteDTO>> GetListAsync(int pageNumber, int pageSize)
         {
             var (remitente, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize);
-            var remitenteDTO=_mapper.Map<List<RemitenteListDTO>>(remitente);
-            return new PagedResult<RemitenteListDTO>
+            var remitenteDto=_mapper.Map<List<RemitenteDTO>>(remitente);
+            return new PagedResult<RemitenteDTO>
             {
                 PageNumber=pageNumber,
                 PageSize=pageSize,
                 TotalRecords=totalRecords,
                 TotalPages=(int)Math.Ceiling(totalRecords/(double)pageSize),
-                Data= remitenteDTO
+                Data= remitenteDto
             };
         }
         public async Task<RemitenteDTO?> GetByIdAsync(int id)

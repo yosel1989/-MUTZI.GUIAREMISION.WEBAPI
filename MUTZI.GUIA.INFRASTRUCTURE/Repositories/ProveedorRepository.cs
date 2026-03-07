@@ -21,7 +21,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<(List<Proveedor>, int)> GetListAsync(int pageNumber, int pageSize)
         {
-            var query = _context.Proveedors.OrderBy(p=>p.ProveedorId);
+            var query = _context.Proveedors
+                .Include(p => p.Ubigeo)
+                .OrderBy(p=>p.ProveedorId);
             var totalRecords = await query.CountAsync();
             var data = await query
                 .Skip((pageNumber - 1) * pageSize)

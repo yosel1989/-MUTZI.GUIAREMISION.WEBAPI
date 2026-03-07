@@ -56,10 +56,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Listar remitentes por página",
         Description = "Lista los remitentes por página. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
         OperationId = "listar_remitente_por_pagina")]
-        [ProducesResponseType(typeof(PagedResult<RemitenteListDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<RemitenteDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<RemitenteListDTO>>> GetAllForPages(int pageNumber, int pageSize)
+        public async Task<ActionResult<PagedResult<RemitenteDTO>>> GetAllForPages(int pageNumber, int pageSize)
         {
             try
             {

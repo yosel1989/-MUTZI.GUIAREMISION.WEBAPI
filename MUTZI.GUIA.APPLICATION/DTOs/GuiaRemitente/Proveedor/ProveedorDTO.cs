@@ -54,7 +54,21 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor
         [SwaggerSchema("Devuelve en texto el Código de establecimiento o de la Sucursal", Nullable = true)]
         public string? CodigoSunat { get; set; }
 
+        [JsonPropertyName("fecha_creacion")]
+        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00", Nullable = false)]
         public DateTime FechaCreacion { get; set; }
+
+        [JsonPropertyName("empleado_nombre_creacion")]
+        [SwaggerSchema("Devuelve un texto, el nombre del empleado que ha registrado la transacción en el sistema", Nullable = false)]
+        public string EmpleadoNombreCreacion { get; set; }
+
+        [JsonPropertyName("fecha_ultima_edicion")]
+        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00, es la fecha de la última edición realizada en la guía", Nullable = true)]
+        public DateTime? FechaEdicion { get; set; }
+
+        [JsonPropertyName("empleado_nombre_edicion")]
+        [SwaggerSchema("Devuelve en texto el nombre del empleado que ha realizado la última edición en la guía", Nullable = true)]
+        public string? EmpleadoNombreEdicion { get; set; }
 
         [JsonPropertyName("estado")]
         [SwaggerSchema("Devuelve en texto el estado del proveedor solo puede ser: ACTIVO o INACTIVO", Nullable = false)]
