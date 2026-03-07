@@ -24,7 +24,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         //public string Email { get; set; }
         public string Pais { get; set; }
 
-        [JsonPropertyName("codigoSunat")]
+        [JsonPropertyName("codigo_sunat")]
         [SwaggerSchema("Devuelve en texto el Código de establecimiento o de la Sucursal", Nullable = true)]
         public string? CodigoSunat { get; set; }
 

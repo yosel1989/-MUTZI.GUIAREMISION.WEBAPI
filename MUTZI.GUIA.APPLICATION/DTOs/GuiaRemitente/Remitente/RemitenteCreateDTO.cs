@@ -54,7 +54,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         [StringLength(3, ErrorMessage = "La serie requiere 3 caracteres")]
         public string? Serie { get; set; }
 
-        [JsonPropertyName("codigoSunat")]
+        [JsonPropertyName("codigo_sunat")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]
         [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
         public string? CodigoSunat { get; set; }

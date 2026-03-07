@@ -333,6 +333,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
             guia.RespuestaTicket = ticket;
             guia.Estado = estado;
+            guia.IdEstado = (sbyte)idEstado;
             await _context.SaveChangesAsync();
         }
         public async Task UpdateAsync(DOMAIN.Entities.GuiaRemision guiaRemision)

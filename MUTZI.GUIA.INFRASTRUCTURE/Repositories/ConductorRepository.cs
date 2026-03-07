@@ -16,6 +16,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             return await _context.Conductors.ToListAsync();
         }
+        public async Task<(List<Conductor>, int)> GetListAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Conductors.OrderBy(x=>x.ConductorId);
+            var totalRecords=await query.CountAsync();
+            var data = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
+        }
         public async Task<DOMAIN.Entities.Conductor?> GetByIdAsync(int id)
         {
             return await _context.Conductors.FirstOrDefaultAsync(c => c.ConductorId == id);

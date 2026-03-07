@@ -2,6 +2,7 @@
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
 {
@@ -18,6 +19,19 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
         {
             var conductors = await _repository.GetAllAsync();
             return _mapper.Map<List<ConductorDTO>>(conductors);
+        }
+        public async Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize)
+        {
+            var (conductor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
+            var conductorDTO = _mapper.Map<List<ConductorDTO>>(conductor);
+            return new PagedResult<ConductorDTO>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+                Data = conductorDTO
+            };
         }
         public async Task<ConductorDTO?> GetByIdAsync(int id)
         {
