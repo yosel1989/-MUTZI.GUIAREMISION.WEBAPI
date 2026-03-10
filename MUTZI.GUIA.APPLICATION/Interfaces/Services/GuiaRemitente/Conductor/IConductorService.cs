@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor
         Task<ConductorDTO?> GetByIdAsync(int id);
         Task<ConductorDTO?> GetByNumeroDocumentoAsync(string numeroDocumento);
         Task<int> CreateAsync(ConductorCreateDTO createDTO);
-        Task<ConductorUpdateDTO> UpdateAsync(int id, ConductorUpdateDTO updateDTO);
+        Task<ConductorDTO> UpdateAsync(int id, ConductorUpdateDTO updateDTO);
         Task DeleteAsync(int id);
     }
 }

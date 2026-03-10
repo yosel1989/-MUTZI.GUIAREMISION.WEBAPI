@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
-using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
 {
@@ -45,7 +46,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
             await _repository.CreateAsync(transporte);
             return transporte.TransporteId;
         }
-        public async Task<UnidadTransporteUpdateDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO)
+        public async Task<UnidadTransporteDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO)
         {
             var existingTransporte = await _repository.GetByIdAsync(id);
             if (existingTransporte == null)
@@ -54,7 +55,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
             }
             _mapper.Map(updateDTO, existingTransporte);
             await _repository.UpdateAsync(existingTransporte);
-            return updateDTO;
+            return _mapper.Map<UnidadTransporteDTO>(existingTransporte);
         }
         public async Task DeleteAsync(int id)
         {

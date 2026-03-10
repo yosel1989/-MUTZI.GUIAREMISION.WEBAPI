@@ -4,6 +4,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
+using MUTZI.GUIA.DOMAIN.Entities;
 using System;
 using System.Text.Json;
 
@@ -84,7 +85,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             return _mapper.Map<GuiaRemitenteDTO>(guiaCreada);
         }
 
-        public async Task<GuiaRemitenteUpdateDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto)
+        public async Task<GuiaRemitenteDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto)
         {
             var existingGuiaRemision = await _repository.GetByIdAsync(id);
             if (existingGuiaRemision == null)
@@ -93,7 +94,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             }
             _mapper.Map(guiaRemisionDto, existingGuiaRemision);
             await _repository.UpdateAsync(existingGuiaRemision);
-            return guiaRemisionDto;
+            return _mapper.Map<GuiaRemitenteDTO>(existingGuiaRemision);
         }
         public async Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado)
         {

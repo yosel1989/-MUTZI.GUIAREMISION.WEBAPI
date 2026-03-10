@@ -115,10 +115,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Actualizar unidad de transporte",
         Description = "Actualiza la tabla transporte en la bbdd",
         OperationId = "actualizar_transporte")]
-        [ProducesResponseType(typeof(UnidadTransporteUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UnidadTransporteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UnidadTransporteUpdateDTO>> Update(int id, UnidadTransporteUpdateDTO transporteDto)
+        public async Task<ActionResult<UnidadTransporteDTO>> Update(int id, UnidadTransporteUpdateDTO transporteDto)
         {
             try
             {

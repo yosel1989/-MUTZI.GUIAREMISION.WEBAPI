@@ -152,10 +152,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Actualizar un proveedor",
         Description = "Actualizar proveedor en la bbdd",
         OperationId = "actualizar_proveedor")]
-        [ProducesResponseType(typeof(ProveedorUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProveedorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ProveedorUpdateDTO>> Update(int id, ProveedorUpdateDTO proveedorDto)
+        public async Task<ActionResult<ProveedorDTO>> Update(int id, ProveedorUpdateDTO proveedorDto)
         {
             try
             {

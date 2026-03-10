@@ -118,10 +118,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Actualizar un destinatario",
         Description = "Actualizar destinatario en la bbdd",
         OperationId = "actualizar_destinatario")]
-        [ProducesResponseType(typeof(DestinatarioUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DestinatarioDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<DestinatarioUpdateDTO>> Update(int id, [FromBody] DestinatarioUpdateDTO updateDTO)
+        public async Task<ActionResult<DestinatarioDTO>> Update(int id, [FromBody] DestinatarioUpdateDTO updateDTO)
         {
             try
             {

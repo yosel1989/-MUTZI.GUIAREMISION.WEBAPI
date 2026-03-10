@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
 {
@@ -49,7 +50,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
             await _repository.CreateAsync(conductor);
             return conductor.ConductorId;
         }
-        public async Task<ConductorUpdateDTO> UpdateAsync(int id, ConductorUpdateDTO updateDTO)
+        public async Task<ConductorDTO> UpdateAsync(int id, ConductorUpdateDTO updateDTO)
         {
             var existingConductor = await _repository.GetByIdAsync(id);
             if (existingConductor == null)
@@ -58,7 +59,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
             }
             _mapper.Map(updateDTO, existingConductor);
             await _repository.UpdateAsync(existingConductor);
-            return updateDTO;
+            return _mapper.Map<ConductorDTO>(existingConductor);
         }
         public async Task DeleteAsync(int id)
         {

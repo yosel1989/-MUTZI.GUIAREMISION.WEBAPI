@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
 {
@@ -52,7 +53,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
             await _repository.CreateAsync(proveedor);
             return proveedor.ProveedorId;
         }
-        public async Task<ProveedorUpdateDTO> UpdateAsync(int id, ProveedorUpdateDTO updateDTO)
+        public async Task<ProveedorDTO> UpdateAsync(int id, ProveedorUpdateDTO updateDTO)
         {
             var existingProveedor = await _repository.GetByIdAsync(id);
             if (existingProveedor == null)
@@ -61,7 +62,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
             }
             _mapper.Map(updateDTO, existingProveedor);
             await _repository.UpdateAsync(existingProveedor);
-            return updateDTO;
+            return _mapper.Map<ProveedorDTO>(existingProveedor);
         }
         public async Task DeleteAsync(int id)
         {

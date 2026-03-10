@@ -146,10 +146,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Actualizar un conductor",
         Description = "Actualiza un conductor en la bbdd",
         OperationId = "actualizar_conductor")]
-        [ProducesResponseType(typeof(ConductorUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ConductorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ConductorUpdateDTO>> Update(int id, ConductorUpdateDTO conductorDto)
+        public async Task<ActionResult<ConductorDTO>> Update(int id, ConductorUpdateDTO conductorDto)
         {
             try
             {

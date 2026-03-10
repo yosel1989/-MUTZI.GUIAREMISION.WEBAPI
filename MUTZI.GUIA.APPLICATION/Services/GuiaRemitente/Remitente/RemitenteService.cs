@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
 {
@@ -80,7 +81,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
             await _repository.CreateAsync(remitente);
             return remitente.RemitenteId;
         }
-        public async Task<RemitenteUpdateDTO> UpdateAsync(int id, RemitenteUpdateDTO updateDTO)
+        public async Task<RemitenteDTO> UpdateAsync(int id, RemitenteUpdateDTO updateDTO)
         {
             var existingRemitente = await _repository.GetByIdAsync(id);
             if (existingRemitente == null)
@@ -89,7 +90,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
             }
             _mapper.Map(updateDTO, existingRemitente);
             await _repository.UpdateAsync(existingRemitente);
-            return updateDTO;
+            return _mapper.Map<RemitenteDTO>(existingRemitente);
         }
         public async Task DeleteAsync(int id)
         {
