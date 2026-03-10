@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente
         Task<RemitenteForGuiaDTO?> GetByIdForGuiaAsync(int id, string tipoGuia);
         Task<RemitenteDTO?> GetByIdAsync(int id);
         Task<int> CreateAsync(RemitenteCreateDTO createDTO);
-        Task<RemitenteUpdateDTO> UpdateAsync(int id, RemitenteUpdateDTO updateDTO);
+        Task<RemitenteDTO> UpdateAsync(int id, RemitenteUpdateDTO updateDTO);
         Task DeleteAsync(int id);
     }
 }

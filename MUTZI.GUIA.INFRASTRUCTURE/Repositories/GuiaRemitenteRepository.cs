@@ -43,6 +43,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
             var data = await query
                 .Skip((pageNumber - 1) * pageSize)
+                .AsNoTracking()
                 .Take(pageSize)
                 .ToListAsync();
 
@@ -334,6 +335,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             guia.RespuestaTicket = ticket;
             guia.Estado = estado;
             guia.IdEstado = (sbyte)idEstado;
+            guia.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         public async Task UpdateAsync(DOMAIN.Entities.GuiaRemision guiaRemision)

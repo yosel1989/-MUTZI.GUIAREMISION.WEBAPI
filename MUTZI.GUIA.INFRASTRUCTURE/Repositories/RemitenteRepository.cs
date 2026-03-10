@@ -28,6 +28,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             var totalRecords = await query.CountAsync();
             var data = await query
                 .Skip((pageNumber - 1) * pageSize)
+                .AsNoTracking()
                 .Take(pageSize)
                 .ToListAsync();
 
@@ -58,7 +59,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task UpdateAsync(DOMAIN.Entities.Remitente remitente)
         {
             _context.Remitentes.Update(remitente);
-            remitente.FechaEdicion = DateTime.Now;
+            remitente.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id)

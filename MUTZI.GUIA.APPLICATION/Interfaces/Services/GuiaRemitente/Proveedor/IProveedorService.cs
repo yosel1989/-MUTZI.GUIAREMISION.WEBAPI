@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor
         Task<ProveedorDTO?> GetByIdAsync(int id);
         Task<ProveedorDTO?> GetByNumeroDocumentoAsync(string numeroDocumento);
         Task<int> CreateAsync(ProveedorCreateDTO createDTO);
-        Task<ProveedorUpdateDTO> UpdateAsync(int id, ProveedorUpdateDTO updateDTO);
+        Task<ProveedorDTO> UpdateAsync(int id, ProveedorUpdateDTO updateDTO);
         Task DeleteAsync(int id);
     }
 }

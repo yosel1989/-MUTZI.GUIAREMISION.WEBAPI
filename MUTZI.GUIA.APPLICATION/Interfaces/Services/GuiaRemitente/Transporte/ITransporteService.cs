@@ -9,7 +9,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte
         Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize);
         Task<UnidadTransporteDTO?> GetByIdAsync(int id);
         Task<int> CreateAsync(UnidadTransporteCreateDTO createDTO);
-        Task<UnidadTransporteUpdateDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO);
+        Task<UnidadTransporteDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO);
         Task DeleteAsync(int id);
     }
 }
