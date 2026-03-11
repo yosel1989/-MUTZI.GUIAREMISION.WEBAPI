@@ -32,14 +32,6 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             try
             {
                 var result = await _service.GetListAsync(pageNumber, pageSize);
-                if (result == null || result.Data.Count==0)
-                {
-                    return BadRequest(new BadRequestResponseDTO
-                    {
-                        Error = "No se encontraron registros",
-                        Detalle = "No se pudo obtener la lista de unidades de transporte."
-                    });
-                }
                 return Ok(result);
             }
             catch (Exception ex)
@@ -156,6 +148,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al eliminar transporte.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpPut]
+        [Route("actualizar-estado/{id}/{status}")]
+        [SwaggerOperation(
+        Summary = "Actualizar estado de una unidad de transporte",
+        Description = "Actualizar el estado de una unidad de transporte en la bbdd. 1='activo', 0='inactivo'.",
+        OperationId = "actualizar_estado_transporte")]
+        [ProducesResponseType(typeof(UpdatedStatus), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Cancelar(int id, int status)
+        {
+            try
+            {
+                await _service.CancelAsync(id, status);
+                return Ok(new UpdatedStatus { Id = id, NewStatus = status });
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar el estado de una unidad de transporte.",
                     Detalle = errorMsg
                 });
             }

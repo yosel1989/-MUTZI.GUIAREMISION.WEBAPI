@@ -21,6 +21,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
             var conductors = await _repository.GetAllAsync();
             return _mapper.Map<List<ConductorDTO>>(conductors);
         }
+        public async Task<List<ConductorDTO>> GetListByName(string numeroDoc, string nombre)
+        {
+            var conductors = await _repository.GetListByName(numeroDoc, nombre);
+            return _mapper.Map<List<ConductorDTO>>(conductors);
+        }
         public async Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize)
         {
             var (conductor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
@@ -64,6 +69,17 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
+        }
+        public async Task CancelAsync(int id, int status)
+        {
+            var existing = await _repository.GetByIdAsync(id);
+            if (existing == null)
+            {
+                throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
+            }
+            existing.Estado = status == 1 ? "activo" : "inactivo";
+            existing.IdEstado = (sbyte?)status;
+            await _repository.UpdateAsync(existing);
         }
     }
 }
