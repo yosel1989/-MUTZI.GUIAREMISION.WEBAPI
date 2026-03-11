@@ -75,7 +75,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
             string _status = status switch
             {
                 1 => "activo",
-                2 => "inactivo",
+                0 => "inactivo",
                 _ => throw new KeyNotFoundException("El nuevo estado solo acepta valores de '0' ó '1'"),
             };
             var existing = await _repository.GetByIdAsync(id);
