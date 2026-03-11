@@ -3,7 +3,7 @@
     public interface IProveedorRepository
     {
         Task<List<DOMAIN.Entities.Proveedor>> GetAllAsync();
-        Task<List<DOMAIN.Entities.Proveedor>> GetListByName(string numeroDoc, string nombre);
+        Task<List<DOMAIN.Entities.Proveedor>> GetListBySuggestion(string numeroDoc);
         Task<(List<DOMAIN.Entities.Proveedor>, int)> GetListAsync(int pageNumber, int pageSize);
         Task<DOMAIN.Entities.Proveedor?> GetByIdAsync(int id);
         Task<DOMAIN.Entities.Proveedor?> GetByNumeroDocumentoAsync(string numeroDocumento);

@@ -43,6 +43,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpGet]
+        [Route("listar-sugerido/{numeroDoc}")]
+        [SwaggerOperation(
+        Summary = "Listar conductores sugeridos",
+        Description = "Lista los conductores sugeridos por número de documento o razón social",
+        OperationId = "listar_conductor_sugerido")]
+        [ProducesResponseType(typeof(ConductorListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<ConductorListDTO>>> GetBySuggestion(string numeroDoc)
+        {
+            try
+            {
+                var conductores = await _service.GetListBySuggestion(numeroDoc);
+                return Ok(conductores);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar conductores.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
         [Route("buscar-por-id/{id}")]
         [SwaggerOperation(
         Summary = "Buscar conductor por ID",
@@ -132,6 +158,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Actualizar un conductor",
         Description = "Actualiza un conductor en la bbdd",
@@ -139,7 +166,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(ConductorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ConductorDTO>> Update(int id, ConductorUpdateDTO conductorDto)
+        public async Task<ActionResult<ConductorDTO>> Update(int id, [FromBody] ConductorUpdateDTO conductorDto)
         {
             try
             {
@@ -157,6 +184,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpDelete]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Eliminar un conductor",
         Description = "Elimina un conductor de la bbdd",
@@ -182,7 +210,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
-        [Route("actualizar-estado/{id}/{status}")]
+        [Route("{id}/actualizar-estado")]
         [SwaggerOperation(
         Summary = "Actualizar estado de un conductor",
         Description = "Actualizar el estado de un conductor en la bbdd. 1='activo', 0='inactivo'.",
@@ -190,7 +218,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(UpdatedStatus), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Cancelar(int id, int status)
+        public async Task<IActionResult> Cancelar(int id, [FromBody] int status)
         {
             try
             {

@@ -6,7 +6,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario
     public interface IDestinatarioService
     {
         Task<List<DestinatarioDTO>> GetAllAsync();
-        Task<List<DestinatarioListDTO>> GetListByName(string numeroDoc, string nombre);
+        Task<List<DestinatarioListDTO>> GetListBySuggestion(string numeroDoc);
         Task<PagedResult<DestinatarioDTO>> GetListAsync(int pageNumber, int pageSize);
         Task<DestinatarioDTO?> GetByIdAsync(int id);
         Task<int> CreateAsync(DestinatarioCreateDTO createDTO);

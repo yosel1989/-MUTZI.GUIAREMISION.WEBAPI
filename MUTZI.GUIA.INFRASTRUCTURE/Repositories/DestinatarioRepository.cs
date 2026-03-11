@@ -19,11 +19,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(d => d.Ubigeo)
                 .ToListAsync();
         }
-        public async Task<List<Destinatario>> GetListByName(string numeroDoc, string nombre)
+        public async Task<List<Destinatario>> GetListBySuggestion(string numeroDoc)
         {
             return await _context.Destinatarios
                 .Where(c => c.IdEstado == 1 &&
-                (c.NumeroDocumento.Contains(numeroDoc) || c.RazonSocial.Contains(nombre)))
+                (c.NumeroDocumento.Contains(numeroDoc) || c.RazonSocial.Contains(numeroDoc)))
                 .ToListAsync();
         }
         public async Task<(List<Destinatario>, int)> GetListAsync(int pageNumber, int pageSize)

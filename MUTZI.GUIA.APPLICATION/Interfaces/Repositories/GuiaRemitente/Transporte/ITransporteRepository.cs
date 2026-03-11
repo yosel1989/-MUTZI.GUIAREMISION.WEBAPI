@@ -3,7 +3,7 @@
     public interface ITransporteRepository
     {
         Task<List<DOMAIN.Entities.Transporte>> GetAllAsync();
-        Task<List<DOMAIN.Entities.Transporte>> GetListByName(string numeroDoc, string nombre);
+        Task<List<DOMAIN.Entities.Transporte>> GetListBySuggestion(string numeroDoc);
         Task<(List<DOMAIN.Entities.Transporte>, int)> GetListAsync(int pageNumber, int pageSize);
         Task<DOMAIN.Entities.Transporte?> GetByIdAsync(int id);
         Task CreateAsync(DOMAIN.Entities.Transporte transporte);
