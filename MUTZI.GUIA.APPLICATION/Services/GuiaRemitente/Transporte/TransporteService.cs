@@ -22,6 +22,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
             var transportes = await _repository.GetAllAsync();
             return _mapper.Map<List<UnidadTransporteDTO>>(transportes);
         }
+        public async Task<List<TransporteListDTO>> GetListByName(string numeroDoc, string nombre)
+        {
+            var transportes=await _repository.GetListByName(numeroDoc, nombre);
+            return _mapper.Map<List<TransporteListDTO>>(transportes);
+        }
         public async Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize)
         {
             var (transporte, totalRecords)= await _repository.GetListAsync(pageNumber, pageSize);

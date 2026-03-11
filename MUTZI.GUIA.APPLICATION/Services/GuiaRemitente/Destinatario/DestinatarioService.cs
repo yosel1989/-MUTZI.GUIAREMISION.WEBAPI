@@ -21,10 +21,10 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
             var destinatarios = await _repository.GetAllAsync();
             return _mapper.Map<List<DestinatarioDTO>>(destinatarios);
         }
-        public async Task<List<DestinatarioDTO>> GetListByName(string numeroDoc, string nombre)
+        public async Task<List<DestinatarioListDTO>> GetListByName(string numeroDoc, string nombre)
         {
             var destinatarios=await _repository.GetListByName(numeroDoc, nombre);
-            return _mapper.Map<List<DestinatarioDTO>>(destinatarios);
+            return _mapper.Map<List<DestinatarioListDTO>>(destinatarios);
         }
         public async Task<PagedResult<DestinatarioDTO>> GetListAsync(int pageNumber, int pageSize)
         {

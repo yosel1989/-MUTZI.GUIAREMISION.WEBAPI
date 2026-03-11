@@ -16,6 +16,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             return await _context.Transportes.ToListAsync();
         }
+        public async Task<List<Transporte>> GetListByName(string numeroDoc, string nombre)
+        {
+            return await _context.Transportes
+                .Where(c => c.IdEstado == 1 &&
+                (c.Descripcion.Contains(numeroDoc) || c.Placa.Contains(nombre)))
+                .ToListAsync();
+        }
         public async Task<(List<Transporte>, int)> GetListAsync(int pageNumber, int pageSize)
         {
             var query = _context.Transportes.OrderBy(t => t.TransporteId);
@@ -52,5 +59,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        
     }
 }

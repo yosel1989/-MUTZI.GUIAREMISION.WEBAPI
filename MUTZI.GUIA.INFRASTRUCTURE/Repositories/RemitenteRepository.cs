@@ -19,6 +19,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(e=>e.RucNavigation)
                 .ToListAsync();
         }
+        public async Task<List<Remitente>> GetListByName(string numeroDoc, string nombre)
+        {
+            return await _context.Remitentes
+                .Include(r => r.Ubigeo)
+                .Include(e => e.RucNavigation)
+                .Where(c => c.IdEstado == 1 &&
+                (c.Ruc.Contains(numeroDoc) || c.Descripcion.Contains(nombre)))
+                .ToListAsync();
+        }
         public async Task<(List<Remitente>, int)> GetListAsync(int pageNumber, int pageSize)
         {
             var query = _context.Remitentes
@@ -71,5 +80,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        
     }
 }
