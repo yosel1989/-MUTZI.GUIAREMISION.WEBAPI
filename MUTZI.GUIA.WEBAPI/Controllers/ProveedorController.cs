@@ -220,15 +220,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Actualizar estado de un proveedor",
         Description = "Actualizar el estado de un proveedor en la bbdd. 1='activo', 0='inactivo'.",
         OperationId = "actualizar_estado_proveedor")]
-        [ProducesResponseType(typeof(UpdatedStatus), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Cancelar(int id, [FromBody] int status)
         {
             try
             {
-                await _service.CancelAsync(id, status);
-                return Ok(new UpdatedStatus { Id = id, NewStatus= status });
+                var result = await _service.CancelAsync(id, status);
+                return Ok(result);
             }
             catch (Exception ex)
             {

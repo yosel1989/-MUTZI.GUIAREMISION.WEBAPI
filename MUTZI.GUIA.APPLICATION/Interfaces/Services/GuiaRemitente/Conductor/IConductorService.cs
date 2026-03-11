@@ -1,4 +1,5 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor
@@ -13,6 +14,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor
         Task<int> CreateAsync(ConductorCreateDTO createDTO);
         Task<ConductorDTO> UpdateAsync(int id, ConductorUpdateDTO updateDTO);
         Task DeleteAsync(int id);
-        Task CancelAsync(int id, int status);
+        Task<UpdatedStatusDto> CancelAsync(int id, int status);
     }
 }

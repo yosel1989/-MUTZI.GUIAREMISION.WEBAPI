@@ -1,4 +1,5 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor
@@ -13,6 +14,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor
         Task<int> CreateAsync(ProveedorCreateDTO createDTO);
         Task<ProveedorDTO> UpdateAsync(int id, ProveedorUpdateDTO updateDTO);
         Task DeleteAsync(int id);
-        Task CancelAsync(int id, int status);
+        Task<UpdatedStatusDto> CancelAsync(int id, int status);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
@@ -73,7 +74,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
         {
             await _repository.DeleteAsync(id);
         }
-        public async Task CancelAsync(int id, int status)
+        public async Task<UpdatedStatusDto> CancelAsync(int id, int status)
         {
             string _status = status switch
             {
@@ -89,6 +90,14 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
             existing.Estado = _status;
             existing.IdEstado = (sbyte?)status;
             await _repository.UpdateAsync(existing);
+
+            return new UpdatedStatusDto
+            {
+                Id = existing.ProveedorId,
+                IdEstado = Convert.ToInt32(existing.IdEstado),
+                Estado = existing.Estado,
+                Detalle = $"Proveedor con ID {existing.ProveedorId} ha sido actualizado a estado '{existing.Estado}'."
+            };
         }
     }
 }

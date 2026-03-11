@@ -1,4 +1,5 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte
@@ -12,6 +13,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte
         Task<int> CreateAsync(UnidadTransporteCreateDTO createDTO);
         Task<UnidadTransporteDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO);
         Task DeleteAsync(int id);
-        Task CancelAsync(int id, int status);
+        Task<UpdatedStatusDto> CancelAsync(int id, int status);
     }
 }
