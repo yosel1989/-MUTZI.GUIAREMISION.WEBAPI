@@ -21,10 +21,10 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
             var conductors = await _repository.GetAllAsync();
             return _mapper.Map<List<ConductorDTO>>(conductors);
         }
-        public async Task<List<ConductorDTO>> GetListByName(string numeroDoc, string nombre)
+        public async Task<List<ConductorListDTO>> GetListByName(string numeroDoc, string nombre)
         {
             var conductors = await _repository.GetListByName(numeroDoc, nombre);
-            return _mapper.Map<List<ConductorDTO>>(conductors);
+            return _mapper.Map<List<ConductorListDTO>>(conductors);
         }
         public async Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize)
         {

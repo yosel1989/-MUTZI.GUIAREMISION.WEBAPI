@@ -19,6 +19,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(p => p.Ubigeo)
                 .ToListAsync();
         }
+        public async Task<List<Proveedor>> GetListByName(string numeroDoc, string nombre)
+        {
+            return await _context.Proveedors
+                .Where(c => c.IdEstado == 1 &&
+                (c.NumeroDocumento.Contains(numeroDoc) || c.RazonSocial.Contains(nombre)))
+                .ToListAsync();
+        }
         public async Task<(List<Proveedor>, int)> GetListAsync(int pageNumber, int pageSize)
         {
             var query = _context.Proveedors
@@ -65,5 +72,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+       
     }
 }

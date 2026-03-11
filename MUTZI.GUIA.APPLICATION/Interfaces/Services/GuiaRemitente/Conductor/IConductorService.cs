@@ -6,7 +6,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor
     public interface IConductorService
     {
         Task<List<ConductorDTO>> GetAllAsync();
-        Task<List<ConductorDTO>> GetListByName(string numeroDoc, string nombre);
+        Task<List<ConductorListDTO>> GetListByName(string numeroDoc, string nombre);
         Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize);
         Task<ConductorDTO?> GetByIdAsync(int id);
         Task<ConductorDTO?> GetByNumeroDocumentoAsync(string numeroDocumento);
