@@ -16,11 +16,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             return await _context.Conductors.ToListAsync();
         }
-        public async Task<List<Conductor>> GetListByName(string numeroDoc, string nombre)
+        public async Task<List<Conductor>> GetListBySuggestion(string numeroDoc)
         {
             return await _context.Conductors
                 .Where(c=>c.IdEstado==1 && 
-                (c.NumeroDocumento.Contains(numeroDoc)||c.Nombres.Contains(nombre)||c.Apellidos.Contains(nombre)))
+                (c.NumeroDocumento.Contains(numeroDoc)||c.Nombres.Contains(numeroDoc)||c.Apellidos.Contains(numeroDoc)))
                 .ToListAsync();
         }
         public async Task<(List<Conductor>, int)> GetListAsync(int pageNumber, int pageSize)

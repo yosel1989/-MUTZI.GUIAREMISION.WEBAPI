@@ -180,6 +180,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest=>dest.EmailDestinatariosGuia, opt=>opt.MapFrom(src=>src.EmailDestinatarioGuids))
                 ;
+            CreateMap<DOMAIN.Entities.Destinatario, DestinatarioListDTO>();
             CreateMap<DestinatarioCreateDTO, DOMAIN.Entities.Destinatario>();
             CreateMap<DestinatarioUpdateDTO, DOMAIN.Entities.Destinatario>();
             //Proveedor
@@ -188,6 +189,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 ;
+            CreateMap<DOMAIN.Entities.Proveedor, ProveedorListDTO>();
             CreateMap<ProveedorCreateDTO, DOMAIN.Entities.Proveedor>();
             CreateMap<ProveedorUpdateDTO, DOMAIN.Entities.Proveedor>();
             //Productos
@@ -196,11 +198,13 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<ProductosCreateDTO, DOMAIN.Entities.GuiaDetalle>();
             //Conductor
             CreateMap<DOMAIN.Entities.Conductor, ConductorDTO>();
+            CreateMap<DOMAIN.Entities.Conductor, ConductorListDTO>();
             CreateMap<ConductorCreateDTO, DOMAIN.Entities.Conductor>();
             CreateMap<ConductorUpdateDTO, DOMAIN.Entities.Conductor>();
 
             //Unidad de transporte
             CreateMap<DOMAIN.Entities.Transporte, UnidadTransporteDTO>();
+            CreateMap<DOMAIN.Entities.Transporte, TransporteListDTO>();
             CreateMap<UnidadTransporteCreateDTO, DOMAIN.Entities.Transporte>();
             CreateMap<UnidadTransporteUpdateDTO, DOMAIN.Entities.Transporte>();
 

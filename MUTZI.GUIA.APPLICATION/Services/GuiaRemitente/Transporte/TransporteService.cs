@@ -22,9 +22,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
             var transportes = await _repository.GetAllAsync();
             return _mapper.Map<List<UnidadTransporteDTO>>(transportes);
         }
-        public async Task<List<TransporteListDTO>> GetListByName(string numeroDoc, string nombre)
+        public async Task<List<TransporteListDTO>> GetListBySuggestion(string numeroDoc)
         {
-            var transportes=await _repository.GetListByName(numeroDoc, nombre);
+            var transportes=await _repository.GetListBySuggestion(numeroDoc);
             return _mapper.Map<List<TransporteListDTO>>(transportes);
         }
         public async Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize)
@@ -68,12 +68,18 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
         }
         public async Task CancelAsync(int id, int status)
         {
+            string _status = status switch
+            {
+                1 => "activo",
+                2 => "inactivo",
+                _ => throw new KeyNotFoundException("El nuevo estado solo acepta valores de '0' ó '1'"),
+            };
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null)
             {
                 throw new KeyNotFoundException($"Unidad de Transporte con ID {id} no encontrado.");
             }
-            existing.Estado = status == 1 ? "activo" : "inactivo";
+            existing.Estado = _status;
             existing.IdEstado = (sbyte?)status;
             await _repository.UpdateAsync(existing);
         }

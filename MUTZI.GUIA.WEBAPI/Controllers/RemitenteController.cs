@@ -31,15 +31,33 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             try
             {
                 var remitentes = await _remitenteService.GetAllAsync();
-                if (remitentes == null)
-                {
-                    return BadRequest(new BadRequestResponseDTO
-                    {
-                        Error = "No se encontraron registros",
-                        Detalle = "No se pudo obtener la lista de remitentes."
-                    });
-                }
                 return Ok(remitentes);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar remitentes.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("listar-sugerido/{numeroDoc}")]
+        [SwaggerOperation(
+        Summary = "Listar remitentes sugeridos",
+        Description = "Lista los remitentes sugeridos por número de documento o razón social",
+        OperationId = "listar_remitente_sugerido")]
+        [ProducesResponseType(typeof(RemitenteListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<RemitenteListDTO>>> GetBySuggestion(string numeroDoc)
+        {
+            try
+            {
+                var proveedores = await _remitenteService.GetListBySuggestion(numeroDoc);
+                return Ok(proveedores);
             }
             catch (Exception ex)
             {
@@ -223,7 +241,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
-        [Route("actualizar-estado/{id}/{status}")]
+        [Route("{id}/actualizar-estado")]
         [SwaggerOperation(
         Summary = "Actualizar estado de un remitente",
         Description = "Actualizar el estado de un remitente en la bbdd. 1='activo', 0='inactivo'.",
@@ -231,7 +249,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(UpdatedStatus), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Cancelar(int id, int status)
+        public async Task<IActionResult> Cancelar(int id, [FromBody] int status)
         {
             try
             {

@@ -21,9 +21,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
             var remitentes = await _repository.GetAllAsync();
             return _mapper.Map<List<RemitenteListDTO>>(remitentes);
         }
-        public async Task<List<RemitenteListDTO>> GetListByName(string numeroDoc, string nombre)
+        public async Task<List<RemitenteListDTO>> GetListBySuggestion(string numeroDoc)
         {
-            var remitentes=await _repository.GetListByName(numeroDoc, nombre);
+            var remitentes=await _repository.GetListBySuggestion(numeroDoc);
             return _mapper.Map<List<RemitenteListDTO>>(remitentes);
         }
         public async Task<PagedResult<RemitenteDTO>> GetListAsync(int pageNumber, int pageSize)
@@ -103,12 +103,18 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
         }
         public async Task CancelAsync(int id, int status)
         {
+            string _status = status switch
+            {
+                1 => "activo",
+                2 => "inactivo",
+                _ => throw new KeyNotFoundException("El nuevo estado solo acepta valores de '0' ó '1'"),
+            };
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null)
             {
                 throw new KeyNotFoundException($"Remitente con ID {id} no encontrado.");
             }
-            existing.Estado = status == 1 ? "activo" : "inactivo";
+            existing.Estado = _status;
             existing.IdEstado = (sbyte?)status;
             await _repository.UpdateAsync(existing);
         }

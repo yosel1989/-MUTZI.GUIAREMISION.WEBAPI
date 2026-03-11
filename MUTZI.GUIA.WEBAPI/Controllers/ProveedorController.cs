@@ -1,8 +1,6 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
@@ -33,6 +31,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             {
                 var result = await _service.GetListAsync(pageNumber, pageSize);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar proveedores.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("listar-sugerido/{numeroDoc}")]
+        [SwaggerOperation(
+        Summary = "Listar proveedores sugeridos",
+        Description = "Lista los proveedores sugeridos por número de documento o razón social",
+        OperationId = "listar_proveedor_sugerido")]
+        [ProducesResponseType(typeof(ProveedorListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<ProveedorListDTO>>> GetBySuggestion(string numeroDoc)
+        {
+            try
+            {
+                var proveedores = await _service.GetListBySuggestion(numeroDoc);
+                return Ok(proveedores);
             }
             catch (Exception ex)
             {
@@ -139,6 +163,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Actualizar un proveedor",
         Description = "Actualizar proveedor en la bbdd",
@@ -146,7 +171,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(ProveedorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ProveedorDTO>> Update(int id, ProveedorUpdateDTO proveedorDto)
+        public async Task<ActionResult<ProveedorDTO>> Update(int id, [FromBody] ProveedorUpdateDTO proveedorDto)
         {
             try
             {
@@ -164,6 +189,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpDelete]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Eliminar un proveedor",
         Description = "Elimina un proveedor de la bbdd",
@@ -189,7 +215,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
-        [Route("actualizar-estado/{id}/{status}")]
+        [Route("{id}/actualizar-estado")]
         [SwaggerOperation(
         Summary = "Actualizar estado de un proveedor",
         Description = "Actualizar el estado de un proveedor en la bbdd. 1='activo', 0='inactivo'.",
@@ -197,7 +223,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(UpdatedStatus), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Cancelar(int id, int status)
+        public async Task<IActionResult> Cancelar(int id, [FromBody] int status)
         {
             try
             {

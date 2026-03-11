@@ -92,8 +92,8 @@ public partial class LogisticaContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("empleadoNombreEdicion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(20)
-                .HasDefaultValueSql("'ACTIVO'")
+                .HasDefaultValueSql("'activo'")
+                .HasColumnType("enum('activo','inactivo')")
                 .HasColumnName("estado");
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -211,8 +211,8 @@ public partial class LogisticaContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("empleadoNombreEdicion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(20)
                 .HasDefaultValueSql("'activo'")
+                .HasColumnType("enum('activo','inactivo')")
                 .HasColumnName("estado");
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -545,8 +545,8 @@ public partial class LogisticaContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("empleadoNombreEdicion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(20)
                 .HasDefaultValueSql("'activo'")
+                .HasColumnType("enum('activo','inactivo')")
                 .HasColumnName("estado");
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -606,8 +606,8 @@ public partial class LogisticaContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("empleadoNombreEdicion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(20)
                 .HasDefaultValueSql("'activo'")
+                .HasColumnType("enum('activo','inactivo')")
                 .HasColumnName("estado");
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -675,8 +675,8 @@ public partial class LogisticaContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("empleadoNombreEdicion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(20)
                 .HasDefaultValueSql("'activo'")
+                .HasColumnType("enum('activo','inactivo')")
                 .HasColumnName("estado");
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -734,8 +734,8 @@ public partial class LogisticaContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("empleadoNombreEdicion");
             entity.Property(e => e.Estado)
-                .HasMaxLength(20)
-                .HasDefaultValueSql("'ACTIVO'")
+                .HasDefaultValueSql("'activo'")
+                .HasColumnType("enum('activo','inactivo')")
                 .HasColumnName("estado");
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")

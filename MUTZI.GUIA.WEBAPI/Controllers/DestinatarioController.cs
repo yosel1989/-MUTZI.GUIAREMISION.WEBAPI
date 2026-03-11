@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario;
 using Swashbuckle.AspNetCore.Annotations;
@@ -33,6 +32,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             try
             {
                 var destinatarios = await _destinatarioService.GetListAsync(pageNumber, pageSize);
+                return Ok(destinatarios);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar destinatarios.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("listar-sugerido/{numeroDoc}")]
+        [SwaggerOperation(
+        Summary = "Listar destinatarios sugeridos",
+        Description = "Lista los destinatarios sugeridos por número de documento o razón social",
+        OperationId = "listar_destinatario_sugerido")]
+        [ProducesResponseType(typeof(DestinatarioListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<DestinatarioListDTO>>> GetBySuggestion(string numeroDoc)
+        {
+            try
+            {
+                var destinatarios = await _destinatarioService.GetListBySuggestion(numeroDoc);
                 return Ok(destinatarios);
             }
             catch (Exception ex)
@@ -106,6 +131,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Actualizar un destinatario",
         Description = "Actualizar destinatario en la bbdd",
@@ -131,6 +157,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpDelete]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Eliminar un destinatario",
         Description = "Elimina un destinatario de la bbdd",
@@ -156,7 +183,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
-        [Route("actualizar-estado/{id}/{status}")]
+        [Route("{id}/actualizar-estado")]
         [SwaggerOperation(
         Summary = "Actualizar estado de un destinatario",
         Description = "Actualizar el estado de un destinatario en la bbdd. 1='activo', 0='inactivo'.",
@@ -164,7 +191,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(UpdatedStatus), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Cancelar(int id, int status)
+        public async Task<IActionResult> Cancelar(int id, [FromBody] int status)
         {
             try
             {

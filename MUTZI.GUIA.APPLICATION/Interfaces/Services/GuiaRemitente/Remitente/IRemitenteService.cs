@@ -6,7 +6,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente
     public interface IRemitenteService
     {
         Task<List<RemitenteListDTO>> GetAllAsync();
-        Task<List<RemitenteListDTO>> GetListByName(string numeroDoc, string nombre);
+        Task<List<RemitenteListDTO>> GetListBySuggestion(string numeroDoc);
         Task<PagedResult<RemitenteDTO>> GetListAsync(int pageNumber, int pageSize);
         Task<RemitenteForGuiaDTO?> GetByIdForGuiaAsync(int id, string tipoGuia);
         Task<RemitenteDTO?> GetByIdAsync(int id);

@@ -3,7 +3,7 @@
     public interface IRemitenteRepository
     {
         Task<List<DOMAIN.Entities.Remitente>> GetAllAsync();
-        Task<List<DOMAIN.Entities.Remitente>> GetListByName(string numeroDoc, string nombre);
+        Task<List<DOMAIN.Entities.Remitente>> GetListBySuggestion(string numeroDoc);
         Task<(List<DOMAIN.Entities.Remitente>, int)> GetListAsync(int pageNumber, int pageSize);
         Task<DOMAIN.Entities.Remitente?> GetByIdAsync(int id);
         Task CreateAsync(DOMAIN.Entities.Remitente remitente);

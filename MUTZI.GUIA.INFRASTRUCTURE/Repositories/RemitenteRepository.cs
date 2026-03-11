@@ -19,13 +19,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(e=>e.RucNavigation)
                 .ToListAsync();
         }
-        public async Task<List<Remitente>> GetListByName(string numeroDoc, string nombre)
+        public async Task<List<Remitente>> GetListBySuggestion(string numeroDoc)
         {
             return await _context.Remitentes
                 .Include(r => r.Ubigeo)
                 .Include(e => e.RucNavigation)
                 .Where(c => c.IdEstado == 1 &&
-                (c.Ruc.Contains(numeroDoc) || c.Descripcion.Contains(nombre)))
+                (c.Ruc.Contains(numeroDoc) || c.Descripcion.Contains(numeroDoc)))
                 .ToListAsync();
         }
         public async Task<(List<Remitente>, int)> GetListAsync(int pageNumber, int pageSize)
