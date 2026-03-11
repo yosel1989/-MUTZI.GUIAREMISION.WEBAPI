@@ -1,9 +1,10 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+﻿using Genexs.AWS.Library;
+using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente;
-using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
@@ -64,14 +65,6 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             try
             {
                 var remitentes = await _remitenteService.GetListAsync(pageNumber, pageSize);
-                if (remitentes == null || remitentes.Data.Count==0)
-                {
-                    return BadRequest(new BadRequestResponseDTO
-                    {
-                        Error = "No se encontraron registros",
-                        Detalle = "No se pudo obtener la lista de remitentes."
-                    });
-                }
                 return Ok(remitentes);
             }
             catch (Exception ex)
@@ -225,6 +218,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al eliminar remitente.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpPut]
+        [Route("actualizar-estado/{id}/{status}")]
+        [SwaggerOperation(
+        Summary = "Actualizar estado de un remitente",
+        Description = "Actualizar el estado de un remitente en la bbdd. 1='activo', 0='inactivo'.",
+        OperationId = "actualizar_estado_remitente")]
+        [ProducesResponseType(typeof(UpdatedStatus), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Cancelar(int id, int status)
+        {
+            try
+            {
+                await _remitenteService.CancelAsync(id, status);
+                return Ok(new UpdatedStatus { Id = id, NewStatus = status });
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar el estado de un remitente.",
                     Detalle = errorMsg
                 });
             }

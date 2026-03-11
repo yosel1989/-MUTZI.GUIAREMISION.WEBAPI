@@ -21,6 +21,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
             var proveedores = await _repository.GetAllAsync();
             return _mapper.Map<List<ProveedorDTO>>(proveedores);
         }
+        public async Task<List<ProveedorDTO>> GetListByName(string numeroDoc, string nombre)
+        {
+            var proveedores = await _repository.GetListByName(numeroDoc, nombre);
+            return _mapper.Map<List<ProveedorDTO>>(proveedores);
+        }
         public async Task<PagedResult<ProveedorDTO>> GetListAsync(int pageNumber, int pageSize)
         {
             var (proveedor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
@@ -68,5 +73,18 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
         {
             await _repository.DeleteAsync(id);
         }
+        public async Task CancelAsync(int id, int status)
+        {
+            var existing=await _repository.GetByIdAsync(id);
+            if (existing == null)
+            {
+                throw new KeyNotFoundException($"Proveedor con ID {id} no encontrado.");
+            }
+            existing.Estado = status==1?"activo":"inactivo";
+            existing.IdEstado = (sbyte?)status;
+            await _repository.UpdateAsync(existing);
+        }
+
+        
     }
 }

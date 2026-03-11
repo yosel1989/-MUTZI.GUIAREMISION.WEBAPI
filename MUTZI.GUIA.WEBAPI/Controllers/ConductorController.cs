@@ -1,8 +1,6 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
@@ -32,14 +30,6 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             try
             {
                 var result = await _service.GetListAsync(pageNumber, pageSize);
-                if (result == null || result.Data.Count==0)
-                {
-                    return BadRequest(new BadRequestResponseDTO
-                    {
-                        Error = "No se encontraron registros",
-                        Detalle = "No se pudo obtener la lista de conductores."
-                    });
-                }
                 return Ok(result);
             }
             catch (Exception ex)
@@ -187,6 +177,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al eliminar conductor.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpPut]
+        [Route("actualizar-estado/{id}/{status}")]
+        [SwaggerOperation(
+        Summary = "Actualizar estado de un conductor",
+        Description = "Actualizar el estado de un conductor en la bbdd. 1='activo', 0='inactivo'.",
+        OperationId = "actualizar_estado_conductor")]
+        [ProducesResponseType(typeof(UpdatedStatus), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Cancelar(int id, int status)
+        {
+            try
+            {
+                await _service.CancelAsync(id, status);
+                return Ok(new UpdatedStatus { Id = id, NewStatus = status });
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar el estado de un conductor.",
                     Detalle = errorMsg
                 });
             }

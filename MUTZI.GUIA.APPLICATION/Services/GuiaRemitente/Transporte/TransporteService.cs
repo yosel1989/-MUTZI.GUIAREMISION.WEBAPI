@@ -61,5 +61,16 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
         {
             await _repository.DeleteAsync(id);
         }
+        public async Task CancelAsync(int id, int status)
+        {
+            var existing = await _repository.GetByIdAsync(id);
+            if (existing == null)
+            {
+                throw new KeyNotFoundException($"Unidad de Transporte con ID {id} no encontrado.");
+            }
+            existing.Estado = status == 1 ? "activo" : "inactivo";
+            existing.IdEstado = (sbyte?)status;
+            await _repository.UpdateAsync(existing);
+        }
     }
 }

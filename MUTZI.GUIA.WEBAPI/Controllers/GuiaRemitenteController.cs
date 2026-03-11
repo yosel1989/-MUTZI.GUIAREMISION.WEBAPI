@@ -122,16 +122,6 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             try
             {
                 var result = await _guiasRemisionBDService.GetListAsync(pageNumber, pageSize);
-
-                if (result == null || result.Data.Count == 0)
-                {
-                    return BadRequest(new BadRequestResponseDTO
-                    {
-                        Error = "No se encontraron registros",
-                        Detalle = "No se pudo obtener la lista de guías."
-                    });
-                }
-
                 return Ok(result);
             }
             catch (Exception ex)

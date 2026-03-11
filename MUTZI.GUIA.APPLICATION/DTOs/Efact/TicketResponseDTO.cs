@@ -77,4 +77,19 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         [SwaggerSchema("Devuelve en texto el detalle de la transacción en la bbdd.", Nullable = false)]
         public string Detalle { get; set; } = "Registro eliminado exitosamente.";
     }
+    [SwaggerSchema("Respuesta para una actualización de estado de un registro en la bbdd")]
+    public class UpdatedStatus
+    {
+        [JsonPropertyName("id")]
+        [SwaggerSchema("Devuelve un entero, el ID afectado por la transacción en la bbdd.", Nullable = false)]
+        public int Id { get; set; }
+
+        [JsonPropertyName("new_status")]
+        [SwaggerSchema("Devuelve en entero el nuevo estado del registro.", Nullable = false)]
+        public int NewStatus { get; set; }
+
+        [JsonPropertyName("detalle")]
+        [SwaggerSchema("Devuelve en texto el detalle de la transacción en la bbdd.", Nullable = false)]
+        public string Detalle { get; set; } = "Estado de registro actualizado correctamente.";
+    }
 }

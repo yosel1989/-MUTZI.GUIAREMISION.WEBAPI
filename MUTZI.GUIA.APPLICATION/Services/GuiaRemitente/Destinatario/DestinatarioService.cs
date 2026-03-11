@@ -21,6 +21,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
             var destinatarios = await _repository.GetAllAsync();
             return _mapper.Map<List<DestinatarioDTO>>(destinatarios);
         }
+        public async Task<List<DestinatarioDTO>> GetListByName(string numeroDoc, string nombre)
+        {
+            var destinatarios=await _repository.GetListByName(numeroDoc, nombre);
+            return _mapper.Map<List<DestinatarioDTO>>(destinatarios);
+        }
         public async Task<PagedResult<DestinatarioDTO>> GetListAsync(int pageNumber, int pageSize)
         {
             var(destinatario, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
@@ -58,6 +63,17 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
+        }
+        public async Task CancelAsync(int id, int status)
+        {
+            var existing = await _repository.GetByIdAsync(id);
+            if (existing == null)
+            {
+                throw new KeyNotFoundException($"Destinatario con ID {id} no encontrado.");
+            }
+            existing.Estado = status == 1 ? "activo" : "inactivo";
+            existing.IdEstado = (sbyte?)status;
+            await _repository.UpdateAsync(existing);
         }
     }
 }
