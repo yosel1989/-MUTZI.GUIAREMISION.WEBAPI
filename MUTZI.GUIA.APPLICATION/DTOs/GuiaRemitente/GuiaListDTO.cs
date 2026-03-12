@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
     public class GuiaListDTO
     {
-        [JsonPropertyName("guia_id")]
+        [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, es el número ID de la guía.", Nullable = false)]
         public int GuiaID { get; set; }
 

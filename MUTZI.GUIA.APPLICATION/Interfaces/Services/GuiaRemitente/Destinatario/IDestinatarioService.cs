@@ -13,6 +13,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario
         Task<int> CreateAsync(DestinatarioCreateDTO createDTO);
         Task<DestinatarioDTO> UpdateAsync(int id, DestinatarioUpdateDTO updateDTO);
         Task DeleteAsync(int id);
-        Task<UpdatedStatusDto> CancelAsync(int id, int status);
+        Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto);
     }
 }

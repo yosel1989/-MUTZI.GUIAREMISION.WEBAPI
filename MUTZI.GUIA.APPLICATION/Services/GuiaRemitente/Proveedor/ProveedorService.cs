@@ -55,9 +55,18 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
 
         public async Task<int> CreateAsync(ProveedorCreateDTO createDTO)
         {
-            var proveedor = _mapper.Map<DOMAIN.Entities.Proveedor>(createDTO);
-            await _repository.CreateAsync(proveedor);
-            return proveedor.ProveedorId;
+            try
+            {
+                var proveedor = _mapper.Map<DOMAIN.Entities.Proveedor>(createDTO);
+                await _repository.CreateAsync(proveedor);
+                return proveedor.ProveedorId;
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
         }
         public async Task<ProveedorDTO> UpdateAsync(int id, ProveedorUpdateDTO updateDTO)
         {
@@ -74,9 +83,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
         {
             await _repository.DeleteAsync(id);
         }
-        public async Task<UpdatedStatusDto> CancelAsync(int id, int status)
+        public async Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto)
         {
-            string _status = status switch
+            string _status = infoRequestDto.IdEstado switch
             {
                 1 => "activo",
                 0 => "inactivo",
@@ -88,7 +97,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
                 throw new KeyNotFoundException($"Proveedor con ID {id} no encontrado.");
             }
             existing.Estado = _status;
-            existing.IdEstado = (sbyte?)status;
+            existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
+            existing.EmpleadoIdedicion = infoRequestDto.EditedEmployeeId;
+            existing.EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName;
             await _repository.UpdateAsync(existing);
 
             return new UpdatedStatusDto

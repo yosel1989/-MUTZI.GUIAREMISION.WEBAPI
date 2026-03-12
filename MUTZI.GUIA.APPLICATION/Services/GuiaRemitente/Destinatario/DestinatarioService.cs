@@ -46,9 +46,18 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
         }
         public async Task<int> CreateAsync(DestinatarioCreateDTO createDTO)
         {
-            var destinatario = _mapper.Map<DOMAIN.Entities.Destinatario>(createDTO);
-            await _repository.CreateAsync(destinatario);
-            return destinatario.DestinatarioId;
+            try
+            {
+                var destinatario = _mapper.Map<DOMAIN.Entities.Destinatario>(createDTO);
+                await _repository.CreateAsync(destinatario);
+                return destinatario.DestinatarioId;
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
         }
         public async Task<DestinatarioDTO> UpdateAsync(int id, DestinatarioUpdateDTO updateDTO)
         {
@@ -65,9 +74,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
         {
             await _repository.DeleteAsync(id);
         }
-        public async Task<UpdatedStatusDto> CancelAsync(int id, int status)
+        public async Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto)
         {
-            string _status = status switch
+            string _status = infoRequestDto.IdEstado switch
             {
                 1 => "activo",
                 0 => "inactivo",
@@ -79,7 +88,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
                 throw new KeyNotFoundException($"Destinatario con ID {id} no encontrado.");
             }
             existing.Estado = _status;
-            existing.IdEstado = (sbyte?)status;
+            existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
+            existing.EmpleadoIdedicion = infoRequestDto.EditedEmployeeId;
+            existing.EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName;
             await _repository.UpdateAsync(existing);
 
             return new UpdatedStatusDto

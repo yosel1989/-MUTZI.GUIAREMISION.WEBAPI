@@ -100,10 +100,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     [SwaggerSchema("Recibe un objeto con los campos del empleado que está realizando la transacción")]
     public class InfoRequestDTO
     {
-        [JsonPropertyName("id")]
-        [SwaggerSchema("Recibe un entero, aquí se soloc", Nullable = false)]
+        [JsonPropertyName("id_estado")]
+        [SwaggerSchema("Recibe un entero, aquí se coloca el nuevo id del estado del objeto", Nullable = false)]
         [Required]
-        public int Id { get; set; }
+        public int IdEstado { get; set; }
 
         [JsonPropertyName("edited_employee_id")]
         [SwaggerSchema("Recibe un entero, aquí se coloca el ID del empleado que ha realizado la transacción", Nullable = false)]

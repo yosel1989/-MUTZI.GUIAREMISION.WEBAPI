@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
 {
     public class RemitenteListDTO
     {
-        [JsonPropertyName("remitente_id")]
+        [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, el ID del remitente en la bbdd", Nullable = false)]
         public int RemitenteID { get; set; }
 

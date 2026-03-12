@@ -13,6 +13,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte
         Task<int> CreateAsync(UnidadTransporteCreateDTO createDTO);
         Task<UnidadTransporteDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO);
         Task DeleteAsync(int id);
-        Task<UpdatedStatusDto> CancelAsync(int id, int status);
+        Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto);
     }
 }

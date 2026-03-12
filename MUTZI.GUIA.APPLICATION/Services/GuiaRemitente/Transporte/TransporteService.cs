@@ -48,9 +48,18 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
         }
         public async Task<int> CreateAsync(UnidadTransporteCreateDTO createDTO)
         {
-            var transporte=_mapper.Map<DOMAIN.Entities.Transporte>(createDTO);
-            await _repository.CreateAsync(transporte);
-            return transporte.TransporteId;
+            try
+            {
+                var transporte = _mapper.Map<DOMAIN.Entities.Transporte>(createDTO);
+                await _repository.CreateAsync(transporte);
+                return transporte.TransporteId;
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("placa_UNIQUE")) { msg = "La placa ya se encuentra registrada."; }
+                throw new Exception(msg);
+            }
         }
         public async Task<UnidadTransporteDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO)
         {
@@ -67,9 +76,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
         {
             await _repository.DeleteAsync(id);
         }
-        public async Task<UpdatedStatusDto> CancelAsync(int id, int status)
+        public async Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto)
         {
-            string _status = status switch
+            string _status = infoRequestDto.IdEstado switch
             {
                 1 => "activo",
                 0 => "inactivo",
@@ -81,7 +90,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
                 throw new KeyNotFoundException($"Unidad de Transporte con ID {id} no encontrado.");
             }
             existing.Estado = _status;
-            existing.IdEstado = (sbyte?)status;
+            existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
+            existing.EmpleadoIdedicion = infoRequestDto.EditedEmployeeId;
+            existing.EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName;
             await _repository.UpdateAsync(existing);
 
             return new UpdatedStatusDto
