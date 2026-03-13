@@ -25,7 +25,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<(List<Conductor>, int)> GetListAsync(int pageNumber, int pageSize)
         {
-            var query = _context.Conductors.OrderBy(x=>x.ConductorId);
+            var query = _context.Conductors.OrderByDescending(x=>x.FechaCreacion);
             var totalRecords=await query.CountAsync();
             var data = await query
                 .Skip((pageNumber - 1) * pageSize)
