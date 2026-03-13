@@ -18,19 +18,19 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             _remitenteService = remitenteService;
         }
         [HttpGet]
-        [Route("listar")]
+        [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
         Summary = "Listar remitentes",
-        Description = "Lista los remitentes",
+        Description = "Lista los remitentes por página. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
         OperationId = "listar_remitente")]
-        [ProducesResponseType(typeof(RemitenteListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<RemitenteDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<RemitenteListDTO>>> GetAll()
+        public async Task<ActionResult<PagedResult<RemitenteDTO>>> GetAll(int pageNumber, int pageSize)
         {
             try
             {
-                var remitentes = await _remitenteService.GetAllAsync();
+                var remitentes = await _remitenteService.GetListAsync(pageNumber, pageSize);
                 return Ok(remitentes);
             }
             catch (Exception ex)
@@ -58,32 +58,6 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             {
                 var proveedores = await _remitenteService.GetListBySuggestion(numeroDoc);
                 return Ok(proveedores);
-            }
-            catch (Exception ex)
-            {
-                string errorMsg = ex.InnerException?.Message ?? ex.Message;
-                return StatusCode(500, new InternalErrorResponseDTO
-                {
-                    Error = "Error al listar remitentes.",
-                    Detalle = errorMsg
-                });
-            }
-        }
-        [HttpGet]
-        [Route("listar-por-pagina/{pageNumber}/{pageSize}")]
-        [SwaggerOperation(
-        Summary = "Listar remitentes por página",
-        Description = "Lista los remitentes por página. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
-        OperationId = "listar_remitente_por_pagina")]
-        [ProducesResponseType(typeof(PagedResult<RemitenteDTO>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<RemitenteDTO>>> GetAllForPages(int pageNumber, int pageSize)
-        {
-            try
-            {
-                var remitentes = await _remitenteService.GetListAsync(pageNumber, pageSize);
-                return Ok(remitentes);
             }
             catch (Exception ex)
             {
