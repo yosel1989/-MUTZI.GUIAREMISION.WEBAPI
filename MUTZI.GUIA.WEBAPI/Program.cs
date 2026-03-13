@@ -22,6 +22,7 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Pais;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Mappings;
@@ -34,6 +35,7 @@ using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Services.Pais;
 using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Services.VentaConfig;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
@@ -103,6 +105,7 @@ builder.Services.AddScoped<IGuiaTransportistaUBLService, GuiaTransportistaUBLSer
 builder.Services.AddScoped<IGuiaRemitenteService, GuiaRemitenteService>();
 builder.Services.AddScoped<IGuiaTransportistaService, GuiaTransportistaService>();
 builder.Services.AddScoped<IEnvioService, EnvioService>();
+builder.Services.AddScoped<IPaisService, PaisService>();
 
 builder.Services.AddScoped<IRemitenteService, RemitenteService>();
 builder.Services.AddScoped<IDestinatarioService, DestinatarioService>();

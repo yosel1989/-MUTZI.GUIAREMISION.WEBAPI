@@ -8,6 +8,5 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Ubigeo
         Task<IEnumerable<UbigeoProvinciaDto>> GetProvinciaAsync(string ubigeoDepartamento);
         Task<IEnumerable<UbigeoDepartamentoDto>> GetDepartamentoAsync();
         Task<UbigeoDto> FindByIdAsync(string ubigeo);
-        IEnumerable<PaisesDTO> GetPaisesAsync();
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace MUTZI.GUIA.APPLICATION.DTOs.Ubigeo
+namespace MUTZI.GUIA.APPLICATION.DTOs.Pais
 {
     [SwaggerSchema("Devuelve lista de código de países", Nullable = false)]
     public class PaisesDTO
