@@ -33,7 +33,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             var query = _context.Remitentes
                 .Include(r => r.Ubigeo)
                 .Include(e => e.RucNavigation)
-                .OrderBy(r=>r.RemitenteId);
+                .OrderByDescending(r=>r.FechaCreacion);
             var totalRecords = await query.CountAsync();
             var data = await query
                 .Skip((pageNumber - 1) * pageSize)

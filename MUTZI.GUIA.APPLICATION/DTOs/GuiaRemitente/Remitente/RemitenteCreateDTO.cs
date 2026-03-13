@@ -51,9 +51,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         public string Pais { get; set; }
 
         [JsonPropertyName("serie")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = false)]
         [StringLength(3, ErrorMessage = "La serie requiere 3 caracteres")]
-        public string? Serie { get; set; }
+        public string Serie { get; set; }
 
         [JsonPropertyName("codigo_sunat")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]

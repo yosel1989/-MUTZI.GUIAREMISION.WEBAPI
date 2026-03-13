@@ -37,7 +37,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .Include(doc => doc.DocRelacionados)
-                .OrderBy(x => x.GuiaId);
+                .OrderByDescending(x => x.FechaCreacion);
 
             var totalRecords = await query.CountAsync();
 

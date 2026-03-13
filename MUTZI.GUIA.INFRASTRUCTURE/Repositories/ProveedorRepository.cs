@@ -30,7 +30,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             var query = _context.Proveedors
                 .Include(p => p.Ubigeo)
-                .OrderBy(p=>p.ProveedorId);
+                .OrderByDescending(p=>p.FechaCreacion);
             var totalRecords = await query.CountAsync();
             var data = await query
                 .Skip((pageNumber - 1) * pageSize)

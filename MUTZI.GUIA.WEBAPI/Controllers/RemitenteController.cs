@@ -44,6 +44,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpGet]
+        [Route("listar-select")]
+        [SwaggerOperation(
+        Summary = "Listar remitentes para select",
+        Description = "Lista los remitentes para select",
+        OperationId = "listar_remitente_select")]
+        [ProducesResponseType(typeof(RemitenteListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<RemitenteListDTO>>> GetToSelect()
+        {
+            try
+            {
+                var remitentes = await _remitenteService.GetAllAsync();
+                return Ok(remitentes);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar remitentes.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
         [Route("listar-sugerido/{numeroDoc}")]
         [SwaggerOperation(
         Summary = "Listar remitentes sugeridos",
@@ -112,7 +138,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(RemitenteForGuiaDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task <ActionResult<RemitenteForGuiaDTO>> GetForGuiaById(int id, string tipoGuia)
+        public async Task<ActionResult<RemitenteForGuiaDTO>> GetForGuiaById(int id, string tipoGuia)
         {
             try
             {
