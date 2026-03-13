@@ -100,6 +100,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
                 Id = existing.TransporteId,
                 IdEstado = (Int32)existing.IdEstado,
                 Estado = existing.Estado,
+                FechaEdicion = existing.FechaEdicion,
+                EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
                 Detalle = $"Unidad de Transporte con ID {existing.TransporteId} ha sido actualizado a estado '{existing.Estado}'."
             };
         }

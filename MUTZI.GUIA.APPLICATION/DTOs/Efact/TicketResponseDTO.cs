@@ -93,6 +93,16 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         [SwaggerSchema("Devuelve el nuevo estado del registro.", Nullable = false)]
         public string Estado { get; set; }
 
+        [JsonPropertyName("fecha_ultima_edicion")]
+        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00, es la fecha de la última edición realizada en la guía", Nullable = true)]
+        public DateTime? FechaEdicion { get; set; }
+
+        [JsonPropertyName("empleado_nombre_edicion")]
+        [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha realizado la transacción en el sistema", Nullable = false)]
+        [MaxLength(100)]
+        [Required]
+        public string EmpleadoNombreEdicion { get; set; }
+
         [JsonPropertyName("detalle")]
         [SwaggerSchema("Devuelve en texto el detalle de la transacción en la bbdd.", Nullable = false)]
         public string Detalle { get; set; } = "Estado de registro actualizado correctamente.";

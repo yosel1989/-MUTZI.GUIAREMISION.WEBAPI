@@ -107,6 +107,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
                 Id = existing.ProveedorId,
                 IdEstado = Convert.ToInt32(existing.IdEstado),
                 Estado = existing.Estado,
+                FechaEdicion = existing.FechaEdicion,
+                EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
                 Detalle = $"Proveedor con ID {existing.ProveedorId} ha sido actualizado a estado '{existing.Estado}'."
             };
         }

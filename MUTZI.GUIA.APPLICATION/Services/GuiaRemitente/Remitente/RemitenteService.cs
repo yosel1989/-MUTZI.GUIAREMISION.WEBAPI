@@ -135,6 +135,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
                 Id = existing.RemitenteId,
                 IdEstado = (Int32)existing.IdEstado,
                 Estado = existing.Estado,
+                FechaEdicion = existing.FechaEdicion,
+                EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
                 Detalle = $"Remitente con ID {existing.RemitenteId} actualizado a estado '{existing.Estado}'."
             };
         }
