@@ -7,7 +7,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
     {
         Task<List<GuiaRemitenteDTO>> GetAllAsync();
         Task<PagedResult<GuiaListDTO>> GetListAsync(int pageNumber, int pageSize);
-        Task<GuiaRemitenteDTO> GetByIdAsync(int id);
+        Task<object> GetByIdAsync(int id);
         Task<GuiaPorTicketDTO> GetByTicketAsync(string ticket);
         Task<GuiaRemitenteDTO> CreateAsync(GuiaRemitenteCreateDTO guiaRemisionDto);
         Task<GuiaRemitenteDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto);
