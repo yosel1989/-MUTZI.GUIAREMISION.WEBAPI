@@ -274,9 +274,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             string ticket = "";
             string estado = "";
             int idEstado = 0;
+
             try
             {
                 var guiaExistente = await _guiaRemitenteBDService.GetByIdAsync(guiaId);
+
                 if (guiaExistente == null)
                 {
                     return new BadRequestResponseDTO
@@ -285,8 +287,20 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                         Detalle = $"No se encontró una guía de remisión con ID {guiaId}."
                     };
                 }
-                var nombreArchivo = await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaExistente);
+
+                string nombreArchivo = guiaExistente switch
+                {
+                    GuiaRemitenteDTO guiaRemitente =>
+                        await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaRemitente),
+
+                    GuiaTransportistaDTO guiaTransportista =>
+                        await _guiaTransportistaUBLService.GenerarGuiaTransportistaJson(guiaTransportista),
+
+                    _ => throw new KeyNotFoundException("Tipo de guía no válido.")
+                };
+
                 string efactRawResponse;
+
                 try
                 {
                     efactRawResponse = await EnviarGuiaElectronicaAsync(ruc, nombreArchivo);
@@ -295,23 +309,29 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 {
                     estado = "RECHAZADO";
                     idEstado = -1;
+
                     string errorMsg = ex.InnerException?.Message ?? ex.Message;
                     if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
+
                     return new InternalErrorResponseDTO
                     {
                         Error = "Error al enviar a EFACT",
                         Detalle = errorMsg
                     };
                 }
+
                 EfactResponseDTO efactParsed;
+
                 try
                 {
                     var json = JsonDocument.Parse(efactRawResponse).RootElement;
+
                     efactParsed = new EfactResponseDTO
                     {
                         Code = json.GetProperty("code").GetString() ?? "",
                         Description = json.GetProperty("description").GetString() ?? ""
                     };
+
                     ticket = efactParsed.Description;
                     estado = "ENVIADO";
                     idEstado = 1;
@@ -321,13 +341,16 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                     ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
                     estado = "RECHAZADO";
                     idEstado = -1;
+
                     efactParsed = new EfactResponseDTO
                     {
                         Code = "-1",
                         Description = ticket
                     };
                 }
+
                 await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaId, ticket, estado, idEstado);
+
                 return new SendGuiaResponseDTO
                 {
                     Success = true,
@@ -338,6 +361,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             {
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
+
                 return new InternalErrorResponseDTO
                 {
                     Error = "Error inesperado",
@@ -345,7 +369,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 };
             }
         }
-
         public async Task<object> ProcesarGuiaTransportistaAsync(string ruc, GuiaTransportistaCreateDTO doc)
         {
             string ticket = "";

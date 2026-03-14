@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
@@ -46,10 +47,21 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 Data = guiasDTO
             };
         }
-        public async Task<GuiaRemitenteDTO> GetByIdAsync(int id)
+        //public async Task<GuiaRemitenteDTO> GetByIdAsync(int id)
+        //{
+        //    var guiaRemision = await _repository.GetByIdAsync(id);
+        //    return _mapper.Map<GuiaRemitenteDTO>(guiaRemision);
+        //}
+        public async Task<object> GetByIdAsync(int id)
         {
             var guiaRemision = await _repository.GetByIdAsync(id);
-            return _mapper.Map<GuiaRemitenteDTO>(guiaRemision);
+
+            return guiaRemision.TipoGuia switch
+            {
+                "REMITENTE" => _mapper.Map<GuiaRemitenteDTO>(guiaRemision),
+                "TRANSPORTISTA" => _mapper.Map<GuiaTransportistaDTO>(guiaRemision),
+                _ => throw new KeyNotFoundException("El tipo guia solo puede ser REMITENTE o TRANSPORTISTA.")
+            };
         }
         public async Task<GuiaPorTicketDTO> GetByTicketAsync(string ticket)
         {
