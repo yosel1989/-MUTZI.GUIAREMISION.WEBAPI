@@ -253,7 +253,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var result = await _remitenteService.CancelAsync(id, infoRequestDto);
+                var result = await _remitenteService.CambiarEstadoAsync(id, infoRequestDto);
                 return Ok(result);
             }
             catch (Exception ex)

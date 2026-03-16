@@ -70,20 +70,29 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
         }
         public async Task<ProveedorDTO> UpdateAsync(int id, ProveedorUpdateDTO updateDTO)
         {
-            var existingProveedor = await _repository.GetByIdAsync(id);
-            if (existingProveedor == null)
+            try
             {
-                throw new KeyNotFoundException($"Proveedor con ID {id} no encontrado.");
+                var existingProveedor = await _repository.GetByIdAsync(id);
+                if (existingProveedor == null)
+                {
+                    throw new KeyNotFoundException($"Proveedor con ID {id} no encontrado.");
+                }
+                _mapper.Map(updateDTO, existingProveedor);
+                await _repository.UpdateAsync(existingProveedor);
+                return _mapper.Map<ProveedorDTO>(existingProveedor);
             }
-            _mapper.Map(updateDTO, existingProveedor);
-            await _repository.UpdateAsync(existingProveedor);
-            return _mapper.Map<ProveedorDTO>(existingProveedor);
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
         }
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
         }
-        public async Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto)
+        public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
         {
             string _status = infoRequestDto.IdEstado switch
             {

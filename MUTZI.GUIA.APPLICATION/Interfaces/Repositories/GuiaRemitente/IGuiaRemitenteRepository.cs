@@ -27,6 +27,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         //Destinatario
         Task<DOMAIN.Entities.Destinatario> GetDestinatarioByRucAsync(string ruc);
         Task<DOMAIN.Entities.Destinatario> CreateDestinatarioAsync(DOMAIN.Entities.Destinatario destinatario);
+        Task<DOMAIN.Entities.Destinatario> UpdateDestinatarioAsync(DOMAIN.Entities.Destinatario destinatario);
         //Proveedor
         Task<DOMAIN.Entities.Proveedor> GetProveedorByRucAsync(string ruc);
         Task<DOMAIN.Entities.Proveedor> CreateProveedorAsync(DOMAIN.Entities.Proveedor proveedor);
