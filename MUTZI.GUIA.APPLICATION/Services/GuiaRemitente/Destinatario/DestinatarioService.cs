@@ -61,20 +61,29 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
         }
         public async Task<DestinatarioDTO> UpdateAsync(int id, DestinatarioUpdateDTO updateDTO)
         {
-            var existingDestinatario = await _repository.GetByIdAsync(id);
-            if (existingDestinatario == null)
+            try
             {
-                throw new KeyNotFoundException($"Destinatario con ID {id} no encontrado.");
+                var existingDestinatario = await _repository.GetByIdAsync(id);
+                if (existingDestinatario == null)
+                {
+                    throw new KeyNotFoundException($"Destinatario con ID {id} no encontrado.");
+                }
+                _mapper.Map(updateDTO, existingDestinatario);
+                await _repository.UpdateAsync(existingDestinatario);
+                return _mapper.Map<DestinatarioDTO>(existingDestinatario);
             }
-            _mapper.Map(updateDTO, existingDestinatario);
-            await _repository.UpdateAsync(existingDestinatario);
-            return _mapper.Map<DestinatarioDTO>(existingDestinatario);
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
         }
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
         }
-        public async Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto)
+        public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
         {
             string _status = infoRequestDto.IdEstado switch
             {

@@ -68,20 +68,30 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
         }
         public async Task<ConductorDTO> UpdateAsync(int id, ConductorUpdateDTO updateDTO)
         {
-            var existingConductor = await _repository.GetByIdAsync(id);
-            if (existingConductor == null)
+            try
             {
-                throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
+                var existingConductor = await _repository.GetByIdAsync(id);
+                if (existingConductor == null)
+                {
+                    throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
+                }
+                _mapper.Map(updateDTO, existingConductor);
+                await _repository.UpdateAsync(existingConductor);
+                return _mapper.Map<ConductorDTO>(existingConductor);
             }
-            _mapper.Map(updateDTO, existingConductor);
-            await _repository.UpdateAsync(existingConductor);
-            return _mapper.Map<ConductorDTO>(existingConductor);
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                else if (msg.Contains("licencia_UNIQUE")) { msg = "Nro Licencia ya se encuentra registrado"; }
+                throw new Exception(msg);
+            }
         }
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
         }
-        public async Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto)
+        public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
         {
             string _status = infoRequestDto.IdEstado switch
             {

@@ -83,6 +83,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
         }
         public async Task<int> CreateAsync(RemitenteCreateDTO createDTO)
         {
+            var existe = await _repository.GetBySerieAsync(createDTO.Ruc, createDTO.Serie);
+            if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
             try
             {
                 var remitente = _mapper.Map<DOMAIN.Entities.Remitente>(createDTO);
@@ -98,20 +100,29 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
         }
         public async Task<RemitenteDTO> UpdateAsync(int id, RemitenteUpdateDTO updateDTO)
         {
-            var existingRemitente = await _repository.GetByIdAsync(id);
-            if (existingRemitente == null)
+            try
             {
-                throw new KeyNotFoundException($"Remitente con ID {id} no encontrado.");
+                var existingRemitente = await _repository.GetByIdAsync(id);
+                if (existingRemitente == null)
+                {
+                    throw new KeyNotFoundException($"Remitente con ID {id} no encontrado.");
+                }
+                _mapper.Map(updateDTO, existingRemitente);
+                await _repository.UpdateAsync(existingRemitente);
+                return _mapper.Map<RemitenteDTO>(existingRemitente);
             }
-            _mapper.Map(updateDTO, existingRemitente);
-            await _repository.UpdateAsync(existingRemitente);
-            return _mapper.Map<RemitenteDTO>(existingRemitente);
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("razonSocial_UNIQUE")) { msg = "La razón social social o sucursal del remitente ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
         }
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
         }
-        public async Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto)
+        public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
         {
             string _status = infoRequestDto.IdEstado switch
             {

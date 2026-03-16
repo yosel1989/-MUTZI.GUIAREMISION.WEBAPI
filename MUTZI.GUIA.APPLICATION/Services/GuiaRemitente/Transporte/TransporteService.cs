@@ -58,25 +58,36 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
             {
                 string msg = ex.InnerException?.Message ?? ex.Message;
                 if (msg.Contains("placa_UNIQUE")) { msg = "La placa ya se encuentra registrada."; }
+                else if (msg.Contains("tarjeta_UNIQUE")) { msg = "Nro de tarjeta ya se encuentra registrado"; }
                 throw new Exception(msg);
             }
         }
         public async Task<UnidadTransporteDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO)
         {
-            var existingTransporte = await _repository.GetByIdAsync(id);
-            if (existingTransporte == null)
+            try
             {
-                throw new KeyNotFoundException($"Transporte con ID {id} no encontrado.");
+                var existingTransporte = await _repository.GetByIdAsync(id);
+                if (existingTransporte == null)
+                {
+                    throw new KeyNotFoundException($"Transporte con ID {id} no encontrado.");
+                }
+                _mapper.Map(updateDTO, existingTransporte);
+                await _repository.UpdateAsync(existingTransporte);
+                return _mapper.Map<UnidadTransporteDTO>(existingTransporte);
             }
-            _mapper.Map(updateDTO, existingTransporte);
-            await _repository.UpdateAsync(existingTransporte);
-            return _mapper.Map<UnidadTransporteDTO>(existingTransporte);
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("placa_UNIQUE")) { msg = "La placa ya se encuentra registrada."; }
+                else if (msg.Contains("tarjeta_UNIQUE")) { msg = "Nro de tarjeta ya se encuentra registrado"; }
+                throw new Exception(msg);
+            }
         }
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
         }
-        public async Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto)
+        public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
         {
             string _status = infoRequestDto.IdEstado switch
             {

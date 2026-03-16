@@ -60,6 +60,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(e => e.RucNavigation)
                 .FirstOrDefaultAsync(r => r.RemitenteId == id);
         }
+        public async Task<bool> GetBySerieAsync(string ruc, string serie)
+        {
+            var existe = await _context.Remitentes
+                .AnyAsync(r => r.Ruc == ruc && r.Serie == serie);
+            return existe;
+        }
         public async Task CreateAsync(DOMAIN.Entities.Remitente remitente)
         {
             await _context.Remitentes.AddAsync(remitente);
@@ -80,7 +86,5 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-
-        
     }
 }

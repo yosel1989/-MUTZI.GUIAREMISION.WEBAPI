@@ -29,12 +29,18 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
 
         // Remitente
         public RemitenteDTO Remitente { get; set; }
+
+        [JsonPropertyName("remite_transportista")]
         public RemiteTransportistaDTO RemiteTransportista { get; set; }
         public DestinatarioDTO Destinatario { get; set; }
+
+        [JsonPropertyName("datos_envio")]
         public DatosEnvioGT_DTO DatosEnvio { get; set; }
         public OrigenDTO Origen { get; set; }
         public List<DestinoDTO> Destino { get; set; }
         public List<ProductosDTO> Productos { get; set; }
+
+        [JsonPropertyName("fecha_creacion")]
         public DateTime FechaCreacion { get; set; }
         public string getTipoCodigoDocumento(string tipo)
         {

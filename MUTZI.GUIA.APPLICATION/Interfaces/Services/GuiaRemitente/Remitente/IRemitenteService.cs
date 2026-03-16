@@ -14,6 +14,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente
         Task<int> CreateAsync(RemitenteCreateDTO createDTO);
         Task<RemitenteDTO> UpdateAsync(int id, RemitenteUpdateDTO updateDTO);
         Task DeleteAsync(int id);
-        Task<UpdatedStatusDto> CancelAsync(int id, InfoRequestDTO infoRequestDto);
+        Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto);
     }
 }
