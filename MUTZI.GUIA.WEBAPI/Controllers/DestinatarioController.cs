@@ -1,9 +1,10 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario;
+﻿using Genexs.AWS.Library;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -18,28 +19,45 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             _destinatarioService = destinatarioService;
         }
         [HttpGet]
-        [Route("listar")]
+        [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
         Summary = "Listar destinatarios",
-        Description = "Lista los destinatarios",
+        Description = "Lista los destinatarios. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
         OperationId = "listar_destinatario")]
-        [ProducesResponseType(typeof(DestinatarioDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<DestinatarioDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<DestinatarioDTO>>> GetAll()
+        public async Task<ActionResult<PagedResult<DestinatarioDTO>>> GetAll(int pageNumber, int pageSize)
         {
             try
             {
-                var destinatarios = await _destinatarioService.GetAllAsync();
-                if (destinatarios == null)
+                var destinatarios = await _destinatarioService.GetListAsync(pageNumber, pageSize);
+                return Ok(destinatarios);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
                 {
-                    return BadRequest(new BadRequestResponseDTO
-                    {
-                        Error = "No se encontraron registros",
-                        Detalle = "No se pudo obtener la lista de destinatarios."
-                    });
-                }
-
+                    Error = "Error al listar destinatarios.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("listar-sugerido/{numeroDoc}")]
+        [SwaggerOperation(
+        Summary = "Listar destinatarios sugeridos",
+        Description = "Lista los destinatarios sugeridos por número de documento o razón social",
+        OperationId = "listar_destinatario_sugerido")]
+        [ProducesResponseType(typeof(DestinatarioListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<DestinatarioListDTO>>> GetBySuggestion(string numeroDoc)
+        {
+            try
+            {
+                var destinatarios = await _destinatarioService.GetListBySuggestion(numeroDoc);
                 return Ok(destinatarios);
             }
             catch (Exception ex)
@@ -113,14 +131,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Actualizar un destinatario",
         Description = "Actualizar destinatario en la bbdd",
         OperationId = "actualizar_destinatario")]
-        [ProducesResponseType(typeof(DestinatarioUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DestinatarioDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<DestinatarioUpdateDTO>> Update(int id, [FromBody] DestinatarioUpdateDTO updateDTO)
+        public async Task<ActionResult<DestinatarioDTO>> Update(int id, [FromBody] DestinatarioUpdateDTO updateDTO)
         {
             try
             {
@@ -138,6 +157,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpDelete]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Eliminar un destinatario",
         Description = "Elimina un destinatario de la bbdd",
@@ -158,6 +178,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al eliminar destinatario.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpPut]
+        [Route("{id}/actualizar-estado")]
+        [SwaggerOperation(
+        Summary = "Actualizar estado de un destinatario",
+        Description = "Actualizar el estado de un destinatario en la bbdd. 1='activo', 0='inactivo'.",
+        OperationId = "actualizar_estado_destinatario")]
+        [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] InfoRequestDTO infoRequestDto)
+        {
+            try
+            {
+                var result = await _destinatarioService.CambiarEstadoAsync(id, infoRequestDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar el estado de un destinatario.",
                     Detalle = errorMsg
                 });
             }

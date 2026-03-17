@@ -2,6 +2,7 @@
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using Microsoft.EntityFrameworkCore;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -17,6 +18,27 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return await _context.Proveedors
                 .Include(p => p.Ubigeo)
                 .ToListAsync();
+        }
+        public async Task<List<Proveedor>> GetListBySuggestion(string numeroDoc)
+        {
+            return await _context.Proveedors
+                .Where(c => c.IdEstado == 1 &&
+                (c.NumeroDocumento.Contains(numeroDoc) || c.RazonSocial.Contains(numeroDoc)))
+                .ToListAsync();
+        }
+        public async Task<(List<Proveedor>, int)> GetListAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Proveedors
+                .Include(p => p.Ubigeo)
+                .OrderByDescending(p=>p.FechaCreacion);
+            var totalRecords = await query.CountAsync();
+            var data = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .AsNoTracking()
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
         }
         public async Task<DOMAIN.Entities.Proveedor?> GetByIdAsync(int id)
         {
@@ -38,7 +60,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task UpdateAsync(DOMAIN.Entities.Proveedor proveedor)
         {
             _context.Proveedors.Update(proveedor);
-            proveedor.FechaEdicion = DateTime.Now;
+            proveedor.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id)
@@ -50,5 +72,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+       
     }
 }

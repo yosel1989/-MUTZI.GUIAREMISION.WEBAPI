@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
@@ -76,5 +77,43 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         [JsonPropertyName("detalle")]
         [SwaggerSchema("Devuelve en texto el detalle de la transacción en la bbdd.", Nullable = false)]
         public string Detalle { get; set; } = "Registro eliminado exitosamente.";
+    }
+    [SwaggerSchema("Respuesta para una actualización de estado de un registro en la bbdd")]
+    public class UpdatedStatusDto
+    {
+        [JsonPropertyName("id")]
+        [SwaggerSchema("Devuelve un entero, el ID afectado por la transacción en la bbdd.", Nullable = false)]
+        public int Id { get; set; }
+
+        [JsonPropertyName("id_estado")]
+        [SwaggerSchema("Devuelve en entero el nuevo estado del registro.", Nullable = false)]
+        public int IdEstado { get; set; }
+
+        [JsonPropertyName("estado")]
+        [SwaggerSchema("Devuelve el nuevo estado del registro.", Nullable = false)]
+        public string Estado { get; set; }
+
+        [JsonPropertyName("detalle")]
+        [SwaggerSchema("Devuelve en texto el detalle de la transacción en la bbdd.", Nullable = false)]
+        public string Detalle { get; set; } = "Estado de registro actualizado correctamente.";
+    }
+    [SwaggerSchema("Recibe un objeto con los campos del empleado que está realizando la transacción")]
+    public class InfoRequestDTO
+    {
+        [JsonPropertyName("id_estado")]
+        [SwaggerSchema("Recibe un entero, aquí se coloca el nuevo id del estado del objeto", Nullable = false)]
+        [Required]
+        public int IdEstado { get; set; }
+
+        [JsonPropertyName("edited_employee_id")]
+        [SwaggerSchema("Recibe un entero, aquí se coloca el ID del empleado que ha realizado la transacción", Nullable = false)]
+        [Required]
+        public int EditedEmployeeId { get; set; }
+
+        [JsonPropertyName("edited_employee_name")]
+        [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha realizado la transacción en el sistema", Nullable = false)]
+        [MaxLength(100)]
+        [Required]
+        public string EditedEmployeeName { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
     [SwaggerSchema("Devuelve un objeto del remitente", Nullable = false)]
     public class RemitenteDTO
     {
-        [JsonPropertyName("remitente_id")]
+        [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, el ID del remitente en la bbdd", Nullable = false)]
         public int RemitenteID { get; set; }
 
@@ -58,24 +58,18 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         [SwaggerSchema("Devuelve un texto, la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
         public string Serie { get; set; }
 
-        [JsonPropertyName("codigoSunat")]
+        [JsonPropertyName("codigo_sunat")]
         [SwaggerSchema("Devuelve un texto, el Código de establecimiento o de la Sucursal", Nullable = true)]
         public string? CodigoSunat { get; set; }
 
         [JsonPropertyName("fecha_creacion")]
         public DateTime FechaCreacion { get; set; }
 
-        [JsonPropertyName("fecha_edicion")]
+        [JsonPropertyName("fecha_ultima_edicion")]
         public DateTime? FechaEdicion { get; set; }
-
-        [JsonPropertyName("empleado_id_creacion")]
-        public int EmpleadoIdCreacion { get; set; }
 
         [JsonPropertyName("empleado_nombre_creacion")]
         public string EmpleadoNombreCreacion { get; set; }
-
-        [JsonPropertyName("empleado_id_edicion")]
-        public int? EmpleadoIdEdicion { get; set; }
 
         [JsonPropertyName("empleado_nombre_edicion")]
         public string? EmpleadoNombreEdicion { get; set; }

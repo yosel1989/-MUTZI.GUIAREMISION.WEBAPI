@@ -16,6 +16,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor
         [JsonPropertyName("numero_documento")]
         [SwaggerSchema("Recibe un texto, se coloca el número de documento del conductor. En caso de DNI, solo 8 dígitos, en otros casos acepta hasta 15 digitos", Nullable = false)]
         [MaxLength(15)]
+        [MinLength(8)]
         [Required]
         public string NumeroDocumento { get; set; }
 
@@ -38,6 +39,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor
 
         [JsonPropertyName("licencia")]
         [SwaggerSchema("Recibe un texto, se coloca el número de licencia del conductor", Nullable = false)]
+        [MinLength(9)]
         [MaxLength(10)]
         [Required]
         [RegularExpression("^[A-Z0-9]{9,10}$", ErrorMessage = "El N° de licencia o brevete debe ser alfanumérico de 9 a 10 dígitos.")]

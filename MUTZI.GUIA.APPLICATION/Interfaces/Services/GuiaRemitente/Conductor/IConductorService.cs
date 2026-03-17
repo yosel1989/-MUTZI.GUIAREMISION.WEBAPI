@@ -1,14 +1,19 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor
 {
     public interface IConductorService
     {
         Task<List<ConductorDTO>> GetAllAsync();
+        Task<List<ConductorListDTO>> GetListBySuggestion(string numeroDoc);
+        Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize);
         Task<ConductorDTO?> GetByIdAsync(int id);
         Task<ConductorDTO?> GetByNumeroDocumentoAsync(string numeroDocumento);
         Task<int> CreateAsync(ConductorCreateDTO createDTO);
-        Task<ConductorUpdateDTO> UpdateAsync(int id, ConductorUpdateDTO updateDTO);
+        Task<ConductorDTO> UpdateAsync(int id, ConductorUpdateDTO updateDTO);
         Task DeleteAsync(int id);
+        Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto);
     }
 }

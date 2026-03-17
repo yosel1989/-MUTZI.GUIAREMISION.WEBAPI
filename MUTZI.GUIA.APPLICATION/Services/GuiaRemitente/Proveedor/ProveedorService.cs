@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
 {
@@ -20,6 +22,24 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
             var proveedores = await _repository.GetAllAsync();
             return _mapper.Map<List<ProveedorDTO>>(proveedores);
         }
+        public async Task<List<ProveedorListDTO>> GetListBySuggestion(string numeroDoc)
+        {
+            var proveedores = await _repository.GetListBySuggestion(numeroDoc);
+            return _mapper.Map<List<ProveedorListDTO>>(proveedores);
+        }
+        public async Task<PagedResult<ProveedorDTO>> GetListAsync(int pageNumber, int pageSize)
+        {
+            var (proveedor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
+            var proveedorDTO = _mapper.Map<List<ProveedorDTO>>(proveedor);
+            return new PagedResult<ProveedorDTO>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+                Data = proveedorDTO
+            };
+        }
 
         public async Task<ProveedorDTO?> GetByIdAsync(int id)
         {
@@ -35,24 +55,69 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
 
         public async Task<int> CreateAsync(ProveedorCreateDTO createDTO)
         {
-            var proveedor = _mapper.Map<DOMAIN.Entities.Proveedor>(createDTO);
-            await _repository.CreateAsync(proveedor);
-            return proveedor.ProveedorId;
-        }
-        public async Task<ProveedorUpdateDTO> UpdateAsync(int id, ProveedorUpdateDTO updateDTO)
-        {
-            var existingProveedor = await _repository.GetByIdAsync(id);
-            if (existingProveedor == null)
+            try
             {
-                throw new KeyNotFoundException($"Proveedor con ID {id} no encontrado.");
+                var proveedor = _mapper.Map<DOMAIN.Entities.Proveedor>(createDTO);
+                await _repository.CreateAsync(proveedor);
+                return proveedor.ProveedorId;
             }
-            _mapper.Map(updateDTO, existingProveedor);
-            await _repository.UpdateAsync(existingProveedor);
-            return updateDTO;
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
+        }
+        public async Task<ProveedorDTO> UpdateAsync(int id, ProveedorUpdateDTO updateDTO)
+        {
+            try
+            {
+                var existingProveedor = await _repository.GetByIdAsync(id);
+                if (existingProveedor == null)
+                {
+                    throw new KeyNotFoundException($"Proveedor con ID {id} no encontrado.");
+                }
+                _mapper.Map(updateDTO, existingProveedor);
+                await _repository.UpdateAsync(existingProveedor);
+                return _mapper.Map<ProveedorDTO>(existingProveedor);
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
         }
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
+        }
+        public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
+        {
+            string _status = infoRequestDto.IdEstado switch
+            {
+                1 => "activo",
+                0 => "inactivo",
+                _ => throw new KeyNotFoundException("El nuevo estado solo acepta valores de '0' ó '1'"),
+            };
+            var existing=await _repository.GetByIdAsync(id);
+            if (existing == null)
+            {
+                throw new KeyNotFoundException($"Proveedor con ID {id} no encontrado.");
+            }
+            existing.Estado = _status;
+            existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
+            existing.EmpleadoIdedicion = infoRequestDto.EditedEmployeeId;
+            existing.EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName;
+            await _repository.UpdateAsync(existing);
+
+            return new UpdatedStatusDto
+            {
+                Id = existing.ProveedorId,
+                IdEstado = Convert.ToInt32(existing.IdEstado),
+                Estado = existing.Estado,
+                Detalle = $"Proveedor con ID {existing.ProveedorId} ha sido actualizado a estado '{existing.Estado}'."
+            };
         }
     }
 }

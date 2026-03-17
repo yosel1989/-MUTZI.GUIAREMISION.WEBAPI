@@ -7,6 +7,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista;
 using MUTZI.GUIA.APPLICATION.Helpers;
+using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -14,6 +15,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
 {
     public class GuiaTransportistaDTO
     {
+        [JsonPropertyName("id")]
+        [SwaggerSchema("Devuelve en entero el ID de la guía transportista.", Nullable = false)]
         public int GuiaID { get; set; }
         public string SerieCorrelativo { get; set; }
         public string Fecha { get; set; }
@@ -26,12 +29,18 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
 
         // Remitente
         public RemitenteDTO Remitente { get; set; }
+
+        [JsonPropertyName("remite_transportista")]
         public RemiteTransportistaDTO RemiteTransportista { get; set; }
         public DestinatarioDTO Destinatario { get; set; }
+
+        [JsonPropertyName("datos_envio")]
         public DatosEnvioGT_DTO DatosEnvio { get; set; }
         public OrigenDTO Origen { get; set; }
         public List<DestinoDTO> Destino { get; set; }
         public List<ProductosDTO> Productos { get; set; }
+
+        [JsonPropertyName("fecha_creacion")]
         public DateTime FechaCreacion { get; set; }
         public string getTipoCodigoDocumento(string tipo)
         {

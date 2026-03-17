@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
 {
@@ -19,6 +22,24 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
             var conductors = await _repository.GetAllAsync();
             return _mapper.Map<List<ConductorDTO>>(conductors);
         }
+        public async Task<List<ConductorListDTO>> GetListBySuggestion(string numeroDoc)
+        {
+            var conductors = await _repository.GetListBySuggestion(numeroDoc);
+            return _mapper.Map<List<ConductorListDTO>>(conductors);
+        }
+        public async Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize)
+        {
+            var (conductor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
+            var conductorDTO = _mapper.Map<List<ConductorDTO>>(conductor);
+            return new PagedResult<ConductorDTO>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+                Data = conductorDTO
+            };
+        }
         public async Task<ConductorDTO?> GetByIdAsync(int id)
         {
             var conductor = await _repository.GetByIdAsync(id);
@@ -31,24 +52,71 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
         }
         public async Task<int> CreateAsync(ConductorCreateDTO createDTO)
         {
-            var conductor = _mapper.Map<DOMAIN.Entities.Conductor>(createDTO);
-            await _repository.CreateAsync(conductor);
-            return conductor.ConductorId;
-        }
-        public async Task<ConductorUpdateDTO> UpdateAsync(int id, ConductorUpdateDTO updateDTO)
-        {
-            var existingConductor = await _repository.GetByIdAsync(id);
-            if (existingConductor == null)
+            try
             {
-                throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
+                var conductor = _mapper.Map<DOMAIN.Entities.Conductor>(createDTO);
+                await _repository.CreateAsync(conductor);
+                return conductor.ConductorId;
             }
-            _mapper.Map(updateDTO, existingConductor);
-            await _repository.UpdateAsync(existingConductor);
-            return updateDTO;
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                else if (msg.Contains("licencia_UNIQUE")) { msg = "Nro Licencia ya se encuentra registrado"; }
+                    throw new Exception(msg);
+            }
+        }
+        public async Task<ConductorDTO> UpdateAsync(int id, ConductorUpdateDTO updateDTO)
+        {
+            try
+            {
+                var existingConductor = await _repository.GetByIdAsync(id);
+                if (existingConductor == null)
+                {
+                    throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
+                }
+                _mapper.Map(updateDTO, existingConductor);
+                await _repository.UpdateAsync(existingConductor);
+                return _mapper.Map<ConductorDTO>(existingConductor);
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                else if (msg.Contains("licencia_UNIQUE")) { msg = "Nro Licencia ya se encuentra registrado"; }
+                throw new Exception(msg);
+            }
         }
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
+        }
+        public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
+        {
+            string _status = infoRequestDto.IdEstado switch
+            {
+                1 => "activo",
+                0 => "inactivo",
+                _ => throw new KeyNotFoundException("El nuevo estado solo acepta valores de '0' ó '1'"),
+            };
+            var existing = await _repository.GetByIdAsync(id);
+            if (existing == null)
+            {
+                throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
+            }
+            existing.Estado = _status;
+            existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
+            existing.EmpleadoIdedicion = infoRequestDto.EditedEmployeeId;
+            existing.EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName;
+            await _repository.UpdateAsync(existing);
+
+            return new UpdatedStatusDto
+            {
+                Id = existing.ConductorId,
+                IdEstado = Convert.ToInt32(existing.IdEstado),
+                Estado = existing.Estado,
+                Detalle = $"Conductor con ID {existing.ConductorId} ha sido actualizado a estado '{existing.Estado}'."
+            };
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
+﻿using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.DOMAIN.Entities;
@@ -13,7 +12,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             _context = context;
         }
-        public async Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize)
+        public async Task<(List<GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize)
         {
             var query = _context.GuiaRemisions
                 .Include(r => r.Remitente)
@@ -37,19 +36,20 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .Include(doc => doc.DocRelacionados)
-                .OrderBy(x => x.GuiaId);
+                .OrderByDescending(x => x.FechaCreacion);
 
             var totalRecords = await query.CountAsync();
 
             var data = await query
                 .Skip((pageNumber - 1) * pageSize)
+                .AsNoTracking()
                 .Take(pageSize)
                 .ToListAsync();
 
             return (data, totalRecords);
         }
 
-        public async Task<List<DOMAIN.Entities.GuiaRemision>> GetAllAsync()
+        public async Task<List<GuiaRemision>> GetAllAsync()
         {
             return await _context.GuiaRemisions
                 .Include(r => r.Remitente)
@@ -76,16 +76,18 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //.Include(e=>e.EmailDestinatarioGuids)
                 .ToListAsync();
         }
-        public async Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket)
+        public async Task<GuiaRemision> GetByTicketAsync(string ticket)
         {
             return await _context.GuiaRemisions.Include(r => r.Remitente)
                 .FirstOrDefaultAsync(g => g.RespuestaTicket == ticket);
         }
-        public async Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id)
+        public async Task<GuiaRemision> GetByIdAsync(int id)
         {
             return await _context.GuiaRemisions
                 .Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
+                .Include(rt=>rt.RemiteTransportista)
+                    .ThenInclude(rtu=>rtu.Ubigeo)
                 .Include(d => d.Destinatario)
                     .ThenInclude(des => des.Ubigeo)
                 .Include(p => p.Proveedor)
@@ -104,23 +106,24 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .Include(doc => doc.DocRelacionados)
                 .Include(e => e.EmailDestinatarioGuids)
+                .Include(erm=>erm.EmailRemiteTransportistaGuids)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
                 //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
         public async Task<int> CreateGuiaRemisionTransactionalAsync(
-            DOMAIN.Entities.Remitente remitente,
-            DOMAIN.Entities.Destinatario destinatario,
-            DOMAIN.Entities.Proveedor proveedor,
-            List<DOMAIN.Entities.Conductor> conductor,
-            List<DOMAIN.Entities.Transporte> transporte,
-            DOMAIN.Entities.GuiaRemision guiaRemision,
-            DOMAIN.Entities.DatosEnvio datosEnvio,
-            DOMAIN.Entities.Origen origen,
-            //DOMAIN.Entities.Destino destino,
-            List<DOMAIN.Entities.Destino> destino,
-            List<DOMAIN.Entities.GuiaDetalle> detalles,
-            List<DOMAIN.Entities.DocRelacionado> docRelacionados,
-            List<DOMAIN.Entities.EmailDestinatarioGuid> emailDestinatarioGuia
+            Remitente remitente,
+            Destinatario destinatario,
+            Proveedor proveedor,
+            List<Conductor> conductor,
+            List<Transporte> transporte,
+            GuiaRemision guiaRemision,
+            DatosEnvio datosEnvio,
+            Origen origen,
+            //Destino destino,
+            List<Destino> destino,
+            List<GuiaDetalle> detalles,
+            List<DocRelacionado> docRelacionados,
+            List<EmailDestinatarioGuid> emailDestinatarioGuia
             )
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -130,10 +133,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var existingRemitente = await GetRemitenteByNameAsync(remitente.Descripcion);
                 if (existingRemitente == null)
                 {
-                    remitente.EmpleadoIdcreacion= guiaRemision.EmpleadoIdcreacion;
-                    remitente.EmpleadoNombreCreacion=guiaRemision.EmpleadoNombreCreacion;
-                    await _context.Remitentes.AddAsync(remitente);
-                    await _context.SaveChangesAsync();
+                    //remitente.EmpleadoIdcreacion= guiaRemision.EmpleadoIdcreacion;
+                    //remitente.EmpleadoNombreCreacion=guiaRemision.EmpleadoNombreCreacion;
+                    //await _context.Remitentes.AddAsync(remitente);
+                    //await _context.SaveChangesAsync();
+                    throw new Exception("No existe este remitente.");
                 }
                 else
                 {
@@ -146,12 +150,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     destinatario.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
                     destinatario.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                    await _context.Destinatarios.AddAsync(destinatario);
-                    await _context.SaveChangesAsync();
+                    //await _context.Destinatarios.AddAsync(destinatario);
+                    //await _context.SaveChangesAsync();
+                    await CreateDestinatarioAsync(destinatario);
                 }
                 else
                 {
-                    destinatario = existingDestinatario;
+                    await UpdateDestinatarioAsync(destinatario);
+
+
+
+                    //destinatario = existingDestinatario;
                 }
 
                 // Proveedor
@@ -162,8 +171,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     {
                         proveedor.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
                         proveedor.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                        await _context.Proveedors.AddAsync(proveedor);
-                        await _context.SaveChangesAsync();
+                        //await _context.Proveedors.AddAsync(proveedor);
+                        //await _context.SaveChangesAsync();
+                        await CreateProveedorAsync(proveedor);
                     }
                     else
                     {
@@ -229,14 +239,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         {
                             condu.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
                             condu.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                            await _context.Conductors.AddAsync(condu);
-                            await _context.SaveChangesAsync();
+                            //await _context.Conductors.AddAsync(condu);
+                            //await _context.SaveChangesAsync();
+                            await CreateConductorAsync(condu);
                         }
                         else
                         {
                             condu.ConductorId = existingConductor.ConductorId;
                         }
-                        var conductorGuia = new DOMAIN.Entities.ConductorGuid
+                        var conductorGuia = new ConductorGuid
                         {
                             ConductorId = condu.ConductorId,
                             DatosEnvioId = datosEnvio.DatosEnvioId
@@ -257,14 +268,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         {
                             tr.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
                             tr.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                            await _context.Transportes.AddAsync(tr);
-                            await _context.SaveChangesAsync();
+                            //await _context.Transportes.AddAsync(tr);
+                            //await _context.SaveChangesAsync();
+                            await CreateTransporteAsync(tr);
                         }
                         else
                         {
                             tr.TransporteId = existingTransporte.TransporteId;
                         }
-                        var transporteGuia = new DOMAIN.Entities.TransporteGuid
+                        var transporteGuia = new TransporteGuid
                         {
                             TransporteId = tr.TransporteId,
                             DatosEnvioId = datosEnvio.DatosEnvioId
@@ -333,9 +345,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
             guia.RespuestaTicket = ticket;
             guia.Estado = estado;
+            guia.IdEstado = (sbyte)idEstado;
+            guia.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
-        public async Task UpdateAsync(DOMAIN.Entities.GuiaRemision guiaRemision)
+        public async Task UpdateAsync(GuiaRemision guiaRemision)
         {
             if (guiaRemision == null)
             {
@@ -355,82 +369,145 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             await _context.SaveChangesAsync();
         }
         //Remitente
-        public async Task<DOMAIN.Entities.Remitente> GetRemitenteByNameAsync(string name)
+        public async Task<Remitente> GetRemitenteByNameAsync(string name)
         {
             return await _context.Remitentes.FirstOrDefaultAsync(r => r.Descripcion == name);
         }
-        public async Task<DOMAIN.Entities.Remitente> CreateRemitenteAsync(DOMAIN.Entities.Remitente remitente)
+        public async Task<Remitente> CreateRemitenteAsync(Remitente remitente)
         {
-            if (remitente == null)
+            try
             {
-                throw new ArgumentNullException(nameof(remitente), "El objeto remitente no puede ser nulo");
+                if (remitente == null)
+                {
+                    throw new ArgumentNullException(nameof(remitente), "El objeto remitente no puede ser nulo");
+                }
+                await _context.Remitentes.AddAsync(remitente);
+                await _context.SaveChangesAsync();
+                return remitente;
             }
-            await _context.Remitentes.AddAsync(remitente);
-            await _context.SaveChangesAsync();
-            return remitente;
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("razonSocial_UNIQUE")) { msg = "La razón social social o sucursal del remitente ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
         }
         //Destinatario
-        public async Task<DOMAIN.Entities.Destinatario> GetDestinatarioByRucAsync(string ruc)
+        public async Task<Destinatario> GetDestinatarioByRucAsync(string ruc)
         {
             return await _context.Destinatarios.FirstOrDefaultAsync(d => d.NumeroDocumento == ruc);
         }
-        public async Task<DOMAIN.Entities.Destinatario> CreateDestinatarioAsync(DOMAIN.Entities.Destinatario destinatario)
+        public async Task<Destinatario> CreateDestinatarioAsync(Destinatario destinatario)
         {
-            if (destinatario == null)
+            try
             {
-                throw new ArgumentNullException(nameof(destinatario), "El objeto destinatario no puede ser nulo");
+                if (destinatario == null)
+                {
+                    throw new ArgumentNullException(nameof(destinatario), "El objeto destinatario no puede ser nulo");
+                }
+                await _context.Destinatarios.AddAsync(destinatario);
+                await _context.SaveChangesAsync();
+                return destinatario;
             }
-            await _context.Destinatarios.AddAsync(destinatario);
-            await _context.SaveChangesAsync();
-            return destinatario;
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
+        }
+        public async Task<Destinatario> UpdateDestinatarioAsync(Destinatario destinatario)
+        {
+            try
+            {
+                _context.Destinatarios.Update(destinatario);
+                destinatario.FechaEdicion = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+                return destinatario;
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
         }
         //Proveedor
-        public async Task<DOMAIN.Entities.Proveedor> GetProveedorByRucAsync(string ruc)
+        public async Task<Proveedor> GetProveedorByRucAsync(string ruc)
         {
             return await _context.Proveedors.FirstOrDefaultAsync(p => p.NumeroDocumento == ruc);
         }
-        public async Task<DOMAIN.Entities.Proveedor> CreateProveedorAsync(DOMAIN.Entities.Proveedor proveedor)
+        public async Task<Proveedor> CreateProveedorAsync(Proveedor proveedor)
         {
-            if (proveedor == null)
+            try
             {
-                throw new ArgumentNullException(nameof(proveedor), "El objeto proveedor no puede ser nulo");
+                if (proveedor == null)
+                {
+                    throw new ArgumentNullException(nameof(proveedor), "El objeto proveedor no puede ser nulo");
+                }
+                await _context.Proveedors.AddAsync(proveedor);
+                await _context.SaveChangesAsync();
+                return proveedor;
             }
-            await _context.Proveedors.AddAsync(proveedor);
-            await _context.SaveChangesAsync();
-            return proveedor;
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                throw new Exception(msg);
+            }
         }
         //Conductor
-        public async Task<DOMAIN.Entities.Conductor> GetConductorByNumeroDocumentoAsync(string numeroDocumento)
+        public async Task<Conductor> GetConductorByNumeroDocumentoAsync(string numeroDocumento)
         {
             return await _context.Conductors.FirstOrDefaultAsync(c => c.NumeroDocumento == numeroDocumento);
         }
-        public async Task<DOMAIN.Entities.Conductor> CreateConductorAsync(DOMAIN.Entities.Conductor conductor)
+        public async Task<Conductor> CreateConductorAsync(Conductor conductor)
         {
-            if (conductor == null)
+            try
             {
-                throw new ArgumentNullException(nameof(conductor), "El objeto conductor no puede ser nulo");
+                if (conductor == null)
+                {
+                    throw new ArgumentNullException(nameof(conductor), "El objeto conductor no puede ser nulo");
+                }
+                await _context.Conductors.AddAsync(conductor);
+                await _context.SaveChangesAsync();
+                return conductor;
             }
-            await _context.Conductors.AddAsync(conductor);
-            await _context.SaveChangesAsync();
-            return conductor;
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("numeroDocumento_UNIQUE")) { msg = "El número de documento ya se encuentra registrado."; }
+                else if (msg.Contains("licencia_UNIQUE")) { msg = "Nro Licencia ya se encuentra registrado"; }
+                throw new Exception(msg);
+            }
         }
         //Transporte
-        public async Task<DOMAIN.Entities.Transporte> GetTransporteByPlacaAsync(string placa)
+        public async Task<Transporte> GetTransporteByPlacaAsync(string placa)
         {
             return await _context.Transportes.FirstOrDefaultAsync(t => t.Placa == placa);
         }
-        public async Task<DOMAIN.Entities.Transporte> CreateTransporteAsync(DOMAIN.Entities.Transporte transporte)
+        public async Task<Transporte> CreateTransporteAsync(Transporte transporte)
         {
-            if (transporte == null)
+            try
             {
-                throw new ArgumentException(nameof(transporte), "El objeto transporte no puede ser nulo");
+                if (transporte == null)
+                {
+                    throw new ArgumentException(nameof(transporte), "El objeto transporte no puede ser nulo");
+                }
+                await _context.Transportes.AddAsync(transporte);
+                await _context.SaveChangesAsync();
+                return transporte;
             }
-            await _context.Transportes.AddAsync(transporte);
-            await _context.SaveChangesAsync();
-            return transporte;
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("placa_UNIQUE")) { msg = "La placa ya se encuentra registrada."; }
+                else if (msg.Contains("tarjeta_UNIQUE")) { msg = "Nro de tarjeta ya se encuentra registrado"; }
+                throw new Exception(msg);
+            }
         }
         //Datos envio
-        public async Task<DOMAIN.Entities.DatosEnvio> CreateDatosEnvioAsync(DOMAIN.Entities.DatosEnvio datosEnvio)
+        public async Task<DatosEnvio> CreateDatosEnvioAsync(DatosEnvio datosEnvio)
         {
             if (datosEnvio == null)
             {
@@ -441,7 +518,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return datosEnvio;
         }
         //Guia detalle
-        public async Task<DOMAIN.Entities.GuiaDetalle> CreateGuiaDetalleAsync(DOMAIN.Entities.GuiaDetalle guiaDetalle)
+        public async Task<GuiaDetalle> CreateGuiaDetalleAsync(GuiaDetalle guiaDetalle)
         {
             if (guiaDetalle == null)
             {
@@ -452,7 +529,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return guiaDetalle;
         }
 
-        public async Task<DOMAIN.Entities.Origen> CreateOrigenAsync(DOMAIN.Entities.Origen origen)
+        public async Task<Origen> CreateOrigenAsync(Origen origen)
         {
             if (origen == null)
             {
@@ -463,7 +540,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return origen;
         }
 
-        public async Task<DOMAIN.Entities.Destino> CreateDestinoAsync(DOMAIN.Entities.Destino destino)
+        public async Task<Destino> CreateDestinoAsync(Destino destino)
         {
             if (destino == null)
             {

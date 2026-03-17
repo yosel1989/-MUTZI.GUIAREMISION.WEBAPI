@@ -1,7 +1,9 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+﻿using Genexs.AWS.Library;
+using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente;
-using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -16,28 +18,72 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             _remitenteService = remitenteService;
         }
         [HttpGet]
-        [Route("listar")]
+        [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
         Summary = "Listar remitentes",
-        Description = "Lista los remitentes",
+        Description = "Lista los remitentes por página. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
         OperationId = "listar_remitente")]
+        [ProducesResponseType(typeof(PagedResult<RemitenteDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<PagedResult<RemitenteDTO>>> GetAll(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var remitentes = await _remitenteService.GetListAsync(pageNumber, pageSize);
+                return Ok(remitentes);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar remitentes.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("listar-select")]
+        [SwaggerOperation(
+        Summary = "Listar remitentes para select",
+        Description = "Lista los remitentes para select",
+        OperationId = "listar_remitente_select")]
         [ProducesResponseType(typeof(RemitenteListDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<RemitenteListDTO>>> GetAll()
+        public async Task<ActionResult<List<RemitenteListDTO>>> GetToSelect()
         {
             try
             {
                 var remitentes = await _remitenteService.GetAllAsync();
-                if (remitentes == null)
-                {
-                    return BadRequest(new BadRequestResponseDTO
-                    {
-                        Error = "No se encontraron registros",
-                        Detalle = "No se pudo obtener la lista de remitentes."
-                    });
-                }
                 return Ok(remitentes);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar remitentes.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("listar-sugerido/{numeroDoc}")]
+        [SwaggerOperation(
+        Summary = "Listar remitentes sugeridos",
+        Description = "Lista los remitentes sugeridos por número de documento o razón social",
+        OperationId = "listar_remitente_sugerido")]
+        [ProducesResponseType(typeof(RemitenteListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<RemitenteListDTO>>> GetBySuggestion(string numeroDoc)
+        {
+            try
+            {
+                var proveedores = await _remitenteService.GetListBySuggestion(numeroDoc);
+                return Ok(proveedores);
             }
             catch (Exception ex)
             {
@@ -92,7 +138,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(RemitenteForGuiaDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task <ActionResult<RemitenteForGuiaDTO>> GetForGuiaById(int id, string tipoGuia)
+        public async Task<ActionResult<RemitenteForGuiaDTO>> GetForGuiaById(int id, string tipoGuia)
         {
             try
             {
@@ -148,10 +194,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Actualizar un remitente",
         Description = "Actualiza remitente en la bbdd",
         OperationId = "actualizar_remitente")]
-        [ProducesResponseType(typeof(RemitenteUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RemitenteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<RemitenteUpdateDTO>> Update(int id, [FromBody] RemitenteUpdateDTO updateDTO)
+        public async Task<ActionResult<RemitenteDTO>> Update(int id, [FromBody] RemitenteUpdateDTO updateDTO)
         {
             try
             {
@@ -190,6 +236,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al eliminar remitente.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpPut]
+        [Route("{id}/actualizar-estado")]
+        [SwaggerOperation(
+        Summary = "Actualizar estado de un remitente",
+        Description = "Actualizar el estado de un remitente en la bbdd. 1='activo', 0='inactivo'.",
+        OperationId = "actualizar_estado_remitente")]
+        [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] InfoRequestDTO infoRequestDto)
+        {
+            try
+            {
+                var result = await _remitenteService.CambiarEstadoAsync(id, infoRequestDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar el estado de un remitente.",
                     Detalle = errorMsg
                 });
             }

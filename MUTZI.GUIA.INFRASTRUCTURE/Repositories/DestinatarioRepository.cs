@@ -2,6 +2,7 @@
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Destinatario;
 using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -18,6 +19,27 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(d => d.Ubigeo)
                 .ToListAsync();
         }
+        public async Task<List<Destinatario>> GetListBySuggestion(string numeroDoc)
+        {
+            return await _context.Destinatarios
+                .Where(c => c.IdEstado == 1 &&
+                (c.NumeroDocumento.Contains(numeroDoc) || c.RazonSocial.Contains(numeroDoc)))
+                .ToListAsync();
+        }
+        public async Task<(List<Destinatario>, int)> GetListAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Destinatarios
+                .Include(d => d.Ubigeo)
+                .OrderByDescending(d=>d.FechaCreacion);
+            var totalRecords = await query.CountAsync();
+            var data = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .AsNoTracking()
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
+        }
         public async Task<DOMAIN.Entities.Destinatario?> GetByIdAsync(int id)
         {
             return await _context.Destinatarios
@@ -32,7 +54,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task UpdateAsync(DOMAIN.Entities.Destinatario destinatario)
         {
             _context.Destinatarios.Update(destinatario);
-            destinatario.FechaEdicion = DateTime.Now;
+            destinatario.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id)
@@ -44,5 +66,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        
     }
 }

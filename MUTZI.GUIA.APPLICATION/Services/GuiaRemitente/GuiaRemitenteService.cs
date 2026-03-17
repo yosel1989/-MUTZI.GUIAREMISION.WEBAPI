@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
+using MUTZI.GUIA.DOMAIN.Entities;
 using System;
 using System.Text.Json;
 
@@ -45,10 +47,21 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 Data = guiasDTO
             };
         }
-        public async Task<GuiaRemitenteDTO> GetByIdAsync(int id)
+        //public async Task<GuiaRemitenteDTO> GetByIdAsync(int id)
+        //{
+        //    var guiaRemision = await _repository.GetByIdAsync(id);
+        //    return _mapper.Map<GuiaRemitenteDTO>(guiaRemision);
+        //}
+        public async Task<object> GetByIdAsync(int id)
         {
             var guiaRemision = await _repository.GetByIdAsync(id);
-            return _mapper.Map<GuiaRemitenteDTO>(guiaRemision);
+
+            return guiaRemision.TipoGuia switch
+            {
+                "REMITENTE" => _mapper.Map<GuiaRemitenteDTO>(guiaRemision),
+                "TRANSPORTISTA" => _mapper.Map<GuiaTransportistaDTO>(guiaRemision),
+                _ => throw new KeyNotFoundException("El tipo guia solo puede ser REMITENTE o TRANSPORTISTA.")
+            };
         }
         public async Task<GuiaPorTicketDTO> GetByTicketAsync(string ticket)
         {
@@ -84,7 +97,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             return _mapper.Map<GuiaRemitenteDTO>(guiaCreada);
         }
 
-        public async Task<GuiaRemitenteUpdateDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto)
+        public async Task<GuiaRemitenteDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto)
         {
             var existingGuiaRemision = await _repository.GetByIdAsync(id);
             if (existingGuiaRemision == null)
@@ -93,7 +106,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             }
             _mapper.Map(guiaRemisionDto, existingGuiaRemision);
             await _repository.UpdateAsync(existingGuiaRemision);
-            return guiaRemisionDto;
+            return _mapper.Map<GuiaRemitenteDTO>(existingGuiaRemision);
         }
         public async Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado)
         {

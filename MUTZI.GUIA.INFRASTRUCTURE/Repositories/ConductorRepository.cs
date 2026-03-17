@@ -16,6 +16,25 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             return await _context.Conductors.ToListAsync();
         }
+        public async Task<List<Conductor>> GetListBySuggestion(string numeroDoc)
+        {
+            return await _context.Conductors
+                .Where(c=>c.IdEstado==1 && 
+                (c.NumeroDocumento.Contains(numeroDoc)||c.Nombres.Contains(numeroDoc)||c.Apellidos.Contains(numeroDoc)))
+                .ToListAsync();
+        }
+        public async Task<(List<Conductor>, int)> GetListAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Conductors.OrderByDescending(x=>x.FechaCreacion);
+            var totalRecords=await query.CountAsync();
+            var data = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .AsNoTracking()
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
+        }
         public async Task<DOMAIN.Entities.Conductor?> GetByIdAsync(int id)
         {
             return await _context.Conductors.FirstOrDefaultAsync(c => c.ConductorId == id);
@@ -32,7 +51,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task UpdateAsync(DOMAIN.Entities.Conductor conductor)
         {
             _context.Conductors.Update(conductor);
-            conductor.FechaEdicion = DateTime.Now;
+            conductor.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id)

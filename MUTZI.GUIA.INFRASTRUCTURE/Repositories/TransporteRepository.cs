@@ -1,7 +1,7 @@
-﻿
-using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+﻿using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Transporte;
 using Microsoft.EntityFrameworkCore;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -16,6 +16,25 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             return await _context.Transportes.ToListAsync();
         }
+        public async Task<List<Transporte>> GetListBySuggestion(string numeroDoc)
+        {
+            return await _context.Transportes
+                .Where(c => c.IdEstado == 1 &&
+                (c.Descripcion.Contains(numeroDoc) || c.Placa.Contains(numeroDoc)))
+                .ToListAsync();
+        }
+        public async Task<(List<Transporte>, int)> GetListAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Transportes.OrderByDescending(t => t.FechaCreacion);
+            var totalRecords = await query.CountAsync();
+            var data = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .AsNoTracking()
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
+        }
         public async Task<DOMAIN.Entities.Transporte?> GetByIdAsync(int id)
         {
             return await _context.Transportes.FirstOrDefaultAsync(t => t.TransporteId == id);
@@ -28,7 +47,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task UpdateAsync(DOMAIN.Entities.Transporte transporte)
         {
             _context.Transportes.Update(transporte);
-            transporte.FechaEdicion = DateTime.Now;
+            transporte.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id)
@@ -40,5 +59,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        
     }
 }

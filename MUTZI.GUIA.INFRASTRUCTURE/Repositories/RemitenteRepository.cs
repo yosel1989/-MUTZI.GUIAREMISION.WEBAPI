@@ -1,7 +1,7 @@
-﻿
-using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+﻿using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
 using Microsoft.EntityFrameworkCore;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -18,6 +18,30 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(r=>r.Ubigeo)
                 .Include(e=>e.RucNavigation)
                 .ToListAsync();
+        }
+        public async Task<List<Remitente>> GetListBySuggestion(string numeroDoc)
+        {
+            return await _context.Remitentes
+                .Include(r => r.Ubigeo)
+                .Include(e => e.RucNavigation)
+                .Where(c => c.IdEstado == 1 &&
+                (c.Ruc.Contains(numeroDoc) || c.Descripcion.Contains(numeroDoc)))
+                .ToListAsync();
+        }
+        public async Task<(List<Remitente>, int)> GetListAsync(int pageNumber, int pageSize)
+        {
+            var query = _context.Remitentes
+                .Include(r => r.Ubigeo)
+                .Include(e => e.RucNavigation)
+                .OrderByDescending(r=>r.FechaCreacion);
+            var totalRecords = await query.CountAsync();
+            var data = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .AsNoTracking()
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
         }
         public async Task<DOMAIN.Entities.GuiaRemision?> GetLastBySerieAsync(string serie)
         {
@@ -36,6 +60,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(e => e.RucNavigation)
                 .FirstOrDefaultAsync(r => r.RemitenteId == id);
         }
+        public async Task<bool> GetBySerieAsync(string ruc, string serie)
+        {
+            var existe = await _context.Remitentes
+                .AnyAsync(r => r.Ruc == ruc && r.Serie == serie);
+            return existe;
+        }
         public async Task CreateAsync(DOMAIN.Entities.Remitente remitente)
         {
             await _context.Remitentes.AddAsync(remitente);
@@ -44,7 +74,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task UpdateAsync(DOMAIN.Entities.Remitente remitente)
         {
             _context.Remitentes.Update(remitente);
-            remitente.FechaEdicion = DateTime.Now;
+            remitente.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id)
