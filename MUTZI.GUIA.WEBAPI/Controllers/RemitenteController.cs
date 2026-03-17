@@ -75,10 +75,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Listar remitentes para filtro",
         Description = "Lista los remitentes para select específico de filtro.",
         OperationId = "listar_remitente_nombres")]
-        [ProducesResponseType(typeof(RemitenteListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RemitenteNameListDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<RemitenteListDTO>>> GetOnlyName()
+        public async Task<ActionResult<List<RemitenteNameListDTO>>> GetOnlyName()
         {
             try
             {
