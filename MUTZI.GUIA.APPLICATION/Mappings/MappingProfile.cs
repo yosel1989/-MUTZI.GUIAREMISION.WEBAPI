@@ -161,6 +161,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest => dest.NombreEmpresa, opt => opt.MapFrom(src => src.RucNavigation.Empresa))
                 ;
+            CreateMap<DOMAIN.Entities.Remitente, RemitenteNameListDTO>();
             CreateMap<RemitenteCreateDTO, Remitente>();
             CreateMap<RemitenteUpdateDTO, Remitente>();
 

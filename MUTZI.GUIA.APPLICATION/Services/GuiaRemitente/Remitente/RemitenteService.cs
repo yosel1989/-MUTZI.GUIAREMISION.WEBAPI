@@ -22,6 +22,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
             var remitentes = await _repository.GetAllAsync();
             return _mapper.Map<List<RemitenteListDTO>>(remitentes);
         }
+        public async Task<List<RemitenteNameListDTO>> GetOnlynameAsync()
+        {
+            var remitentes = await _repository.GetOnlyNameAsync();
+            return _mapper.Map<List<RemitenteNameListDTO>>(remitentes);
+        }
         public async Task<List<RemitenteListDTO>> GetListBySuggestion(string numeroDoc)
         {
             var remitentes=await _repository.GetListBySuggestion(numeroDoc);
@@ -120,7 +125,16 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
         }
         public async Task DeleteAsync(int id)
         {
-            await _repository.DeleteAsync(id);
+            try
+            {
+                await _repository.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("FOREIGN KEY")) { msg = "No se puede eliminar porque existen registros asociados a esta tabla."; }
+                throw new Exception(msg);
+            }
         }
         public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
         {
