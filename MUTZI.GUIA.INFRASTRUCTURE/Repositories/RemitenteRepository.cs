@@ -19,6 +19,16 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(e=>e.RucNavigation)
                 .ToListAsync();
         }
+        public async Task<List<Remitente>> GetOnlyNameAsync()
+        {
+            return await _context.Remitentes
+            .Select(r => new Remitente
+            {
+                RemitenteId = r.RemitenteId,
+                Descripcion = r.Descripcion
+            })
+            .ToListAsync();
+        }
         public async Task<List<Remitente>> GetListBySuggestion(string numeroDoc)
         {
             return await _context.Remitentes
