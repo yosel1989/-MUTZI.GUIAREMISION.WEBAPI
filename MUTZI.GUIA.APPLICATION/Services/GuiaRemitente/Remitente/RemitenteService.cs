@@ -132,7 +132,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
             catch (Exception ex)
             {
                 string msg = ex.InnerException?.Message ?? ex.Message;
-                if (msg.Contains("FOREIGN KEY")) { msg = "No se puede eliminar porque existen registros asociados a esta tabla."; }
+                if (msg.Contains("FOREIGN KEY")) { msg = "No se puede eliminar porque existen registros asociados"; }
                 throw new Exception(msg);
             }
         }

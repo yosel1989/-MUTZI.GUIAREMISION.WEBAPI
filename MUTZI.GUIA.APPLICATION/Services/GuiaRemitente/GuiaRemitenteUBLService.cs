@@ -80,7 +80,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                                 Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.Pais } }}}
                             }},
                             PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _  = guia.Remitente.Descripcion }}}},
-                            Contact=guia.Remitente.EmailFacturador==null?null: new List<Contact>
+                            Contact=guia.EmailFacturador==null?null: new List<Contact>
                             {
                                 new Contact
                                 {
@@ -88,7 +88,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                                     {
                                         new ElectronicMail
                                         {
-                                            _ = guia.Remitente.EmailFacturador
+                                            _ = guia.EmailFacturador
                                         }
                                     }
                                 }

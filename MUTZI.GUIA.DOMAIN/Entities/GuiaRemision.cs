@@ -9,6 +9,8 @@ public partial class GuiaRemision
 
     public string NumeroGuia { get; set; } = null!;
 
+    public string Ruc { get; set; } = null!;
+
     public string Serie { get; set; } = null!;
 
     public string Correlativo { get; set; } = null!;
@@ -72,4 +74,6 @@ public partial class GuiaRemision
     public virtual RemiteTransportistum? RemiteTransportista { get; set; }
 
     public virtual Remitente Remitente { get; set; } = null!;
+
+    public virtual VentaConfig RucNavigation { get; set; } = null!;
 }

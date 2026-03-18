@@ -19,6 +19,18 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un entero, es el número ID de la guía.", Nullable = false)]
         public int GuiaID { get; set; }
 
+        [JsonPropertyName("tipo_guia")]
+        [SwaggerSchema("Devuelve en texto el tipo de guía: REMITENTE ó TRANSPORTISTA", Nullable = false)]
+        public string TipoGuia { get; set; }
+
+        [JsonPropertyName("ruc")]
+        [SwaggerSchema("Devuelve en texto el ruc del facturador asociado", Nullable = false)]
+        public string Ruc { get; set; }
+
+        [JsonPropertyName("email_facturador")]
+        [SwaggerSchema("Devuelve en texto el correo electrónico del facturador asociado", Nullable = false)]
+        public string EmailFacturador { get; set; }
+
         [JsonPropertyName("tipo_transporte")]
         [SwaggerSchema("Devuelve un texto y solo pueden ser: PUBLICO ó PRIVADO", Nullable = false)]
         public string TipoTransporte { get; set; }
