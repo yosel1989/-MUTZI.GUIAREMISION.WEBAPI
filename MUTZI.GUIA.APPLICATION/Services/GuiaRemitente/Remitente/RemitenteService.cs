@@ -106,14 +106,17 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
         }
         public async Task<RemitenteDTO> UpdateAsync(int id, RemitenteUpdateDTO updateDTO)
         {
-            var existe = await _repository.GetBySerieAsync(updateDTO.Ruc, updateDTO.Serie);
-            if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
             try
             {
                 var existingRemitente = await _repository.GetByIdAsync(id);
                 if (existingRemitente == null)
                 {
                     throw new KeyNotFoundException($"Remitente con ID {id} no encontrado.");
+                }
+                if (updateDTO.Serie != existingRemitente.Serie)
+                {
+                    var existe = await _repository.GetBySerieAsync(updateDTO.Ruc, updateDTO.Serie);
+                    if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
                 }
                 _mapper.Map(updateDTO, existingRemitente);
                 await _repository.UpdateAsync(existingRemitente);
