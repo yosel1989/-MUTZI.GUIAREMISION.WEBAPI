@@ -7,5 +7,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig
     {
         Task<VentaConfigAccessDTO> GetByRucAsync(string ruc);
         Task<TokenResponseDTO> ObtenerTokenAsync(string ruc);
+        Task<List<EmpresaListDTO>> GetOnlyNameAsync();
     }
 }

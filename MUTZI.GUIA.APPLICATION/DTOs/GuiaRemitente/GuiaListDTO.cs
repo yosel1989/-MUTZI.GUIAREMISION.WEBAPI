@@ -18,9 +18,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, es el nombre de la empresa a la que pertenece la guía de remisión", Nullable = false)]
         public string Empresa { get; set; }
 
-        [JsonPropertyName("ruc_empresa")]
+        [JsonPropertyName("ruc")]
         [SwaggerSchema("Devuelve un texto, es el número de RUC de la empresa a la que pertenece la guía de remisión", Nullable = false)]
-        public string RucEmpresa { get; set; }
+        public string Ruc { get; set; }
 
         [JsonPropertyName("razon_remitente")]
         [SwaggerSchema("Devuelve un texto, es la razón social del remitente de la guía de remisión", Nullable = false)]
