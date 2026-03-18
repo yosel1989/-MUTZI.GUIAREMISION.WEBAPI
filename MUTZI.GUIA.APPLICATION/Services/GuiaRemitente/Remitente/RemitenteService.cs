@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
@@ -105,6 +106,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
         }
         public async Task<RemitenteDTO> UpdateAsync(int id, RemitenteUpdateDTO updateDTO)
         {
+            var existe = await _repository.GetBySerieAsync(updateDTO.Ruc, updateDTO.Serie);
+            if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
             try
             {
                 var existingRemitente = await _repository.GetByIdAsync(id);
