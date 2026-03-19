@@ -35,7 +35,8 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var result = await _guiasRemisionBDService.GetListAsync(pageNumber, pageSize);
+                var q = Request.Query;
+                var result = await _guiasRemisionBDService.GetListAsync(pageNumber, pageSize, q);
                 return Ok(result);
             }
             catch (Exception ex)
