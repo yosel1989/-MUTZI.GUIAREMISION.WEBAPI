@@ -29,7 +29,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 foreach (var col in request.Columns)
                 {
-                    var val = col.Search.Value;
+                    var val = col.Search.Value?.ToLower();
                     var key = col.Data?.ToLower();
                     if (string.IsNullOrEmpty(val)) continue;
                     if (key.Contains("fecha"))
@@ -66,7 +66,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         }
                         continue;
                     }
-                    
                     if (key.Contains("id_remitente"))
                     {
                         var idsStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
@@ -87,31 +86,55 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         var tipoStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
                         if (tipoStrings.Length==1)
                         {
-                            query = query.Where(x => x.TipoTraslado == tipoStrings[0]);
+                            query = query.Where(x => x.TipoTraslado.ToLower() == tipoStrings[0]);
                         }
                         else
                         {
-                            query = query.Where(x => tipoStrings.Contains(x.TipoTraslado));
+                            query = query.Where(x => tipoStrings.Contains(x.TipoTraslado.ToLower()));
                         }
+                        continue;
+                    }
+                    if (key.Contains("estado"))
+                    {
+                        var estadoStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                        if (estadoStrings.Length == 1)
+                        {
+                            query = query.Where(x => x.Estado.ToLower() == estadoStrings[0]);
+                        }
+                        else
+                        {
+                            query = query.Where(x => estadoStrings.Contains(x.Estado.ToLower()));
+                        }
+                        continue;
                     }
                     switch (key)
                     {
                         case "ruc": query = query.Where(x => x.Ruc == val); break;
-                        case "tipo_guia": query = query.Where(x => x.TipoGuia.Contains(val)); break;
-                        case "correlativo": query = query.Where(x => x.Correlativo == val); break;
-                        case "serie_guia": query = query.Where(x => x.Serie == val); break;
+                        case "tipo_guia": query = query.Where(x => x.TipoGuia.ToLower().Contains(val)); break;
+                        case "correlativo": query = query.Where(x => x.Correlativo.ToLower() == val); break;
+                        case "serie_guia": query = query.Where(x => x.Serie.ToLower() == val); break;
                         //case "tipo_traslado": query = query.Where(x => x.TipoTraslado == val); break;
-                        case "tipo_transporte": query = query.Where(x => x.TipoTransporte == val); break;
+                        case "tipo_transporte": query = query.Where(x => x.TipoTransporte.ToLower() == val); break;
                         case "id_destinatario":
                             if (int.TryParse(val, out int idD)) 
                                 query = query.Where(x => x.DestinatarioId == idD);
                             break;
+                        case "search": query = query.Where(x=>x.Ruc.Contains(val)||
+                            x.RucNavigation.Empresa.ToLower().Contains(val)||x.Ruc.Contains(val)||
+                            x.Remitente.Descripcion.ToLower().Contains(val)||x.TipoGuia.ToLower().Contains(val)||
+                            x.NumeroGuia.Contains(val)||x.TipoTraslado.ToLower().Contains(val)||
+                            x.TipoTransporte.ToLower().Contains(val)|| //x.Hora.Contains(val)||
+                            x.Destinatario.RazonSocial.ToLower().Contains(val)||x.Destinatario.NumeroDocumento.Contains(val)||
+                            x.Origens.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val)||
+                            x.Destinos.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val)||
+                            x.EmpleadoNombreCreacion.ToLower().Contains(val)||x.EmpleadoNombreEdicion.ToLower().Contains(val)||
+                            x.Estado.Contains(val)
+                            );
+                            break;
                     }
                 }
             }
-
             var totalRecords = await query.CountAsync();
-
             var data = await query
                 .OrderByDescending(x => x.FechaCreacion)
                 .Skip((pageNumber - 1) * pageSize)
