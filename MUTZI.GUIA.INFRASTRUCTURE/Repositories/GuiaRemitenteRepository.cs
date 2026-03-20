@@ -15,6 +15,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<(List<GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
         {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
             var query = _context.GuiaRemisions.AsQueryable();
             if (request.Columns != null && request.Columns.Any())
             {
@@ -34,7 +43,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             query = key switch
                             {
                                 "fecha_registro"=> query.Where(x => x.FechaCreacion.Value.Date >= fechaIni.Date && x.FechaCreacion.Value.Date < dFinSiguiente.Date),
-                                "fecha_emision"=>query.Where(x=>Convert.ToDateTime(x.Fecha).Date>=fechaIni.Date && Convert.ToDateTime(x.Fecha)<dFinSiguiente.Date)
+                                "fecha_emision"=> query = query.Where(x => x.Fecha >= DateOnly.FromDateTime(fechaIni) && x.Fecha < DateOnly.FromDateTime(dFinSiguiente))
                             };
                         }
                         continue;
