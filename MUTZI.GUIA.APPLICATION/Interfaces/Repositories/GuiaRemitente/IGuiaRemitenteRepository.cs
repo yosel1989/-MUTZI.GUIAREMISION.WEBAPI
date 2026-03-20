@@ -1,10 +1,13 @@
 ﻿
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
+
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
 {
     public interface IGuiaRemitenteRepository
     {
         Task<List<DOMAIN.Entities.GuiaRemision>> GetAllAsync();
-        Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize);
+        Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO? request);
+        //Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, List<ColumnFilterDTO> columnFilterDTOs);
         Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id);
         Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket);
         Task <int> CreateGuiaRemisionTransactionalAsync(

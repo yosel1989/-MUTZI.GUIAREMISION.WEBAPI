@@ -403,6 +403,8 @@ public partial class LogisticaContext : DbContext
 
             entity.HasIndex(e => e.DestinatarioId, "destinatarioID");
 
+            entity.HasIndex(e => e.Ruc, "guia_ruc_BUSQUEDA");
+
             entity.HasIndex(e => e.NumeroGuia, "numeroGuia").IsUnique();
 
             entity.HasIndex(e => e.ProveedorId, "proveedorID");
@@ -451,6 +453,10 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.RespuestaTicket)
                 .HasMaxLength(500)
                 .HasColumnName("respuestaTicket");
+            entity.Property(e => e.Ruc)
+                .HasMaxLength(11)
+                .HasColumnName("ruc")
+                .UseCollation("utf8mb4_unicode_ci");
             entity.Property(e => e.Serie)
                 .HasMaxLength(4)
                 .HasColumnName("serie");
@@ -481,6 +487,11 @@ public partial class LogisticaContext : DbContext
                 .HasForeignKey(d => d.RemitenteId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("guiaRemision_ibfk_1");
+
+            entity.HasOne(d => d.RucNavigation).WithMany(p => p.GuiaRemisions)
+                .HasForeignKey(d => d.Ruc)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("guiaRemision_ibfk_5");
         });
 
         modelBuilder.Entity<Origen>(entity =>
@@ -720,6 +731,8 @@ public partial class LogisticaContext : DbContext
             entity.ToTable("transporte");
 
             entity.HasIndex(e => e.Placa, "placa_UNIQUE").IsUnique();
+
+            entity.HasIndex(e => e.Tarjeta, "tarjeta_UNIQUE").IsUnique();
 
             entity.Property(e => e.TransporteId).HasColumnName("transporteID");
             entity.Property(e => e.Descripcion)

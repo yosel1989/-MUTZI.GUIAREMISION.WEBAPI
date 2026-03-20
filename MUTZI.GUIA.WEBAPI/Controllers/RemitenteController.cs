@@ -70,6 +70,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpGet]
+        [Route("listar-nombres")]
+        [SwaggerOperation(
+        Summary = "Listar remitentes para filtro",
+        Description = "Lista los remitentes para select específico de filtro.",
+        OperationId = "listar_remitente_nombres")]
+        [ProducesResponseType(typeof(RemitenteNameListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<RemitenteNameListDTO>>> GetOnlyName()
+        {
+            try
+            {
+                var remitentes = await _remitenteService.GetOnlynameAsync();
+                return Ok(remitentes);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar remitentes.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
         [Route("listar-sugerido/{numeroDoc}")]
         [SwaggerOperation(
         Summary = "Listar remitentes sugeridos",

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
@@ -21,6 +22,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
         {
             var remitentes = await _repository.GetAllAsync();
             return _mapper.Map<List<RemitenteListDTO>>(remitentes);
+        }
+        public async Task<List<RemitenteNameListDTO>> GetOnlynameAsync()
+        {
+            var remitentes = await _repository.GetOnlyNameAsync();
+            return _mapper.Map<List<RemitenteNameListDTO>>(remitentes);
         }
         public async Task<List<RemitenteListDTO>> GetListBySuggestion(string numeroDoc)
         {
@@ -107,6 +113,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
                 {
                     throw new KeyNotFoundException($"Remitente con ID {id} no encontrado.");
                 }
+                if (updateDTO.Serie != existingRemitente.Serie)
+                {
+                    var existe = await _repository.GetBySerieAsync(updateDTO.Ruc, updateDTO.Serie);
+                    if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
+                }
                 _mapper.Map(updateDTO, existingRemitente);
                 await _repository.UpdateAsync(existingRemitente);
                 return _mapper.Map<RemitenteDTO>(existingRemitente);
@@ -120,7 +131,16 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
         }
         public async Task DeleteAsync(int id)
         {
-            await _repository.DeleteAsync(id);
+            try
+            {
+                await _repository.DeleteAsync(id);
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                if (msg.Contains("FOREIGN KEY")) { msg = "No se puede eliminar porque existen registros asociados"; }
+                throw new Exception(msg);
+            }
         }
         public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
         {

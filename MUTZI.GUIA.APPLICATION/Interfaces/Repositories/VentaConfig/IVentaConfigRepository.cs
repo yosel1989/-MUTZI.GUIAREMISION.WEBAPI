@@ -3,5 +3,6 @@
     public interface IVentaConfigRepository
     {
         Task<DOMAIN.Entities.VentaConfig> GetByRucAsync(string ruc);
+        Task<List<DOMAIN.Entities.VentaConfig>> GetOnlyNameAsync();
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.DOMAIN.Entities;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -12,31 +13,229 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             _context = context;
         }
-        public async Task<(List<GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize)
+        public async Task<(List<GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
+        {
+            var query = _context.GuiaRemisions.AsQueryable();
+            if (request.Columns != null && request.Columns.Any())
+            {
+                foreach (var col in request.Columns)
+                {
+                    var val = col.Search.Value;
+                    var key = col.Data?.ToLower();
+
+                    if (string.IsNullOrEmpty(val)) continue;
+
+                    if (key.Contains("fecha") && val.Contains("|"))
+                    {
+                        var parts = val.Split('|');
+                        if (DateTime.TryParse(parts[0], out var fechaIni) && DateTime.TryParse(parts[1], out var fechaFin))
+                        {
+                            var dFinSiguiente = fechaFin.AddDays(1);
+                            query = key switch
+                            {
+                                "fecha_registro"=> query.Where(x => x.FechaCreacion.Value.Date >= fechaIni.Date && x.FechaCreacion.Value.Date < dFinSiguiente.Date),
+                                "fecha_emision"=>query.Where(x=>Convert.ToDateTime(x.Fecha).Date>=fechaIni.Date && Convert.ToDateTime(x.Fecha)<dFinSiguiente.Date)
+                            };
+                        }
+                        continue;
+                    }
+
+                    if (key.Contains("id") && val.Contains(","))
+                    {
+                        var idsStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                        if (key == "id_remitente")
+                        {
+                            var idsInt = idsStrings.Select(int.Parse).ToList();
+                            query = query.Where(x => idsInt.Contains(x.RemitenteId));
+                        }
+                        else if (key == "id_destinatario")
+                        {
+                            var idsInt = idsStrings.Select(int.Parse).ToList();
+                            query = query.Where(x => idsInt.Contains(x.DestinatarioId));
+                        }
+                        continue;
+                    }
+
+                    switch (key)
+                    {
+                        case "ruc": query = query.Where(x => x.Ruc == val); break;
+                        case "tipo_guia": query = query.Where(x => x.TipoGuia.Contains(val)); break;
+                        case "numero_guia": query = query.Where(x => x.NumeroGuia == val); break;
+                        case "serie_guia": query = query.Where(x => x.Serie == val); break;
+                        case "tipo_traslado": query = query.Where(x => x.TipoTraslado == val); break;
+                        case "tipo_transporte": query = query.Where(x => x.TipoTransporte == val); break;
+                        case "id_remitente":
+                            if (int.TryParse(val, out int idR)) query = query.Where(x => x.RemitenteId == idR);
+                            break;
+                    }
+                }
+            }
+
+            var totalRecords = await query.CountAsync();
+
+            var data = await query
+                .OrderByDescending(x => x.FechaCreacion)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(g => new GuiaRemision
+                {
+                    GuiaId = g.GuiaId,
+                    TipoGuia = g.TipoGuia,
+                    Ruc = g.Ruc,
+                    RucNavigation = new VentaConfig
+                    {
+                        EmailPrincipal = g.RucNavigation.EmailPrincipal,
+                        Empresa = g.RucNavigation.Empresa
+                    },
+                    TipoTransporte = g.TipoTransporte,
+                    TipoTraslado = g.TipoTraslado,
+                    NumeroGuia = g.NumeroGuia,
+                    Fecha = g.Fecha,
+                    Hora = g.Hora,
+                    RespuestaTicket = g.RespuestaTicket,
+                    Remitente = new Remitente { Descripcion = g.Remitente.Descripcion },
+                    Destinatario = new Destinatario
+                    {
+                        TipoDocumento = g.Destinatario.TipoDocumento,
+                        NumeroDocumento = g.Destinatario.NumeroDocumento,
+                        RazonSocial = g.Destinatario.RazonSocial
+                    },
+                    Proveedor = g.Proveedor == null ? null : new Proveedor
+                    {
+                        TipoDocumento = g.Proveedor.TipoDocumento,
+                        NumeroDocumento = g.Proveedor.NumeroDocumento,
+                        RazonSocial = g.Proveedor.RazonSocial
+                    },
+                    Origens = g.Origens.Select(o => new Origen { Ubigeo = o.Ubigeo }).ToList(),
+                    Destinos = g.Destinos.Select(d => new Destino { Ubigeo = d.Ubigeo }).ToList(),
+                    FechaCreacion = g.FechaCreacion,
+                    EmpleadoNombreCreacion = g.EmpleadoNombreCreacion,
+                    FechaEdicion = g.FechaEdicion,
+                    EmpleadoNombreEdicion = g.EmpleadoNombreEdicion,
+                    Estado = g.Estado,
+                    IdEstado = g.IdEstado
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            return (data, totalRecords);
+        }
+        public async Task<(List<GuiaRemision>, int)> GetListAsync2(int pageNumber, int pageSize, DataTableDTO request)
+        {
+            var query = _context.GuiaRemisions.AsQueryable();
+
+            if (request.Columns != null && request.Columns.Any())
+            {
+                foreach (var col in request.Columns)
+                {
+                    var val = col.Search.Value;
+                    var key = col.Data?.ToLower();
+
+                    if (string.IsNullOrEmpty(val)) continue;
+
+                    if (key.Contains("fecha") && val.Contains("|"))
+                    {
+                        var parts = val.Split('|');
+                        if (DateTime.TryParse(parts[0], out var dIni) && DateTime.TryParse(parts[1], out var dFin))
+                        {
+                            var dFinSiguiente = dFin.AddDays(1);
+                            query = query.Where(x => x.FechaCreacion >= dIni && x.FechaCreacion < dFinSiguiente);
+                        }
+                        continue;
+                    }
+
+                    if ((key.Contains("id") || key.Contains("ruc")) && val.Contains(","))
+                    {
+                        var idsStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+                        if (key == "id_remitente")
+                        {
+                            var idsInt = idsStrings.Select(int.Parse).ToList();
+                            query = query.Where(x => idsInt.Contains(x.RemitenteId));
+                        }
+                        else if (key == "ruc")
+                        {
+                            query = query.Where(x => idsStrings.Contains(x.Ruc));
+                        }
+                        continue;
+                    }
+
+                    // Filtros unitarios normales
+                    switch (key)
+                    {
+                        case "ruc": query = query.Where(x => x.Ruc == val); break;
+                        case "tipo_guia": query = query.Where(x => x.TipoGuia.Contains(val)); break;
+                        case "numero_guia": query = query.Where(x => x.NumeroGuia == val); break;
+                        case "serie_guia": query = query.Where(x => x.Serie == val); break;
+                        case "id_remitente":
+                            if (int.TryParse(val, out int idR)) query = query.Where(x => x.RemitenteId == idR);
+                            break;
+                    }
+                }
+            }
+
+            var totalRecords = await query.CountAsync();
+
+            var data = await query
+                .OrderByDescending(x => x.FechaCreacion)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return (data, totalRecords);
+        }
+        public async Task<(List<GuiaRemision>, int)> GetListAsync1(int pageNumber, int pageSize, DataTableDTO request)
         {
             var query = _context.GuiaRemisions
-                .Include(r => r.Remitente)
-                    .ThenInclude(rem => rem.Ubigeo)
-                .Include(r => r.Remitente)
-                    .ThenInclude(rem => rem.RucNavigation)
-                .Include(d => d.Destinatario)
-                    .ThenInclude(des => des.Ubigeo)
-                .Include(p => p.Proveedor)
-                    .ThenInclude(pro => pro.Ubigeo)
-                .Include(dest => dest.Destinos)
-                    .ThenInclude(de => de.Ubigeo)
-                .Include(o => o.Origens)
-                    .ThenInclude(or => or.Ubigeo)
-                .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.ConductorGuids)
-                        .ThenInclude(con => con.Conductor)
-                .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.TransporteGuids)
-                        .ThenInclude(tr => tr.Transporte)
-                .Include(det => det.GuiaDetalles)
-                    .ThenInclude(gd => gd.CodigoUmNavigation)
-                .Include(doc => doc.DocRelacionados)
-                .OrderByDescending(x => x.FechaCreacion);
+                .Select(g => new GuiaRemision
+                {
+                    GuiaId = g.GuiaId,
+                    TipoGuia = g.TipoGuia,
+                    Ruc = g.Ruc,
+                    RucNavigation = new VentaConfig
+                    {
+                        EmailPrincipal = g.RucNavigation.EmailPrincipal,
+                        Empresa = g.RucNavigation.Empresa
+                    },
+                    TipoTransporte = g.TipoTransporte,
+                    TipoTraslado = g.TipoTraslado,
+                    NumeroGuia = g.NumeroGuia,
+                    Fecha = g.Fecha,
+                    Hora = g.Hora,
+                    RespuestaTicket = g.RespuestaTicket,
+                    Remitente = new Remitente
+                    {
+                        Descripcion = g.Remitente.Descripcion
+                    },
+                    Destinatario = new Destinatario
+                    {
+                        TipoDocumento = g.Destinatario.TipoDocumento,
+                        NumeroDocumento = g.Destinatario.NumeroDocumento,
+                        RazonSocial = g.Destinatario.RazonSocial
+                    },
+                    Proveedor = g.Proveedor == null ? null : new Proveedor
+                    {
+                        TipoDocumento = g.Proveedor.TipoDocumento,
+                        NumeroDocumento = g.Proveedor.NumeroDocumento,
+                        RazonSocial = g.Proveedor.RazonSocial
+                    },
+                    Origens = g.Origens.Select(o => new Origen
+                    {
+                        Ubigeo = o.Ubigeo
+                    }).ToList(),
+                    Destinos = g.Destinos.Select(d => new Destino
+                    {
+                        Ubigeo = d.Ubigeo
+                    }).ToList(),
+                    FechaCreacion = g.FechaCreacion,
+                    EmpleadoNombreCreacion = g.EmpleadoNombreCreacion,
+                    FechaEdicion = g.FechaEdicion,
+                    EmpleadoNombreEdicion = g.EmpleadoNombreEdicion,
+                    Estado = g.Estado,
+                    IdEstado = g.IdEstado
+                })
+                 .OrderByDescending(x => x.FechaCreacion);
 
             var totalRecords = await query.CountAsync();
 
@@ -48,7 +247,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
             return (data, totalRecords);
         }
-
         public async Task<List<GuiaRemision>> GetAllAsync()
         {
             return await _context.GuiaRemisions
@@ -84,6 +282,156 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<GuiaRemision> GetByIdAsync(int id)
         {
             return await _context.GuiaRemisions
+                .Where(g => g.GuiaId == id)
+                .Select(g => new GuiaRemision
+                {
+                    GuiaId = g.GuiaId,
+                    TipoGuia = g.TipoGuia,
+                    Ruc=g.Ruc,
+                    RucNavigation=new VentaConfig
+                    {
+                        EmailPrincipal=g.RucNavigation.EmailPrincipal
+                    },
+                    TipoTransporte = g.TipoTransporte,
+                    TipoTraslado=g.TipoTraslado,
+                    NumeroGuia=g.NumeroGuia,
+                    Fecha=g.Fecha,
+                    Hora=g.Hora,
+                    Observacion=g.Observacion,
+                    Remitente = new Remitente
+                    {
+                        RemitenteId = g.Remitente.RemitenteId,
+                        Ruc=g.Remitente.Ruc,
+                        Descripcion = g.Remitente.Descripcion,
+                        UbigeoId=g.Remitente.UbigeoId,
+                        Ubigeo = g.Remitente.Ubigeo,
+                        Direccion=g.Remitente.Direccion,
+                        Email=g.Remitente.Email,
+                        Pais=g.Remitente.Pais,
+                        Serie=g.Remitente.Serie,
+                        CodigoSunat=g.Remitente.CodigoSunat,
+                        FechaCreacion=g.Remitente.FechaCreacion,
+                        FechaEdicion=g.Remitente.FechaEdicion,
+                        EmpleadoNombreCreacion=g.Remitente.EmpleadoNombreCreacion,
+                        EmpleadoNombreEdicion=g.Remitente.EmpleadoNombreEdicion,
+                        Estado=g.Remitente.Estado,
+                        IdEstado=g.Remitente.IdEstado
+                    },
+                    Destinatario=new Destinatario {
+                        DestinatarioId=g.Destinatario.DestinatarioId,
+                        TipoDocumento=g.Destinatario.TipoDocumento,
+                        NumeroDocumento=g.Destinatario.NumeroDocumento,
+                        RazonSocial=g.Destinatario.RazonSocial,
+                        UbigeoId=g.Destinatario.UbigeoId,
+                        Ubigeo=g.Destinatario.Ubigeo,
+                        Direccion=g.Destinatario.Direccion,
+                        Pais=g.Destinatario.Pais,
+                        CodigoSunat=g.Destinatario.CodigoSunat,
+                        FechaCreacion=g.Destinatario.FechaCreacion,
+                        EmpleadoNombreCreacion=g.Destinatario.EmpleadoNombreCreacion,
+                        FechaEdicion=g.Destinatario.FechaEdicion,
+                        EmpleadoNombreEdicion=g.Destinatario.EmpleadoNombreEdicion,
+                        EmailDestinatarioGuids=g.EmailDestinatarioGuids,
+                        Estado=g.Destinatario.Estado,
+                        IdEstado=g.Destinatario.IdEstado
+                    },
+                    Proveedor=g.Proveedor==null?null:  new Proveedor
+                    {
+                        ProveedorId=g.Proveedor.ProveedorId,
+                        TipoDocumento=g.Proveedor.TipoDocumento,
+                        NumeroDocumento=g.Proveedor.NumeroDocumento,
+                        RazonSocial=g.Proveedor.RazonSocial,
+                        Ubigeo=g.Proveedor.Ubigeo,
+                        Direccion=g.Proveedor.Direccion,
+                        Email=g.Proveedor.Email,
+                        Pais=g.Proveedor.Pais,
+                        CodigoSunat=g.Proveedor.CodigoSunat,
+                        FechaCreacion=g.Proveedor.FechaCreacion,
+                        EmpleadoNombreCreacion=g.Proveedor.EmpleadoNombreCreacion,
+                        FechaEdicion=g.Proveedor.FechaEdicion,
+                        EmpleadoNombreEdicion=g.Proveedor.EmpleadoNombreEdicion,
+                        Estado=g.Proveedor.Estado,
+                        IdEstado=g.Proveedor.IdEstado
+                    },
+                    GuiaDetalles = g.GuiaDetalles.Select(det => new GuiaDetalle
+                    {
+                        GuiaDetalleId = det.GuiaDetalleId,
+                        Codigo=det.Codigo,
+                        Descripcion=det.Descripcion,
+                        Cantidad = det.Cantidad,
+                        CodigoUm=det.CodigoUm,
+                        CodigoUmNavigation = new UnidadMedidum
+                        {
+                            CodigoUm=det.CodigoUmNavigation.CodigoUm,
+                            Descripcion = det.CodigoUmNavigation.Descripcion
+                        }
+                    }).ToList(),
+
+                    // Datos de Envío y Conductores
+                    DatosEnvios = g.DatosEnvios.Select(env => new DatosEnvio
+                    {
+                        MotivoEnvio = env.MotivoEnvio,
+                        FechaEnvio=env.FechaEnvio,
+                        PesoBruto=env.PesoBruto,
+                        CodigoUm=env.CodigoUm,
+                        RucEmpresaCurrier=env.RucEmpresaCurrier,
+                        RazonSocialCurrier=env.RazonSocialCurrier,
+                        RegistroMtcCurrier=env.RegistroMtcCurrier,
+                        ConductorGuids = env.ConductorGuids.Select(cg => new ConductorGuid
+                        {
+                            ConductorGuidId=cg.ConductorGuidId,
+                            DatosEnvioId=cg.DatosEnvioId,
+                            ConductorId=cg.ConductorId,
+                            Conductor = new Conductor
+                            {
+                                ConductorId = cg.Conductor.ConductorId,
+                                TipoDocumento=cg.Conductor.TipoDocumento,
+                                NumeroDocumento=cg.Conductor.NumeroDocumento,
+                                Nombres=cg.Conductor.Nombres,
+                                Apellidos=cg.Conductor.Apellidos,
+                                Cargo=cg.Conductor.Cargo,
+                                Licencia=cg.Conductor.Licencia
+                            }
+                        }).ToList(),
+                        TransporteGuids=env.TransporteGuids.Select(tg=>new TransporteGuid
+                        {
+                            TransporteGuidId=tg.TransporteGuidId,
+                            DatosEnvioId=tg.DatosEnvioId,
+                            TransporteId=tg.TransporteId,
+                            Transporte = new Transporte
+                            {
+                                TransporteId=tg.Transporte.TransporteId,
+                                Placa=tg.Transporte.Placa,
+                                Tarjeta=tg.Transporte.Tarjeta,
+                                NumeroRegistroMtc=tg.Transporte.NumeroRegistroMtc
+                            }
+                        }).ToList(),
+                    }).ToList(),
+                    Origens=g.Origens.Select(o=>new Origen
+                    {
+                        UbigeoId=o.UbigeoId,
+                        Direccion=o.Direccion,
+                        Ubigeo=o.Ubigeo,
+                        Pais=o.Pais
+                    }).ToList(),
+                    Destinos=g.Destinos.Select(d=>new Destino
+                    {
+                        UbigeoId=d.UbigeoId,
+                        Direccion=d.Direccion,
+                        Ubigeo=d.Ubigeo,
+                        Pais=d.Pais
+                    }).ToList(),
+                    DocRelacionados = g.DocRelacionados.ToList(),
+                    FechaCreacion=g.FechaCreacion,
+                    EmpleadoNombreCreacion=g.EmpleadoNombreCreacion,
+                    Estado=g.Estado,
+                    IdEstado=g.IdEstado
+                })
+                .FirstOrDefaultAsync();
+        }
+        public async Task<GuiaRemision> GetByIdAsync2(int id)
+        {
+            return await _context.GuiaRemisions
                 .Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
                 .Include(rt=>rt.RemiteTransportista)
@@ -108,7 +456,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(e => e.EmailDestinatarioGuids)
                 .Include(erm=>erm.EmailRemiteTransportistaGuids)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
-                //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
         public async Task<int> CreateGuiaRemisionTransactionalAsync(
             Remitente remitente,
@@ -184,6 +531,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 // Guía
                 guiaRemision.RemitenteId = remitente.RemitenteId;
+                guiaRemision.Ruc = remitente.Ruc;
                 guiaRemision.DestinatarioId = destinatario.DestinatarioId;
                 guiaRemision.Estado = "CREADO";
                 guiaRemision.IdEstado = 0;

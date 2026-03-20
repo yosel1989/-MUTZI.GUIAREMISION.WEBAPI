@@ -2,6 +2,7 @@
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using Microsoft.EntityFrameworkCore;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -17,6 +18,16 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             return await _context.VentaConfigs
                 .FirstOrDefaultAsync(vc => vc.Ruc == ruc);
+        }
+        public async Task<List<VentaConfig>> GetOnlyNameAsync()
+        {
+            return await _context.VentaConfigs
+            .Select(e => new VentaConfig
+            {
+                Ruc = e.Ruc,
+                Empresa = e.Empresa
+            })
+            .ToListAsync();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
@@ -32,9 +33,49 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
         //    var guiaRemisions = await _repository.GetAllAsync();
         //    return _mapper.Map<List<GuiaListDTO>>(guiaRemisions);
         //}
-        public async Task<PagedResult<GuiaListDTO>> GetListAsync(int pageNumber, int pageSize)
+        //public async Task<PagedResult<GuiaListDTO>> GetListAsync2(int pageNumber, int pageSize)
+        //{
+        //    var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize);
+
+        //    var guiasDTO = _mapper.Map<List<GuiaListDTO>>(guias);
+
+        //    return new PagedResult<GuiaListDTO>
+        //    {
+        //        PageNumber = pageNumber,
+        //        PageSize = pageSize,
+        //        TotalRecords = totalRecords,
+        //        TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+        //        Data = guiasDTO
+        //    };
+        //    throw new NotImplementedException();
+        //}
+        public async Task<PagedResult<GuiaListDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
         {
-            var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize);
+            var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
+
+            int i = 0;
+            while (q.ContainsKey($"columns[{i}][data]"))
+            {
+                var dataField = q[$"columns[{i}][data]"];
+                var searchValue = q[$"columns[{i}][search][value]"];
+                var regexValue = q[$"columns[{i}][search][regex]"];
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    request.Columns.Add(new RequestFiltroDTO
+                    {
+                        Data = dataField,
+                        Search = new SearchDTO
+                        {
+                            Value = searchValue,
+                            Regex = regexValue
+                        }
+                    });
+                }
+                i++;
+            }
+
+            var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize, request);
 
             var guiasDTO = _mapper.Map<List<GuiaListDTO>>(guias);
 

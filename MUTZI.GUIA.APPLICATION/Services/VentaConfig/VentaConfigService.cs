@@ -32,6 +32,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.VentaConfig
         {
             return _mapper.Map<VentaConfigAccessDTO>(await _repository.GetByRucAsync(ruc));
         }
+
+        public async Task<List<EmpresaListDTO>> GetOnlyNameAsync()
+        {
+            var empresas = await _repository.GetOnlyNameAsync();
+            return _mapper.Map<List<EmpresaListDTO>>(empresas);
+        }
+
         public async Task<TokenResponseDTO> ObtenerTokenAsync(string ruc)
         {
             var config = await _repository.GetByRucAsync(ruc);
