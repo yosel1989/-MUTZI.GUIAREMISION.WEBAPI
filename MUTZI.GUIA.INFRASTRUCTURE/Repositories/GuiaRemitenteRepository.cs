@@ -22,50 +22,79 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     var val = col.Search.Value;
                     var key = col.Data?.ToLower();
-
                     if (string.IsNullOrEmpty(val)) continue;
-
-                    if (key.Contains("fecha") && val.Contains("|"))
+                    if (key.Contains("fecha"))
                     {
-                        var parts = val.Split('|');
-                        if (DateTime.TryParse(parts[0], out var fechaIni) && DateTime.TryParse(parts[1], out var fechaFin))
+                        var parts = val.Split('|', StringSplitOptions.RemoveEmptyEntries);
+
+                        if (parts.Length == 1)
                         {
-                            var dFinSiguiente = fechaFin.AddDays(1);
-                            query = key switch
+                            if (DateTime.TryParse(parts[0], out var fechaDt))
                             {
-                                "fecha_registro"=> query.Where(x => x.FechaCreacion.Value.Date >= fechaIni.Date && x.FechaCreacion.Value.Date < dFinSiguiente.Date),
-                                "fecha_emision"=>query.Where(x=>Convert.ToDateTime(x.Fecha).Date>=fechaIni.Date && Convert.ToDateTime(x.Fecha)<dFinSiguiente.Date)
-                            };
+                                var fecha = DateOnly.FromDateTime(fechaDt);
+                                query = key switch
+                                {
+                                    "fecha_registro" => query.Where(x => DateOnly.FromDateTime(x.FechaCreacion.Value) == fecha),
+                                    "fecha_emision" => query.Where(x => x.Fecha == fecha),
+                                    _ => query
+                                };
+                            }
+                        }
+                        else
+                        {
+                            if (DateTime.TryParse(parts[0], out var iniDt) && DateTime.TryParse(parts[1], out var finDt))
+                            {
+                                var fechaIni = DateOnly.FromDateTime(iniDt);
+                                var fechaFin = DateOnly.FromDateTime(finDt);
+                                query = key switch
+                                {
+                                    "fecha_registro" => query.Where(x => DateOnly.FromDateTime(x.FechaCreacion.Value) >= fechaIni
+                                                                      && DateOnly.FromDateTime(x.FechaCreacion.Value) <= fechaFin),
+                                    "fecha_emision" => query.Where(x => x.Fecha >= fechaIni && x.Fecha <= fechaFin),
+                                    _ => query
+                                };
+                            }
                         }
                         continue;
                     }
-
-                    if (key.Contains("id") && val.Contains(","))
+                    
+                    if (key.Contains("id_remitente"))
                     {
                         var idsStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                        if (key == "id_remitente")
+                        if (idsStrings.Length == 1)
+                        {
+                            if (int.TryParse(idsStrings[0], out int idUnico))
+                                query = query.Where(x => x.RemitenteId == idUnico);
+                        }
+                        else
                         {
                             var idsInt = idsStrings.Select(int.Parse).ToList();
                             query = query.Where(x => idsInt.Contains(x.RemitenteId));
                         }
-                        else if (key == "id_destinatario")
-                        {
-                            var idsInt = idsStrings.Select(int.Parse).ToList();
-                            query = query.Where(x => idsInt.Contains(x.DestinatarioId));
-                        }
                         continue;
                     }
-
+                    if (key.Contains("tipo_traslado"))
+                    {
+                        var tipoStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                        if (tipoStrings.Length==1)
+                        {
+                            query = query.Where(x => x.TipoTraslado == tipoStrings[0]);
+                        }
+                        else
+                        {
+                            query = query.Where(x => tipoStrings.Contains(x.TipoTraslado));
+                        }
+                    }
                     switch (key)
                     {
                         case "ruc": query = query.Where(x => x.Ruc == val); break;
                         case "tipo_guia": query = query.Where(x => x.TipoGuia.Contains(val)); break;
-                        case "numero_guia": query = query.Where(x => x.NumeroGuia == val); break;
+                        case "correlativo": query = query.Where(x => x.Correlativo == val); break;
                         case "serie_guia": query = query.Where(x => x.Serie == val); break;
-                        case "tipo_traslado": query = query.Where(x => x.TipoTraslado == val); break;
+                        //case "tipo_traslado": query = query.Where(x => x.TipoTraslado == val); break;
                         case "tipo_transporte": query = query.Where(x => x.TipoTransporte == val); break;
-                        case "id_remitente":
-                            if (int.TryParse(val, out int idR)) query = query.Where(x => x.RemitenteId == idR);
+                        case "id_destinatario":
+                            if (int.TryParse(val, out int idD)) query = query.Where(x => x.DestinatarioId == idD);
                             break;
                     }
                 }
