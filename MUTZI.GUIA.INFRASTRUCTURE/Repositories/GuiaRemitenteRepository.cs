@@ -13,7 +13,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             _context = context;
         }
-        public async Task<(List<GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
+        public async Task<(List<GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request, bool export = false)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     if (key.Contains("tipo_traslado"))
                     {
                         var tipoStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                        if (tipoStrings.Length==1)
+                        if (tipoStrings.Length == 1)
                         {
                             query = query.Where(x => x.TipoTraslado.ToLower() == tipoStrings[0]);
                         }
@@ -119,26 +119,33 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             if (int.TryParse(val, out int idD)) 
                                 query = query.Where(x => x.DestinatarioId == idD);
                             break;
-                        case "search": query = query.Where(x=>x.Ruc.Contains(val)||
-                            x.RucNavigation.Empresa.ToLower().Contains(val)||x.Ruc.Contains(val)||
-                            x.Remitente.Descripcion.ToLower().Contains(val)||x.TipoGuia.ToLower().Contains(val)||
-                            x.NumeroGuia.Contains(val)||x.TipoTraslado.ToLower().Contains(val)||
-                            x.TipoTransporte.ToLower().Contains(val)|| //x.Hora.Contains(val)||
-                            x.Destinatario.RazonSocial.ToLower().Contains(val)||x.Destinatario.NumeroDocumento.Contains(val)||
-                            x.Origens.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val)||
-                            x.Destinos.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val)||
-                            x.EmpleadoNombreCreacion.ToLower().Contains(val)||x.EmpleadoNombreEdicion.ToLower().Contains(val)||
+                        case "search":
+                            query = query.Where(x => x.Ruc.Contains(val) ||
+                            x.RucNavigation.Empresa.ToLower().Contains(val) || x.Ruc.Contains(val) ||
+                            x.Remitente.Descripcion.ToLower().Contains(val) || x.TipoGuia.ToLower().Contains(val) ||
+                            x.NumeroGuia.Contains(val) || x.TipoTraslado.ToLower().Contains(val) ||
+                            x.TipoTransporte.ToLower().Contains(val) || //x.Hora.Contains(val)||
+                            x.Destinatario.RazonSocial.ToLower().Contains(val) || x.Destinatario.NumeroDocumento.Contains(val) ||
+                            x.Origens.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
+                            x.Destinos.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
+                            x.EmpleadoNombreCreacion.ToLower().Contains(val) || x.EmpleadoNombreEdicion.ToLower().Contains(val) ||
                             x.Estado.Contains(val)
                             );
                             break;
                     }
                 }
             }
+            if (!export)
+            {
+                query = query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
+            }
             var totalRecords = await query.CountAsync();
             var data = await query
                 .OrderByDescending(x => x.FechaCreacion)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                //.Skip((pageNumber - 1) * pageSize)
+                //.Take(pageSize)
                 .Select(g => new GuiaRemision
                 {
                     GuiaId = g.GuiaId,
@@ -314,8 +321,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return await _context.GuiaRemisions
                 .Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
-                .Include(r=>r.Remitente)
-                    .ThenInclude(rem=>rem.RucNavigation)
+                .Include(r => r.Remitente)
+                    .ThenInclude(rem => rem.RucNavigation)
                 .Include(d => d.Destinatario)
                     .ThenInclude(des => des.Ubigeo)
                 .Include(p => p.Proveedor)
@@ -326,10 +333,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .ThenInclude(or => or.Ubigeo)
                 .Include(env => env.DatosEnvios)
                     .ThenInclude(de => de.ConductorGuids)
-                        .ThenInclude(con=>con.Conductor)
+                        .ThenInclude(con => con.Conductor)
                 .Include(env => env.DatosEnvios)
                     .ThenInclude(de => de.TransporteGuids)
-                        .ThenInclude(tr=>tr.Transporte)
+                        .ThenInclude(tr => tr.Transporte)
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .Include(doc => doc.DocRelacionados)
@@ -349,82 +356,83 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     GuiaId = g.GuiaId,
                     TipoGuia = g.TipoGuia,
-                    Ruc=g.Ruc,
-                    RucNavigation=new VentaConfig
+                    Ruc = g.Ruc,
+                    RucNavigation = new VentaConfig
                     {
-                        EmailPrincipal=g.RucNavigation.EmailPrincipal
+                        EmailPrincipal = g.RucNavigation.EmailPrincipal
                     },
                     TipoTransporte = g.TipoTransporte,
-                    TipoTraslado=g.TipoTraslado,
-                    NumeroGuia=g.NumeroGuia,
-                    Fecha=g.Fecha,
-                    Hora=g.Hora,
-                    Observacion=g.Observacion,
+                    TipoTraslado = g.TipoTraslado,
+                    NumeroGuia = g.NumeroGuia,
+                    Fecha = g.Fecha,
+                    Hora = g.Hora,
+                    Observacion = g.Observacion,
                     Remitente = new Remitente
                     {
                         RemitenteId = g.Remitente.RemitenteId,
-                        Ruc=g.Remitente.Ruc,
+                        Ruc = g.Remitente.Ruc,
                         Descripcion = g.Remitente.Descripcion,
-                        UbigeoId=g.Remitente.UbigeoId,
+                        UbigeoId = g.Remitente.UbigeoId,
                         Ubigeo = g.Remitente.Ubigeo,
-                        Direccion=g.Remitente.Direccion,
-                        Email=g.Remitente.Email,
-                        Pais=g.Remitente.Pais,
-                        Serie=g.Remitente.Serie,
-                        CodigoSunat=g.Remitente.CodigoSunat,
-                        FechaCreacion=g.Remitente.FechaCreacion,
-                        FechaEdicion=g.Remitente.FechaEdicion,
-                        EmpleadoNombreCreacion=g.Remitente.EmpleadoNombreCreacion,
-                        EmpleadoNombreEdicion=g.Remitente.EmpleadoNombreEdicion,
-                        Estado=g.Remitente.Estado,
-                        IdEstado=g.Remitente.IdEstado
+                        Direccion = g.Remitente.Direccion,
+                        Email = g.Remitente.Email,
+                        Pais = g.Remitente.Pais,
+                        Serie = g.Remitente.Serie,
+                        CodigoSunat = g.Remitente.CodigoSunat,
+                        FechaCreacion = g.Remitente.FechaCreacion,
+                        FechaEdicion = g.Remitente.FechaEdicion,
+                        EmpleadoNombreCreacion = g.Remitente.EmpleadoNombreCreacion,
+                        EmpleadoNombreEdicion = g.Remitente.EmpleadoNombreEdicion,
+                        Estado = g.Remitente.Estado,
+                        IdEstado = g.Remitente.IdEstado
                     },
-                    Destinatario=new Destinatario {
-                        DestinatarioId=g.Destinatario.DestinatarioId,
-                        TipoDocumento=g.Destinatario.TipoDocumento,
-                        NumeroDocumento=g.Destinatario.NumeroDocumento,
-                        RazonSocial=g.Destinatario.RazonSocial,
-                        UbigeoId=g.Destinatario.UbigeoId,
-                        Ubigeo=g.Destinatario.Ubigeo,
-                        Direccion=g.Destinatario.Direccion,
-                        Pais=g.Destinatario.Pais,
-                        CodigoSunat=g.Destinatario.CodigoSunat,
-                        FechaCreacion=g.Destinatario.FechaCreacion,
-                        EmpleadoNombreCreacion=g.Destinatario.EmpleadoNombreCreacion,
-                        FechaEdicion=g.Destinatario.FechaEdicion,
-                        EmpleadoNombreEdicion=g.Destinatario.EmpleadoNombreEdicion,
-                        EmailDestinatarioGuids=g.EmailDestinatarioGuids,
-                        Estado=g.Destinatario.Estado,
-                        IdEstado=g.Destinatario.IdEstado
-                    },
-                    Proveedor=g.Proveedor==null?null:  new Proveedor
+                    Destinatario = new Destinatario
                     {
-                        ProveedorId=g.Proveedor.ProveedorId,
-                        TipoDocumento=g.Proveedor.TipoDocumento,
-                        NumeroDocumento=g.Proveedor.NumeroDocumento,
-                        RazonSocial=g.Proveedor.RazonSocial,
-                        Ubigeo=g.Proveedor.Ubigeo,
-                        Direccion=g.Proveedor.Direccion,
-                        Email=g.Proveedor.Email,
-                        Pais=g.Proveedor.Pais,
-                        CodigoSunat=g.Proveedor.CodigoSunat,
-                        FechaCreacion=g.Proveedor.FechaCreacion,
-                        EmpleadoNombreCreacion=g.Proveedor.EmpleadoNombreCreacion,
-                        FechaEdicion=g.Proveedor.FechaEdicion,
-                        EmpleadoNombreEdicion=g.Proveedor.EmpleadoNombreEdicion,
-                        Estado=g.Proveedor.Estado,
-                        IdEstado=g.Proveedor.IdEstado
+                        DestinatarioId = g.Destinatario.DestinatarioId,
+                        TipoDocumento = g.Destinatario.TipoDocumento,
+                        NumeroDocumento = g.Destinatario.NumeroDocumento,
+                        RazonSocial = g.Destinatario.RazonSocial,
+                        UbigeoId = g.Destinatario.UbigeoId,
+                        Ubigeo = g.Destinatario.Ubigeo,
+                        Direccion = g.Destinatario.Direccion,
+                        Pais = g.Destinatario.Pais,
+                        CodigoSunat = g.Destinatario.CodigoSunat,
+                        FechaCreacion = g.Destinatario.FechaCreacion,
+                        EmpleadoNombreCreacion = g.Destinatario.EmpleadoNombreCreacion,
+                        FechaEdicion = g.Destinatario.FechaEdicion,
+                        EmpleadoNombreEdicion = g.Destinatario.EmpleadoNombreEdicion,
+                        EmailDestinatarioGuids = g.EmailDestinatarioGuids,
+                        Estado = g.Destinatario.Estado,
+                        IdEstado = g.Destinatario.IdEstado
+                    },
+                    Proveedor = g.Proveedor == null ? null : new Proveedor
+                    {
+                        ProveedorId = g.Proveedor.ProveedorId,
+                        TipoDocumento = g.Proveedor.TipoDocumento,
+                        NumeroDocumento = g.Proveedor.NumeroDocumento,
+                        RazonSocial = g.Proveedor.RazonSocial,
+                        Ubigeo = g.Proveedor.Ubigeo,
+                        Direccion = g.Proveedor.Direccion,
+                        Email = g.Proveedor.Email,
+                        Pais = g.Proveedor.Pais,
+                        CodigoSunat = g.Proveedor.CodigoSunat,
+                        FechaCreacion = g.Proveedor.FechaCreacion,
+                        EmpleadoNombreCreacion = g.Proveedor.EmpleadoNombreCreacion,
+                        FechaEdicion = g.Proveedor.FechaEdicion,
+                        EmpleadoNombreEdicion = g.Proveedor.EmpleadoNombreEdicion,
+                        Estado = g.Proveedor.Estado,
+                        IdEstado = g.Proveedor.IdEstado
                     },
                     GuiaDetalles = g.GuiaDetalles.Select(det => new GuiaDetalle
                     {
                         GuiaDetalleId = det.GuiaDetalleId,
-                        Codigo=det.Codigo,
-                        Descripcion=det.Descripcion,
+                        Codigo = det.Codigo,
+                        Descripcion = det.Descripcion,
                         Cantidad = det.Cantidad,
-                        CodigoUm=det.CodigoUm,
+                        CodigoUm = det.CodigoUm,
                         CodigoUmNavigation = new UnidadMedidum
                         {
-                            CodigoUm=det.CodigoUmNavigation.CodigoUm,
+                            CodigoUm = det.CodigoUmNavigation.CodigoUm,
                             Descripcion = det.CodigoUmNavigation.Descripcion
                         }
                     }).ToList(),
@@ -433,61 +441,61 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     DatosEnvios = g.DatosEnvios.Select(env => new DatosEnvio
                     {
                         MotivoEnvio = env.MotivoEnvio,
-                        FechaEnvio=env.FechaEnvio,
-                        PesoBruto=env.PesoBruto,
-                        CodigoUm=env.CodigoUm,
-                        RucEmpresaCurrier=env.RucEmpresaCurrier,
-                        RazonSocialCurrier=env.RazonSocialCurrier,
-                        RegistroMtcCurrier=env.RegistroMtcCurrier,
+                        FechaEnvio = env.FechaEnvio,
+                        PesoBruto = env.PesoBruto,
+                        CodigoUm = env.CodigoUm,
+                        RucEmpresaCurrier = env.RucEmpresaCurrier,
+                        RazonSocialCurrier = env.RazonSocialCurrier,
+                        RegistroMtcCurrier = env.RegistroMtcCurrier,
                         ConductorGuids = env.ConductorGuids.Select(cg => new ConductorGuid
                         {
-                            ConductorGuidId=cg.ConductorGuidId,
-                            DatosEnvioId=cg.DatosEnvioId,
-                            ConductorId=cg.ConductorId,
+                            ConductorGuidId = cg.ConductorGuidId,
+                            DatosEnvioId = cg.DatosEnvioId,
+                            ConductorId = cg.ConductorId,
                             Conductor = new Conductor
                             {
                                 ConductorId = cg.Conductor.ConductorId,
-                                TipoDocumento=cg.Conductor.TipoDocumento,
-                                NumeroDocumento=cg.Conductor.NumeroDocumento,
-                                Nombres=cg.Conductor.Nombres,
-                                Apellidos=cg.Conductor.Apellidos,
-                                Cargo=cg.Conductor.Cargo,
-                                Licencia=cg.Conductor.Licencia
+                                TipoDocumento = cg.Conductor.TipoDocumento,
+                                NumeroDocumento = cg.Conductor.NumeroDocumento,
+                                Nombres = cg.Conductor.Nombres,
+                                Apellidos = cg.Conductor.Apellidos,
+                                Cargo = cg.Conductor.Cargo,
+                                Licencia = cg.Conductor.Licencia
                             }
                         }).ToList(),
-                        TransporteGuids=env.TransporteGuids.Select(tg=>new TransporteGuid
+                        TransporteGuids = env.TransporteGuids.Select(tg => new TransporteGuid
                         {
-                            TransporteGuidId=tg.TransporteGuidId,
-                            DatosEnvioId=tg.DatosEnvioId,
-                            TransporteId=tg.TransporteId,
+                            TransporteGuidId = tg.TransporteGuidId,
+                            DatosEnvioId = tg.DatosEnvioId,
+                            TransporteId = tg.TransporteId,
                             Transporte = new Transporte
                             {
-                                TransporteId=tg.Transporte.TransporteId,
-                                Placa=tg.Transporte.Placa,
-                                Tarjeta=tg.Transporte.Tarjeta,
-                                NumeroRegistroMtc=tg.Transporte.NumeroRegistroMtc
+                                TransporteId = tg.Transporte.TransporteId,
+                                Placa = tg.Transporte.Placa,
+                                Tarjeta = tg.Transporte.Tarjeta,
+                                NumeroRegistroMtc = tg.Transporte.NumeroRegistroMtc
                             }
                         }).ToList(),
                     }).ToList(),
-                    Origens=g.Origens.Select(o=>new Origen
+                    Origens = g.Origens.Select(o => new Origen
                     {
-                        UbigeoId=o.UbigeoId,
-                        Direccion=o.Direccion,
-                        Ubigeo=o.Ubigeo,
-                        Pais=o.Pais
+                        UbigeoId = o.UbigeoId,
+                        Direccion = o.Direccion,
+                        Ubigeo = o.Ubigeo,
+                        Pais = o.Pais
                     }).ToList(),
-                    Destinos=g.Destinos.Select(d=>new Destino
+                    Destinos = g.Destinos.Select(d => new Destino
                     {
-                        UbigeoId=d.UbigeoId,
-                        Direccion=d.Direccion,
-                        Ubigeo=d.Ubigeo,
-                        Pais=d.Pais
+                        UbigeoId = d.UbigeoId,
+                        Direccion = d.Direccion,
+                        Ubigeo = d.Ubigeo,
+                        Pais = d.Pais
                     }).ToList(),
                     DocRelacionados = g.DocRelacionados.ToList(),
-                    FechaCreacion=g.FechaCreacion,
-                    EmpleadoNombreCreacion=g.EmpleadoNombreCreacion,
-                    Estado=g.Estado,
-                    IdEstado=g.IdEstado
+                    FechaCreacion = g.FechaCreacion,
+                    EmpleadoNombreCreacion = g.EmpleadoNombreCreacion,
+                    Estado = g.Estado,
+                    IdEstado = g.IdEstado
                 })
                 .FirstOrDefaultAsync();
         }
@@ -496,8 +504,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return await _context.GuiaRemisions
                 .Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
-                .Include(rt=>rt.RemiteTransportista)
-                    .ThenInclude(rtu=>rtu.Ubigeo)
+                .Include(rt => rt.RemiteTransportista)
+                    .ThenInclude(rtu => rtu.Ubigeo)
                 .Include(d => d.Destinatario)
                     .ThenInclude(des => des.Ubigeo)
                 .Include(p => p.Proveedor)
@@ -516,7 +524,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .ThenInclude(gd => gd.CodigoUmNavigation)
                 .Include(doc => doc.DocRelacionados)
                 .Include(e => e.EmailDestinatarioGuids)
-                .Include(erm=>erm.EmailRemiteTransportistaGuids)
+                .Include(erm => erm.EmailRemiteTransportistaGuids)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
         }
         public async Task<int> CreateGuiaRemisionTransactionalAsync(
@@ -589,7 +597,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         proveedor = existingProveedor;
                     }
                 }
-                
+
 
                 // Guía
                 guiaRemision.RemitenteId = remitente.RemitenteId;
