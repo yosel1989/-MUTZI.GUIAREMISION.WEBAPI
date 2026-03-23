@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
@@ -28,9 +30,22 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
             var transportes=await _repository.GetListBySuggestion(numeroDoc);
             return _mapper.Map<List<TransporteListDTO>>(transportes);
         }
-        public async Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
         {
-            var (transporte, totalRecords)= await _repository.GetListAsync(pageNumber, pageSize);
+            var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
+            var searchValue = q[$"columns[{0}][search][value]"];
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                request.Columns.Add(new RequestFiltroDTO
+                {
+                    Data = q[$"columns[{0}][data]"],
+                    Search = new SearchDTO
+                    {
+                        Value = searchValue
+                    }
+                });
+            }
+            var (transporte, totalRecords)= await _repository.GetListAsync(pageNumber, pageSize, request);
             var transporteDto = _mapper.Map<List<UnidadTransporteDTO>>(transporte);
             return new PagedResult<UnidadTransporteDTO>
             {

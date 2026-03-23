@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
@@ -27,9 +29,22 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor
             var proveedores = await _repository.GetListBySuggestion(numeroDoc);
             return _mapper.Map<List<ProveedorListDTO>>(proveedores);
         }
-        public async Task<PagedResult<ProveedorDTO>> GetListAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<ProveedorDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
         {
-            var (proveedor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
+            var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
+            var searchValue = q[$"columns[{0}][search][value]"];
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                request.Columns.Add(new RequestFiltroDTO
+                {
+                    Data = q[$"columns[{0}][data]"],
+                    Search = new SearchDTO
+                    {
+                        Value = searchValue
+                    }
+                });
+            }
+            var (proveedor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize, request);
             var proveedorDTO = _mapper.Map<List<ProveedorDTO>>(proveedor);
             return new PagedResult<ProveedorDTO>
             {

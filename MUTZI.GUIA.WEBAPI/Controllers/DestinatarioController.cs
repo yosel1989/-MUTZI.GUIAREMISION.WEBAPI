@@ -31,7 +31,8 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var destinatarios = await _destinatarioService.GetListAsync(pageNumber, pageSize);
+                var q = Request.Query;
+                var destinatarios = await _destinatarioService.GetListAsync(pageNumber, pageSize, q);
                 return Ok(destinatarios);
             }
             catch (Exception ex)

@@ -30,7 +30,8 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var remitentes = await _remitenteService.GetListAsync(pageNumber, pageSize);
+                var q = Request.Query;
+                var remitentes = await _remitenteService.GetListAsync(pageNumber, pageSize, q);
                 return Ok(remitentes);
             }
             catch (Exception ex)
