@@ -125,13 +125,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     }
                 }
             }
+            var totalRecords = await query.CountAsync();
             if (!export)
             {
                 query = query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize);
             }
-            var totalRecords = await query.CountAsync();
             var data = await query
                 .OrderByDescending(x => x.FechaCreacion)
                 //.Skip((pageNumber - 1) * pageSize)

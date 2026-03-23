@@ -98,7 +98,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
         {
             try
             {
-                // 1. Replicar la lógica de filtrado de GetListAsync
                 var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
                 int i = 0;
                 while (q.ContainsKey($"columns[{i}][data]"))
@@ -122,17 +121,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     i++;
                 }
 
-                // 2. Obtener los datos (usando los mismos parámetros que el listado)
-                // Nota: Si quieres exportar TODO, podrías pasar un pageSize muy grande o un flag adicional.
                 var (guias, _) = await _repository.GetListAsync(pageNumber, pageSize, request, true);
                 var guiasDTO = _mapper.Map<List<GuiaListDTO>>(guias);
 
-                // 3. Generar el Excel con ClosedXML
                 using (var workbook = new XLWorkbook())
                 {
                     var worksheet = workbook.Worksheets.Add("Reporte de Guías");
 
-                    // Definir Encabezados basados en la imagen
                     string[] headers = {
                         "#", "Código", "Empresa", "RUC Empresa", "Remitente / Local",
                         "Tipo Guía", "N° Guía", "T. Traslado", "T. Transporte",
@@ -164,7 +159,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                         worksheet.Cell(row, 14).Value = item.DistritoOrigen;
                         worksheet.Cell(row, 15).Value = item.DistritoDestino;
 
-                        // Celda de Estado con formato condicional (verde similar a la imagen)
                         var cellEstado = worksheet.Cell(row, 16);
                         cellEstado.Value = item.Estado;
                         cellEstado.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
@@ -172,6 +166,10 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                         {
                             cellEstado.Style.Fill.BackgroundColor = XLColor.FromHtml("#C6EFCE");
                             cellEstado.Style.Font.FontColor = XLColor.FromHtml("#006100");
+                        }
+                        else if (item.Estado?.ToUpper()=="CREADO")
+                        {
+                            cellEstado.Style.Fill.BackgroundColor = XLColor.FromHtml("#e5e7eb");
                         }
 
                         //worksheet.Cell(row, 17).Value = item.FechaCreacion?.ToString("dd/MM/yyyy hh:mm:ss tt");
@@ -181,7 +179,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                         row++;
                     }
 
-                    // 4. Estilos Generales (Scannability)
                     var headerRange = worksheet.Range(1, 1, 1, headers.Length);
                     headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#DCB2FC"); // Color lila del ejemplo
                     headerRange.Style.Font.FontColor = XLColor.FromHtml("#560591");

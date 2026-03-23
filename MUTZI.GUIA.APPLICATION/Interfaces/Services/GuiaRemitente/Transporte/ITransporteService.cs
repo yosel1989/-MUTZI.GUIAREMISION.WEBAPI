@@ -1,4 +1,5 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+﻿using Microsoft.AspNetCore.Http;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
 
@@ -8,7 +9,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte
     {
         Task<List<UnidadTransporteDTO>> GetAllAsycn();
         Task<List<TransporteListDTO>> GetListBySuggestion(string numeroDoc);
-        Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize);
+        Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q);
         Task<UnidadTransporteDTO?> GetByIdAsync(int id);
         Task<int> CreateAsync(UnidadTransporteCreateDTO createDTO);
         Task<UnidadTransporteDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO);

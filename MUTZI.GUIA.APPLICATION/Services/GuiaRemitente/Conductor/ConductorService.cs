@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.DOMAIN.Entities;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
 {
@@ -27,9 +30,22 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
             var conductors = await _repository.GetListBySuggestion(numeroDoc);
             return _mapper.Map<List<ConductorListDTO>>(conductors);
         }
-        public async Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
         {
-            var (conductor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
+            var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
+            var searchValue = q[$"columns[{0}][search][value]"];
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                request.Columns.Add(new RequestFiltroDTO
+                {
+                    Data = q[$"columns[{0}][data]"],
+                    Search = new SearchDTO
+                    {
+                        Value = searchValue
+                    }
+                });
+            }
+            var (conductor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize, request);
             var conductorDTO = _mapper.Map<List<ConductorDTO>>(conductor);
             return new PagedResult<ConductorDTO>
             {
