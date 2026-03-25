@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.Helpers;
+using MUTZI.GUIA.APPLICATION.Hubs;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Destinatario;
@@ -184,11 +185,12 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseCors(corsPolicy);
+app.UseRouting();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-    endpoints.MapHub<GuiasHub>("/guias-signal"); // Ruta para el Front
+    endpoints.MapHub<GuiasHub>("/guias-signal");
 });
 
 app.UseHttpsRedirection();

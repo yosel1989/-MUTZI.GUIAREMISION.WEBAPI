@@ -254,16 +254,20 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 //EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
                 if (estado == "ENVIADO" && doc.TipoTraslado == "TRASLADO")
                 {
-                    await _hubContext.Clients.Group(doc.Destinatario.NumeroDocumento)
-                    .SendAsync("NuevaGuiaRecibida", new
+                    try
                     {
-                        serie = guiaCreada.SerieCorrelativo,
-                        remitente = ruc,
-                        mensaje = "Se ha emitido una nueva guía de traslado para usted."
-                    });
+                        await _hubContext.Clients.Group(doc.Destinatario.NumeroDocumento)
+                        .SendAsync("NuevaGuiaRecibida", new
+                        {
+                            serie = guiaCreada.SerieCorrelativo,
+                            remitente = ruc,
+                            mensaje = "Se ha emitido una nueva guía de traslado para "+doc.Destinatario.RazonSocial
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                    }
                 }
-
-
                 return new SendGuiaResponseDTO
                 {
                     Success = true,
