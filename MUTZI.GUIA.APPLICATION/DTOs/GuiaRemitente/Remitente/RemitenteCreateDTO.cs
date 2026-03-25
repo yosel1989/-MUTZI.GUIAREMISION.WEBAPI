@@ -39,7 +39,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
 
         [JsonPropertyName("email")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del remitente", Nullable = true)]
-        //[MaxLength(50)]
+        [MinLength(5)]
+        [MaxLength(50)]
         //[EmailAddress(ErrorMessage = "El formato del correo es inválido")]
         public string? Email { get; set; }
         
@@ -50,11 +51,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
         public string Pais { get; set; }
 
         [JsonPropertyName("serie")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = false)]
         [StringLength(3, ErrorMessage = "La serie requiere 3 caracteres")]
-        public string? Serie { get; set; }
+        public string Serie { get; set; }
 
-        [JsonPropertyName("codigoSunat")]
+        [JsonPropertyName("codigo_sunat")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]
         [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
         public string? CodigoSunat { get; set; }

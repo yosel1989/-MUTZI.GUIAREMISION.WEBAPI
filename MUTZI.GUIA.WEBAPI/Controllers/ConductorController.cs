@@ -1,10 +1,9 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
@@ -18,28 +17,47 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             _service = service;
         }
         [HttpGet]
-        [Route("listar")]
+        [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
         Summary = "Listar conductores",
-        Description = "Lista los conductores",
+        Description = "Lista los conductores. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
         OperationId = "listar_conductor")]
-        [ProducesResponseType(typeof(ConductorDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<ConductorDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<ConductorDTO>>> GetAll()
+        public async Task<ActionResult<PagedResult<ConductorDTO>>> GetAll(int pageNumber, int pageSize)
         {
             try
             {
-                var result = await _service.GetAllAsync();
-                if (result == null)
-                {
-                    return BadRequest(new BadRequestResponseDTO
-                    {
-                        Error = "No se encontraron registros",
-                        Detalle = "No se pudo obtener la lista de conductores."
-                    });
-                }
+                var q = Request.Query;
+                var result = await _service.GetListAsync(pageNumber, pageSize, q);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar conductores.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("listar-sugerido/{numeroDoc}")]
+        [SwaggerOperation(
+        Summary = "Listar conductores sugeridos",
+        Description = "Lista los conductores sugeridos por número de documento o razón social",
+        OperationId = "listar_conductor_sugerido")]
+        [ProducesResponseType(typeof(ConductorListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<ConductorListDTO>>> GetBySuggestion(string numeroDoc)
+        {
+            try
+            {
+                var conductores = await _service.GetListBySuggestion(numeroDoc);
+                return Ok(conductores);
             }
             catch (Exception ex)
             {
@@ -141,14 +159,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Actualizar un conductor",
         Description = "Actualiza un conductor en la bbdd",
         OperationId = "actualizar_conductor")]
-        [ProducesResponseType(typeof(ConductorUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ConductorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ConductorUpdateDTO>> Update(int id, ConductorUpdateDTO conductorDto)
+        public async Task<ActionResult<ConductorDTO>> Update(int id, [FromBody] ConductorUpdateDTO conductorDto)
         {
             try
             {
@@ -166,6 +185,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpDelete]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Eliminar un conductor",
         Description = "Elimina un conductor de la bbdd",
@@ -186,6 +206,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al eliminar conductor.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpPut]
+        [Route("{id}/actualizar-estado")]
+        [SwaggerOperation(
+        Summary = "Actualizar estado de un conductor",
+        Description = "Actualizar el estado de un conductor en la bbdd. 1='activo', 0='inactivo'.",
+        OperationId = "actualizar_estado_conductor")]
+        [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] InfoRequestDTO infoRequestDto)
+        {
+            try
+            {
+                var result = await _service.CambiarEstadoAsync(id, infoRequestDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar el estado de un conductor.",
                     Detalle = errorMsg
                 });
             }

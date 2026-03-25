@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
     public class GuiaListDTO
     {
-        [JsonPropertyName("guia_id")]
+        [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, es el número ID de la guía.", Nullable = false)]
         public int GuiaID { get; set; }
 
@@ -18,9 +18,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, es el nombre de la empresa a la que pertenece la guía de remisión", Nullable = false)]
         public string Empresa { get; set; }
 
-        [JsonPropertyName("ruc_empresa")]
+        [JsonPropertyName("ruc")]
         [SwaggerSchema("Devuelve un texto, es el número de RUC de la empresa a la que pertenece la guía de remisión", Nullable = false)]
-        public string RucEmpresa { get; set; }
+        public string Ruc { get; set; }
 
         [JsonPropertyName("razon_remitente")]
         [SwaggerSchema("Devuelve un texto, es la razón social del remitente de la guía de remisión", Nullable = false)]
@@ -62,13 +62,17 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, es el número de documento del destinatario de la guía de remisión", Nullable = false)]
         public string NroDocumentoDestinatario { get; set; }
 
+        [JsonPropertyName("distrito_origen")]
+        [SwaggerSchema("Devuelve en texto el distrito de origen o del punto de partida", Nullable = false)]
+        public string DistritoOrigen { get; set; }
+
+        [JsonPropertyName("distrito_destino")]
+        [SwaggerSchema("Devuelve en texto el distrito de destino o del punto de llegada", Nullable = false)]
+        public string DistritoDestino { get; set; }
+
         [JsonPropertyName("fecha_creacion")]
         [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00", Nullable = false)]
         public DateTime FechaCreacion { get; set; }
-
-        [JsonPropertyName("empleado_id_creacion")]
-        [SwaggerSchema("Devuelve un entero, ID del empleado que ha realizado la transacción", Nullable = false)]
-        public int EmpleadoIDCreacion { get; set; }
 
         [JsonPropertyName("empleado_nombre_creacion")]
         [SwaggerSchema("Devuelve un texto, el nombre del empleado que ha registrado la transacción en el sistema", Nullable = false)]
@@ -77,10 +81,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [JsonPropertyName("fecha_ultima_edicion")]
         [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00, es la fecha de la última edición realizada en la guía", Nullable = true)]
         public DateTime? FechaEdicion { get; set; }
-
-        [JsonPropertyName("empleado_id_edicion")]
-        [SwaggerSchema("Devuelve en entero el ID del empleado que ha realizado la última edición en la guía", Nullable = true)]
-        public int? EmpleadoIDEdicion { get; set; }
 
         [JsonPropertyName("empleado_nombre_edicion")]
         [SwaggerSchema("Devuelve en texto el nombre del empleado que ha realizado la última edición en la guía", Nullable = true)]

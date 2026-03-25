@@ -6,7 +6,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
     [SwaggerSchema("Devuelve un objeto de unidad de transporte")]
     public class UnidadTransporteDTO
     {
-        [JsonPropertyName("transporte_id")]
+        [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, el ID del transporte en la bbdd", Nullable = false)]
         public int TransporteID { get; set; }
 
@@ -34,7 +34,21 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
         [SwaggerSchema("Devuelve un texto, la tarjeta de circulación del transporte", Nullable = false)]
         public string Tarjeta { get; set; }
 
+        [JsonPropertyName("fecha_creacion")]
+        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00", Nullable = false)]
         public DateTime FechaCreacion { get; set; }
+
+        [JsonPropertyName("empleado_nombre_creacion")]
+        [SwaggerSchema("Devuelve un texto, el nombre del empleado que ha registrado la transacción en el sistema", Nullable = false)]
+        public string EmpleadoNombreCreacion { get; set; }
+
+        [JsonPropertyName("fecha_ultima_edicion")]
+        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00, es la fecha de la última edición realizada en la guía", Nullable = true)]
+        public DateTime? FechaEdicion { get; set; }
+
+        [JsonPropertyName("empleado_nombre_edicion")]
+        [SwaggerSchema("Devuelve en texto el nombre del empleado que ha realizado la última edición en la guía", Nullable = true)]
+        public string? EmpleadoNombreEdicion { get; set; }
 
         [JsonPropertyName("estado")]
         [SwaggerSchema("Devuelve un texto, el estado del transporte solo puede ser: ACTIVO o INACTIVO", Nullable = false)]

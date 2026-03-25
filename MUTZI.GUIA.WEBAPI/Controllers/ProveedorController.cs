@@ -1,10 +1,9 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
@@ -18,29 +17,47 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             _service = service;
         }
         [HttpGet]
-        [Route("listar")]
+        [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
         Summary = "Listar proveedores",
-        Description = "Lista los proveedores",
+        Description = "Lista los proveedores. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
         OperationId = "listar_proveedor")]
-        [ProducesResponseType(typeof(ProveedorDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<ProveedorDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<ProveedorDTO>>> GetAll()
+        public async Task<ActionResult<PagedResult<ProveedorDTO>>> GetAll(int pageNumber, int pageSize)
         {
             try
             {
-                var result = await _service.GetAllAsync();
-                if (result == null)
-                {
-                    return BadRequest(new BadRequestResponseDTO
-                    {
-                        Error = "No se encontraron registros",
-                        Detalle = "No se pudo obtener la lista de proveedores."
-                    });
-                }
-
+                var q = Request.Query;
+                var result = await _service.GetListAsync(pageNumber, pageSize, q);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar proveedores.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("listar-sugerido/{numeroDoc}")]
+        [SwaggerOperation(
+        Summary = "Listar proveedores sugeridos",
+        Description = "Lista los proveedores sugeridos por número de documento o razón social",
+        OperationId = "listar_proveedor_sugerido")]
+        [ProducesResponseType(typeof(ProveedorListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<ProveedorListDTO>>> GetBySuggestion(string numeroDoc)
+        {
+            try
+            {
+                var proveedores = await _service.GetListBySuggestion(numeroDoc);
+                return Ok(proveedores);
             }
             catch (Exception ex)
             {
@@ -147,14 +164,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Actualizar un proveedor",
         Description = "Actualizar proveedor en la bbdd",
         OperationId = "actualizar_proveedor")]
-        [ProducesResponseType(typeof(ProveedorUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProveedorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ProveedorUpdateDTO>> Update(int id, ProveedorUpdateDTO proveedorDto)
+        public async Task<ActionResult<ProveedorDTO>> Update(int id, [FromBody] ProveedorUpdateDTO proveedorDto)
         {
             try
             {
@@ -172,6 +190,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpDelete]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Eliminar un proveedor",
         Description = "Elimina un proveedor de la bbdd",
@@ -192,6 +211,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al eliminar proveedor.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpPut]
+        [Route("{id}/actualizar-estado")]
+        [SwaggerOperation(
+        Summary = "Actualizar estado de un proveedor",
+        Description = "Actualizar el estado de un proveedor en la bbdd. 1='activo', 0='inactivo'.",
+        OperationId = "actualizar_estado_proveedor")]
+        [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] InfoRequestDTO infoRequestDto)
+        {
+            try
+            {
+                var result = await _service.CambiarEstadoAsync(id, infoRequestDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar el estado de un proveedor.",
                     Detalle = errorMsg
                 });
             }

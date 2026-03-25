@@ -1,10 +1,15 @@
 ﻿using AutoMapper;
+using ClosedXML.Excel;
+using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
+using MUTZI.GUIA.DOMAIN.Entities;
 using System;
+using System.Drawing;
 using System.Text.Json;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
@@ -30,9 +35,49 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
         //    var guiaRemisions = await _repository.GetAllAsync();
         //    return _mapper.Map<List<GuiaListDTO>>(guiaRemisions);
         //}
-        public async Task<PagedResult<GuiaListDTO>> GetListAsync(int pageNumber, int pageSize)
+        //public async Task<PagedResult<GuiaListDTO>> GetListAsync2(int pageNumber, int pageSize)
+        //{
+        //    var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize);
+
+        //    var guiasDTO = _mapper.Map<List<GuiaListDTO>>(guias);
+
+        //    return new PagedResult<GuiaListDTO>
+        //    {
+        //        PageNumber = pageNumber,
+        //        PageSize = pageSize,
+        //        TotalRecords = totalRecords,
+        //        TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+        //        Data = guiasDTO
+        //    };
+        //    throw new NotImplementedException();
+        //}
+        public async Task<PagedResult<GuiaListDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
         {
-            var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize);
+            var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
+
+            int i = 0;
+            while (q.ContainsKey($"columns[{i}][data]"))
+            {
+                var dataField = q[$"columns[{i}][data]"];
+                var searchValue = q[$"columns[{i}][search][value]"];
+                var regexValue = q[$"columns[{i}][search][regex]"];
+
+                if (!string.IsNullOrEmpty(searchValue))
+                {
+                    request.Columns.Add(new RequestFiltroDTO
+                    {
+                        Data = dataField,
+                        Search = new SearchDTO
+                        {
+                            Value = searchValue,
+                            Regex = regexValue
+                        }
+                    });
+                }
+                i++;
+            }
+
+            var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize, request);
 
             var guiasDTO = _mapper.Map<List<GuiaListDTO>>(guias);
 
@@ -45,10 +90,135 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 Data = guiasDTO
             };
         }
-        public async Task<GuiaRemitenteDTO> GetByIdAsync(int id)
+        public async Task<byte[]> ExportCollectionGuiaAsync(int pageNumber, int pageSize, IQueryCollection q)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<byte[]> ExportGuiasAsync(int pageNumber, int pageSize, IQueryCollection q)
+        {
+            try
+            {
+                var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
+                int i = 0;
+                while (q.ContainsKey($"columns[{i}][data]"))
+                {
+                    var dataField = q[$"columns[{i}][data]"];
+                    var searchValue = q[$"columns[{i}][search][value]"];
+                    var regexValue = q[$"columns[{i}][search][regex]"];
+
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        request.Columns.Add(new RequestFiltroDTO
+                        {
+                            Data = dataField,
+                            Search = new SearchDTO
+                            {
+                                Value = searchValue,
+                                Regex = regexValue
+                            }
+                        });
+                    }
+                    i++;
+                }
+
+                var (guias, _) = await _repository.GetListAsync(pageNumber, pageSize, request, true);
+                var guiasDTO = _mapper.Map<List<GuiaListDTO>>(guias);
+
+                using (var workbook = new XLWorkbook())
+                {
+                    var worksheet = workbook.Worksheets.Add("Reporte de Guías");
+
+                    string[] headers = {
+                        "#", "Código", "Empresa", "RUC Empresa", "Remitente / Local",
+                        "Tipo Guía", "N° Guía", "T. Traslado", "T. Transporte",
+                        "F. Emisión", "H. Emisión", "Destinatario", "N° Doc. Destinatario",
+                        "Origen", "Destino", "Estado", "F. Registro", "U. Registro"
+                    };
+
+                    for (int col = 0; col < headers.Length; col++)
+                    {
+                        worksheet.Cell(1, col + 1).Value = headers[col];
+                    }
+
+                    int row = 2;
+                    foreach (var item in guiasDTO)
+                    {
+                        worksheet.Cell(row, 1).Value = row - 1;
+                        worksheet.Cell(row, 2).Value = $"COD-{item.GuiaID.ToString("D4")}";
+                        worksheet.Cell(row, 3).Value = item.Empresa;
+                        worksheet.Cell(row, 4).Value = item.Ruc;
+                        worksheet.Cell(row, 5).Value = item.RazonRemitente;
+                        worksheet.Cell(row, 6).Value = item.TipoGuia;
+                        worksheet.Cell(row, 7).Value = item.NumeroGuia;
+                        worksheet.Cell(row, 8).Value = item.TipoTraslado;
+                        worksheet.Cell(row, 9).Value = item.TipoTransporte;
+                        worksheet.Cell(row, 10).Value = item.FechaEmision;
+                        worksheet.Cell(row, 11).Value = item.HoraEmision;
+                        worksheet.Cell(row, 12).Value = item.RazonDestinatario;
+                        worksheet.Cell(row, 13).Value = item.NroDocumentoDestinatario;
+                        worksheet.Cell(row, 14).Value = item.DistritoOrigen;
+                        worksheet.Cell(row, 15).Value = item.DistritoDestino;
+
+                        var cellEstado = worksheet.Cell(row, 16);
+                        cellEstado.Value = item.Estado;
+                        cellEstado.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                        if (item.Estado?.ToUpper() == "ENVIADO")
+                        {
+                            cellEstado.Style.Fill.BackgroundColor = XLColor.FromHtml("#C6EFCE");
+                            cellEstado.Style.Font.FontColor = XLColor.FromHtml("#006100");
+                        }
+                        else if (item.Estado?.ToUpper()=="CREADO")
+                        {
+                            cellEstado.Style.Fill.BackgroundColor = XLColor.FromHtml("#e5e7eb");
+                        }
+
+                        //worksheet.Cell(row, 17).Value = item.FechaCreacion?.ToString("dd/MM/yyyy hh:mm:ss tt");
+                        worksheet.Cell(row, 17).Value = item.FechaCreacion;
+                        worksheet.Cell(row, 18).Value = item.EmpleadoNombreCreacion;
+
+                        row++;
+                    }
+
+                    var headerRange = worksheet.Range(1, 1, 1, headers.Length);
+                    headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#DCB2FC"); // Color lila del ejemplo
+                    headerRange.Style.Font.FontColor = XLColor.FromHtml("#560591");
+                    headerRange.Style.Font.Bold = true;
+                    headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+
+                    var usedRange = worksheet.RangeUsed();
+                    usedRange.Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
+                    usedRange.Style.Border.InsideBorder = XLBorderStyleValues.Thin;
+                    usedRange.Style.Font.FontSize = 9;
+
+                    worksheet.Columns().AdjustToContents();
+
+                    using (var stream = new MemoryStream())
+                    {
+                        workbook.SaveAs(stream);
+                        return stream.ToArray();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        //public async Task<GuiaRemitenteDTO> GetByIdAsync(int id)
+        //{
+        //    var guiaRemision = await _repository.GetByIdAsync(id);
+        //    return _mapper.Map<GuiaRemitenteDTO>(guiaRemision);
+        //}
+        public async Task<object> GetByIdAsync(int id)
         {
             var guiaRemision = await _repository.GetByIdAsync(id);
-            return _mapper.Map<GuiaRemitenteDTO>(guiaRemision);
+
+            return guiaRemision.TipoGuia switch
+            {
+                "REMITENTE" => _mapper.Map<GuiaRemitenteDTO>(guiaRemision),
+                "TRANSPORTISTA" => _mapper.Map<GuiaTransportistaDTO>(guiaRemision),
+                _ => throw new KeyNotFoundException("El tipo guia solo puede ser REMITENTE o TRANSPORTISTA.")
+            };
         }
         public async Task<GuiaPorTicketDTO> GetByTicketAsync(string ticket)
         {
@@ -84,7 +254,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             return _mapper.Map<GuiaRemitenteDTO>(guiaCreada);
         }
 
-        public async Task<GuiaRemitenteUpdateDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto)
+        public async Task<GuiaRemitenteDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto)
         {
             var existingGuiaRemision = await _repository.GetByIdAsync(id);
             if (existingGuiaRemision == null)
@@ -93,7 +263,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             }
             _mapper.Map(guiaRemisionDto, existingGuiaRemision);
             await _repository.UpdateAsync(existingGuiaRemision);
-            return guiaRemisionDto;
+            return _mapper.Map<GuiaRemitenteDTO>(existingGuiaRemision);
         }
         public async Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado)
         {

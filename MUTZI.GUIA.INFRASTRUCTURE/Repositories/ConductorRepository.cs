@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.DOMAIN.Entities;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -15,6 +16,42 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<List<DOMAIN.Entities.Conductor>> GetAllAsync()
         {
             return await _context.Conductors.ToListAsync();
+        }
+        public async Task<List<Conductor>> GetListBySuggestion(string numeroDoc)
+        {
+            return await _context.Conductors
+                .Where(c=>c.IdEstado==1 && 
+                (c.NumeroDocumento.Contains(numeroDoc)||c.Nombres.Contains(numeroDoc)||c.Apellidos.Contains(numeroDoc)))
+                .ToListAsync();
+        }
+        public async Task<(List<Conductor>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
+        {
+            var query=_context.Conductors.AsQueryable();
+            if (request.Columns!=null&&request.Columns.Any())
+            {
+                var val = request.Columns[0].Search.Value?.ToLower();
+                var key = request.Columns[0].Data?.ToLower();
+                if (!string.IsNullOrEmpty(val))
+                {
+                    query = query.Where(x => x.TipoDocumento.ToLower().Contains(val)||
+                    x.NumeroDocumento.ToLower().Contains(val)||
+                    x.Nombres.ToLower().Contains(val)|| x.Apellidos.ToLower().Contains(val)||
+                    x.Cargo.ToLower().Contains(val)|| x.Licencia.ToLower().Contains(val)||
+                    x.EmpleadoNombreCreacion.ToLower().Contains(val)||x.Estado.ToLower().Contains(val)||
+                    x.EmpleadoNombreEdicion.ToLower().Contains(val)
+                    );
+                }
+            }
+            //var query = _context.Conductors.OrderByDescending(x=>x.FechaCreacion);
+            var totalRecords=await query.CountAsync();
+            var data = await query
+                .OrderByDescending(x=>x.FechaCreacion)
+                .Skip((pageNumber - 1) * pageSize)
+                .AsNoTracking()
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
         }
         public async Task<DOMAIN.Entities.Conductor?> GetByIdAsync(int id)
         {
@@ -32,7 +69,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task UpdateAsync(DOMAIN.Entities.Conductor conductor)
         {
             _context.Conductors.Update(conductor);
-            conductor.FechaEdicion = DateTime.Now;
+            conductor.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id)

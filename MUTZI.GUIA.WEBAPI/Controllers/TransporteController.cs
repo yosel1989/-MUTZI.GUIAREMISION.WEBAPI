@@ -1,9 +1,9 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -18,28 +18,47 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             _service = service;
         }
         [HttpGet]
-        [Route("listar")]
+        [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
         Summary = "Listar Unidad de Transporte",
-        Description = "Lista las unidades de transporte",
+        Description = "Lista las unidades de transporte. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
         OperationId = "listar_transporte")]
-        [ProducesResponseType(typeof(UnidadTransporteDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<UnidadTransporteDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<UnidadTransporteDTO>>> GetAll()
+        public async Task<ActionResult<PagedResult<UnidadTransporteDTO>>> GetAll(int pageNumber, int pageSize)
         {
             try
             {
-                var result = await _service.GetAllAsycn();
-                if (result == null)
-                {
-                    return BadRequest(new BadRequestResponseDTO
-                    {
-                        Error = "No se encontraron registros",
-                        Detalle = "No se pudo obtener la lista de unidades de transporte."
-                    });
-                }
+                var q = Request.Query;
+                var result = await _service.GetListAsync(pageNumber, pageSize, q);
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar unidades de transporte.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
+        [Route("listar-sugerido/{numeroDoc}")]
+        [SwaggerOperation(
+        Summary = "Listar unidades de transportes sugeridos",
+        Description = "Lista las unidades de transporte sugeridos por número de documento o razón social",
+        OperationId = "listar_transporte_sugerido")]
+        [ProducesResponseType(typeof(TransporteListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<TransporteListDTO>>> GetBySuggestion(string numeroDoc)
+        {
+            try
+            {
+                var transporte = await _service.GetListBySuggestion(numeroDoc);
+                return Ok(transporte);
             }
             catch (Exception ex)
             {
@@ -110,14 +129,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPut]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Actualizar unidad de transporte",
         Description = "Actualiza la tabla transporte en la bbdd",
         OperationId = "actualizar_transporte")]
-        [ProducesResponseType(typeof(UnidadTransporteUpdateDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UnidadTransporteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UnidadTransporteUpdateDTO>> Update(int id, UnidadTransporteUpdateDTO transporteDto)
+        public async Task<ActionResult<UnidadTransporteDTO>> Update(int id, [FromBody] UnidadTransporteUpdateDTO transporteDto)
         {
             try
             {
@@ -135,6 +155,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpDelete]
+        [Route("{id}")]
         [SwaggerOperation(
         Summary = "Eliminar unidad de transporte",
         Description = "Elimina una unidad de transporte de la bbdd",
@@ -155,6 +176,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al eliminar transporte.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpPut]
+        [Route("{id}/actualizar-estado")]
+        [SwaggerOperation(
+        Summary = "Actualizar estado de una unidad de transporte",
+        Description = "Actualizar el estado de una unidad de transporte en la bbdd. 1='activo', 0='inactivo'.",
+        OperationId = "actualizar_estado_transporte")]
+        [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] InfoRequestDTO infoRequestDto)
+        {
+            try
+            {
+                var result = await _service.CambiarEstadoAsync(id, infoRequestDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar el estado de una unidad de transporte.",
                     Detalle = errorMsg
                 });
             }

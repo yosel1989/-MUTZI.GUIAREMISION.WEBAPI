@@ -71,12 +71,9 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var provincias = await _cache.GetOrCreateAsync("provincias", async entry =>
-                {
-                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
-                    return await _service.GetProvinciaAsync(idDepartamento);
-                });
-                if (provincias==null)
+                    var result= await _service.GetProvinciaAsync(idDepartamento);
+                
+                if (result==null)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {
@@ -84,7 +81,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                         Detalle = $"No se pudo obtener Ubigeo con el inicial del código: {idDepartamento}. Verifique si el inicial del código existe en la bbdd."
                     });
                 }
-                return Ok(provincias);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -110,12 +107,9 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var distritos = await _cache.GetOrCreateAsync("distritos", async entry =>
-                {
-                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
-                    return await _service.GetDistritoAsync(idProvincia);
-                });
-                if (distritos == null)
+                var result= await _service.GetDistritoAsync(idProvincia);
+
+                if (result == null)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {
@@ -124,7 +118,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                     });
                 }
 
-                return Ok(distritos);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -173,6 +167,5 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
-
     }
 }

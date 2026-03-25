@@ -15,9 +15,21 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
     public class GuiaRemitenteDTO
     {
-        [JsonPropertyName("guia_id")]
+        [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, es el número ID de la guía.", Nullable = false)]
         public int GuiaID { get; set; }
+
+        [JsonPropertyName("tipo_guia")]
+        [SwaggerSchema("Devuelve en texto el tipo de guía: REMITENTE ó TRANSPORTISTA", Nullable = false)]
+        public string TipoGuia { get; set; }
+
+        [JsonPropertyName("ruc")]
+        [SwaggerSchema("Devuelve en texto el ruc del facturador asociado", Nullable = false)]
+        public string Ruc { get; set; }
+
+        [JsonPropertyName("email_facturador")]
+        [SwaggerSchema("Devuelve en texto el correo electrónico del facturador asociado", Nullable = false)]
+        public string EmailFacturador { get; set; }
 
         [JsonPropertyName("tipo_transporte")]
         [SwaggerSchema("Devuelve un texto y solo pueden ser: PUBLICO ó PRIVADO", Nullable = false)]
@@ -53,10 +65,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public List<DestinoDTO> Destino { get; set; }
         public List<ProductosDTO> Productos { get; set; }
         public DateTime FechaCreacion { get; set; }
-
-        [JsonPropertyName("empleado_id_creacion")]
-        [SwaggerSchema("Devuelve un entero, ID del empleado que ha realizado la transacción", Nullable = false)]
-        public int EmpleadoIDCreacion { get; set; }
 
         [JsonPropertyName("empleado_nombre_creacion")]
         [SwaggerSchema("Devuelve un texto, el nombre del empleado que ha registrado la transacción en el sistema", Nullable = false)]
