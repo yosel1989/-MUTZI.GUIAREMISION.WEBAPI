@@ -1,7 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Hubs;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
@@ -23,7 +26,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
         private string Url_Base_Efact = "";
         private readonly IS3FileService _s3FileService;
         private readonly string _baseUrl = "";
-        public EnvioService(IConfiguration config, IGuiaRemitenteService guiaRemitenteBDService, IGuiaTransportistaService guiaTransportistaBDService, IGuiaRemitenteUBLService guiaRemitenteUBLService, IGuiaTransportistaUBLService guiaTransportistaUBLService, IVentaConfigService ventaConfigService, HttpClient httpClient, IS3FileService s3FileService)
+        private readonly IHubContext<GuiasHub> _hubContext;
+        public EnvioService(IConfiguration config, IGuiaRemitenteService guiaRemitenteBDService, IGuiaTransportistaService guiaTransportistaBDService, IGuiaRemitenteUBLService guiaRemitenteUBLService, IGuiaTransportistaUBLService guiaTransportistaUBLService, IVentaConfigService ventaConfigService, HttpClient httpClient, IS3FileService s3FileService,
+            IHubContext<GuiasHub> hubContext)
         {
             _config = config;
             _guiaRemitenteBDService = guiaRemitenteBDService;
@@ -35,6 +40,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             Url_Base_Efact = config["AppSettings:url_base_facturador"];
             _s3FileService = s3FileService;
             _baseUrl = _config["Aws:BaseUrl"] ?? "";
+            _hubContext = hubContext;
         }
 
         public async Task<string> EnviarGuiaElectronicaAsync2(string ruc, string nombreArchivoJson)
@@ -246,6 +252,17 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
 
                 await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaCreada.GuiaID, ticket, estado, idEstado);
                 //EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
+                if (estado == "ENVIADO" && doc.TipoTraslado == "TRASLADO")
+                {
+                    await _hubContext.Clients.Group(doc.Destinatario.NumeroDocumento)
+                    .SendAsync("NuevaGuiaRecibida", new
+                    {
+                        serie = guiaCreada.SerieCorrelativo,
+                        remitente = ruc,
+                        mensaje = "Se ha emitido una nueva guía de traslado para usted."
+                    });
+                }
+
 
                 return new SendGuiaResponseDTO
                 {

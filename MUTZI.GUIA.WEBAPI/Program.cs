@@ -84,6 +84,8 @@ builder.Services.AddDbContext<LogisticaContext>(options =>
 //Registrar AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
+builder.Services.AddSignalR();
+
 //Registrar repositorios
 builder.Services.AddScoped<IVentaConfigRepository, VentaConfigRepository>();
 builder.Services.AddScoped<IGuiaRemitenteRepository, GuiaRemitenteRepository>();
@@ -182,6 +184,12 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseCors(corsPolicy);
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<GuiasHub>("/guias-signal"); // Ruta para el Front
+});
 
 app.UseHttpsRedirection();
 
