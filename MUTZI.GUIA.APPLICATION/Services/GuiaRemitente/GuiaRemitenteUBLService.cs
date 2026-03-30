@@ -103,11 +103,15 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                             }},
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
                                 ID = new List<ID> { new ID { _ = guia.Destinatario.UbigeoId}},
-                                StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Direccion } },
-                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Departamento } },
+                                //StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Direccion } },
+                                StreetName = new List<StreetName>{ new StreetName { _ = null } },
+                                //CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Departamento } },
+                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = null } },
                                 CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Provincia } },
-                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Departamento } },
-                                District= new List<District>{ new District { _ = guia.Destinatario.Distrito } },
+                                //CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Departamento } },
+                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = null } },
+                                //District= new List<District>{ new District { _ = guia.Destinatario.Distrito } },
+                                District= new List<District>{ new District { _ = null } },
                                 Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.Pais } }}}
                             }},
                             PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity {

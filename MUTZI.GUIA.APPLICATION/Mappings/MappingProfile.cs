@@ -63,6 +63,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                     .ForMember(dest => dest.Destinatario, opt => opt.Ignore())
                     .ForMember(dest => dest.Proveedor, opt => opt.Ignore())
                     ;
+            
             CreateMap<GuiaRemitenteUpdateDTO, DOMAIN.Entities.GuiaRemision>();
             //Guia de remisión por ticket
             CreateMap<DOMAIN.Entities.GuiaRemision, GuiaPorTicketDTO>()
@@ -163,6 +164,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             CreateMap<DOMAIN.Entities.Remitente, RemitenteNameListDTO>();
             CreateMap<RemitenteCreateDTO, Remitente>();
+            CreateMap<RemitenteCreateGuiaDTO, Remitente>();
             CreateMap<RemitenteUpdateDTO, Remitente>();
 
             //Remite transportista

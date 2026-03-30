@@ -563,11 +563,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
                 else
                 {
+                    destinatario = existingDestinatario;
                     await UpdateDestinatarioAsync(destinatario);
-
-
-
-                    //destinatario = existingDestinatario;
                 }
 
                 // Proveedor
@@ -739,7 +736,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //retornar el ID de la guía creada
                 return guiaRemision.GuiaId;
             }
-            catch
+            catch(Exception ex)
             {
                 await transaction.RollbackAsync();
                 throw;
