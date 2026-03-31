@@ -59,6 +59,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
             var destinatario = await _repository.GetByIdAsync(id);
             return destinatario == null ? null : _mapper.Map<DestinatarioDTO>(destinatario);
         }
+        public async Task<DestinatarioDTO?> GetByNumeroDocumentoAsync(string numeroDocumento)
+        {
+            var destinatario = await _repository.GetByNumeroDocumentoAsync(numeroDocumento);
+            return destinatario == null ? null : _mapper.Map<DestinatarioDTO>(destinatario);
+        }
         public async Task<int> CreateAsync(DestinatarioCreateDTO createDTO)
         {
             try

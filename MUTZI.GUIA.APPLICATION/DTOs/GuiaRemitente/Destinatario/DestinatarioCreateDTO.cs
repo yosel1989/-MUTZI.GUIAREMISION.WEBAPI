@@ -30,19 +30,17 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         public string RazonSocial { get; set; }
 
         [JsonPropertyName("ubigeo_id")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del destinatario, ejm: 150131", Nullable = false)]
-        [Required(ErrorMessage = "EL ubigeo es obligatorio")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del destinatario, ejm: 150131", Nullable = true)]
         //EL ubigeo debe tener 6 caracteres
         [StringLength(6, ErrorMessage = "El ubigeo debe tener 6 caracteres")]
         //El ubigeo no puede ser 000000
         [RegularExpression(@"^(?!000000)\d{6}$", ErrorMessage = "El ubigeo debe tener 6 caracteres y no puede ser 000000")]
-        public string UbigeoId { get; set; }
+        public string? UbigeoId { get; set; }
 
         [JsonPropertyName("direccion")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la dirección fiscal del destinatario", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca la dirección fiscal del destinatario", Nullable = true)]
         [MaxLength(250)]
-        [Required]
-        public string Direccion { get; set; }
+        public string? Direccion { get; set; }
 
         //[JsonPropertyName("email")]
         //[SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del destinatario", Nullable = false)]
@@ -52,10 +50,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         //public string Email { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el codigo de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el codigo de PAIS referente, ejm: PE", Nullable = true)]
         [MaxLength(3)]
-        [Required]
-        public string Pais { get; set; }
+        public string? Pais { get; set; }
 
         [JsonPropertyName("codigo_sunat")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]

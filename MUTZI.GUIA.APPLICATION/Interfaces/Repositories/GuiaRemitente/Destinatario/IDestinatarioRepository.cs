@@ -8,6 +8,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Destinata
         Task<List<DOMAIN.Entities.Destinatario>> GetListBySuggestion(string numeroDoc);
         Task<(List<DOMAIN.Entities.Destinatario>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO? request);
         Task<DOMAIN.Entities.Destinatario?> GetByIdAsync(int id);
+        Task<DOMAIN.Entities.Destinatario?> GetByNumeroDocumentoAsync(string numeroDocumento);
         Task CreateAsync(DOMAIN.Entities.Destinatario destinatario);
         Task UpdateAsync(DOMAIN.Entities.Destinatario destinatario);
         Task DeleteAsync(int id);
