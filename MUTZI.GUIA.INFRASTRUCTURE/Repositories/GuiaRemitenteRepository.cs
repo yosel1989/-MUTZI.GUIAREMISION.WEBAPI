@@ -713,13 +713,16 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
 
                 //EmailDestinatarioGuia
-                foreach (var email in emailDestinatarioGuia)
+                if (emailDestinatarioGuia is not null)
                 {
-                    email.GuiaId = guiaRemision.GuiaId;
-                    email.DestinatarioId = destinatario.DestinatarioId;
-                    await _context.EmailDestinatarioGuids.AddAsync(email);
+                    foreach (var email in emailDestinatarioGuia)
+                    {
+                        email.GuiaId = guiaRemision.GuiaId;
+                        email.DestinatarioId = destinatario.DestinatarioId;
+                        await _context.EmailDestinatarioGuids.AddAsync(email);
+                    }
+                    await _context.SaveChangesAsync();
                 }
-                await _context.SaveChangesAsync();
 
                 //Origen
                 origen.GuiaId = guiaRemision.GuiaId;

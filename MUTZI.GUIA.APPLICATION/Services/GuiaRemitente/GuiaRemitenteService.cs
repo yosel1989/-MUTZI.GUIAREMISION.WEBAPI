@@ -242,7 +242,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             var destino = dto.Destino.Select(p => _mapper.Map<DOMAIN.Entities.Destino>(p)).ToList();
             var detalles = dto.Productos.Select(p => _mapper.Map<DOMAIN.Entities.GuiaDetalle>(p)).ToList();
             var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.DocRelacionado>(p)).ToList();
-            var emailDestinatarioGuia = dto.Destinatario.EmailDestinatarioGuia.Select(p => _mapper.Map<DOMAIN.Entities.EmailDestinatarioGuid>(p)).ToList();
+            var emailDestinatarioGuia = dto.Destinatario?.EmailDestinatarioGuia?.Select(p => _mapper.Map<DOMAIN.Entities.EmailDestinatarioGuid>(p)).ToList();
 
             // Llamar al repositorio
             var id = await _repository.CreateGuiaRemisionTransactionalAsync(
