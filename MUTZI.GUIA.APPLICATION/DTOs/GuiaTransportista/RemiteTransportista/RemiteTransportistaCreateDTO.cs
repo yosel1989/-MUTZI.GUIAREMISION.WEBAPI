@@ -28,20 +28,18 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         public string RazonSocial { get; set; }
 
         [JsonPropertyName("ubigeo_id")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del remitente_transportista, ejm: 150131", Nullable = false)]
-        [Required(ErrorMessage = "EL ubigeo es obligatorio")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del remitente_transportista, ejm: 150131", Nullable = true)]
         //EL ubigeo debe tener 6 caracteres
         [StringLength(6, ErrorMessage = "El ubigeo debe tener 6 caracteres")]
         [MinLength(6)]
         //El ubigeo no puede ser 000000
         [RegularExpression(@"^(?!000000)\d{6}$", ErrorMessage = "El ubigeo debe tener 6 caracteres y no puede ser 000000")]
-        public string UbigeoID { get; set; }
+        public string? UbigeoID { get; set; }
 
         [JsonPropertyName("direccion")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la direccion fiscal del remitente_transportista", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca la direccion fiscal del remitente_transportista", Nullable = true)]
         [MaxLength(250)]
-        [Required]
-        public string Direccion { get; set; }
+        public string? Direccion { get; set; }
 
         //[JsonPropertyName("email")]
         //[SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del remite_transportista", Nullable = false)]
@@ -51,10 +49,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         //public string Email { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el codigo de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el codigo de PAIS referente, ejm: PE", Nullable = true)]
         [MaxLength(3)]
-        [Required]
-        public string Pais { get; set; }
+        public string? Pais { get; set; }
 
         [JsonPropertyName("codigo_sunat")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]

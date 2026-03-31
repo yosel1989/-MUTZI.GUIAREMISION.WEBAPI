@@ -11,6 +11,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario
         Task<List<DestinatarioListDTO>> GetListBySuggestion(string numeroDoc);
         Task<PagedResult<DestinatarioDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q);
         Task<DestinatarioDTO?> GetByIdAsync(int id);
+        Task<DestinatarioDTO?> GetByNumeroDocumentoAsync(string numeroDocumento);
         Task<int> CreateAsync(DestinatarioCreateDTO createDTO);
         Task<DestinatarioDTO> UpdateAsync(int id, DestinatarioUpdateDTO updateDTO);
         Task DeleteAsync(int id);

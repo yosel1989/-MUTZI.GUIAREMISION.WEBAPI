@@ -69,6 +69,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(d => d.Ubigeo)
                 .FirstOrDefaultAsync(d => d.DestinatarioId == id);
         }
+        public async Task<Destinatario?> GetByNumeroDocumentoAsync(string numeroDocumento)
+        {
+            return await _context.Destinatarios
+                .Include(d => d.Ubigeo)
+                .FirstOrDefaultAsync(d => d.NumeroDocumento == numeroDocumento);
+        }
         public async Task CreateAsync(DOMAIN.Entities.Destinatario destinatario)
         {
             await _context.Destinatarios.AddAsync(destinatario);
@@ -89,7 +95,5 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 await _context.SaveChangesAsync();
             }
         }
-
-        
     }
 }
