@@ -13,11 +13,11 @@ public partial class RemiteTransportistum
 
     public string RazonSocial { get; set; } = null!;
 
-    public string UbigeoId { get; set; } = null!;
+    public string? UbigeoId { get; set; }
 
-    public string Direccion { get; set; } = null!;
+    public string? Direccion { get; set; }
 
-    public string Pais { get; set; } = null!;
+    public string? Pais { get; set; }
 
     public string? CodigoSunat { get; set; }
 
@@ -41,5 +41,5 @@ public partial class RemiteTransportistum
 
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 
-    public virtual Ubigeo Ubigeo { get; set; } = null!;
+    public virtual Ubigeo? Ubigeo { get; set; }
 }

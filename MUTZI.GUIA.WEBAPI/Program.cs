@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.Helpers;
+using MUTZI.GUIA.APPLICATION.Hubs;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Destinatario;
@@ -83,6 +84,8 @@ builder.Services.AddDbContext<LogisticaContext>(options =>
 );
 //Registrar AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+
+builder.Services.AddSignalR();
 
 //Registrar repositorios
 builder.Services.AddScoped<IVentaConfigRepository, VentaConfigRepository>();
@@ -182,6 +185,13 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseCors(corsPolicy);
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<GuiasHub>("/guias-signal");
+});
 
 app.UseHttpsRedirection();
 

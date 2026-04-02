@@ -1,7 +1,8 @@
-﻿using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+﻿using Microsoft.EntityFrameworkCore;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
-using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.DOMAIN.Entities;
+using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -38,14 +39,35 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 (c.Ruc.Contains(numeroDoc) || c.Descripcion.Contains(numeroDoc)))
                 .ToListAsync();
         }
-        public async Task<(List<Remitente>, int)> GetListAsync(int pageNumber, int pageSize)
+        public async Task<(List<Remitente>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
         {
-            var query = _context.Remitentes
+            var query=_context.Remitentes.AsQueryable();
+            if (request.Columns != null && request.Columns.Any())
+            {
+                var val = request.Columns[0].Search.Value?.ToLower();
+                var key = request.Columns[0].Data?.ToLower();
+                if (!string.IsNullOrEmpty(val))
+                {
+                    query = query.Where(x => x.RucNavigation.Empresa.ToLower().Contains(val) ||
+                    x.Ruc.Contains(val)||x.Descripcion.ToLower().Contains(val)||
+                    x.Ubigeo.Departamento.ToLower().Contains(val) || x.Ubigeo.Provincia.ToLower().Contains(val) ||
+                    x.Ubigeo.Distrito.ToLower().Contains(val) || x.Direccion.ToLower().Contains(val) ||
+                    x.Email.ToLower().Contains(val) || x.Pais.ToLower().Contains(val) ||x.Serie.Contains(val)||
+                    x.CodigoSunat.ToLower().Contains(val) || x.EmpleadoNombreCreacion.ToLower().Contains(val) ||
+                    x.Estado.ToLower().Contains(val) || x.EmpleadoNombreEdicion.ToLower().Contains(val)
+                    );
+                }
+            }
+            var totalRecords = await query.CountAsync();
+            //var query = _context.Remitentes
+            //    .Include(r => r.Ubigeo)
+            //    .Include(e => e.RucNavigation)
+            //    .OrderByDescending(r=>r.FechaCreacion);
+
+            var data = await query
+                .OrderByDescending(r => r.FechaCreacion)
                 .Include(r => r.Ubigeo)
                 .Include(e => e.RucNavigation)
-                .OrderByDescending(r=>r.FechaCreacion);
-            var totalRecords = await query.CountAsync();
-            var data = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .AsNoTracking()
                 .Take(pageSize)

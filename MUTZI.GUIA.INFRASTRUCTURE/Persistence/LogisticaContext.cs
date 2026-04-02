@@ -242,7 +242,6 @@ public partial class LogisticaContext : DbContext
 
             entity.HasOne(d => d.Ubigeo).WithMany(p => p.Destinatarios)
                 .HasForeignKey(d => d.UbigeoId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("destinatario_ibfk_1");
         });
 
@@ -535,7 +534,7 @@ public partial class LogisticaContext : DbContext
 
             entity.HasIndex(e => e.NumeroDocumento, "numeroDocumento_BUSQUEDA").IsUnique();
 
-            entity.HasIndex(e => e.UbigeoId, "ubigeoID");
+            entity.HasIndex(e => e.UbigeoId, "proveedor_ibfk_1");
 
             entity.Property(e => e.ProveedorId).HasColumnName("proveedorID");
             entity.Property(e => e.CodigoSunat)
@@ -587,7 +586,6 @@ public partial class LogisticaContext : DbContext
 
             entity.HasOne(d => d.Ubigeo).WithMany(p => p.Proveedors)
                 .HasForeignKey(d => d.UbigeoId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("proveedor_ibfk_1");
         });
 
@@ -599,7 +597,7 @@ public partial class LogisticaContext : DbContext
 
             entity.HasIndex(e => e.NumeroDocumento, "numeroDocumento_UNIQUE").IsUnique();
 
-            entity.HasIndex(e => e.UbigeoId, "ubigeoID");
+            entity.HasIndex(e => e.UbigeoId, "remiteTransportista_ibfk_1");
 
             entity.Property(e => e.RemiteTransportistaId).HasColumnName("remiteTransportistaID");
             entity.Property(e => e.CodigoSunat)
@@ -648,7 +646,6 @@ public partial class LogisticaContext : DbContext
 
             entity.HasOne(d => d.Ubigeo).WithMany(p => p.RemiteTransportista)
                 .HasForeignKey(d => d.UbigeoId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("remiteTransportista_ibfk_1");
         });
 

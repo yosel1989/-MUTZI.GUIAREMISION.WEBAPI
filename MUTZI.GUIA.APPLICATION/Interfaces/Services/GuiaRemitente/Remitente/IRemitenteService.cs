@@ -1,4 +1,5 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+﻿using Microsoft.AspNetCore.Http;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 
@@ -9,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente
         Task<List<RemitenteListDTO>> GetAllAsync();
         Task<List<RemitenteNameListDTO>> GetOnlynameAsync();
         Task<List<RemitenteListDTO>> GetListBySuggestion(string numeroDoc);
-        Task<PagedResult<RemitenteDTO>> GetListAsync(int pageNumber, int pageSize);
+        Task<PagedResult<RemitenteDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q);
         Task<RemitenteForGuiaDTO?> GetByIdForGuiaAsync(int id, string tipoGuia);
         Task<RemitenteDTO?> GetByIdAsync(int id);
         Task<int> CreateAsync(RemitenteCreateDTO createDTO);

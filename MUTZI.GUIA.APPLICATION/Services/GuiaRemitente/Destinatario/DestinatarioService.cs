@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario;
@@ -27,9 +29,22 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
             var destinatarios=await _repository.GetListBySuggestion(numeroDoc);
             return _mapper.Map<List<DestinatarioListDTO>>(destinatarios);
         }
-        public async Task<PagedResult<DestinatarioDTO>> GetListAsync(int pageNumber, int pageSize)
+        public async Task<PagedResult<DestinatarioDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
         {
-            var(destinatario, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize);
+            var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
+            var searchValue = q[$"columns[{0}][search][value]"];
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                request.Columns.Add(new RequestFiltroDTO
+                {
+                    Data = q[$"columns[{0}][data]"],
+                    Search = new SearchDTO
+                    {
+                        Value = searchValue
+                    }
+                });
+            }
+            var (destinatario, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize, request);
             var destinatarioDTO = _mapper.Map<List<DestinatarioDTO>>(destinatario);
             return new PagedResult<DestinatarioDTO>{
                 PageNumber=pageNumber,
@@ -42,6 +57,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
         public async Task<DestinatarioDTO?> GetByIdAsync(int id)
         {
             var destinatario = await _repository.GetByIdAsync(id);
+            return destinatario == null ? null : _mapper.Map<DestinatarioDTO>(destinatario);
+        }
+        public async Task<DestinatarioDTO?> GetByNumeroDocumentoAsync(string numeroDocumento)
+        {
+            var destinatario = await _repository.GetByNumeroDocumentoAsync(numeroDocumento);
             return destinatario == null ? null : _mapper.Map<DestinatarioDTO>(destinatario);
         }
         public async Task<int> CreateAsync(DestinatarioCreateDTO createDTO)

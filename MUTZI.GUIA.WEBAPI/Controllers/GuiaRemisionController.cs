@@ -51,6 +51,37 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpGet]
+        [Route("exportar")]
+        [SwaggerOperation(
+        Summary = "Exportar guías de remisión y transportista",
+        Description = "Exporta las guías de remisión y transportista.",
+        OperationId = "exportar_guias")]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+
+        public async Task<IActionResult> ExportGuias()
+        {
+            try
+            {
+                var q = Request.Query;
+                byte[] fileBytes = await _guiasRemisionBDService.ExportGuiasAsync(1, 10, q);
+                return File(fileBytes,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "reporte-guias-remision.xlsx");
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al exportar guías.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpGet]
         [Route("buscar-por-id/{id}")]
         [SwaggerOperation(
         Summary = "Buscar guía de remisión por ID",
