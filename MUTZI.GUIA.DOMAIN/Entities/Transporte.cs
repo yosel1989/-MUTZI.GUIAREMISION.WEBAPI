@@ -17,7 +17,11 @@ public partial class Transporte
 
     public string? Tarjeta { get; set; }
 
-    public string? NumeroRegistroMtc { get; set; }
+    public string? CodEmisorVehicular { get; set; }
+
+    public string? EmisorVehicular { get; set; }
+
+    public string? NroAutorizacion { get; set; }
 
     public DateTime? FechaCreacion { get; set; }
 

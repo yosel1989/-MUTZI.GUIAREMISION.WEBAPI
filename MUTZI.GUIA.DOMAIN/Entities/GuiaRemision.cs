@@ -35,6 +35,10 @@ public partial class GuiaRemision
 
     public int? ProveedorId { get; set; }
 
+    public string? Area { get; set; }
+
+    public string? RegistroMtc { get; set; }
+
     public string RespuestaTicket { get; set; } = null!;
 
     public DateTime? FechaCreacion { get; set; }

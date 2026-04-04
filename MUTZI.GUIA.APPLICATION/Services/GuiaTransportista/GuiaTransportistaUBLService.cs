@@ -320,7 +320,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                 transportEquipments.Add(new TransportEquipment
                 {
                     ID = new List<ID> { new ID { _ = transportes[0].Placa } },
-                    ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0].NumeroRegistroMTC) ? null : new List<ShipmentDocumentReference>
+                    ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0].NroAutorizacion) ? null : new List<ShipmentDocumentReference>
                         {
                             new ShipmentDocumentReference
                             {
@@ -328,8 +328,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                 {
                                     new ID
                                     {
-                                        _ = transportes[0].NumeroRegistroMTC,
-                                        schemeID = "06"
+                                        _ = transportes[0].NroAutorizacion,
+                                        schemeID = transportes[0].CodEmisorVehicular
+                                        //schemeID = "06"//ya no va
                                     }
                                 }
                             }
@@ -348,7 +349,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                     new AttachedTransportEquipment
                                     {
                                         ID = new List<ID> { new ID { _ = t.Placa } },
-                                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(t.NumeroRegistroMTC)?null: new List<ShipmentDocumentReference>
+                                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(t.NroAutorizacion)?null: new List<ShipmentDocumentReference>
                                         {
                                             new ShipmentDocumentReference
                                             {
@@ -356,8 +357,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                                 {
                                                     new ID
                                                     {
-                                                        _ = t.Placa,
-                                                        schemeID = "06"
+                                                        _ = t.NroAutorizacion,
+                                                        schemeID = t.CodEmisorVehicular
                                                     }
                                                 }
                                             }

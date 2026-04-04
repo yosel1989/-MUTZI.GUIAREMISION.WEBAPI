@@ -246,7 +246,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<DOMAIN.Entities.TransporteGuid, TransporteGuiaDTO>()
                 .ForMember(dest => dest.Placa, opt => opt.MapFrom(src => src.Transporte.Placa))
                 .ForMember(dest => dest.Tarjeta, opt => opt.MapFrom(src => src.Transporte.Tarjeta))
-                .ForMember(dest => dest.NumeroRegistroMTC, opt => opt.MapFrom(src => src.Transporte.NumeroRegistroMtc))
+                .ForMember(dest => dest.NroAutorizacion, opt => opt.MapFrom(src => src.Transporte.NroAutorizacion))
+                .ForMember(dest=>dest.CodEmisorVehicular, opt=>opt.MapFrom(src=>src.Transporte.CodEmisorVehicular))
+                .ForMember(dest=>dest.EmisorVehicular, opt=>opt.MapFrom(src=>src.Transporte.EmisorVehicular))
                 ;
         }
     }

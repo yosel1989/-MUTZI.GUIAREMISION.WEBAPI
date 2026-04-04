@@ -463,7 +463,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 TransporteId = tg.Transporte.TransporteId,
                                 Placa = tg.Transporte.Placa,
                                 Tarjeta = tg.Transporte.Tarjeta,
-                                NumeroRegistroMtc = tg.Transporte.NumeroRegistroMtc
+                                NroAutorizacion = tg.Transporte.NroAutorizacion,
+                                EmisorVehicular = tg.Transporte.EmisorVehicular,
+                                CodEmisorVehicular=tg.Transporte.CodEmisorVehicular,
                             }
                         }).ToList(),
                     }).ToList(),
@@ -517,7 +519,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(erm => erm.EmailRemiteTransportistaGuids)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
         }
-        public async Task<int> CreateGuiaRemisionTransactionalAsync(
+        public async Task<(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(
             Remitente remitente,
             Destinatario destinatario,
             Proveedor proveedor,
@@ -736,8 +738,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 await transaction.CommitAsync();
 
-                //retornar el ID de la guía creada
-                return guiaRemision.GuiaId;
+                //retornar el ID de la guía creada y asimismo el número de guía.
+                return (guiaRemision.GuiaId, guiaRemision.NumeroGuia);
             }
             catch(Exception ex)
             {
