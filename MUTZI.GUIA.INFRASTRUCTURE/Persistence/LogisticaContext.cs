@@ -413,6 +413,9 @@ public partial class LogisticaContext : DbContext
             entity.HasIndex(e => e.RemitenteId, "remitenteID");
 
             entity.Property(e => e.GuiaId).HasColumnName("guiaID");
+            entity.Property(e => e.Area)
+                .HasMaxLength(100)
+                .HasColumnName("area");
             entity.Property(e => e.Correlativo)
                 .HasMaxLength(8)
                 .HasColumnName("correlativo");
@@ -447,6 +450,9 @@ public partial class LogisticaContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("observacion");
             entity.Property(e => e.ProveedorId).HasColumnName("proveedorID");
+            entity.Property(e => e.RegistroMtc)
+                .HasMaxLength(20)
+                .HasColumnName("registroMTC");
             entity.Property(e => e.RemiteTransportistaId).HasColumnName("remiteTransportistaID");
             entity.Property(e => e.RemitenteId).HasColumnName("remitenteID");
             entity.Property(e => e.RespuestaTicket)
@@ -732,9 +738,15 @@ public partial class LogisticaContext : DbContext
             entity.HasIndex(e => e.Tarjeta, "tarjeta_UNIQUE").IsUnique();
 
             entity.Property(e => e.TransporteId).HasColumnName("transporteID");
+            entity.Property(e => e.CodEmisorVehicular)
+                .HasMaxLength(2)
+                .HasColumnName("codEmisorVehicular");
             entity.Property(e => e.Descripcion)
                 .HasMaxLength(50)
                 .HasColumnName("descripcion");
+            entity.Property(e => e.EmisorVehicular)
+                .HasMaxLength(100)
+                .HasColumnName("emisorVehicular");
             entity.Property(e => e.EmpleadoIdcreacion).HasColumnName("empleadoIDCreacion");
             entity.Property(e => e.EmpleadoIdedicion).HasColumnName("empleadoIDEdicion");
             entity.Property(e => e.EmpleadoNombreCreacion)
@@ -763,9 +775,9 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.Modelo)
                 .HasMaxLength(20)
                 .HasColumnName("modelo");
-            entity.Property(e => e.NumeroRegistroMtc)
-                .HasMaxLength(20)
-                .HasColumnName("numeroRegistroMTC");
+            entity.Property(e => e.NroAutorizacion)
+                .HasMaxLength(50)
+                .HasColumnName("nroAutorizacion");
             entity.Property(e => e.Placa)
                 .HasMaxLength(20)
                 .HasColumnName("placa");

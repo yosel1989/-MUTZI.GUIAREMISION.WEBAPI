@@ -30,10 +30,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
         [SwaggerSchema("Devuelve un texto, la placa del transporte", Nullable = false)]
         public string Placa { get; set; }
 
-        [JsonPropertyName("numero_registro_mtc")]
-        [SwaggerSchema("Devuelve un texto, el número de registro MTC del transporte", Nullable = false)]
-        public string NumeroRegistroMTC { get; set; }
-
         [JsonPropertyName("tarjeta")]
         [SwaggerSchema("Devuelve un texto, la tarjeta de circulación del transporte", Nullable = false)]
         public string Tarjeta { get; set; }

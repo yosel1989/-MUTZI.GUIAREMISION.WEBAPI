@@ -35,7 +35,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     query = query.Where(x => x.Descripcion.ToLower().Contains(val) ||
                     x.Marca.ToLower().Contains(val)||x.Modelo.ToLower().Contains(val)||
-                    x.Placa.ToLower().Contains(val)||x.NumeroRegistroMtc.ToLower().Contains(val)||
+                    x.Placa.ToLower().Contains(val)||x.NroAutorizacion.ToLower().Contains(val)||
+                    x.EmisorVehicular.ToLower().Contains(val) ||
                     x.Tarjeta.ToLower().Contains(val)||x.EmpleadoNombreCreacion.ToLower().Contains(val)||
                     x.EmpleadoNombreEdicion.ToLower().Contains(val) || x.Estado.ToLower().Contains(val)
                     );

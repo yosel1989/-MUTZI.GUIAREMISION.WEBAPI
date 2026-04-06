@@ -55,6 +55,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, donde se detalla una observación o comentario sobre la guía de remisión", Nullable = true)]
         public string? Observacion { get; set; }
 
+        [JsonPropertyName("area")]
+        [SwaggerSchema("Devuelve en texto el área o departamento de la empresa", Nullable = true)]
+        public string? Area { get; set; }
+
+        [JsonPropertyName("registro_mtc")]
+        [SwaggerSchema("Devuelve en texto el número de registro MTC, este campo tiene valor si tipo_guia es 'TRANSPORTISTA'")]
+        public string? RegistroMTC { get; set; }
+
         [JsonPropertyName("doc_relacionado")]
         public List<DocRelacionadoDTO>? DocRelacionados { get; set; }
         public RemitenteDTO Remitente { get; set; }
