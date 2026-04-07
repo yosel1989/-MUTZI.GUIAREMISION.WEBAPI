@@ -42,7 +42,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
             //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
         }
-        public async Task<int> CreateGuiaTransportistaTransactionalAsync(Remitente remitente, RemiteTransportistum remiteTransportista, Destinatario destinatario, List<Conductor> conductor, List<Transporte> transporte, DOMAIN.Entities.GuiaRemision guiaRemision, DatosEnvio datosEnvio, Origen origen, List<Destino> destino,
+        public async Task<(int GuiaId, string NumeroGuia)> CreateGuiaTransportistaTransactionalAsync(Remitente remitente, RemiteTransportistum remiteTransportista, Destinatario destinatario, List<Conductor> conductor, List<Transporte> transporte, DOMAIN.Entities.GuiaRemision guiaRemision, DatosEnvio datosEnvio, Origen origen, List<Destino> destino,
             List<GuiaDetalle> detalles,
             List<DocRelacionado> docRelacionados,
             List<EmailDestinatarioGuid> emailDestinatarioGuia,
@@ -234,8 +234,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 await transaction.CommitAsync();
 
-                //retornar el ID de la guía creada
-                return guiaRemision.GuiaId;
+                //retornar el ID de la guía creada y asimismo el número de guía generado
+                return (guiaRemision.GuiaId, guiaRemision.NumeroGuia);
             }
             catch
             {

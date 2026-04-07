@@ -602,7 +602,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.RemitenteId = remitente.RemitenteId;
                 guiaRemision.Ruc = remitente.Ruc;
                 guiaRemision.DestinatarioId = destinatario.DestinatarioId;
-                guiaRemision.Estado = "CREADO";
+                guiaRemision.Estado = "REGISTRADO";
                 guiaRemision.IdEstado = 0;
                 if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
 
@@ -649,8 +649,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //Registrar en lista
                 foreach (var condu in conductor)
                 {
-                    if (guiaRemision.TipoTransporte == "PRIVADO")
-                    {
+                    //if (guiaRemision.TipoTransporte == "PRIVADO")
+                    //{
                         var existingConductor = await GetConductorByNumeroDocumentoAsync(condu.NumeroDocumento);
                         if (existingConductor == null)
                         {
@@ -671,15 +671,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         };
                         await _context.ConductorGuids.AddAsync(conductorGuia);
                         await _context.SaveChangesAsync();
-                    }
+                    //}
                 }
 
                 // Transporte
                 //Registrar en lista
                 foreach (var tr in transporte)
                 {
-                    if (guiaRemision.TipoTransporte == "PRIVADO")
-                    {
+                    //if (guiaRemision.TipoTransporte == "PRIVADO")
+                    //{
                         var existingTransporte = await GetTransporteByPlacaAsync(tr.Placa);
                         if (existingTransporte == null)
                         {
@@ -700,7 +700,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         };
                         await _context.TransporteGuids.AddAsync(transporteGuia);
                         await _context.SaveChangesAsync();
-                    }
+                    //}
                 }
 
                 // DocRelacionados

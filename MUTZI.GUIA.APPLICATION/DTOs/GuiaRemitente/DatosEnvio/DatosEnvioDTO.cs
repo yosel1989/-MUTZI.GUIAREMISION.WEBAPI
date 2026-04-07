@@ -36,6 +36,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
         [SwaggerSchema("Devuelve en texto el registro MTC de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = true)]
         public string? RegistroMtcCurrier { get; set; }
 
+        [JsonPropertyName("indicador_vehiculo_conductor")]
+        [SwaggerSchema("Devuelve en booleano el indicador de vehículo y conductor: true o false", Nullable = true)]
+        public bool IndicadorVehiculoConductor { get; set; }
+
         [JsonPropertyName("conductor")]
         public List<ConductorGuiaDTO?> ConductorGuia { get; set; }
 

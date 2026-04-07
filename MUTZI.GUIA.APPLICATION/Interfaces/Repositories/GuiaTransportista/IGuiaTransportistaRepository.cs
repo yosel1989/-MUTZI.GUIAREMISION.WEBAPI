@@ -3,7 +3,7 @@
     public interface IGuiaTransportistaRepository
     {
         Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id);
-        Task<int> CreateGuiaTransportistaTransactionalAsync(
+        Task<(int GuiaId, string NumeroGuia)> CreateGuiaTransportistaTransactionalAsync(
             DOMAIN.Entities.Remitente remitente,
             DOMAIN.Entities.RemiteTransportistum remiteTransportista,
             DOMAIN.Entities.Destinatario destinatario,

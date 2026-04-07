@@ -214,6 +214,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         public string unitCode { get; set; }
     }
 
+    public class SpecialInstructions
+    {
+        public string _ { get; set; }
+    }
+
     public class HandlingCode
     {
         public string _ { get; set; }
@@ -353,6 +358,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         public List<HandlingCode> HandlingCode { get; set; }
         public List<HandlingInstruction> HandlingInstructions { get; set; }
         public List<GrossWeightMeasure> GrossWeightMeasure { get; set; }
+        public List <SpecialInstructions>? SpecialInstructions { get; set; }
         public List<ShipmentStage> ShipmentStage { get; set; }
         public List<Delivery> Delivery { get; set; }
         public List<TransportHandlingUnit>? TransportHandlingUnit { get; set; }

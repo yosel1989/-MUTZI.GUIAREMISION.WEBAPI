@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -15,10 +17,12 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
     public class GuiaRemisionController : ControllerBase
     {
         private readonly IGuiaRemitenteService _guiasRemisionBDService;
+        private readonly IGuiaTransportistaService _guiasTransportistaBDService;
         private readonly IEnvioService _envioService;
-        public GuiaRemisionController(IGuiaRemitenteService guiaRemisionBDService, IEnvioService envioService)
+        public GuiaRemisionController(IGuiaRemitenteService guiaRemisionBDService, IGuiaTransportistaService guiaTransportistaService, IEnvioService envioService)
         {
             _guiasRemisionBDService = guiaRemisionBDService;
+            _guiasTransportistaBDService = guiaTransportistaService;
             _envioService = envioService;
         }
         [HttpGet]
@@ -116,15 +120,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpPost]
-        [Route("remitente/{ruc}")]
+        [Route("registrar-remitente/{ruc}")]
         [SwaggerOperation(
         Summary = "Registrar guía remitente",
-        Description = "Registra una nueva guía de remisión remitente y la envía a EFACT.",
-        OperationId = "enviar_guia_remitente")]
-        [ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
+        Description = "Registra guía de remisión remitente y lo guarda en la bbdd.",
+        OperationId = "registrar_guia_remitente")]
+        [ProducesResponseType(typeof(GuiaCreatedResponseDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> EnviarGuiaRemision(string ruc, [FromBody] GuiaRemitenteCreateDTO doc)
+        public async Task<IActionResult> RegistrarGuiaRemision(string ruc, [FromBody] GuiaRemitenteCreateDTO doc)
         {
             if (doc == null)
             {
@@ -135,10 +139,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
 
-            var resultado = await _envioService.ProcesarGuiaRemisionAsync(ruc, doc);
+            //var resultado = await _envioService.ProcesarGuiaRemisionAsync(ruc, doc);
+            var resultado = await _guiasRemisionBDService.CreateAsync(ruc, doc);
             return resultado switch
             {
-                SendGuiaResponseDTO ok => Created(string.Empty, ok),
+                GuiaCreatedResponseDTO ok => Created(string.Empty, ok),
                 BadRequestResponseDTO bad => BadRequest(bad),
                 InternalErrorResponseDTO error => StatusCode(500, error),
                 _ => StatusCode(500, new InternalErrorResponseDTO
@@ -148,17 +153,50 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 })
             };
         }
+        //[HttpPost]
+        //[Route("remitente/{ruc}")]
+        //[SwaggerOperation(
+        //Summary = "Registrar guía remitente",
+        //Description = "Registra una nueva guía de remisión remitente y la envía a EFACT.",
+        //OperationId = "enviar_guia_remitente")]
+        //[ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
+        //[ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        //public async Task<IActionResult> EnviarGuiaRemision(string ruc, [FromBody] GuiaRemitenteCreateDTO doc)
+        //{
+        //    if (doc == null)
+        //    {
+        //        return BadRequest(new BadRequestResponseDTO
+        //        {
+        //            Error = "Error en datos enviados",
+        //            Detalle = "La guía de remisión remitente no puede ser nula."
+        //        });
+        //    }
+
+        //    var resultado = await _envioService.ProcesarGuiaRemisionAsync(ruc, doc);
+        //    return resultado switch
+        //    {
+        //        SendGuiaResponseDTO ok => Created(string.Empty, ok),
+        //        BadRequestResponseDTO bad => BadRequest(bad),
+        //        InternalErrorResponseDTO error => StatusCode(500, error),
+        //        _ => StatusCode(500, new InternalErrorResponseDTO
+        //        {
+        //            Error = "Error desconocido",
+        //            Detalle = "Ocurrió un error desconocido al procesar la solicitud."
+        //        })
+        //    };
+        //}
         [HttpPost]
-        [Route("transportista/{ruc}")]
+        [Route("registrar-transportista/{ruc}")]
         [SwaggerOperation(
             Summary = "Registrar guía transportista",
-            Description = "Registra una nueva guía de remisión transportista y la envía a EFACT.",
-            OperationId = "enviar_guia_transportista"
+            Description = "Registra guía de remisión transportista en la bbdd.",
+            OperationId = "registrar_guia_transportista"
             )]
-        [ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(GuiaCreatedResponseDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> EnviarGuiaTransportista(string ruc, [FromBody] GuiaTransportistaCreateDTO doc)
+        public async Task<ActionResult> RegistrarGuiaTransportista(string ruc, [FromBody] GuiaTransportistaCreateDTO doc)
         {
             if (doc == null)
             {
@@ -168,10 +206,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                     Detalle = "La guía de remisión transportista no puede ser nula."
                 });
             }
-            var resultado = await _envioService.ProcesarGuiaTransportistaAsync(ruc, doc);
+            var resultado = await _guiasTransportistaBDService.CreateAsync(ruc, doc);
             return resultado switch
             {
-                SendGuiaResponseDTO ok => Created(string.Empty, ok),
+                GuiaCreatedResponseDTO ok => Created(string.Empty, ok),
                 BadRequestResponseDTO bad => BadRequest(bad),
                 InternalErrorResponseDTO error => StatusCode(500, error),
                 _ => StatusCode(500, new InternalErrorResponseDTO
@@ -181,12 +219,47 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 })
             };
         }
-        [HttpPut]
+
+
+        //[HttpPost]
+        //[Route("transportista/{ruc}")]
+        //[SwaggerOperation(
+        //    Summary = "Registrar guía transportista",
+        //    Description = "Registra una nueva guía de remisión transportista y la envía a EFACT.",
+        //    OperationId = "enviar_guia_transportista"
+        //    )]
+        //[ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
+        //[ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        //public async Task<ActionResult> EnviarGuiaTransportista(string ruc, [FromBody] GuiaTransportistaCreateDTO doc)
+        //{
+        //    if (doc == null)
+        //    {
+        //        return BadRequest(new BadRequestResponseDTO
+        //        {
+        //            Error = "Error en datos enviados",
+        //            Detalle = "La guía de remisión transportista no puede ser nula."
+        //        });
+        //    }
+        //    var resultado = await _envioService.ProcesarGuiaTransportistaAsync(ruc, doc);
+        //    return resultado switch
+        //    {
+        //        SendGuiaResponseDTO ok => Created(string.Empty, ok),
+        //        BadRequestResponseDTO bad => BadRequest(bad),
+        //        InternalErrorResponseDTO error => StatusCode(500, error),
+        //        _ => StatusCode(500, new InternalErrorResponseDTO
+        //        {
+        //            Error = "Error desconocido",
+        //            Detalle = "Ocurrió un error desconocido al procesar la solicitud."
+        //        })
+        //    };
+        //}
+        [HttpPost]
         [Route("{ruc}/{guiaId}")]
         [SwaggerOperation(
-        Summary = "Reenviar guia remisión",
-        Description = "Reenvia una guía existente(REMITENTE ó TRANSPORTISTA) al facturador electrónico.",
-        OperationId = "reenviar_guia_remision")]
+        Summary = "Enviar guia remisión",
+        Description = "Envía una guía existente(REMITENTE ó TRANSPORTISTA) al facturador electrónico.",
+        OperationId = "enviar_guia_remision")]
         [ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]

@@ -23,6 +23,8 @@ public partial class DatosEnvio
 
     public string? RegistroMtcCurrier { get; set; }
 
+    public sbyte? IndicadorVehiculoConductor { get; set; }
+
     public virtual UnidadMedidum CodigoUmNavigation { get; set; } = null!;
 
     public virtual ICollection<ConductorGuid> ConductorGuids { get; set; } = new List<ConductorGuid>();

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using ClosedXML.Excel;
 using Microsoft.AspNetCore.Http;
+using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
@@ -225,33 +227,82 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             var guiaRemision = await _repository.GetByTicketAsync(ticket);
             return _mapper.Map<GuiaPorTicketDTO>(guiaRemision);
         }
-        public async Task<GuiaRemitenteDTO> CreateAsync(GuiaRemitenteCreateDTO dto)
+        public async Task<object> CreateAsync(string ruc, GuiaRemitenteCreateDTO dto)
         {
-            // Mapear todos los objetos
-            var remitente = _mapper.Map<DOMAIN.Entities.Remitente>(dto.Remitente);
-            var destinatario = _mapper.Map<DOMAIN.Entities.Destinatario>(dto.Destinatario);
-            var proveedor = _mapper.Map<DOMAIN.Entities.Proveedor>(dto.Proveedor);
-            //var conductor = _mapper.Map<DOMAIN.Entities.Conductor>(dto.DatosEnvio.Conductor);
-            var conductor=dto.DatosEnvio.Conductor.Select(p => _mapper.Map<DOMAIN.Entities.Conductor>(p)).ToList();
-            //var transporte = _mapper.Map<DOMAIN.Entities.Transporte>(dto.DatosEnvio.UnidadTransporte);
-            var transporte=dto.DatosEnvio.UnidadTransporte.Select(p => _mapper.Map<DOMAIN.Entities.Transporte>(p)).ToList();
-            var guiaRemision = _mapper.Map<DOMAIN.Entities.GuiaRemision>(dto);
-            var datosEnvio = _mapper.Map<DOMAIN.Entities.DatosEnvio>(dto.DatosEnvio);
-            var origen = _mapper.Map<DOMAIN.Entities.Origen>(dto.Origen);
-            //var destino = _mapper.Map<DOMAIN.Entities.Destino>(dto.Destino);
-            var destino = dto.Destino.Select(p => _mapper.Map<DOMAIN.Entities.Destino>(p)).ToList();
-            var detalles = dto.Productos.Select(p => _mapper.Map<DOMAIN.Entities.GuiaDetalle>(p)).ToList();
-            var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.DocRelacionado>(p)).ToList();
-            var emailDestinatarioGuia = dto.Destinatario?.EmailDestinatarioGuia?.Select(p => _mapper.Map<DOMAIN.Entities.EmailDestinatarioGuid>(p)).ToList();
+            try
+            {
+                var (esValido, error) = ValidarDatosGuiaRemitente(dto, ruc);
+                if (!esValido)
+                {
+                    return new BadRequestResponseDTO
+                    {
+                        Error = "Error en datos enviados",
+                        Detalle = error
+                    };
+                }
 
-            // Llamar al repositorio
-            var (guia_id, numero_guia) = await _repository.CreateGuiaRemisionTransactionalAsync(
-                remitente, destinatario, proveedor, conductor, transporte,
-                guiaRemision, datosEnvio, origen, destino, detalles, docRelacionados,emailDestinatarioGuia
-            );
+                GuiaRemitenteDTO guiaCreada;
+                try
+                {
+                    // Mapear todos los objetos
+                    var remitente = _mapper.Map<DOMAIN.Entities.Remitente>(dto.Remitente);
+                    var destinatario = _mapper.Map<DOMAIN.Entities.Destinatario>(dto.Destinatario);
+                    var proveedor = _mapper.Map<DOMAIN.Entities.Proveedor>(dto.Proveedor);
+                    //var conductor = _mapper.Map<DOMAIN.Entities.Conductor>(dto.DatosEnvio.Conductor);
+                    var conductor = dto.DatosEnvio.Conductor.Select(p => _mapper.Map<DOMAIN.Entities.Conductor>(p)).ToList();
+                    //var transporte = _mapper.Map<DOMAIN.Entities.Transporte>(dto.DatosEnvio.UnidadTransporte);
+                    var transporte = dto.DatosEnvio.UnidadTransporte.Select(p => _mapper.Map<DOMAIN.Entities.Transporte>(p)).ToList();
+                    var guiaRemision = _mapper.Map<DOMAIN.Entities.GuiaRemision>(dto);
+                    var datosEnvio = _mapper.Map<DOMAIN.Entities.DatosEnvio>(dto.DatosEnvio);
+                    var origen = _mapper.Map<DOMAIN.Entities.Origen>(dto.Origen);
+                    //var destino = _mapper.Map<DOMAIN.Entities.Destino>(dto.Destino);
+                    var destino = dto.Destino.Select(p => _mapper.Map<DOMAIN.Entities.Destino>(p)).ToList();
+                    var detalles = dto.Productos.Select(p => _mapper.Map<DOMAIN.Entities.GuiaDetalle>(p)).ToList();
+                    var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.DocRelacionado>(p)).ToList();
+                    var emailDestinatarioGuia = dto.Destinatario?.EmailDestinatarioGuia?.Select(p => _mapper.Map<DOMAIN.Entities.EmailDestinatarioGuid>(p)).ToList();
+
+                    // Llamar al repositorio
+                    var (guia_id, numero_guia) = await _repository.CreateGuiaRemisionTransactionalAsync(
+                        remitente, destinatario, proveedor, conductor, transporte,
+                        guiaRemision, datosEnvio, origen, destino, detalles, docRelacionados, emailDestinatarioGuia
+                    );
+                    return new GuiaCreatedResponseDTO
+                    {
+                        GuiaID = guia_id,
+                        NumeroGuia = numero_guia,
+                        TipoGuia="REMITENTE"
+                    };
+                }
+                catch (Exception ex)
+                {
+                    string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                    if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
+
+                    string errorBox = errorMsg.Contains("FOREIGN KEY") ? "Error de clave foránea."
+                                    : errorMsg.Contains("UnidadMedida") ? "Unidad de medida no válida."
+                                    : errorMsg.Contains("String") ? "Error de longitud de campo."
+                                    : "";
+
+                    return new BadRequestResponseDTO
+                    {
+                        Error = "Error al guardar la guía",
+                        Detalle = $"{errorBox} Más detalle: {errorMsg}"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
+                return new InternalErrorResponseDTO
+                {
+                    Error = "Error inesperado",
+                    Detalle = errorMsg
+                };
+            }
             //SE obtiene la guia de remision creada
-            var guiaCreada = await _repository.GetByIdAsync(guia_id);
-            return _mapper.Map<GuiaRemitenteDTO>(guiaCreada);
+            //var guiaCreada = await _repository.GetByIdAsync(guia_id);
+            //return _mapper.Map<GuiaRemitenteDTO>(guiaCreada);
         }
 
         public async Task<GuiaRemitenteDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto)
