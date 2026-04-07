@@ -163,7 +163,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 HandlingCode = new List<HandlingCode>{ new HandlingCode { _ = guia.TipoTrasladoCode20() }},
                 HandlingInstructions = new List<HandlingInstruction>{ new HandlingInstruction { _ = guia.DatosEnvio.MotivoEnvio }},
                 GrossWeightMeasure = new List<GrossWeightMeasure>{ new GrossWeightMeasure { _ =guia.DatosEnvio.PesoBruto.ToString() , unitCode = guia.DatosEnvio?.CodigoUM??"KGM" }},
-
+                //SpecialInstructions=new List<SpecialInstructions>{ new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" } },
                 ShipmentStage = new List<ShipmentStage>{ new ShipmentStage {
                     TransportModeCode = new List<TransportModeCode>{ new TransportModeCode { _ = guia.TipoTRansporteCode18() }},
                     TransitPeriod = new List<TransitPeriod>{ new TransitPeriod {

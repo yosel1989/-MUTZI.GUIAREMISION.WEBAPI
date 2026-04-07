@@ -183,7 +183,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 GuiaRemitenteDTO guiaCreada;
                 try
                 {
-                    guiaCreada = await _guiaRemitenteBDService.CreateAsync(doc);
+                    //guiaCreada = await _guiaRemitenteBDService.CreateAsync(doc);
+                    guiaCreada = new GuiaRemitenteDTO();
                 }
                 catch (Exception ex)
                 {
@@ -261,7 +262,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                         {
                             serie = guiaCreada.SerieCorrelativo,
                             remitente = ruc,
-                            mensaje = "Se ha emitido una nueva guía de traslado para "+doc.Destinatario.RazonSocial
+                            mensaje = "Se ha emitido una nueva guía de traslado para " + doc.Destinatario.RazonSocial
                         });
                     }
                     catch (Exception ex)
@@ -410,7 +411,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 GuiaTransportistaDTO guiaCreada;
                 try
                 {
-                    guiaCreada = await _guiaTransportistaBDService.CreateAsync(doc);
+                    //guiaCreada = await _guiaTransportistaBDService.CreateAsync(doc);
+                    guiaCreada = new GuiaTransportistaDTO();
                 }
                 catch (Exception ex)
                 {

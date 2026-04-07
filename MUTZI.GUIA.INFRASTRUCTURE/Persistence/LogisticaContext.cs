@@ -158,6 +158,9 @@ public partial class LogisticaContext : DbContext
                 .HasColumnName("codigoUM");
             entity.Property(e => e.FechaEnvio).HasColumnName("fechaEnvio");
             entity.Property(e => e.GuiaId).HasColumnName("guiaID");
+            entity.Property(e => e.IndicadorVehiculoConductor)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("indicadorVehiculoConductor");
             entity.Property(e => e.MotivoEnvio)
                 .HasMaxLength(100)
                 .HasColumnName("motivoEnvio");
@@ -431,6 +434,10 @@ public partial class LogisticaContext : DbContext
             entity.Property(e => e.Estado)
                 .HasMaxLength(50)
                 .HasColumnName("estado");
+            entity.Property(e => e.EstadoSunat)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("'PENDIENTE'")
+                .HasColumnName("estadoSunat");
             entity.Property(e => e.Fecha).HasColumnName("fecha");
             entity.Property(e => e.FechaCreacion)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -443,6 +450,7 @@ public partial class LogisticaContext : DbContext
                 .HasMaxLength(10)
                 .HasColumnName("hora");
             entity.Property(e => e.IdEstado).HasColumnName("idEstado");
+            entity.Property(e => e.IdEstadoSunat).HasColumnName("idEstadoSunat");
             entity.Property(e => e.NumeroGuia)
                 .HasMaxLength(15)
                 .HasColumnName("numeroGuia");

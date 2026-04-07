@@ -11,7 +11,8 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
         Task<byte[]> ExportGuiasAsync(int pageNumber, int pageSize, IQueryCollection q);
         Task<object> GetByIdAsync(int id);
         Task<GuiaPorTicketDTO> GetByTicketAsync(string ticket);
-        Task<GuiaRemitenteDTO> CreateAsync(GuiaRemitenteCreateDTO guiaRemisionDto);
+        //Task<GuiaRemitenteDTO> CreateAsync(GuiaRemitenteCreateDTO guiaRemisionDto);
+        Task<object> CreateAsync(string ruc, GuiaRemitenteCreateDTO guiaRemisionDto);
         Task<GuiaRemitenteDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto);
         Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado);
         public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO doc, string ruc);

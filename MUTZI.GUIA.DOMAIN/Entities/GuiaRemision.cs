@@ -57,6 +57,10 @@ public partial class GuiaRemision
 
     public sbyte IdEstado { get; set; }
 
+    public string EstadoSunat { get; set; } = null!;
+
+    public sbyte IdEstadoSunat { get; set; }
+
     public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
 
     public virtual Destinatario Destinatario { get; set; } = null!;
