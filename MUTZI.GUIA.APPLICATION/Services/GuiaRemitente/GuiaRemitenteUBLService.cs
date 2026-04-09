@@ -99,7 +99,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     DeliveryCustomerParty = new List<DeliveryCustomerParty>{ new DeliveryCustomerParty {
                         Party = new List<Party>{ new Party {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
-                                ID = new List<ID>{ new ID { _ = guia.Destinatario.NumeroDocumento , schemeID = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento)  }}
+                                ID = new List<ID>{ new ID { _ = guia.Destinatario.NumeroDocumento , schemeID = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento)  }}
                             }},
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
                                 ID = new List<ID> { new ID { _ = guia.Destinatario.UbigeoId}},
@@ -135,7 +135,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     //El proveedor se crea solo si el tipo de traslado es compra
                     SellerSupplierParty = guia.TipoTraslado == "COMPRA" ? new List<SellerSupplierParty>{ new SellerSupplierParty {
                         Party = new List<Party>{ new Party {
-                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Proveedor.NumeroDocumento,  schemeID = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento)  }}}},
+                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Proveedor.NumeroDocumento,  schemeID = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento, guia.Proveedor.NumeroDocumento)  }}}},
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
                                 ID = new List<ID> { new ID { _ = guia.Proveedor.UbigeoId } },
                                 CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Proveedor.Departamento } },
@@ -250,7 +250,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             {
                 root.DespatchAdvice[0].Shipment[0].ShipmentStage[0].DriverPerson = guia.DatosEnvio.ConductorGuia.Select(conductor => new DriverPerson
                 {
-                    ID = new List<ID> { new ID { _ = conductor.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(conductor.TipoDocumento) } },
+                    ID = new List<ID> { new ID { _ = conductor.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(conductor.TipoDocumento,conductor.NumeroDocumento) } },
                     FirstName = new List<FirstName> { new FirstName { _ = conductor.Nombres } },
                     FamilyName = new List<FamilyName> { new FamilyName { _ = conductor.Apellidos } },
                     JobTitle = new List<JobTitle> { new JobTitle { _ = conductor.JobTitle } },

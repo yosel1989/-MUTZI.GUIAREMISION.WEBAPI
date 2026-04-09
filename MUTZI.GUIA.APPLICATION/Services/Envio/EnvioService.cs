@@ -309,17 +309,49 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                         Detalle = $"No se encontró una guía de remisión con ID {guiaId}."
                     };
                 }
-
-                string nombreArchivo = guiaExistente switch
+                string nombreArchivo;
+                if (guiaExistente is GuiaRemitenteDTO guiaRemitente)
                 {
-                    GuiaRemitenteDTO guiaRemitente =>
-                        await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaRemitente),
+                    var (esValido, error) = _guiaRemitenteBDService.ValidarDatosGuiaRemitente(guiaRemitente, ruc);
+                    if (!esValido)
+                    {
+                        return new BadRequestResponseDTO
+                        {
+                            Error = "Error en datos enviados",
+                            Detalle = error
+                        };
+                    }
 
-                    GuiaTransportistaDTO guiaTransportista =>
-                        await _guiaTransportistaUBLService.GenerarGuiaTransportistaJson(guiaTransportista),
+                    nombreArchivo = await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaRemitente);
+                }
+                else if (guiaExistente is GuiaTransportistaDTO guiaTransportista)
+                {
+                    var (esValido, error) = _guiaTransportistaBDService.ValidarDatosGuiaTransportista(guiaTransportista, ruc);
+                    if (!esValido)
+                    {
+                        return new BadRequestResponseDTO
+                        {
+                            Error = "Error en datos enviados",
+                            Detalle = error
+                        };
+                    }
 
-                    _ => throw new KeyNotFoundException("Tipo de guía no válido.")
-                };
+                    nombreArchivo = await _guiaTransportistaUBLService.GenerarGuiaTransportistaJson(guiaTransportista);
+                }
+                else
+                {
+                    throw new KeyNotFoundException("Tipo de guía no válido.");
+                }
+                //string nombreArchivo = guiaExistente switch
+                //{
+                //    GuiaRemitenteDTO guiaRemitente =>
+                //        await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaRemitente),
+
+                //    GuiaTransportistaDTO guiaTransportista =>
+                //        await _guiaTransportistaUBLService.GenerarGuiaTransportistaJson(guiaTransportista),
+
+                //    _ => throw new KeyNotFoundException("Tipo de guía no válido.")
+                //};
 
                 string efactRawResponse;
 

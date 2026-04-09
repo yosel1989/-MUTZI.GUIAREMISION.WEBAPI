@@ -125,5 +125,49 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                 return (false, ex.Message);
             }
         }
+        public (bool EsValido, string Error) ValidarDatosGuiaTransportista(GuiaTransportistaDTO guia, string ruc)
+        {
+            //try
+            //{
+            //    if (guia == null)
+            //        return (false, "La guía proporcionada es nula.");
+
+            //    GuiaTransportistaCreateDTO guiaCreate;
+            //    try
+            //    {
+            //        guiaCreate = _mapper.Map<GuiaTransportistaCreateDTO>(guia);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        return (false, $"Error al convertir GuiaTransportistaDTO a GuiaTransportistaCreateDTO: {ex.Message}");
+            //    }
+
+            //    return ValidarDatosGuiaTransportista(guiaCreate, ruc);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return (false, ex.Message);
+            //}
+            try
+            {
+                var ventaConfig = _ventaConfigRepository.GetByRucAsync(ruc).Result;
+                if (ventaConfig == null || string.IsNullOrEmpty(ventaConfig.Ruc))
+                {
+                    return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador.");
+                }
+                _ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento);
+                if (guia.DocRelacionados?.Count > 1)
+                {
+                    return (false, "Solo se permite un documento relacionado como referencia en la guía de remisión transportista.");
+                }
+                //if (string.IsNullOrWhiteSpace(guia.Observacion))
+                //    return (false, "La observación no puede estar vacía.");
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
     }
 }
