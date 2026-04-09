@@ -9,7 +9,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
     [SwaggerSchema("Recibe un objeto datos_envio de la guía transportista, aquí se detala los detalles del envío", Nullable=false)]
     public class DatosEnvioGTCreateDTO
     {
-        //public string MotivoTraslado { get; set; }
         [JsonPropertyName("fecha_envio")]
         [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
         [StringLength(10)]

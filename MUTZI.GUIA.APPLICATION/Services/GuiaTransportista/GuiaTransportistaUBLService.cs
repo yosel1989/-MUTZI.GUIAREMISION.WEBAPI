@@ -178,11 +178,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                 new Shipment {
                     ID = new List<ID> { new ID { _ = "SUNAT_Envio" }},
 
-                    //// Edit 2: No va Motivo de traslado como: HandlingInstructions en transportista
-                    //HandlingInstructions = string.IsNullOrWhiteSpace(guia.DatosEnvioDto?.MotivoTraslado) ? null
-                    //    : new List<HandlingInstruction> { new HandlingInstruction { _ = guia.DatosEnvioDto.MotivoTraslado } },
-                    //HandlingCode = ToCode20OrNull(guia.DatosEnvioDto?.MotivoTraslado),
-
                     GrossWeightMeasure = new List<GrossWeightMeasure> {
                         new GrossWeightMeasure { _ = (guia.DatosEnvio?.PesoBruto ?? 0M).ToString(), unitCode = guia.DatosEnvio?.CodigoUM ?? "KGM" }
                     },
