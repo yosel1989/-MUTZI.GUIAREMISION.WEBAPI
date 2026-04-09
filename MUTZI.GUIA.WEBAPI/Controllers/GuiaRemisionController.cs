@@ -153,39 +153,6 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 })
             };
         }
-        //[HttpPost]
-        //[Route("remitente/{ruc}")]
-        //[SwaggerOperation(
-        //Summary = "Registrar guía remitente",
-        //Description = "Registra una nueva guía de remisión remitente y la envía a EFACT.",
-        //OperationId = "enviar_guia_remitente")]
-        //[ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
-        //[ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        //public async Task<IActionResult> EnviarGuiaRemision(string ruc, [FromBody] GuiaRemitenteCreateDTO doc)
-        //{
-        //    if (doc == null)
-        //    {
-        //        return BadRequest(new BadRequestResponseDTO
-        //        {
-        //            Error = "Error en datos enviados",
-        //            Detalle = "La guía de remisión remitente no puede ser nula."
-        //        });
-        //    }
-
-        //    var resultado = await _envioService.ProcesarGuiaRemisionAsync(ruc, doc);
-        //    return resultado switch
-        //    {
-        //        SendGuiaResponseDTO ok => Created(string.Empty, ok),
-        //        BadRequestResponseDTO bad => BadRequest(bad),
-        //        InternalErrorResponseDTO error => StatusCode(500, error),
-        //        _ => StatusCode(500, new InternalErrorResponseDTO
-        //        {
-        //            Error = "Error desconocido",
-        //            Detalle = "Ocurrió un error desconocido al procesar la solicitud."
-        //        })
-        //    };
-        //}
         [HttpPost]
         [Route("registrar-transportista/{ruc}")]
         [SwaggerOperation(
@@ -219,41 +186,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 })
             };
         }
-
-
-        //[HttpPost]
-        //[Route("transportista/{ruc}")]
-        //[SwaggerOperation(
-        //    Summary = "Registrar guía transportista",
-        //    Description = "Registra una nueva guía de remisión transportista y la envía a EFACT.",
-        //    OperationId = "enviar_guia_transportista"
-        //    )]
-        //[ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
-        //[ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        //public async Task<ActionResult> EnviarGuiaTransportista(string ruc, [FromBody] GuiaTransportistaCreateDTO doc)
-        //{
-        //    if (doc == null)
-        //    {
-        //        return BadRequest(new BadRequestResponseDTO
-        //        {
-        //            Error = "Error en datos enviados",
-        //            Detalle = "La guía de remisión transportista no puede ser nula."
-        //        });
-        //    }
-        //    var resultado = await _envioService.ProcesarGuiaTransportistaAsync(ruc, doc);
-        //    return resultado switch
-        //    {
-        //        SendGuiaResponseDTO ok => Created(string.Empty, ok),
-        //        BadRequestResponseDTO bad => BadRequest(bad),
-        //        InternalErrorResponseDTO error => StatusCode(500, error),
-        //        _ => StatusCode(500, new InternalErrorResponseDTO
-        //        {
-        //            Error = "Error desconocido",
-        //            Detalle = "Ocurrió un error desconocido al procesar la solicitud."
-        //        })
-        //    };
-        //}
+        [HttpPut]
+        [Route("actualizar-remitente{id}")]
+        [SwaggerOperation(
+        Summary = "Actualizar guía de remisión remitente",
+        Description = "Actualiza guía de remisión remitente por ID.",
+        OperationId = "actualizar_guia_remitente")]
+        [ProducesResponseType(typeof(GuiaRemitenteDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<GuiaRemitenteDTO>> Update(int id, [FromBody] GuiaRemitenteUpdateDTO guiaDTO)
+        {
+            try
+            {
+                var updatedProveedor = await _guiasRemisionBDService.UpdateAsync(id, guiaDTO);
+                return Ok(updatedProveedor);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar proveedor.",
+                    Detalle = errorMsg
+                });
+            }
+        }
         [HttpPost]
         [Route("{ruc}enviar/{guiaId}")]
         [SwaggerOperation(

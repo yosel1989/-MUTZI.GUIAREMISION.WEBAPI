@@ -46,7 +46,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpGet]
-        [Route("listar-sugerido/{numeroDoc}")]
+        [Route("listar-sugerido")]
         [SwaggerOperation(
         Summary = "Listar destinatarios sugeridos",
         Description = "Lista los destinatarios sugeridos por número de documento o razón social",
@@ -54,7 +54,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(DestinatarioListDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<DestinatarioListDTO>>> GetBySuggestion(string numeroDoc)
+        public async Task<ActionResult<List<DestinatarioListDTO>>> GetBySuggestion([FromQuery] string? numeroDoc)
         {
             try
             {
