@@ -255,7 +255,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         //    };
         //}
         [HttpPost]
-        [Route("{ruc}/{guiaId}")]
+        [Route("{ruc}enviar/{guiaId}")]
         [SwaggerOperation(
         Summary = "Enviar guia remisión",
         Description = "Envía una guía existente(REMITENTE ó TRANSPORTISTA) al facturador electrónico.",

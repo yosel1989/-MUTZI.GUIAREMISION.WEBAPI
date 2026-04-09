@@ -329,12 +329,12 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 }
                 catch (Exception ex)
                 {
-                    estado = "RECHAZADO";
+                    estado = "ERROR";
                     idEstado = -1;
 
                     string errorMsg = ex.InnerException?.Message ?? ex.Message;
                     if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-
+                    await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaId, errorMsg, estado, idEstado);
                     return new InternalErrorResponseDTO
                     {
                         Error = "Error al enviar a EFACT",
@@ -361,9 +361,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 catch
                 {
                     ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
-                    estado = "RECHAZADO";
+                    estado = "ERROR";
                     idEstado = -1;
-
+                    await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaId, ticket, estado, idEstado);
                     efactParsed = new EfactResponseDTO
                     {
                         Code = "-1",
@@ -381,9 +381,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             }
             catch (Exception ex)
             {
+                estado = "ERROR";
+                idEstado = -1;
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-
+                await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaId, errorMsg, estado, idEstado);
                 return new InternalErrorResponseDTO
                 {
                     Error = "Error inesperado",

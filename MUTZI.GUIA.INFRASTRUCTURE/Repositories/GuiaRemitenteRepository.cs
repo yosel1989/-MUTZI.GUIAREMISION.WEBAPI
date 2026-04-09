@@ -437,6 +437,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         RucEmpresaCurrier = env.RucEmpresaCurrier,
                         RazonSocialCurrier = env.RazonSocialCurrier,
                         RegistroMtcCurrier = env.RegistroMtcCurrier,
+                        IndicadorVehiculoConductor = env.IndicadorVehiculoConductor,
                         ConductorGuids = env.ConductorGuids.Select(cg => new ConductorGuid
                         {
                             ConductorGuidId = cg.ConductorGuidId,
@@ -747,15 +748,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 throw;
             }
         }
-        public async Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado)
+        public async Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estadoSunat, int idEstadoSunat)
         {
             var guia = await _context.GuiaRemisions.FindAsync(guiaId);
             if (guia == null)
                 throw new KeyNotFoundException("Guía no encontrada");
 
             guia.RespuestaTicket = ticket;
-            guia.Estado = estado;
-            guia.IdEstado = (sbyte)idEstado;
+            guia.EstadoSunat = estadoSunat;
+            guia.IdEstadoSunat = (sbyte)idEstadoSunat;
             guia.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }

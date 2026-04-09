@@ -51,7 +51,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
 
         [JsonPropertyName("indicador_vehiculo_conductor")]
         [SwaggerSchema("Recibe un booleano, este campo se marca como 'true' si 'tipo_transporte' es 'PUBLICO' y existen registros de vehículos y conductores.", Nullable = false)]
-        public bool IndicadorVehiculoConductor { get; set; }
+        public bool IndicadorVehiculoConductor { get; set; } = false;
 
         [JsonPropertyName("conductor")]
         public List<ConductorCreateDTO?> Conductor { get; set; }
