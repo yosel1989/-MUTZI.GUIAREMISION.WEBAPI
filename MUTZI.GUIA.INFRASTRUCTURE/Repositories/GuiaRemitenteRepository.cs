@@ -133,7 +133,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Take(pageSize);
             }
             var data = await query
-                .OrderByDescending(x => x.FechaCreacion)
+                .OrderByDescending(x => x.GuiaId)
                 //.Skip((pageNumber - 1) * pageSize)
                 //.Take(pageSize)
                 .Select(g => new GuiaRemision

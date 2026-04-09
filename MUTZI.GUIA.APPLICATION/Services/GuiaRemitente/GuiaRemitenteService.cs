@@ -349,11 +349,52 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                         _ = guia.getTipoCodigoDocumento(conductor.TipoDocumento, conductor.NumeroDocumento);
                     }
                 }
-
-                //if (string.IsNullOrWhiteSpace(guia.Observacion))
-                //    return (false, "La observación no puede estar vacía.");
                 //Si tipo de transporte es PUBLICO, entonces DatosEnvio.rucEmpresaCurrier debe ser obligatorio
                 if (guia.TipoTransporte=="PUBLICO")
+                {
+                    if (guia.DatosEnvio.RucEmpresaCurrier.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
+                    if (string.IsNullOrWhiteSpace(guia.DatosEnvio.RazonSocialCurrier)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
+                    if (string.IsNullOrWhiteSpace(guia.DatosEnvio.RegistroMtcCurrier)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }
+                }
+                //if (guia.)
+                return (true, null);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO guia, string ruc)
+        {
+            try
+            {
+                if (guia.DocRelacionados?.Count > 3)
+                {
+                    return (false, "Solo se permite hasta 3 documentos relacionados como referencia en la guía de remisión transportista.");
+                }
+                var ventaConfig = _ventaConfigRepository.GetByRucAsync(ruc).Result;
+                if (ventaConfig == null || string.IsNullOrEmpty(ventaConfig.Ruc))
+                {
+                    return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");
+                }
+                if (guia.Remitente.Ruc != ventaConfig.Ruc)
+                    return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
+                _ = guia.TipoTRansporteCode18();
+                _ = guia.TipoTrasladoCode20();
+                _ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento);
+                if (guia.Proveedor != null)
+                {
+                    _ = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento, guia.Proveedor.NumeroDocumento);
+                }
+                if (guia.DatosEnvio.ConductorGuia != null)
+                {
+                    foreach (var conductor in guia.DatosEnvio.ConductorGuia)
+                    {
+                        _ = guia.getTipoCodigoDocumento(conductor.TipoDocumento, conductor.NumeroDocumento);
+                    }
+                }
+                //Si tipo de transporte es PUBLICO, entonces DatosEnvio.rucEmpresaCurrier debe ser obligatorio
+                if (guia.TipoTransporte == "PUBLICO")
                 {
                     if (guia.DatosEnvio.RucEmpresaCurrier.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
                     if (string.IsNullOrWhiteSpace(guia.DatosEnvio.RazonSocialCurrier)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }

@@ -64,12 +64,23 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                     .ForMember(dest => dest.Proveedor, opt => opt.Ignore())
                     ;
             
-            CreateMap<GuiaRemitenteUpdateDTO, DOMAIN.Entities.GuiaRemision>();
+            CreateMap<GuiaRemitenteUpdateDTO, DOMAIN.Entities.GuiaRemision>()
+                
+                ;
             //Guia de remisión por ticket
             CreateMap<DOMAIN.Entities.GuiaRemision, GuiaPorTicketDTO>()
                 .ForMember(dest => dest.Ruc, opt => opt.MapFrom(src => src.Remitente.Ruc))
                 ;
-
+            CreateMap<DatosEnvioUpdateDTO, DOMAIN.Entities.DatosEnvio>();
+            CreateMap<DatosEnvioGTUpdateDTO, DOMAIN.Entities.DatosEnvio>();
+            CreateMap<DocRelacionadoUpdateDTO, DOMAIN.Entities.DocRelacionado>();
+            CreateMap<EmailDestinatarioGuiaUpdateDTO, DOMAIN.Entities.EmailDestinatarioGuid>();
+            CreateMap<EmailRemiteTransportistaGuiaUpdateDTO, DOMAIN.Entities.EmailRemiteTransportistaGuid>();
+            CreateMap<OrigenUpdateDTO, DOMAIN.Entities.Origen>();
+            CreateMap<DestinoUpdateDTO, DOMAIN.Entities.Destino>();
+            CreateMap<ProductosUpdateDTO, DOMAIN.Entities.GuiaDetalle>();
+            CreateMap<ConductorGuiaUpdateDTO, DOMAIN.Entities.ConductorGuid>();
+            CreateMap<TransporteGuiaUpdateDTO, DOMAIN.Entities.TransporteGuid>();
             //Guias de transportista
             CreateMap<DOMAIN.Entities.GuiaRemision, GuiaTransportistaDTO>()
                 .ForMember(dest => dest.SerieCorrelativo, opt => opt.MapFrom(src => src.NumeroGuia))

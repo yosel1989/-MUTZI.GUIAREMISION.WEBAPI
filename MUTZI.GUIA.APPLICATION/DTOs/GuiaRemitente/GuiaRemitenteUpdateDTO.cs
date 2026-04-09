@@ -70,56 +70,33 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public string EmpleadoNombreEdicion { get; set; }
 
         [JsonPropertyName("doc_relacionado")]
-        public List<DocRelacionadoCreateDTO>? DocRelacionado { get; set; }
+        public List<DocRelacionadoUpdateDTO>? DocRelacionado { get; set; }
 
-        [JsonPropertyName("remitente")]
+        //[JsonPropertyName("remitente_id")]
+        //[Required]
+        //public int RemitenteId { get; set; }
+        [JsonPropertyName("destinatario_id")]
         [Required]
-        //public RemitenteCreateDTO Remitente { get; set; }
-        public RemitenteCreateGuiaDTO Remitente { get; set; }
+        public int? DestinatarioId { get; set; }
 
-        [JsonPropertyName("destinatario")]
-        [Required]
-        public DestinatarioCreateDTO? Destinatario { get; set; }
-
-        [JsonPropertyName("proveedor")]
-        public ProveedorCreateDTO? Proveedor { get; set; }
+        [JsonPropertyName("proveedor_id")]
+        public int? ProveedorId { get; set; }
 
         [JsonPropertyName("datos_envio")]
         [Required]
-        public DatosEnvioCreateDTO DatosEnvio { get; set; }
+        public DatosEnvioUpdateDTO DatosEnvio { get; set; }
 
         [JsonPropertyName("origen")]
         [Required]
-        public OrigenCreateDTO Origen { get; set; }
+        public OrigenUpdateDTO Origen { get; set; }
 
         [JsonPropertyName("destino")]
         [Required]
-        public List<DestinoCreateDTO> Destino { get; set; }
+        public List<DestinoUpdateDTO> Destino { get; set; }
 
         [JsonPropertyName("productos")]
         [Required]
-        public List<ProductosCreateDTO> Productos { get; set; }
-
-        public string TipoTrasladoCode20()
-        {
-            switch (this.TipoTraslado)
-            {
-                case "VENTA":
-                    if (this.Remitente.Ruc == this.Destinatario.NumeroDocumento)
-                        throw new System.Exception("Si el tipo de traslado es VENTA, el 'Tipo y Número de documento de identidad del destinatario' no puede ser igual al 'Tipo y Número de documento de identidad del remitente'.");
-                    return "01";
-                case "COMPRA":
-                    if (this.Remitente.Ruc != this.Destinatario.NumeroDocumento)
-                        throw new System.Exception("Si el tipo de traslado es COMPRA, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
-                    return "02";
-                case "TRASLADO":
-                    if (this.Remitente.Ruc != this.Destinatario.NumeroDocumento)
-                        throw new System.Exception("Si el tipo de traslado es TRASLADO, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
-                    return "04";
-                default:
-                    throw new System.Exception("Catálogo No. 20: Códigos – Motivos de traslado no definido. Debe elegir entre: VENTA, COMPRA ó TRASLADO");
-            }
-        }
+        public List<ProductosUpdateDTO> Productos { get; set; }
 
         public string TipoTRansporteCode18()
         {
