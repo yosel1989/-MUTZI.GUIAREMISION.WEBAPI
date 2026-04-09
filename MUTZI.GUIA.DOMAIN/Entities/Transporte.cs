@@ -23,6 +23,8 @@ public partial class Transporte
 
     public string? NroAutorizacion { get; set; }
 
+    public string? Tipo { get; set; }
+
     public DateTime? FechaCreacion { get; set; }
 
     public DateTime? FechaEdicion { get; set; }

@@ -17,6 +17,8 @@ public partial class Conductor
 
     public string? Cargo { get; set; }
 
+    public string? Tipo { get; set; }
+
     public string Licencia { get; set; } = null!;
 
     public DateTime? FechaCreacion { get; set; }

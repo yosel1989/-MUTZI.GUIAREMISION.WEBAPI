@@ -21,12 +21,26 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(d => d.Ubigeo)
                 .ToListAsync();
         }
+        //public async Task<List<Destinatario>> GetListBySuggestion(string numeroDoc)
+        //{
+        //    return await _context.Destinatarios
+        //        .Where(c => c.IdEstado == 1 &&
+        //        (c.NumeroDocumento.Contains(numeroDoc) || c.RazonSocial.Contains(numeroDoc)))
+        //        .ToListAsync();
+        //}
         public async Task<List<Destinatario>> GetListBySuggestion(string numeroDoc)
         {
-            return await _context.Destinatarios
-                .Where(c => c.IdEstado == 1 &&
-                (c.NumeroDocumento.Contains(numeroDoc) || c.RazonSocial.Contains(numeroDoc)))
-                .ToListAsync();
+            var query = _context.Destinatarios
+                .Where(c => c.IdEstado == 1);
+
+            if (!string.IsNullOrEmpty(numeroDoc))
+            {
+                query = query.Where(c =>
+                    c.NumeroDocumento.Contains(numeroDoc) ||
+                    c.RazonSocial.Contains(numeroDoc));
+            }
+
+            return await query.ToListAsync();
         }
         public async Task<(List<Destinatario>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
         {
