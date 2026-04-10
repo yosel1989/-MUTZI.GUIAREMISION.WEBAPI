@@ -11,6 +11,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen
 {
     public class OrigenUpdateDTO
     {
+        [JsonPropertyName("origen_id")]
+        [SwaggerSchema("Recibe un entero, aquí se coloca el ID del origen que se va a actualizar", Nullable = false)]
+        [Required]
+        public int OrigenId { get; set; }
+
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del proveedor, ejm: 150131", Nullable = false)]
         [Required(ErrorMessage = "EL ubigeo es obligatorio")]

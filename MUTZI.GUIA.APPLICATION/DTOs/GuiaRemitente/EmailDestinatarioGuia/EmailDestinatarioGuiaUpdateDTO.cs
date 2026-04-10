@@ -22,5 +22,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia
         [Required]
         [EmailAddress(ErrorMessage = "El formato del correo es inválido")]
         public string Email { get; set; }
+
+        [JsonPropertyName("destinatario_id")]
+        [SwaggerSchema("Recibe un entero, aquí se coloca el ID del destinatario asociado a la guía de remisión.", Nullable = false)]
+        [Required]
+        public int DestinatarioId { get; set; }
     }
 }

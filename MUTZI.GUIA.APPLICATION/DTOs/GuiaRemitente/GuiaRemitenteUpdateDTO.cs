@@ -2,6 +2,7 @@
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
@@ -15,6 +16,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
     public class GuiaRemitenteUpdateDTO
     {
+        [JsonPropertyName("ruc")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el RUC del remitente, este campo es obligatorio", Nullable = false)]
+        [StringLength(11)]
+        [MinLength(11)]
+        [Required]
+        public string Ruc { get; set; }
+
         [JsonPropertyName("tipo_transporte")]
         [SwaggerSchema("Recibe un texto y solo pueden ser: PUBLICO ó PRIVADO", Nullable = false)]
         [StringLength(7)]
@@ -78,6 +86,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [JsonPropertyName("destinatario_id")]
         [Required]
         public int? DestinatarioId { get; set; }
+
+        [JsonPropertyName("email_destinatario")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca hasta máximo 3 correos del destinatario", Nullable = true)]
+        public List<EmailDestinatarioGuiaUpdateDTO>? EmailDestinatarioGuia { get; set; }
 
         [JsonPropertyName("proveedor_id")]
         public int? ProveedorId { get; set; }

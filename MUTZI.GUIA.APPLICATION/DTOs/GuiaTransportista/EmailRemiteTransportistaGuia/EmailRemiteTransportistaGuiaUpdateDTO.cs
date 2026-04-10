@@ -22,5 +22,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.EmailRemiteTransportista
         [Required]
         [EmailAddress(ErrorMessage = "El formato del correo es inválido")]
         public string Email { get; set; }
+
+        [JsonPropertyName("remite_transportista_id")]
+        [SwaggerSchema("Recibe un entero, aquí se coloca el ID del remite transportista asociado a la guía.", Nullable = false)]
+        [Required]
+        public int RemiteTransportistaID { get; set; }
     }
 }

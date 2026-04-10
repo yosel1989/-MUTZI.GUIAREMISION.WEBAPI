@@ -19,10 +19,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<List<Transporte>> GetListBySuggestion(string numeroDoc)
         {
-            return await _context.Transportes
-                .Where(c => c.IdEstado == 1 &&
-                (c.Descripcion.Contains(numeroDoc) || c.Placa.Contains(numeroDoc)))
-                .ToListAsync();
+            var query = _context.Transportes.Where(c => c.IdEstado == 1);
+            if (!string.IsNullOrEmpty(numeroDoc))
+            {
+                query = query.Where(c =>
+                    c.Descripcion.Contains(numeroDoc) ||
+                    c.Placa.Contains(numeroDoc) ||
+                    c.Tarjeta.Contains(numeroDoc));
+            }
+            return await query.ToListAsync();
         }
         public async Task<(List<Transporte>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
         {

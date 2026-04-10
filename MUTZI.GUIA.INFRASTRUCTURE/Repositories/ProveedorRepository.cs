@@ -22,10 +22,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<List<Proveedor>> GetListBySuggestion(string numeroDoc)
         {
-            return await _context.Proveedors
-                .Where(c => c.IdEstado == 1 &&
-                (c.NumeroDocumento.Contains(numeroDoc) || c.RazonSocial.Contains(numeroDoc)))
-                .ToListAsync();
+            var query = _context.Proveedors.Where(c => c.IdEstado == 1);
+            if (!string.IsNullOrEmpty(numeroDoc))
+            {
+                query = query.Where(c =>
+                    c.NumeroDocumento.Contains(numeroDoc) ||
+                    c.RazonSocial.Contains(numeroDoc));
+            }
+            return await query.ToListAsync();
         }
         public async Task<(List<Proveedor>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
         {

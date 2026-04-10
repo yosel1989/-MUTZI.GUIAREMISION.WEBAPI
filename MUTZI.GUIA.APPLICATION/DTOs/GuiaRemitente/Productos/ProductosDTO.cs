@@ -6,6 +6,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
     [SwaggerSchema("Devuelve un objeto de productos", Nullable = false)]
     public class ProductosDTO
     {
+        [JsonPropertyName("guia_detalle_id")]
+        [SwaggerSchema("Devuelve en entero el ID de la guía de detalle.", Nullable = false)]
+        public int GuiaDetalleID { get; set; }
+
         [JsonPropertyName("codigo")]
         [SwaggerSchema("Devuelve en texto el código del producto.", Nullable = true)]
         public string? codigo { get; set; }

@@ -6,6 +6,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino
     [SwaggerSchema("Devuelve el objeto destino")]
     public class DestinoDTO
     {
+        [JsonPropertyName("destino_id")]
+        [SwaggerSchema("Devuelve un entero, aquí se coloca el ID del destino registrado en la base de datos", Nullable = false)]
+        public int DestinoId { get; set; }
+
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Devuelve en texto el ubigeo de la dirección fiscal del proveedor, ejm: 150131", Nullable = false)]
         public string UbigeoId { get; set; }

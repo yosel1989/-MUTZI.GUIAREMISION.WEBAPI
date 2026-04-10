@@ -199,15 +199,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var updatedProveedor = await _guiasRemisionBDService.UpdateAsync(id, guiaDTO);
-                return Ok(updatedProveedor);
+                var updated = await _guiasRemisionBDService.UpdateAsync(id, guiaDTO);
+                return Ok(updated);
             }
             catch (Exception ex)
             {
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
-                    Error = "Error al actualizar proveedor.",
+                    Error = "Error al actualizar guía de remisión remitente.",
                     Detalle = errorMsg
                 });
             }

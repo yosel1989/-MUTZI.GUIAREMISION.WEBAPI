@@ -307,7 +307,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
 
         public async Task<GuiaRemitenteDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto)
         {
-            var existingGuiaRemision = await _repository.GetByIdAsync(id);
+            var existingGuiaRemision = await _repository.GetByIdAsync2(id);
             if (existingGuiaRemision == null)
             {
                 throw new KeyNotFoundException("Guia de remisión no encontrada");
