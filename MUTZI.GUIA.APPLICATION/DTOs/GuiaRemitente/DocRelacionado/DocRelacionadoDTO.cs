@@ -11,6 +11,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado
     [SwaggerSchema("Devuelve el objeto de documentos relacionados a la guía", Nullable = false)]
     public class DocRelacionadoDTO
     {
+        [JsonPropertyName("doc_relacionado_id")]
+        [SwaggerSchema("Devuelve en entero el ID del doc_relacionado asociado a la guía.", Nullable = false)]
+        public int DocRelacionadoId { get; set; }
+
         [JsonPropertyName("tipo_doc_ref")]
         [SwaggerSchema("Devuelve un texto, es el tipo de documento vinculado como referencia en la guía de remisión, los tipos definidos son: FACTURA y BOLETA", Nullable = false)]
         public string TipoDocRef { get; set; }

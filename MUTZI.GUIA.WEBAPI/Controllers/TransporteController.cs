@@ -45,7 +45,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
         [HttpGet]
-        [Route("listar-sugerido/{numeroDoc}")]
+        [Route("listar-sugerido")]
         [SwaggerOperation(
         Summary = "Listar unidades de transportes sugeridos",
         Description = "Lista las unidades de transporte sugeridos por número de documento o razón social",
@@ -53,7 +53,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(TransporteListDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<TransporteListDTO>>> GetBySuggestion(string numeroDoc)
+        public async Task<ActionResult<List<TransporteListDTO>>> GetBySuggestion([FromQuery] string? numeroDoc)
         {
             try
             {

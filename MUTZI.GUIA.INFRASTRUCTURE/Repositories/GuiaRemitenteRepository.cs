@@ -189,133 +189,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
             return (data, totalRecords);
         }
-        public async Task<(List<GuiaRemision>, int)> GetListAsync2(int pageNumber, int pageSize, DataTableDTO request)
-        {
-            var query = _context.GuiaRemisions.AsQueryable();
-
-            if (request.Columns != null && request.Columns.Any())
-            {
-                foreach (var col in request.Columns)
-                {
-                    var val = col.Search.Value;
-                    var key = col.Data?.ToLower();
-
-                    if (string.IsNullOrEmpty(val)) continue;
-
-                    if (key.Contains("fecha") && val.Contains("|"))
-                    {
-                        var parts = val.Split('|');
-                        if (DateTime.TryParse(parts[0], out var dIni) && DateTime.TryParse(parts[1], out var dFin))
-                        {
-                            var dFinSiguiente = dFin.AddDays(1);
-                            query = query.Where(x => x.FechaCreacion >= dIni && x.FechaCreacion < dFinSiguiente);
-                        }
-                        continue;
-                    }
-
-                    if ((key.Contains("id") || key.Contains("ruc")) && val.Contains(","))
-                    {
-                        var idsStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-                        if (key == "id_remitente")
-                        {
-                            var idsInt = idsStrings.Select(int.Parse).ToList();
-                            query = query.Where(x => idsInt.Contains(x.RemitenteId));
-                        }
-                        else if (key == "ruc")
-                        {
-                            query = query.Where(x => idsStrings.Contains(x.Ruc));
-                        }
-                        continue;
-                    }
-
-                    // Filtros unitarios normales
-                    switch (key)
-                    {
-                        case "ruc": query = query.Where(x => x.Ruc == val); break;
-                        case "tipo_guia": query = query.Where(x => x.TipoGuia.Contains(val)); break;
-                        case "numero_guia": query = query.Where(x => x.NumeroGuia == val); break;
-                        case "serie_guia": query = query.Where(x => x.Serie == val); break;
-                        case "id_remitente":
-                            if (int.TryParse(val, out int idR)) query = query.Where(x => x.RemitenteId == idR);
-                            break;
-                    }
-                }
-            }
-
-            var totalRecords = await query.CountAsync();
-
-            var data = await query
-                .OrderByDescending(x => x.FechaCreacion)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .AsNoTracking()
-                .ToListAsync();
-
-            return (data, totalRecords);
-        }
-        public async Task<(List<GuiaRemision>, int)> GetListAsync1(int pageNumber, int pageSize, DataTableDTO request)
-        {
-            var query = _context.GuiaRemisions
-                .Select(g => new GuiaRemision
-                {
-                    GuiaId = g.GuiaId,
-                    TipoGuia = g.TipoGuia,
-                    Ruc = g.Ruc,
-                    RucNavigation = new VentaConfig
-                    {
-                        EmailPrincipal = g.RucNavigation.EmailPrincipal,
-                        Empresa = g.RucNavigation.Empresa
-                    },
-                    TipoTransporte = g.TipoTransporte,
-                    TipoTraslado = g.TipoTraslado,
-                    NumeroGuia = g.NumeroGuia,
-                    Fecha = g.Fecha,
-                    Hora = g.Hora,
-                    RespuestaTicket = g.RespuestaTicket,
-                    Remitente = new Remitente
-                    {
-                        Descripcion = g.Remitente.Descripcion
-                    },
-                    Destinatario = new Destinatario
-                    {
-                        TipoDocumento = g.Destinatario.TipoDocumento,
-                        NumeroDocumento = g.Destinatario.NumeroDocumento,
-                        RazonSocial = g.Destinatario.RazonSocial
-                    },
-                    Proveedor = g.Proveedor == null ? null : new Proveedor
-                    {
-                        TipoDocumento = g.Proveedor.TipoDocumento,
-                        NumeroDocumento = g.Proveedor.NumeroDocumento,
-                        RazonSocial = g.Proveedor.RazonSocial
-                    },
-                    Origens = g.Origens.Select(o => new Origen
-                    {
-                        Ubigeo = o.Ubigeo
-                    }).ToList(),
-                    Destinos = g.Destinos.Select(d => new Destino
-                    {
-                        Ubigeo = d.Ubigeo
-                    }).ToList(),
-                    FechaCreacion = g.FechaCreacion,
-                    EmpleadoNombreCreacion = g.EmpleadoNombreCreacion,
-                    FechaEdicion = g.FechaEdicion,
-                    EmpleadoNombreEdicion = g.EmpleadoNombreEdicion,
-                    Estado = g.Estado,
-                    IdEstado = g.IdEstado
-                })
-                 .OrderByDescending(x => x.FechaCreacion);
-
-            var totalRecords = await query.CountAsync();
-
-            var data = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .AsNoTracking()
-                .Take(pageSize)
-                .ToListAsync();
-
-            return (data, totalRecords);
-        }
         public async Task<List<GuiaRemision>> GetAllAsync()
         {
             return await _context.GuiaRemisions
@@ -482,6 +355,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     }).ToList(),
                     Origens = g.Origens.Select(o => new Origen
                     {
+                        OrigenId= o.OrigenId,
                         UbigeoId = o.UbigeoId,
                         Direccion = o.Direccion,
                         Ubigeo = o.Ubigeo,
@@ -489,6 +363,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     }).ToList(),
                     Destinos = g.Destinos.Select(d => new Destino
                     {
+                        DestinoId = d.DestinoId,
                         UbigeoId = d.UbigeoId,
                         Direccion = d.Direccion,
                         Ubigeo = d.Ubigeo,

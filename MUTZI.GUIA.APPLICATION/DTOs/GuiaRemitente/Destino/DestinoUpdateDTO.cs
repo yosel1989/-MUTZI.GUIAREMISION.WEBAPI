@@ -11,6 +11,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino
 {
     public class DestinoUpdateDTO
     {
+        [JsonPropertyName("destino_id")]
+        [SwaggerSchema("Recibe un entero, aquí se coloca el ID del destino que se va a actualizar", Nullable = false)]
+        [Required]
+        public int DestinoId { get; set; }
+
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección del punto de llegada o destino, ejm: 150131", Nullable = false)]
         [Required(ErrorMessage = "EL ubigeo es obligatorio")]
