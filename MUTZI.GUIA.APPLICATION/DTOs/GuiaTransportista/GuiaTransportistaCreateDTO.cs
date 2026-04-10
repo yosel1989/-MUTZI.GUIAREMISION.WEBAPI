@@ -63,7 +63,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
 
         [JsonPropertyName("destinatario")]
         [Required]
-        public DestinatarioCreateDTO Destinatario { get; set; }
+        public DestinatarioCreateGuiaDTO Destinatario { get; set; }
 
         [JsonPropertyName("datos_envio")]
         [Required]

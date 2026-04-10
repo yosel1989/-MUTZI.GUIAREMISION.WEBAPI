@@ -59,8 +59,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         [MaxLength(100)]
         public string? EmpleadoNombreCreacion { get; set; }
 
-        [JsonPropertyName("email_destinatario")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca hasta máximo 3 correos del destinatario", Nullable = true)]
-        public List<EmailDestinatarioGuiaCreateDTO>? EmailDestinatarioGuia { get; set; }
+        //[JsonPropertyName("email_destinatario")]
+        //[SwaggerSchema("Recibe un texto, aquí se coloca hasta máximo 3 correos del destinatario", Nullable = true)]
+        //public List<EmailDestinatarioGuiaCreateDTO>? EmailDestinatarioGuia { get; set; }
     }
 }

@@ -213,6 +213,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             CreateMap<DOMAIN.Entities.Destinatario, DestinatarioListDTO>();
             CreateMap<DestinatarioCreateDTO, DOMAIN.Entities.Destinatario>();
+            CreateMap<DestinatarioCreateGuiaDTO, DOMAIN.Entities.Destinatario>();
             CreateMap<DestinatarioUpdateDTO, DOMAIN.Entities.Destinatario>();
             //Proveedor
             CreateMap<DOMAIN.Entities.Proveedor, ProveedorDTO>()
@@ -222,6 +223,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             CreateMap<DOMAIN.Entities.Proveedor, ProveedorListDTO>();
             CreateMap<ProveedorCreateDTO, DOMAIN.Entities.Proveedor>();
+            CreateMap<ProveedorCreateGuiaDTO, DOMAIN.Entities.Proveedor>();
             CreateMap<ProveedorUpdateDTO, DOMAIN.Entities.Proveedor>();
             //Productos
             CreateMap<DOMAIN.Entities.GuiaDetalle, ProductosDTO>()
@@ -270,6 +272,12 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Cargo, opt => opt.MapFrom(src => src.Conductor.Cargo))
                 .ForMember(dest => dest.Licencia, opt => opt.MapFrom(src => src.Conductor.Licencia))
                 ;
+            CreateMap<ConductorCreateGuiaDTO, DOMAIN.Entities.ConductorGuid>();
+            CreateMap<int, DOMAIN.Entities.ConductorGuid>()
+            .ForMember(dest => dest.ConductorId, opt => opt.MapFrom(src => src))
+            // Opcional: Si quieres ignorar otras propiedades para evitar errores
+            .ForMember(dest => dest.ConductorGuidId, opt => opt.Ignore())
+            .ForMember(dest => dest.DatosEnvioId, opt => opt.Ignore());
             //TransporteGuia
             CreateMap<DOMAIN.Entities.TransporteGuid, TransporteGuiaDTO>()
                 .ForMember(dest => dest.Placa, opt => opt.MapFrom(src => src.Transporte.Placa))
@@ -278,6 +286,12 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.CodEmisorVehicular, opt => opt.MapFrom(src => src.Transporte.CodEmisorVehicular))
                 .ForMember(dest => dest.EmisorVehicular, opt => opt.MapFrom(src => src.Transporte.EmisorVehicular))
                 ;
+            CreateMap<UnidadTransporteCreateDTO, DOMAIN.Entities.Transporte>();
+            CreateMap<int, DOMAIN.Entities.TransporteGuid>()
+            .ForMember(dest => dest.TransporteId, opt => opt.MapFrom(src => src))
+            // Opcional: Si quieres ignorar otras propiedades para evitar errores
+            .ForMember(dest => dest.TransporteGuidId, opt => opt.Ignore())
+            .ForMember(dest => dest.DatosEnvioId, opt => opt.Ignore());
         }
     }
 }
