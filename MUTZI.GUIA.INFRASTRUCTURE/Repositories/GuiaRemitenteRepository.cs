@@ -303,6 +303,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     // Datos de Envío y Conductores
                     DatosEnvios = g.DatosEnvios.Select(env => new DatosEnvio
                     {
+                        DatosEnvioId=env.DatosEnvioId,
                         MotivoEnvio = env.MotivoEnvio,
                         FechaEnvio = env.FechaEnvio,
                         PesoBruto = env.PesoBruto,

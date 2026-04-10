@@ -71,6 +71,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest=>dest.EmailDestinatarioGuids, opt=>opt.MapFrom(src=>src.EmailDestinatarioGuia))
                 .ForMember(dest=>dest.GuiaDetalles, opt=>opt.MapFrom(src=>src.Productos))
                 .ForMember(dest=>dest.Destinos, opt=>opt.MapFrom(src=>src.Destino))
+                .ForMember(dest => dest.Origens, opt => opt.MapFrom(src => src.Origen == null ? null : new[] { src.Origen }))
+                .ForMember(dest => dest.DatosEnvios, opt => opt.MapFrom(src => src.DatosEnvio == null ? null : new[] { src.DatosEnvio }))
                 //.ForMember(dest => dest.Origens.FirstOrDefault(), opt => opt.MapFrom(src => src.Origen))
                 //.ForMember(dest=>dest.DatosEnvios.FirstOrDefault(), opt=>opt.MapFrom(src=>src.))
                 ;

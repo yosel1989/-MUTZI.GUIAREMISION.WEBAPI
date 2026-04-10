@@ -8,6 +8,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
 {
     public class DatosEnvioDTO
     {
+        [JsonPropertyName("datos_envio_id")]
+        [SwaggerSchema("Devuelve en entero el ID de datos_envio asociado a la guía de remisión.", Nullable = false)]
+        public int DatosEnvioId { get; set; }
+
         [JsonPropertyName("motivo_envio")]
         [SwaggerSchema("Devuelve en texto el motivo del envío. Ejm: Venta de mercadería, etc.", Nullable = false)]
         public string MotivoEnvio { get; set; }

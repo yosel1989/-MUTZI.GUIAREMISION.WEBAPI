@@ -153,9 +153,9 @@ public partial class LogisticaContext : DbContext
 
             entity.ToTable("datosEnvio");
 
-            entity.HasIndex(e => e.CodigoUm, "codigoUM");
+            entity.HasIndex(e => e.GuiaId, "datosEnvio_ibfk_1");
 
-            entity.HasIndex(e => e.GuiaId, "guiaID");
+            entity.HasIndex(e => e.CodigoUm, "datosEnvio_ibfk_4");
 
             entity.Property(e => e.DatosEnvioId).HasColumnName("datosEnvioID");
             entity.Property(e => e.CodigoUm)
@@ -184,12 +184,10 @@ public partial class LogisticaContext : DbContext
 
             entity.HasOne(d => d.CodigoUmNavigation).WithMany(p => p.DatosEnvios)
                 .HasForeignKey(d => d.CodigoUm)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("datosEnvio_ibfk_4");
 
             entity.HasOne(d => d.Guia).WithMany(p => p.DatosEnvios)
                 .HasForeignKey(d => d.GuiaId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("datosEnvio_ibfk_1");
         });
 
@@ -511,9 +509,9 @@ public partial class LogisticaContext : DbContext
 
             entity.ToTable("origen");
 
-            entity.HasIndex(e => e.GuiaId, "guiaID");
+            entity.HasIndex(e => e.GuiaId, "origen_ibfk_1");
 
-            entity.HasIndex(e => e.UbigeoId, "ubigeoID");
+            entity.HasIndex(e => e.UbigeoId, "origen_ibfk_2");
 
             entity.Property(e => e.OrigenId).HasColumnName("origenID");
             entity.Property(e => e.Direccion)
@@ -529,12 +527,10 @@ public partial class LogisticaContext : DbContext
 
             entity.HasOne(d => d.Guia).WithMany(p => p.Origens)
                 .HasForeignKey(d => d.GuiaId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("origen_ibfk_1");
 
             entity.HasOne(d => d.Ubigeo).WithMany(p => p.Origens)
                 .HasForeignKey(d => d.UbigeoId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("origen_ibfk_2");
         });
 
