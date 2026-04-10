@@ -248,10 +248,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     var remitente = _mapper.Map<DOMAIN.Entities.Remitente>(dto.Remitente);
                     var destinatario = _mapper.Map<DOMAIN.Entities.Destinatario>(dto.Destinatario);
                     var proveedor = _mapper.Map<DOMAIN.Entities.Proveedor>(dto.Proveedor);
-                    //var conductor = _mapper.Map<DOMAIN.Entities.Conductor>(dto.DatosEnvio.Conductor);
-                    var conductor = dto.DatosEnvio.Conductor.Select(p => _mapper.Map<DOMAIN.Entities.Conductor>(p)).ToList();
-                    //var transporte = _mapper.Map<DOMAIN.Entities.Transporte>(dto.DatosEnvio.UnidadTransporte);
-                    var transporte = dto.DatosEnvio.UnidadTransporte.Select(p => _mapper.Map<DOMAIN.Entities.Transporte>(p)).ToList();
+                    var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<DOMAIN.Entities.ConductorGuid>(p)).ToList();
+                    var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<DOMAIN.Entities.TransporteGuid>(p)).ToList();
                     var guiaRemision = _mapper.Map<DOMAIN.Entities.GuiaRemision>(dto);
                     var datosEnvio = _mapper.Map<DOMAIN.Entities.DatosEnvio>(dto.DatosEnvio);
                     var origen = _mapper.Map<DOMAIN.Entities.Origen>(dto.Origen);
@@ -337,18 +335,18 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
                 _ = guia.TipoTRansporteCode18();
                 _ = guia.TipoTrasladoCode20();
-                _ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento);
-                if (guia.Proveedor != null)
-                {
-                    _ = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento, guia.Proveedor.NumeroDocumento);
-                }
-                if (guia.DatosEnvio.Conductor != null)
-                {
-                    foreach (var conductor in guia.DatosEnvio.Conductor)
-                    {
-                        _ = guia.getTipoCodigoDocumento(conductor.TipoDocumento, conductor.NumeroDocumento);
-                    }
-                }
+                //_ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento);
+                //if (guia.Proveedor != null)
+                //{
+                //    _ = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento, guia.Proveedor.NumeroDocumento);
+                //}
+                //if (guia.DatosEnvio.Conductor != null)
+                //{
+                //    foreach (var conductor in guia.DatosEnvio.Conductor)
+                //    {
+                //        _ = guia.getTipoCodigoDocumento(conductor.TipoDocumento, conductor.NumeroDocumento);
+                //    }
+                //}
                 //Si tipo de transporte es PUBLICO, entonces DatosEnvio.rucEmpresaCurrier debe ser obligatorio
                 if (guia.TipoTransporte=="PUBLICO")
                 {

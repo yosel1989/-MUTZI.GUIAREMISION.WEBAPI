@@ -111,7 +111,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                 {
                     return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador.");
                 }
-                _ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento);
+                //_ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento);
                 if (guia.DocRelacionado?.Count > 1)
                 {
                     return (false, "Solo se permite un documento relacionado como referencia en la guía de remisión transportista.");

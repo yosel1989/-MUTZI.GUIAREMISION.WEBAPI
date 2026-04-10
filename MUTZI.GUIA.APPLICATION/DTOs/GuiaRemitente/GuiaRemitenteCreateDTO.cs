@@ -80,10 +80,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("destinatario")]
         [Required]
-        public DestinatarioCreateDTO? Destinatario { get; set; }
+        public DestinatarioCreateGuiaDTO? Destinatario { get; set; }
 
         [JsonPropertyName("proveedor")]
-        public ProveedorCreateDTO? Proveedor { get; set; }
+        public ProveedorCreateGuiaDTO? Proveedor { get; set; }
         
         [JsonPropertyName("datos_envio")]
         [Required]
