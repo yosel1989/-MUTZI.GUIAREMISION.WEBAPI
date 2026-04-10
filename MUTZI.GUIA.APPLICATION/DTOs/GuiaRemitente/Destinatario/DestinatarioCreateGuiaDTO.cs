@@ -24,8 +24,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario
         [MinLength(8)]
         public string NumeroDocumento { get; set; }
 
+        //[JsonPropertyName("email_destinatario")]
+        //[SwaggerSchema("Recibe un texto, aquí se coloca hasta máximo 3 correos del destinatario", Nullable = true)]
+        //public List<EmailDestinatarioGuiaCreateDTO>? EmailDestinatarioGuia { get; set; }
+
+
         [JsonPropertyName("email_destinatario")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca hasta máximo 3 correos del destinatario", Nullable = true)]
-        public List<EmailDestinatarioGuiaCreateDTO>? EmailDestinatarioGuia { get; set; }
+        [SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del destinatario", Nullable = true)]
+        [MaxLength(50)]
+        public List<string>? EmailDestinatarioGuia { get; set; }
     }
 }

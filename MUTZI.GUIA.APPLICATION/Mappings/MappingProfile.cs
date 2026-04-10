@@ -125,6 +125,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             //Email de destinatarios dentro de Guía de Remisión
             CreateMap<DOMAIN.Entities.EmailDestinatarioGuid, EmailDestinatarioGuiaDTO>();
             CreateMap<EmailDestinatarioGuiaCreateDTO, DOMAIN.Entities.EmailDestinatarioGuid>();
+            CreateMap<string, DOMAIN.Entities.EmailDestinatarioGuid>()
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src))
+            .ForMember(dest => dest.GuiaId, opt => opt.Ignore());
 
             //Email de remitente transportista dentro de Guía de Remisión
             CreateMap<DOMAIN.Entities.EmailRemiteTransportistaGuid, EmailRemiteTransportistaGuiaDTO>();
@@ -275,7 +278,6 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<ConductorCreateGuiaDTO, DOMAIN.Entities.ConductorGuid>();
             CreateMap<int, DOMAIN.Entities.ConductorGuid>()
             .ForMember(dest => dest.ConductorId, opt => opt.MapFrom(src => src))
-            // Opcional: Si quieres ignorar otras propiedades para evitar errores
             .ForMember(dest => dest.ConductorGuidId, opt => opt.Ignore())
             .ForMember(dest => dest.DatosEnvioId, opt => opt.Ignore());
             //TransporteGuia
@@ -289,7 +291,6 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<UnidadTransporteCreateDTO, DOMAIN.Entities.Transporte>();
             CreateMap<int, DOMAIN.Entities.TransporteGuid>()
             .ForMember(dest => dest.TransporteId, opt => opt.MapFrom(src => src))
-            // Opcional: Si quieres ignorar otras propiedades para evitar errores
             .ForMember(dest => dest.TransporteGuidId, opt => opt.Ignore())
             .ForMember(dest => dest.DatosEnvioId, opt => opt.Ignore());
         }

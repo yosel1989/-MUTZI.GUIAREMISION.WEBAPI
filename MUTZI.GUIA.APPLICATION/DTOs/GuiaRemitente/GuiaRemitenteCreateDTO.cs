@@ -83,6 +83,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public DestinatarioCreateGuiaDTO? Destinatario { get; set; }
 
         [JsonPropertyName("proveedor")]
+        [SwaggerSchema("Recibe un objeto con el ID del proveedor que va a ser asociado a la guía", Nullable = true)]
         public ProveedorCreateGuiaDTO? Proveedor { get; set; }
         
         [JsonPropertyName("datos_envio")]
