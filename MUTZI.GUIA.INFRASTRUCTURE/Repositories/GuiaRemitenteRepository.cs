@@ -418,50 +418,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var existingRemitente = await GetRemitenteByNameAsync(remitente.Descripcion);
                 if (existingRemitente == null)
                 {
-                    //remitente.EmpleadoIdcreacion= guiaRemision.EmpleadoIdcreacion;
-                    //remitente.EmpleadoNombreCreacion=guiaRemision.EmpleadoNombreCreacion;
-                    //await _context.Remitentes.AddAsync(remitente);
-                    //await _context.SaveChangesAsync();
                     throw new Exception("No existe este remitente.");
                 }
                 else
                 {
                     remitente = existingRemitente;
                 }
-
-                // Destinatario
-                //var existingDestinatario = await GetDestinatarioByRucAsync(destinatario.NumeroDocumento);
-                //if (existingDestinatario == null)
-                //{
-                //    destinatario.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
-                //    destinatario.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                //    //await _context.Destinatarios.AddAsync(destinatario);
-                //    //await _context.SaveChangesAsync();
-                //    await CreateDestinatarioAsync(destinatario);
-                //}
-                //else
-                //{
-                //    destinatario = existingDestinatario;
-                //    await UpdateDestinatarioAsync(destinatario);
-                //}
-
-                // Proveedor
-                //if (guiaRemision.TipoTraslado == "COMPRA")
-                //{
-                //    var existingProveedor = await GetProveedorByRucAsync(proveedor.NumeroDocumento);
-                //    if (existingProveedor == null)
-                //    {
-                //        proveedor.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
-                //        proveedor.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                //        //await _context.Proveedors.AddAsync(proveedor);
-                //        //await _context.SaveChangesAsync();
-                //        await CreateProveedorAsync(proveedor);
-                //    }
-                //    else
-                //    {
-                //        proveedor = existingProveedor;
-                //    }
-                //}
 
 
                 // Guía

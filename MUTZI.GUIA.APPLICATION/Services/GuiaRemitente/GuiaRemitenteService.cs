@@ -32,27 +32,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             var guiaRemisions = await _repository.GetAllAsync();
             return _mapper.Map<List<GuiaRemitenteDTO>>(guiaRemisions);
         }
-        //public async Task<List<GuiaListDTO>> GetListAsync()
-        //{
-        //    var guiaRemisions = await _repository.GetAllAsync();
-        //    return _mapper.Map<List<GuiaListDTO>>(guiaRemisions);
-        //}
-        //public async Task<PagedResult<GuiaListDTO>> GetListAsync2(int pageNumber, int pageSize)
-        //{
-        //    var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize);
-
-        //    var guiasDTO = _mapper.Map<List<GuiaListDTO>>(guias);
-
-        //    return new PagedResult<GuiaListDTO>
-        //    {
-        //        PageNumber = pageNumber,
-        //        PageSize = pageSize,
-        //        TotalRecords = totalRecords,
-        //        TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
-        //        Data = guiasDTO
-        //    };
-        //    throw new NotImplementedException();
-        //}
         public async Task<PagedResult<GuiaListDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
         {
             var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
@@ -206,11 +185,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 throw;
             }
         }
-        //public async Task<GuiaRemitenteDTO> GetByIdAsync(int id)
-        //{
-        //    var guiaRemision = await _repository.GetByIdAsync(id);
-        //    return _mapper.Map<GuiaRemitenteDTO>(guiaRemision);
-        //}
         public async Task<object> GetByIdAsync(int id)
         {
             var guiaRemision = await _repository.GetByIdAsync(id);
@@ -335,19 +309,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
                 _ = guia.TipoTRansporteCode18();
                 _ = guia.TipoTrasladoCode20();
-                //_ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento);
-                //if (guia.Proveedor != null)
-                //{
-                //    _ = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento, guia.Proveedor.NumeroDocumento);
-                //}
-                //if (guia.DatosEnvio.Conductor != null)
-                //{
-                //    foreach (var conductor in guia.DatosEnvio.Conductor)
-                //    {
-                //        _ = guia.getTipoCodigoDocumento(conductor.TipoDocumento, conductor.NumeroDocumento);
-                //    }
-                //}
-                //Si tipo de transporte es PUBLICO, entonces DatosEnvio.rucEmpresaCurrier debe ser obligatorio
                 if (guia.TipoTransporte=="PUBLICO")
                 {
                     if (guia.DatosEnvio.RucEmpresaCurrier.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }

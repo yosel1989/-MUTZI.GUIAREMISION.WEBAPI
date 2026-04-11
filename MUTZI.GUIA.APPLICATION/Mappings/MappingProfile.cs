@@ -126,8 +126,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<DOMAIN.Entities.EmailDestinatarioGuid, EmailDestinatarioGuiaDTO>();
             CreateMap<EmailDestinatarioGuiaCreateDTO, DOMAIN.Entities.EmailDestinatarioGuid>();
             CreateMap<string, DOMAIN.Entities.EmailDestinatarioGuid>()
-            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src))
-            .ForMember(dest => dest.GuiaId, opt => opt.Ignore());
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src));
+            //.ForMember(dest => dest.GuiaId, opt => opt.Ignore());
 
             //Email de remitente transportista dentro de Guía de Remisión
             CreateMap<DOMAIN.Entities.EmailRemiteTransportistaGuid, EmailRemiteTransportistaGuiaDTO>();
@@ -277,9 +277,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             CreateMap<ConductorCreateGuiaDTO, DOMAIN.Entities.ConductorGuid>();
             CreateMap<int, DOMAIN.Entities.ConductorGuid>()
-            .ForMember(dest => dest.ConductorId, opt => opt.MapFrom(src => src))
-            .ForMember(dest => dest.ConductorGuidId, opt => opt.Ignore())
-            .ForMember(dest => dest.DatosEnvioId, opt => opt.Ignore());
+            .ForMember(dest => dest.ConductorId, opt => opt.MapFrom(src => src));
             //TransporteGuia
             CreateMap<DOMAIN.Entities.TransporteGuid, TransporteGuiaDTO>()
                 .ForMember(dest => dest.Placa, opt => opt.MapFrom(src => src.Transporte.Placa))
@@ -290,9 +288,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             CreateMap<UnidadTransporteCreateDTO, DOMAIN.Entities.Transporte>();
             CreateMap<int, DOMAIN.Entities.TransporteGuid>()
-            .ForMember(dest => dest.TransporteId, opt => opt.MapFrom(src => src))
-            .ForMember(dest => dest.TransporteGuidId, opt => opt.Ignore())
-            .ForMember(dest => dest.DatosEnvioId, opt => opt.Ignore());
+            .ForMember(dest => dest.TransporteId, opt => opt.MapFrom(src => src));
         }
     }
 }
