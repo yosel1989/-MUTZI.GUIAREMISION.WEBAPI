@@ -37,5 +37,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor
         [JsonPropertyName("licencia")]
         [SwaggerSchema("Devuelve el número de licencia del conductor", Nullable = false)]
         public string Licencia { get; set; }
+
+        [JsonPropertyName("tipo")]
+        [SwaggerSchema("Devuelve el tipo de conductor = INTERNO, EXTERNO", Nullable = false)]
+        public string Tipo { get; set; }
     }
 }

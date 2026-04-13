@@ -53,11 +53,11 @@ public partial class GuiaRemision
 
     public string? EmpleadoNombreEdicion { get; set; }
 
-    public string Estado { get; set; } = null!;
+    public string Estado { get; set; }
 
     public sbyte IdEstado { get; set; }
 
-    public string EstadoSunat { get; set; } = null!;
+    public string EstadoSunat { get; set; }
 
     public sbyte IdEstadoSunat { get; set; }
 
