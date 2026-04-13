@@ -249,6 +249,25 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Estado = g.Remitente.Estado,
                         IdEstado = g.Remitente.IdEstado
                     },
+                    RemiteTransportista = g.RemiteTransportista == null ? null : new RemiteTransportistum
+                    {
+                        RemiteTransportistaId = g.RemiteTransportista.RemiteTransportistaId,
+                        TipoDocumento = g.RemiteTransportista.TipoDocumento,
+                        NumeroDocumento = g.RemiteTransportista.NumeroDocumento,
+                        RazonSocial = g.RemiteTransportista.RazonSocial,
+                        UbigeoId = g.RemiteTransportista.UbigeoId,
+                        Ubigeo= g.RemiteTransportista.Ubigeo,
+                        Direccion = g.RemiteTransportista.Direccion,
+                        Pais = g.RemiteTransportista.Pais,
+                        CodigoSunat = g.RemiteTransportista.CodigoSunat,
+                        FechaCreacion = g.RemiteTransportista.FechaCreacion,
+                        EmpleadoNombreCreacion = g.RemiteTransportista.EmpleadoNombreCreacion,
+                        FechaEdicion = g.RemiteTransportista.FechaEdicion,
+                        EmpleadoNombreEdicion = g.RemiteTransportista.EmpleadoNombreEdicion,
+                        EmailRemiteTransportistaGuids = g.EmailRemiteTransportistaGuids,
+                        Estado = g.RemiteTransportista.Estado,
+                        IdEstado = g.RemiteTransportista.IdEstado
+                    },
                     Destinatario = new Destinatario
                     {
                         DestinatarioId = g.Destinatario.DestinatarioId,
@@ -465,11 +484,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 // Datos Envío
                 datosEnvio.GuiaId = guiaRemision.GuiaId;
-                //if (guiaRemision.TipoTransporte == "PRIVADO")
-                //{
-                //    datosEnvio.ConductorId = conductor.ConductorId;
-                //    datosEnvio.TransporteId = transporte.TransporteId;
-                //}
                 await _context.DatosEnvios.AddAsync(datosEnvio);
                 await _context.SaveChangesAsync();
 
@@ -565,11 +579,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             guia.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
+        //Actualizar guía de remisión remitente
         public async Task UpdateAsync(GuiaRemision guiaRemision)
         {
             if (guiaRemision == null)
             {
-                throw new ArgumentNullException(nameof(guiaRemision), "El objeto guiaRemision no puede ser nulo");
+                throw new ArgumentNullException(nameof(guiaRemision), "La guía de remisión remitente no puede ser nula");
             }
             _context.GuiaRemisions.Update(guiaRemision);
             await _context.SaveChangesAsync();

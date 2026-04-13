@@ -7,8 +7,8 @@
             DOMAIN.Entities.Remitente remitente,
             DOMAIN.Entities.RemiteTransportistum remiteTransportista,
             DOMAIN.Entities.Destinatario destinatario,
-            List<DOMAIN.Entities.Conductor> conductor,
-            List<DOMAIN.Entities.Transporte> transporte,
+            List<DOMAIN.Entities.ConductorGuid> conductor,
+            List<DOMAIN.Entities.TransporteGuid> transporte,
             DOMAIN.Entities.GuiaRemision guiaRemision,
             DOMAIN.Entities.DatosEnvio datosEnvio,
             DOMAIN.Entities.Origen origen,
@@ -20,5 +20,6 @@
             );
         //Remitente
         Task<DOMAIN.Entities.RemiteTransportistum> GetRemiteTransportistaByRucAsync(string numeroDocumento);
+        Task UpdateAsync(DOMAIN.Entities.GuiaRemision guiaRemision);
     }
 }

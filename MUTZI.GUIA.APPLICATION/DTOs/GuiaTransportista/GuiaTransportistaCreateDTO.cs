@@ -53,13 +53,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
 
         // Remitente
         [JsonPropertyName("remitente")]
-        [SwaggerSchema("Recibe un objeto remitente, si es nuevo remitente la api crea un nuevo remitente en la bbdd")]
         [Required]
-        public RemitenteCreateDTO Remitente { get; set; }
+        public RemitenteCreateGuiaDTO Remitente { get; set; }
 
         [JsonPropertyName("remite_transportista")]
         [Required]
-        public RemiteTransportistaCreateDTO RemiteTransportista { get; set; }
+        public RemiteTransportistaCreateGuiaDTO RemiteTransportista { get; set; }
 
         [JsonPropertyName("destinatario")]
         [Required]

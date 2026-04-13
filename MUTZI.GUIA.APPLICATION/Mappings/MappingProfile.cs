@@ -73,8 +73,6 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest=>dest.Destinos, opt=>opt.MapFrom(src=>src.Destino))
                 .ForMember(dest => dest.Origens, opt => opt.MapFrom(src => src.Origen == null ? null : new[] { src.Origen }))
                 .ForMember(dest => dest.DatosEnvios, opt => opt.MapFrom(src => src.DatosEnvio == null ? null : new[] { src.DatosEnvio }))
-                //.ForMember(dest => dest.Origens.FirstOrDefault(), opt => opt.MapFrom(src => src.Origen))
-                //.ForMember(dest=>dest.DatosEnvios.FirstOrDefault(), opt=>opt.MapFrom(src=>src.))
                 ;
             //Guia de remisión por ticket
             CreateMap<DOMAIN.Entities.GuiaRemision, GuiaPorTicketDTO>()
@@ -87,6 +85,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             CreateMap<DatosEnvioGTUpdateDTO, DOMAIN.Entities.DatosEnvio>()
                 .ForMember(dest => dest.FechaEnvio, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.FechaEnvio) ? (DateOnly?)null : DateOnly.Parse(src.FechaEnvio)))
+                .ForMember(dest=>dest.ConductorGuids, opt=>opt.MapFrom(src=>src.ConductorGuid))
+                .ForMember(dest=>dest.TransporteGuids, opt=>opt.MapFrom(src=>src.TransporteGuid))
                 ;
             CreateMap<DocRelacionadoUpdateDTO, DOMAIN.Entities.DocRelacionado>();
             CreateMap<EmailDestinatarioGuiaUpdateDTO, DOMAIN.Entities.EmailDestinatarioGuid>();
@@ -117,6 +117,17 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Remitente, opt => opt.Ignore())
                 .ForMember(dest => dest.RemiteTransportista, opt => opt.Ignore())
                 .ForMember(dest => dest.Destinatario, opt => opt.Ignore());
+            CreateMap<GuiaTransportistaUpdateDTO, DOMAIN.Entities.GuiaRemision>()
+                .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src =>
+                string.IsNullOrEmpty(src.Fecha) ? (DateOnly?)null : DateOnly.Parse(src.Fecha)))
+                .ForMember(dest => dest.DocRelacionados, opt => opt.MapFrom(src => src.DocRelacionado))
+                .ForMember(dest => dest.EmailRemiteTransportistaGuids, opt => opt.MapFrom(src => src.EmailRemiteTransportistaGuia))
+                .ForMember(dest => dest.EmailDestinatarioGuids, opt => opt.MapFrom(src => src.EmailDestinatarioGuia))
+                .ForMember(dest => dest.GuiaDetalles, opt => opt.MapFrom(src => src.Productos))
+                .ForMember(dest => dest.Destinos, opt => opt.MapFrom(src => src.Destino))
+                .ForMember(dest => dest.Origens, opt => opt.MapFrom(src => src.Origen == null ? null : new[] { src.Origen }))
+                .ForMember(dest => dest.DatosEnvios, opt => opt.MapFrom(src => src.DatosEnvio == null ? null : new[] { src.DatosEnvio }))
+                ;
 
             //Documentos de referencia relacionados a la guía de remisión
             CreateMap<DOMAIN.Entities.DocRelacionado, DocRelacionadoDTO>();
@@ -132,6 +143,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             //Email de remitente transportista dentro de Guía de Remisión
             CreateMap<DOMAIN.Entities.EmailRemiteTransportistaGuid, EmailRemiteTransportistaGuiaDTO>();
             CreateMap<EmailRemiteTransportistaGuiaCreateDTO, DOMAIN.Entities.EmailRemiteTransportistaGuid>();
+            CreateMap<string, DOMAIN.Entities.EmailRemiteTransportistaGuid>()
+                .ForMember(dest=>dest.Email, opt=>opt.MapFrom(src=>src));
 
             //Datos de envío para guía remitente
             CreateMap<DOMAIN.Entities.DatosEnvio, DatosEnvioDTO>()
@@ -206,6 +219,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.EmailRemiteTransportista, opt => opt.MapFrom(src => src.EmailRemiteTransportistaGuids))
                 ;
             CreateMap<RemiteTransportistaCreateDTO, DOMAIN.Entities.RemiteTransportistum>();
+            CreateMap<RemiteTransportistaCreateGuiaDTO, DOMAIN.Entities.RemiteTransportistum>();
 
             //Destinatario
             CreateMap<DOMAIN.Entities.Destinatario, DestinatarioDTO>()

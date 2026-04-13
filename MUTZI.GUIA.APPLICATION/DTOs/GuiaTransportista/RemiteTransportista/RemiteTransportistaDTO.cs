@@ -6,6 +6,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
 {
     public class RemiteTransportistaDTO
     {
+        [JsonPropertyName("id")]
+        [SwaggerSchema("Devuelve un entero, es el número ID del remite_transportista.", Nullable = false)]
+        public int RemiteTransportistaID { get; set; }
+
         [JsonPropertyName("tipo_documento")]
         [SwaggerSchema("Devuelve en texto el tipo de documento del REMITE_TRANSPORTISTA, solo pueden tener los siguientes valores: DNI, CE, RUC y PASAPORTE", Nullable = false)]
         public string TipoDocumento { get; set; }
@@ -14,8 +18,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         [SwaggerSchema("Devuelve en texto el número documento del REMITE_TRANSPORTISTA.", Nullable = false)]
         public string NumeroDocumento { get; set; }
 
+        [JsonPropertyName("razon_social")]
         public string RazonSocial { get; set; }
 
+        [JsonPropertyName("ubigeo_id")]
         public string UbigeoID { get; set; }
         public string Departamento { get; set; }
         public string Provincia { get; set; }

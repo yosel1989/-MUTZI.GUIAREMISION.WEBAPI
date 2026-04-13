@@ -23,7 +23,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia
         [SwaggerSchema("Devuelve un entero, aquí se muestra el ID de la guía remitente a la que está asociado el email", Nullable = false)]
         public int GuiaID { get; set; }
 
-        [JsonPropertyName("destinatarioID")]
+        [JsonPropertyName("destinatario_id")]
         [SwaggerSchema("Devuelve un entero, aquí se muestra el ID del destinatario al que está asociado el email", Nullable = false)]
         public int DestinatarioID { get; set; }
     }

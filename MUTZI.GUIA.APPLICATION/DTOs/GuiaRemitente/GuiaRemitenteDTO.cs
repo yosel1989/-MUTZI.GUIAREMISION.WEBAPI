@@ -65,13 +65,29 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("doc_relacionado")]
         public List<DocRelacionadoDTO>? DocRelacionados { get; set; }
+
+        [JsonPropertyName("remitente")]
         public RemitenteDTO Remitente { get; set; }
+
+        [JsonPropertyName("destinatario")]
         public DestinatarioDTO Destinatario { get; set; }
+
+        [JsonPropertyName("proveedor")]
         public ProveedorDTO? Proveedor { get; set; }
+
+        [JsonPropertyName("datos_envio")]
         public DatosEnvioDTO DatosEnvio { get; set; }
+
+        [JsonPropertyName("origen")]
         public OrigenDTO Origen { get; set; }
+
+        [JsonPropertyName("destino")]
         public List<DestinoDTO> Destino { get; set; }
+
+        [JsonPropertyName("productos")]
         public List<ProductosDTO> Productos { get; set; }
+
+        [JsonPropertyName("fecha_creacion")]
         public DateTime FechaCreacion { get; set; }
 
         [JsonPropertyName("empleado_nombre_creacion")]

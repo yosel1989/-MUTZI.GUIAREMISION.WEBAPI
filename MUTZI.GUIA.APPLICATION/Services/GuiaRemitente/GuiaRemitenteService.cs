@@ -227,7 +227,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     var guiaRemision = _mapper.Map<DOMAIN.Entities.GuiaRemision>(dto);
                     var datosEnvio = _mapper.Map<DOMAIN.Entities.DatosEnvio>(dto.DatosEnvio);
                     var origen = _mapper.Map<DOMAIN.Entities.Origen>(dto.Origen);
-                    //var destino = _mapper.Map<DOMAIN.Entities.Destino>(dto.Destino);
                     var destino = dto.Destino.Select(p => _mapper.Map<DOMAIN.Entities.Destino>(p)).ToList();
                     var detalles = dto.Productos.Select(p => _mapper.Map<DOMAIN.Entities.GuiaDetalle>(p)).ToList();
                     var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.DocRelacionado>(p)).ToList();
@@ -257,7 +256,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
 
                     return new BadRequestResponseDTO
                     {
-                        Error = "Error al guardar la guía",
+                        Error = "Error al guardar guía remitente",
                         Detalle = $"{errorBox} Más detalle: {errorMsg}"
                     };
                 }
