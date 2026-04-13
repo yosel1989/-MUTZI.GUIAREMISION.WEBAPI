@@ -234,6 +234,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         public string _ { get; set; }
         public string? schemeID { get; set; }
     }
+    public class ItemClassificationCode
+    {
+        public string _ { get; set; }
+    }
 
     [JsonObject("ID")]
     public class ID_Int
@@ -265,6 +269,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     {
         public List<Description> Description { get; set; }
         public List<SellersItemIdentification> SellersItemIdentification { get; set; }
+        public List<CommodityClassification> CommodityClassification { get; set; }
+        public List<StandardItemIdentification> StandardItemIdentification { get; set; }
     }
 
     public class Line
@@ -348,6 +354,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     }
 
     public class SellersItemIdentification
+    {
+        public List<ID> ID { get; set; }
+    }
+    public class CommodityClassification
+    {
+        public List<ItemClassificationCode> ItemClassificationCode { get; set; }
+    }
+    public class StandardItemIdentification
     {
         public List<ID> ID { get; set; }
     }

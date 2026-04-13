@@ -259,6 +259,25 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Estado = g.Remitente.Estado,
                         IdEstado = g.Remitente.IdEstado
                     },
+                    RemiteTransportista = g.RemiteTransportista == null ? null : new RemiteTransportistum
+                    {
+                        RemiteTransportistaId = g.RemiteTransportista.RemiteTransportistaId,
+                        TipoDocumento = g.RemiteTransportista.TipoDocumento,
+                        NumeroDocumento = g.RemiteTransportista.NumeroDocumento,
+                        RazonSocial = g.RemiteTransportista.RazonSocial,
+                        UbigeoId = g.RemiteTransportista.UbigeoId,
+                        Ubigeo= g.RemiteTransportista.Ubigeo,
+                        Direccion = g.RemiteTransportista.Direccion,
+                        Pais = g.RemiteTransportista.Pais,
+                        CodigoSunat = g.RemiteTransportista.CodigoSunat,
+                        FechaCreacion = g.RemiteTransportista.FechaCreacion,
+                        EmpleadoNombreCreacion = g.RemiteTransportista.EmpleadoNombreCreacion,
+                        FechaEdicion = g.RemiteTransportista.FechaEdicion,
+                        EmpleadoNombreEdicion = g.RemiteTransportista.EmpleadoNombreEdicion,
+                        EmailRemiteTransportistaGuids = g.EmailRemiteTransportistaGuids,
+                        Estado = g.RemiteTransportista.Estado,
+                        IdEstado = g.RemiteTransportista.IdEstado
+                    },
                     Destinatario = new Destinatario
                     {
                         DestinatarioId = g.Destinatario.DestinatarioId,
@@ -428,50 +447,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var existingRemitente = await GetRemitenteByNameAsync(remitente.Descripcion);
                 if (existingRemitente == null)
                 {
-                    //remitente.EmpleadoIdcreacion= guiaRemision.EmpleadoIdcreacion;
-                    //remitente.EmpleadoNombreCreacion=guiaRemision.EmpleadoNombreCreacion;
-                    //await _context.Remitentes.AddAsync(remitente);
-                    //await _context.SaveChangesAsync();
                     throw new Exception("No existe este remitente.");
                 }
                 else
                 {
                     remitente = existingRemitente;
                 }
-
-                // Destinatario
-                //var existingDestinatario = await GetDestinatarioByRucAsync(destinatario.NumeroDocumento);
-                //if (existingDestinatario == null)
-                //{
-                //    destinatario.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
-                //    destinatario.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                //    //await _context.Destinatarios.AddAsync(destinatario);
-                //    //await _context.SaveChangesAsync();
-                //    await CreateDestinatarioAsync(destinatario);
-                //}
-                //else
-                //{
-                //    destinatario = existingDestinatario;
-                //    await UpdateDestinatarioAsync(destinatario);
-                //}
-
-                // Proveedor
-                //if (guiaRemision.TipoTraslado == "COMPRA")
-                //{
-                //    var existingProveedor = await GetProveedorByRucAsync(proveedor.NumeroDocumento);
-                //    if (existingProveedor == null)
-                //    {
-                //        proveedor.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
-                //        proveedor.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                //        //await _context.Proveedors.AddAsync(proveedor);
-                //        //await _context.SaveChangesAsync();
-                //        await CreateProveedorAsync(proveedor);
-                //    }
-                //    else
-                //    {
-                //        proveedor = existingProveedor;
-                //    }
-                //}
 
 
                 // Guía
@@ -513,11 +494,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 // Datos Envío
                 datosEnvio.GuiaId = guiaRemision.GuiaId;
-                //if (guiaRemision.TipoTransporte == "PRIVADO")
-                //{
-                //    datosEnvio.ConductorId = conductor.ConductorId;
-                //    datosEnvio.TransporteId = transporte.TransporteId;
-                //}
                 await _context.DatosEnvios.AddAsync(datosEnvio);
                 await _context.SaveChangesAsync();
 
@@ -613,11 +589,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             guia.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
+        //Actualizar guía de remisión remitente
         public async Task UpdateAsync(GuiaRemision guiaRemision)
         {
             if (guiaRemision == null)
             {
-                throw new ArgumentNullException(nameof(guiaRemision), "El objeto guiaRemision no puede ser nulo");
+                throw new ArgumentNullException(nameof(guiaRemision), "La guía de remisión remitente no puede ser nula");
             }
             _context.GuiaRemisions.Update(guiaRemision);
             await _context.SaveChangesAsync();

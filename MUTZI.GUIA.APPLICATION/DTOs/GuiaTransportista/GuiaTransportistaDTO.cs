@@ -18,6 +18,16 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve en entero el ID de la guía transportista.", Nullable = false)]
         public int GuiaID { get; set; }
+
+        [JsonPropertyName("tipo_guia")]
+        [SwaggerSchema("Devuelve en texto el tipo de guía: REMITENTE ó TRANSPORTISTA", Nullable = false)]
+        public string TipoGuia { get; set; }
+
+        [JsonPropertyName("ruc")]
+        [SwaggerSchema("Devuelve en texto el ruc del facturador asociado", Nullable = false)]
+        public string Ruc { get; set; }
+
+        [JsonPropertyName("serie_correlativo")]
         public string SerieCorrelativo { get; set; }
         public string Fecha { get; set; }
         public string Hora { get; set; } // HH:mm:ss

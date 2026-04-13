@@ -189,13 +189,13 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [HttpPut]
         [Route("actualizar-remitente{id}")]
         [SwaggerOperation(
-        Summary = "Actualizar guía de remisión remitente",
+        Summary = "Actualizar guía remitente",
         Description = "Actualiza guía de remisión remitente por ID.",
         OperationId = "actualizar_guia_remitente")]
         [ProducesResponseType(typeof(GuiaRemitenteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GuiaRemitenteDTO>> Update(int id, [FromBody] GuiaRemitenteUpdateDTO guiaDTO)
+        public async Task<ActionResult<GuiaRemitenteDTO>> UpdateGuiaRemitente(int id, [FromBody] GuiaRemitenteUpdateDTO guiaDTO)
         {
             try
             {
@@ -208,6 +208,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al actualizar guía de remisión remitente.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+        [HttpPut]
+        [Route("actualizar-transportista{id}")]
+        [SwaggerOperation(
+        Summary = "Actualizar guía transportista",
+        Description = "Actualiza guía de remisión transportista por ID.",
+        OperationId = "actualizar_guia_transportista")]
+        [ProducesResponseType(typeof(GuiaTransportistaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<GuiaTransportistaDTO>> UpdateGuiaTransportista(int id, [FromBody] GuiaTransportistaUpdateDTO guiaDTO)
+        {
+            try
+            {
+                var updated = await _guiasTransportistaBDService.UpdateAsync(id, guiaDTO);
+                return Ok(updated);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar guía de remisión transportista.",
                     Detalle = errorMsg
                 });
             }

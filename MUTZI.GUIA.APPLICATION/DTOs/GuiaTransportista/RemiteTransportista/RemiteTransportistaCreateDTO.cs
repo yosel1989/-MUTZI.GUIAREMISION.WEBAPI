@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
 {
-    [SwaggerSchema("Recibe un objeto remite_transportista, si es nuevo remite_transportista la api crea un nuevo remite_transportista en la bbdd, tener en cuenta que, si Carolina SAC o la empresa que esté asociada al facturador actúa como transportista este objeto pasa a ser remitente y según Efact, menciona que: 'El 'Número de documento de identidad del remitente', no debe ser igual al número de RUC del transportista.'.", Nullable=false)]
+    [SwaggerSchema("Recibe un objeto remite_transportista, tener en cuenta que, si Carolina SAC o la empresa que esté asociada al facturador actúa como transportista este objeto pasa a ser remitente y según Efact, menciona que: 'El 'Número de documento de identidad del remitente', no debe ser igual al número de RUC del transportista.'.", Nullable=false)]
     public class   RemiteTransportistaCreateDTO
     {
         [JsonPropertyName("tipo_documento")]
@@ -67,7 +67,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         [MaxLength(100)]
         public string? EmpleadoNombreCreacion { get; set; }
 
-        [JsonPropertyName("email_remite_transportista")]
-        public List<EmailRemiteTransportistaGuiaCreateDTO>? EmailRemiteTransportista { get; set; }
+        //[JsonPropertyName("email_remite_transportista")]
+        //public List<EmailRemiteTransportistaGuiaCreateDTO>? EmailRemiteTransportista { get; set; }
     }
 }

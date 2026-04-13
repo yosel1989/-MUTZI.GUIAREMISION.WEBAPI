@@ -145,24 +145,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                             }
                                         }
                                     } : null
-
-
-
-
-                                    //Contact=new List<Contact>
-                                    //{
-                                    //    new Contact
-                                    //    {
-                                    //        ElectronicMail=new List<ElectronicMail>
-                                    //        {
-                                    //            new ElectronicMail
-                                    //            {
-                                    //                _ = guia.Destinatario.Email
-                                    //                //_ = "sistemas7@carolina-peru.com"
-                                    //            }
-                                    //        }
-                                    //    }
-                                    //}
                                 }
                             }
                         }
@@ -283,21 +265,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                                         }
                                                     }
                                                 }
-                                            } : null    
-                                            //Contact=new List<Contact>
-                                            //{
-                                            //    new Contact
-                                            //    {
-                                            //        ElectronicMail=new List<ElectronicMail>
-                                            //        {
-                                            //            new ElectronicMail
-                                            //            {
-                                            //                _ = guia.RemiteTransportista.Email
-                                            //                //_ = "sistemas7@carolina-peru.com"
-                                            //            }
-                                            //        }
-                                            //    }
-                                            //}
+                                            } : null
                                         }
                                     }
                                 }
