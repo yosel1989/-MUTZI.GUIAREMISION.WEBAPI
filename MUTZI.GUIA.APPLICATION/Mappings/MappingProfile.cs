@@ -249,7 +249,10 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             //Conductor
             CreateMap<DOMAIN.Entities.Conductor, ConductorDTO>();
             CreateMap<DOMAIN.Entities.Conductor, ConductorListDTO>();
-            CreateMap<ConductorCreateDTO, DOMAIN.Entities.Conductor>();
+            CreateMap<ConductorCreateDTO, DOMAIN.Entities.Conductor>()
+                .ForMember(dest => dest.Nombres, opt => opt.MapFrom(src => src.Nombres.ToUpper()))
+                .ForMember(dest => dest.Apellidos, opt => opt.MapFrom(src => src.Apellidos.ToUpper()))
+                .ForMember(dest => dest.Cargo, opt => opt.MapFrom(src => src.Cargo.ToUpper()));
             CreateMap<ConductorUpdateDTO, DOMAIN.Entities.Conductor>();
 
             //Unidad de transporte
