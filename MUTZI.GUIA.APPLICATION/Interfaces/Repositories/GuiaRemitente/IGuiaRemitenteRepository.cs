@@ -16,7 +16,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
             DOMAIN.Entities.Destinatario destinatario,
             DOMAIN.Entities.Proveedor proveedor,
             List<DOMAIN.Entities.ConductorGuid> conductor,
-            List<DOMAIN.Entities.TransporteGuid> transporte,
+            List<DOMAIN.Entities.UnidadTransporteGuid> transporte,
             DOMAIN.Entities.GuiaRemision guiaRemision,
             DOMAIN.Entities.DatosEnvio datosEnvio,
             DOMAIN.Entities.Origen origen,
@@ -39,8 +39,8 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<DOMAIN.Entities.Conductor> GetConductorByNumeroDocumentoAsync(string numeroDocumento);
         Task<DOMAIN.Entities.Conductor> CreateConductorAsync(DOMAIN.Entities.Conductor conductor);
         //Transporte
-        Task<DOMAIN.Entities.Transporte> GetTransporteByPlacaAsync(string placa);
-        Task<DOMAIN.Entities.Transporte> CreateTransporteAsync(DOMAIN.Entities.Transporte transporte);
+        Task<DOMAIN.Entities.UnidadTransporte> GetTransporteByPlacaAsync(string placa);
+        Task<DOMAIN.Entities.UnidadTransporte> CreateTransporteAsync(DOMAIN.Entities.UnidadTransporte transporte);
         //Datos envio
         Task<DOMAIN.Entities.DatosEnvio> CreateDatosEnvioAsync(DOMAIN.Entities.DatosEnvio datosEnvio);
         //Ubicación origen

@@ -46,9 +46,9 @@ public partial class LogisticaContext : DbContext
 
     public virtual DbSet<Remitente> Remitentes { get; set; }
 
-    public virtual DbSet<Transporte> Transportes { get; set; }
+    public virtual DbSet<UnidadTransporte> UnidadTransportes { get; set; }
 
-    public virtual DbSet<TransporteGuid> TransporteGuids { get; set; }
+    public virtual DbSet<UnidadTransporteGuid> UnidadTransporteGuids { get; set; }
 
     public virtual DbSet<Ubigeo> Ubigeos { get; set; }
 
@@ -729,11 +729,11 @@ public partial class LogisticaContext : DbContext
                 .HasConstraintName("remitente_ibfk_1");
         });
 
-        modelBuilder.Entity<Transporte>(entity =>
+        modelBuilder.Entity<UnidadTransporte>(entity =>
         {
             entity.HasKey(e => e.TransporteId).HasName("PRIMARY");
 
-            entity.ToTable("transporte");
+            entity.ToTable("unidadTransporte");
 
             entity.HasIndex(e => e.Placa, "placa_UNIQUE").IsUnique();
 
@@ -791,11 +791,11 @@ public partial class LogisticaContext : DbContext
                 .HasColumnName("tipo");
         });
 
-        modelBuilder.Entity<TransporteGuid>(entity =>
+        modelBuilder.Entity<UnidadTransporteGuid>(entity =>
         {
             entity.HasKey(e => e.TransporteGuidId).HasName("PRIMARY");
 
-            entity.ToTable("transporteGuid");
+            entity.ToTable("unidadTransporteGuid");
 
             entity.HasIndex(e => e.DatosEnvioId, "transporteGuid_ibfk_1");
 

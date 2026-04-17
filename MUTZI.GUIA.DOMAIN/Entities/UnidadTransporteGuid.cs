@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-public partial class TransporteGuid
+[Table("unidadTransporteGuid")]
+public partial class UnidadTransporteGuid
 {
     public int TransporteGuidId { get; set; }
 
@@ -13,5 +13,5 @@ public partial class TransporteGuid
 
     public virtual DatosEnvio? DatosEnvio { get; set; }
 
-    public virtual Transporte? Transporte { get; set; }
+    public virtual UnidadTransporte? Transporte { get; set; }
 }

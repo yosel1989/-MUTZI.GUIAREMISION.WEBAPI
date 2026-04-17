@@ -3,34 +3,33 @@ using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Transporte;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Transportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Transportista;
 using MUTZI.GUIA.DOMAIN.Entities;
 
-namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
+namespace MUTZI.GUIA.APPLICATION.Services.Transportista
 {
-    public class TransporteService : ITransporteService
+    public class TransportistaService: ITransportistaService
     {
-        private readonly ITransporteRepository _repository;
+        private readonly ITransportistaRepository _repository;
         private readonly IMapper _mapper;
-        public TransporteService(ITransporteRepository repository, IMapper mapper)
+        public TransportistaService(ITransportistaRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
-        public async Task<List<UnidadTransporteDTO>> GetAllAsycn()
+        public async Task<List<RemiteTransportistaDTO>> GetAllAsycn()
         {
             var transportes = await _repository.GetAllAsync();
-            return _mapper.Map<List<UnidadTransporteDTO>>(transportes);
+            return _mapper.Map<List<RemiteTransportistaDTO>>(transportes);
         }
-        public async Task<List<TransporteListDTO>> GetListBySuggestion(string numeroDoc)
+        public async Task<List<RemiteTransportistaDTO>> GetListBySuggestion(string numeroDoc)
         {
             var transportes=await _repository.GetListBySuggestion(numeroDoc);
-            return _mapper.Map<List<TransporteListDTO>>(transportes);
+            return _mapper.Map<List<RemiteTransportistaDTO>>(transportes);
         }
-        public async Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
+        public async Task<PagedResult<RemiteTransportistaDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
         {
             var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
             var searchValue = q[$"columns[{0}][search][value]"];
@@ -46,8 +45,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
                 });
             }
             var (transporte, totalRecords)= await _repository.GetListAsync(pageNumber, pageSize, request);
-            var transporteDto = _mapper.Map<List<UnidadTransporteDTO>>(transporte);
-            return new PagedResult<UnidadTransporteDTO>
+            var transporteDto = _mapper.Map<List<RemiteTransportistaDTO>>(transporte);
+            return new PagedResult<RemiteTransportistaDTO>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -56,18 +55,18 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
                 Data = transporteDto
             };
         }
-        public async Task<UnidadTransporteDTO?> GetByIdAsync(int id)
+        public async Task<RemiteTransportistaDTO?> GetByIdAsync(int id)
         {
             var transporte = await _repository.GetByIdAsync(id);
-            return transporte == null ? null : _mapper.Map<UnidadTransporteDTO>(transporte);
+            return transporte == null ? null : _mapper.Map<RemiteTransportistaDTO>(transporte);
         }
-        public async Task<int> CreateAsync(UnidadTransporteCreateDTO createDTO)
+        public async Task<int> CreateAsync(RemiteTransportistaCreateDTO createDTO)
         {
             try
             {
-                var transporte = _mapper.Map<DOMAIN.Entities.Transporte>(createDTO);
+                var transporte = _mapper.Map<RemiteTransportistum>(createDTO);
                 await _repository.CreateAsync(transporte);
-                return transporte.TransporteId;
+                return transporte.RemiteTransportistaId;
             }
             catch (Exception ex)
             {
@@ -77,7 +76,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
                 throw new Exception(msg);
             }
         }
-        public async Task<UnidadTransporteDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO)
+        public async Task<RemiteTransportistaDTO> UpdateAsync(int id, RemiteTransportistaUpdateDTO updateDTO)
         {
             try
             {
@@ -88,7 +87,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
                 }
                 _mapper.Map(updateDTO, existingTransporte);
                 await _repository.UpdateAsync(existingTransporte);
-                return _mapper.Map<UnidadTransporteDTO>(existingTransporte);
+                return _mapper.Map<RemiteTransportistaDTO>(existingTransporte);
             }
             catch (Exception ex)
             {
@@ -132,12 +131,12 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte
 
             return new UpdatedStatusDto
             {
-                Id = existing.TransporteId,
+                Id = existing.RemiteTransportistaId,
                 IdEstado = (Int32)existing.IdEstado,
                 Estado = existing.Estado,
                 FechaEdicion = existing.FechaEdicion,
                 EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
-                Detalle = $"Unidad de Transporte con ID {existing.TransporteId} ha sido actualizado a estado '{existing.Estado}'."
+                Detalle = $"Unidad de Transporte con ID {existing.RemiteTransportistaId} ha sido actualizado a estado '{existing.Estado}'."
             };
         }
     }

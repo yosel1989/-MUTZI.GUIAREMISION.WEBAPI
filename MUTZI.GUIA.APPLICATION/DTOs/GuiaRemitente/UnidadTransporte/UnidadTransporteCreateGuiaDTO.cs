@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
 {
-    public class TransporteCreateGuiaDTO
+    public class UnidadTransporteCreateGuiaDTO
     {
 
     }

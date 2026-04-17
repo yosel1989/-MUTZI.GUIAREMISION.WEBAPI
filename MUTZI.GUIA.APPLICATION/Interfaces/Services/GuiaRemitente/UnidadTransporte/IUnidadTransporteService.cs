@@ -5,10 +5,10 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte
 {
-    public interface ITransporteService
+    public interface IUnidadTransporteService
     {
         Task<List<UnidadTransporteDTO>> GetAllAsycn();
-        Task<List<TransporteListDTO>> GetListBySuggestion(string numeroDoc);
+        Task<List<UnidadTransporteListDTO>> GetListBySuggestion(string numeroDoc);
         Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q);
         Task<UnidadTransporteDTO?> GetByIdAsync(int id);
         Task<int> CreateAsync(UnidadTransporteCreateDTO createDTO);

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
 {
-    public class TransporteGuiaUpdateDTO
+    public class UnidadTransporteGuiaUpdateDTO
     {
         [JsonPropertyName("transporte_guia_id")]
         [SwaggerSchema("Recibe un entero, aquí se coloca el ID del transporte_guia, OJO: Colocar el mismo ID si el transporte asociado sigue siendo el mismo, en caso de ser nuevo transporte_guia se debe dejar como valor cero '0'.", Nullable = false)]

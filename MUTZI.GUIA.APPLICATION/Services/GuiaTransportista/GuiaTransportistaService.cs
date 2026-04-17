@@ -42,7 +42,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                     var remiteTransportista = _mapper.Map<DOMAIN.Entities.RemiteTransportistum>(dto.RemiteTransportista);
                     var destinatario = _mapper.Map<DOMAIN.Entities.Destinatario>(dto.Destinatario);
                     var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<DOMAIN.Entities.ConductorGuid>(p)).ToList();
-                    var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<DOMAIN.Entities.TransporteGuid>(p)).ToList();
+                    var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<DOMAIN.Entities.UnidadTransporteGuid>(p)).ToList();
                     var guiaRemision = _mapper.Map<DOMAIN.Entities.GuiaRemision>(dto);
                     var datosEnvio = _mapper.Map<DOMAIN.Entities.DatosEnvio>(dto.DatosEnvio);
                     var origen = _mapper.Map<DOMAIN.Entities.Origen>(dto.Origen);

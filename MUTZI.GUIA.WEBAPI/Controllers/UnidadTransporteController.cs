@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
@@ -8,12 +7,12 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
-    [Route("[controller]")]
+    [Route("unidad-transporte")]
     [ApiController]
-    public class TransporteController : ControllerBase
+    public class UnidadTransporteController : ControllerBase
     {
-        private readonly ITransporteService _service;
-        public TransporteController(ITransporteService service)
+        private readonly IUnidadTransporteService _service;
+        public UnidadTransporteController(IUnidadTransporteService service)
         {
             _service = service;
         }
@@ -50,10 +49,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Listar unidades de transportes sugeridos",
         Description = "Lista las unidades de transporte sugeridos por número de documento o razón social",
         OperationId = "listar_transporte_sugerido")]
-        [ProducesResponseType(typeof(TransporteListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UnidadTransporteListDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<TransporteListDTO>>> GetBySuggestion([FromQuery] string? numeroDoc)
+        public async Task<ActionResult<List<UnidadTransporteListDTO>>> GetBySuggestion([FromQuery] string? numeroDoc)
         {
             try
             {
@@ -103,6 +102,8 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
+
         [HttpPost]
         [SwaggerOperation(
         Summary = "Registrar unidad de transporte",

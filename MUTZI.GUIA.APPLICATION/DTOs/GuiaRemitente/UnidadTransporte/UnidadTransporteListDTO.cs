@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
 {
-    public class TransporteListDTO
+    public class UnidadTransporteListDTO
     {
         [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, el ID del transporte en la bbdd", Nullable = false)]

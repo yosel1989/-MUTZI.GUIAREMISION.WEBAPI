@@ -15,7 +15,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             _context = context;
             _repository = repository;
         }
-        public async Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id)
+        public async Task<GuiaRemision> GetByIdAsync(int id)
         {
             return await _context.GuiaRemisions
                 .Include(r => r.Remitente)
@@ -47,7 +47,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             RemiteTransportistum remiteTransportista,
             Destinatario destinatario,
             List<ConductorGuid> conductor,
-            List<TransporteGuid> transporte,
+            List<UnidadTransporteGuid> transporte,
             GuiaRemision guiaRemision,
             DatosEnvio datosEnvio,
             Origen origen,
@@ -135,12 +135,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //Registrar en lista
                 foreach (var tr in transporte)
                 {
-                    var transporteGuia = new DOMAIN.Entities.TransporteGuid
+                    var transporteGuia = new DOMAIN.Entities.UnidadTransporteGuid
                     {
                         TransporteId = tr.TransporteId,
                         DatosEnvioId = datosEnvio.DatosEnvioId
                     };
-                    await _context.TransporteGuids.AddAsync(transporteGuia);
+                    await _context.UnidadTransporteGuids.AddAsync(transporteGuia);
                     await _context.SaveChangesAsync();
                 }
                 // DocRelacionados

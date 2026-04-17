@@ -6,32 +6,40 @@ using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
-    public class TransporteRepository : ITransporteRepository
+    public class UnidadTransporteRepository : IUnidadTransporteRepository
     {
         private readonly LogisticaContext _context;
-        public TransporteRepository(LogisticaContext context)
+        public UnidadTransporteRepository(LogisticaContext context)
         {
             _context = context;
         }
-        public async Task<List<DOMAIN.Entities.Transporte>> GetAllAsync()
+        public async Task<List<DOMAIN.Entities.UnidadTransporte>> GetAllAsync()
         {
-            return await _context.Transportes.ToListAsync();
+            return await _context.UnidadTransportes.ToListAsync();
         }
-        public async Task<List<Transporte>> GetListBySuggestion(string numeroDoc)
+        public async Task<List<UnidadTransporte>> GetListBySuggestion(string numeroDoc)
         {
-            var query = _context.Transportes.Where(c => c.IdEstado == 1);
-            if (!string.IsNullOrEmpty(numeroDoc))
+            try
             {
-                query = query.Where(c =>
-                    c.Descripcion.Contains(numeroDoc) ||
-                    c.Placa.Contains(numeroDoc) ||
-                    c.Tarjeta.Contains(numeroDoc));
+                var query = _context.UnidadTransportes.Where(c => c.IdEstado == 1);
+                if (!string.IsNullOrEmpty(numeroDoc))
+                {
+                    query = query.Where(c =>
+                        c.Descripcion.Contains(numeroDoc) ||
+                        c.Placa.Contains(numeroDoc) ||
+                        c.Tarjeta.Contains(numeroDoc));
+                }
+                return await query.ToListAsync();
             }
-            return await query.ToListAsync();
+            catch (Exception e)
+            {
+                throw;
+            }
+            
         }
-        public async Task<(List<Transporte>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
+        public async Task<(List<UnidadTransporte>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
         {
-            var query = _context.Transportes.AsQueryable();
+            var query = _context.UnidadTransportes.AsQueryable();
             if (request.Columns != null && request.Columns.Any())
             {
                 var val = request.Columns[0].Search.Value?.ToLower();
@@ -48,7 +56,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
             }
             var totalRecords = await query.CountAsync();
-            //var query = _context.Transportes.OrderByDescending(t => t.FechaCreacion);
+            //var query = _context.UnidadTransportes.OrderByDescending(t => t.FechaCreacion);
 
             var data = await query
                 .OrderByDescending(t=>t.FechaCreacion)
@@ -59,27 +67,27 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
             return (data, totalRecords);
         }
-        public async Task<DOMAIN.Entities.Transporte?> GetByIdAsync(int id)
+        public async Task<DOMAIN.Entities.UnidadTransporte?> GetByIdAsync(int id)
         {
-            return await _context.Transportes.FirstOrDefaultAsync(t => t.TransporteId == id);
+            return await _context.UnidadTransportes.FirstOrDefaultAsync(t => t.TransporteId == id);
         }
-        public async Task CreateAsync(DOMAIN.Entities.Transporte transporte)
+        public async Task CreateAsync(DOMAIN.Entities.UnidadTransporte transporte)
         {
-            await _context.Transportes.AddAsync(transporte);
+            await _context.UnidadTransportes.AddAsync(transporte);
             await _context.SaveChangesAsync();
         }
-        public async Task UpdateAsync(DOMAIN.Entities.Transporte transporte)
+        public async Task UpdateAsync(DOMAIN.Entities.UnidadTransporte transporte)
         {
-            _context.Transportes.Update(transporte);
+            _context.UnidadTransportes.Update(transporte);
             transporte.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id)
         {
-            var transporte = await _context.Transportes.FindAsync(id);
+            var transporte = await _context.UnidadTransportes.FindAsync(id);
             if (transporte != null)
             {
-                _context.Transportes.Remove(transporte);
+                _context.UnidadTransportes.Remove(transporte);
                 await _context.SaveChangesAsync();
             }
         }

@@ -8,7 +8,7 @@
             DOMAIN.Entities.RemiteTransportistum remiteTransportista,
             DOMAIN.Entities.Destinatario destinatario,
             List<DOMAIN.Entities.ConductorGuid> conductor,
-            List<DOMAIN.Entities.TransporteGuid> transporte,
+            List<DOMAIN.Entities.UnidadTransporteGuid> transporte,
             DOMAIN.Entities.GuiaRemision guiaRemision,
             DOMAIN.Entities.DatosEnvio datosEnvio,
             DOMAIN.Entities.Origen origen,

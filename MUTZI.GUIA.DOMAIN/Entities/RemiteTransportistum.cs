@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MUTZI.GUIA.DOMAIN.Entities;
+﻿namespace MUTZI.GUIA.DOMAIN.Entities;
 
 public partial class RemiteTransportistum
 {
@@ -36,6 +33,10 @@ public partial class RemiteTransportistum
     public string? Estado { get; set; }
 
     public sbyte? IdEstado { get; set; }
+
+    public string? RegistroMTC { get; set; }    
+
+    public string? EmailContacto { get; set; }
 
     public virtual ICollection<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; } = new List<EmailRemiteTransportistaGuid>();
 

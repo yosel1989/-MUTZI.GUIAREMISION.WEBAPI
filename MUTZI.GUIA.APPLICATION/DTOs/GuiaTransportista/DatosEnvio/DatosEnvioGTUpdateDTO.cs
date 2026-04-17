@@ -62,6 +62,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
         [JsonPropertyName("transporte_guia")]
         [SwaggerSchema("Recibe una lista de transportes asociados a datos_envio dentro de la guía", Nullable = false)]
         [Required]
-        public List<TransporteGuiaUpdateDTO> TransporteGuid { get; set; }
+        public List<UnidadTransporteGuiaUpdateDTO> TransporteGuid { get; set; }
     }
 }

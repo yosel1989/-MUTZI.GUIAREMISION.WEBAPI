@@ -357,12 +357,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 Licencia = cg.Conductor.Licencia
                             }
                         }).ToList(),
-                        TransporteGuids = env.TransporteGuids.Select(tg => new TransporteGuid
+                        TransporteGuids = env.TransporteGuids.Select(tg => new UnidadTransporteGuid
                         {
                             TransporteGuidId = tg.TransporteGuidId,
                             DatosEnvioId = tg.DatosEnvioId,
                             TransporteId = tg.TransporteId,
-                            Transporte = new Transporte
+                            Transporte = new UnidadTransporte
                             {
                                 TransporteId = tg.Transporte.TransporteId,
                                 Placa = tg.Transporte.Placa,
@@ -430,7 +430,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             Destinatario destinatario,
             Proveedor proveedor,
             List<ConductorGuid> conductor,
-            List<TransporteGuid> transporte,
+            List<UnidadTransporteGuid> transporte,
             GuiaRemision guiaRemision,
             DatosEnvio datosEnvio,
             Origen origen,
@@ -514,12 +514,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //Registrar en lista
                 foreach (var tr in transporte)
                 {
-                    var transporteGuia = new TransporteGuid
+                    var transporteGuia = new UnidadTransporteGuid
                     {
                         TransporteId = tr.TransporteId,
                         DatosEnvioId = datosEnvio.DatosEnvioId
                     };
-                    await _context.TransporteGuids.AddAsync(transporteGuia);
+                    await _context.UnidadTransporteGuids.AddAsync(transporteGuia);
                     await _context.SaveChangesAsync();
                 }
 
@@ -725,11 +725,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
         //Transporte
-        public async Task<Transporte> GetTransporteByPlacaAsync(string placa)
+        public async Task<UnidadTransporte> GetTransporteByPlacaAsync(string placa)
         {
-            return await _context.Transportes.FirstOrDefaultAsync(t => t.Placa == placa);
+            return await _context.UnidadTransportes.FirstOrDefaultAsync(t => t.Placa == placa);
         }
-        public async Task<Transporte> CreateTransporteAsync(Transporte transporte)
+        public async Task<UnidadTransporte> CreateTransporteAsync(UnidadTransporte transporte)
         {
             try
             {
@@ -737,7 +737,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     throw new ArgumentException(nameof(transporte), "El objeto transporte no puede ser nulo");
                 }
-                await _context.Transportes.AddAsync(transporte);
+                await _context.UnidadTransportes.AddAsync(transporte);
                 await _context.SaveChangesAsync();
                 return transporte;
             }

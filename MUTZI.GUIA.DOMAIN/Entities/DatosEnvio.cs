@@ -31,5 +31,5 @@ public partial class DatosEnvio
 
     public virtual GuiaRemision Guia { get; set; } = null!;
 
-    public virtual ICollection<TransporteGuid> TransporteGuids { get; set; } = new List<TransporteGuid>();
+    public virtual ICollection<UnidadTransporteGuid> TransporteGuids { get; set; } = new List<UnidadTransporteGuid>();
 }
