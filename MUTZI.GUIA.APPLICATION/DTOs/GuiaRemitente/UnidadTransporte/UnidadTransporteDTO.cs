@@ -26,13 +26,21 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
         [SwaggerSchema("Devuelve un texto, la placa del transporte", Nullable = false)]
         public string Placa { get; set; }
 
-        [JsonPropertyName("numero_registro_mtc")]
-        [SwaggerSchema("Devuelve un texto, el número de registro MTC del transporte", Nullable = false)]
-        public string NumeroRegistroMTC { get; set; }
-
         [JsonPropertyName("tarjeta")]
         [SwaggerSchema("Devuelve un texto, la tarjeta de circulación del transporte", Nullable = false)]
         public string Tarjeta { get; set; }
+
+        [JsonPropertyName("cod_emisor_vehicular")]
+        [SwaggerSchema("Devuelve un texto, el código del emisor vehicular del transporte", Nullable = true)]
+        public string? CodEmisorVehicular { get; set; }
+
+        [JsonPropertyName("emisor_vehicular")]
+        [SwaggerSchema("Devuelve un texto, el emisor vehicular del transporte", Nullable = true)]
+        public string? EmisorVehicular { get; set; }
+
+        [JsonPropertyName("nro_autorizacion")]
+        [SwaggerSchema("Devuelve un texto, el número de autorización del transporte", Nullable = true)]
+        public string? NroAutorizacion { get; set; }
 
         [JsonPropertyName("fecha_creacion")]
         [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00", Nullable = false)]

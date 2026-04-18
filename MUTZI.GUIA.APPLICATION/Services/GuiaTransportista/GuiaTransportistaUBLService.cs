@@ -145,24 +145,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                             }
                                         }
                                     } : null
-
-
-
-
-                                    //Contact=new List<Contact>
-                                    //{
-                                    //    new Contact
-                                    //    {
-                                    //        ElectronicMail=new List<ElectronicMail>
-                                    //        {
-                                    //            new ElectronicMail
-                                    //            {
-                                    //                _ = guia.Destinatario.Email
-                                    //                //_ = "sistemas7@carolina-peru.com"
-                                    //            }
-                                    //        }
-                                    //    }
-                                    //}
                                 }
                             }
                         }
@@ -177,11 +159,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
             despatch.Shipment = new List<Shipment> {
                 new Shipment {
                     ID = new List<ID> { new ID { _ = "SUNAT_Envio" }},
-
-                    //// Edit 2: No va Motivo de traslado como: HandlingInstructions en transportista
-                    //HandlingInstructions = string.IsNullOrWhiteSpace(guia.DatosEnvioDto?.MotivoTraslado) ? null
-                    //    : new List<HandlingInstruction> { new HandlingInstruction { _ = guia.DatosEnvioDto.MotivoTraslado } },
-                    //HandlingCode = ToCode20OrNull(guia.DatosEnvioDto?.MotivoTraslado),
 
                     GrossWeightMeasure = new List<GrossWeightMeasure> {
                         new GrossWeightMeasure { _ = (guia.DatosEnvio?.PesoBruto ?? 0M).ToString(), unitCode = guia.DatosEnvio?.CodigoUM ?? "KGM" }
@@ -288,21 +265,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                                         }
                                                     }
                                                 }
-                                            } : null    
-                                            //Contact=new List<Contact>
-                                            //{
-                                            //    new Contact
-                                            //    {
-                                            //        ElectronicMail=new List<ElectronicMail>
-                                            //        {
-                                            //            new ElectronicMail
-                                            //            {
-                                            //                _ = guia.RemiteTransportista.Email
-                                            //                //_ = "sistemas7@carolina-peru.com"
-                                            //            }
-                                            //        }
-                                            //    }
-                                            //}
+                                            } : null
                                         }
                                     }
                                 }
@@ -320,7 +283,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                 transportEquipments.Add(new TransportEquipment
                 {
                     ID = new List<ID> { new ID { _ = transportes[0].Placa } },
-                    ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0].NumeroRegistroMTC) ? null : new List<ShipmentDocumentReference>
+                    ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0].NroAutorizacion) ? null : new List<ShipmentDocumentReference>
                         {
                             new ShipmentDocumentReference
                             {
@@ -328,8 +291,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                 {
                                     new ID
                                     {
-                                        _ = transportes[0].NumeroRegistroMTC,
-                                        schemeID = "06"
+                                        _ = transportes[0].NroAutorizacion,
+                                        schemeID = transportes[0].CodEmisorVehicular
+                                        //schemeID = "06"//ya no va
                                     }
                                 }
                             }
@@ -348,7 +312,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                     new AttachedTransportEquipment
                                     {
                                         ID = new List<ID> { new ID { _ = t.Placa } },
-                                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(t.NumeroRegistroMTC)?null: new List<ShipmentDocumentReference>
+                                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(t.NroAutorizacion)?null: new List<ShipmentDocumentReference>
                                         {
                                             new ShipmentDocumentReference
                                             {
@@ -356,8 +320,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                                 {
                                                     new ID
                                                     {
-                                                        _ = t.Placa,
-                                                        schemeID = "06"
+                                                        _ = t.NroAutorizacion,
+                                                        schemeID = t.CodEmisorVehicular
                                                     }
                                                 }
                                             }

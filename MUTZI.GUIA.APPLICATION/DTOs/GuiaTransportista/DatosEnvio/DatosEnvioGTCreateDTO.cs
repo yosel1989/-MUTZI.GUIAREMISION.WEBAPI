@@ -9,7 +9,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
     [SwaggerSchema("Recibe un objeto datos_envio de la guía transportista, aquí se detala los detalles del envío", Nullable=false)]
     public class DatosEnvioGTCreateDTO
     {
-        //public string MotivoTraslado { get; set; }
         [JsonPropertyName("fecha_envio")]
         [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
         [StringLength(10)]
@@ -38,21 +37,16 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
         [MaxLength(200)]
         public string? RazonSocialCurrier { get; set; }
 
-        [JsonPropertyName("registro_mtc_currier")]
-        [SwaggerSchema("Recibe un texto y es el registro MTC de la empresa de Currier, este campo solo se llena si el pagador del flete es un subcontratador", Nullable = false)]
-        [MaxLength(30)]
-        public string? RegistroMtcCurrier { get; set; }
-
         // Conductor
         [JsonPropertyName("conductor")]
-        [SwaggerSchema("Recibe un objeto conductor", Nullable = false)]
+        [SwaggerSchema("Recibe la lista de enteros con los IDs de los conductores asociados a la guía de remisión.", Nullable=false)]
         [Required]
-        public List<ConductorCreateDTO> Conductor { get; set; }
+        public List<int> ConductorId { get; set; }
 
         // Unidad de transporte
-        [JsonPropertyName("unidad_transporte")]
-        [SwaggerSchema("Recibe un objeto unidad_transporte", Nullable = false)]
+        [JsonPropertyName("transporte")]
+        [SwaggerSchema("Recibe la lista de enteros con los IDs de las unidades de transporte asociados a la guía de remisión.", Nullable=false)]
         [Required]
-        public List<UnidadTransporteCreateDTO> UnidadTransporte { get; set; }
+        public List<int> TransporteId { get; set; }
     }
 }

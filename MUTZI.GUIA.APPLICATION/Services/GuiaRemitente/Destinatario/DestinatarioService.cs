@@ -136,6 +136,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
                 Id = existing.DestinatarioId,
                 IdEstado = (Int32)existing.IdEstado,
                 Estado = existing.Estado,
+                FechaEdicion = existing.FechaEdicion,
+                EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
                 Detalle = $"Destinatario con ID {existing.DestinatarioId} ha sido actualizado a estado '{existing.Estado}'."
             };
         }

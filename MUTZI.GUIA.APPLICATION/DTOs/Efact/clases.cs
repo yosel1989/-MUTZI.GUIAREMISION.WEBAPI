@@ -214,6 +214,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         public string unitCode { get; set; }
     }
 
+    public class SpecialInstructions
+    {
+        public string _ { get; set; }
+    }
+
     public class HandlingCode
     {
         public string _ { get; set; }
@@ -228,6 +233,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     {
         public string _ { get; set; }
         public string? schemeID { get; set; }
+    }
+    public class ItemClassificationCode
+    {
+        public string _ { get; set; }
     }
 
     [JsonObject("ID")]
@@ -260,6 +269,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     {
         public List<Description> Description { get; set; }
         public List<SellersItemIdentification> SellersItemIdentification { get; set; }
+        public List<CommodityClassification> CommodityClassification { get; set; }
+        public List<StandardItemIdentification> StandardItemIdentification { get; set; }
     }
 
     public class Line
@@ -346,6 +357,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     {
         public List<ID> ID { get; set; }
     }
+    public class CommodityClassification
+    {
+        public List<ItemClassificationCode> ItemClassificationCode { get; set; }
+    }
+    public class StandardItemIdentification
+    {
+        public List<ID> ID { get; set; }
+    }
 
     public class Shipment
     {
@@ -353,6 +372,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         public List<HandlingCode> HandlingCode { get; set; }
         public List<HandlingInstruction> HandlingInstructions { get; set; }
         public List<GrossWeightMeasure> GrossWeightMeasure { get; set; }
+        public List <SpecialInstructions>? SpecialInstructions { get; set; }
         public List<ShipmentStage> ShipmentStage { get; set; }
         public List<Delivery> Delivery { get; set; }
         public List<TransportHandlingUnit>? TransportHandlingUnit { get; set; }

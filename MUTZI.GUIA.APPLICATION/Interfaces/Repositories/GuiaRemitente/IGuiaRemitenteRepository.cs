@@ -9,13 +9,14 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO? request, bool export = false);
         //Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, List<ColumnFilterDTO> columnFilterDTOs);
         Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id);
+        Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync2(int id);
         Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket);
-        Task <int> CreateGuiaRemisionTransactionalAsync(
+        Task <(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(
             DOMAIN.Entities.Remitente remitente,
             DOMAIN.Entities.Destinatario destinatario,
             DOMAIN.Entities.Proveedor proveedor,
-            List<DOMAIN.Entities.Conductor> conductor,
-            List<DOMAIN.Entities.Transporte> transporte,
+            List<DOMAIN.Entities.ConductorGuid> conductor,
+            List<DOMAIN.Entities.UnidadTransporteGuid> transporte,
             DOMAIN.Entities.GuiaRemision guiaRemision,
             DOMAIN.Entities.DatosEnvio datosEnvio,
             DOMAIN.Entities.Origen origen,
@@ -38,8 +39,8 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<DOMAIN.Entities.Conductor> GetConductorByNumeroDocumentoAsync(string numeroDocumento);
         Task<DOMAIN.Entities.Conductor> CreateConductorAsync(DOMAIN.Entities.Conductor conductor);
         //Transporte
-        Task<DOMAIN.Entities.Transporte> GetTransporteByPlacaAsync(string placa);
-        Task<DOMAIN.Entities.Transporte> CreateTransporteAsync(DOMAIN.Entities.Transporte transporte);
+        Task<DOMAIN.Entities.UnidadTransporte> GetTransporteByPlacaAsync(string placa);
+        Task<DOMAIN.Entities.UnidadTransporte> CreateTransporteAsync(DOMAIN.Entities.UnidadTransporte transporte);
         //Datos envio
         Task<DOMAIN.Entities.DatosEnvio> CreateDatosEnvioAsync(DOMAIN.Entities.DatosEnvio datosEnvio);
         //Ubicación origen

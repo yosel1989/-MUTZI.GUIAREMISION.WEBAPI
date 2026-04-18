@@ -28,15 +28,27 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
         [Required]
         public string Placa { get; set; }
 
-        [JsonPropertyName("numero_registro_mtc")]
-        [SwaggerSchema("Recibe un texto, se coloca el número de registro MTC del vehículo", Nullable = true)]
-        [MaxLength(20)]
-        public string? NumeroRegistroMTC { get; set; }
-
         [JsonPropertyName("tarjeta")]
         [SwaggerSchema("Recibe un texto, se coloca el número de tarjeta de identificación vehicular.", Nullable = true)]
         [MaxLength(20)]
-        public string Tarjeta { get; set; }
+        public string? Tarjeta { get; set; }
+
+        [JsonPropertyName("cod_emisor_vehicular")]
+        [SwaggerSchema("Recibe un texto, se coloca el código del emisor vehicular, este campo es opcional", Nullable = true)]
+        [StringLength(2)]
+        public string? CodEmisorVehicular { get; set; }
+
+        [JsonPropertyName("emisor_vehicular")]
+        [SwaggerSchema("Recibe un texto, se coloca la abreviación del emisor vehicular. Ejm: 'MTC', este campo es opcional", Nullable = true)]
+        [MinLength(2)]
+        [MaxLength(100)]
+        public string? EmisorVehicular { get; set; }
+
+        [JsonPropertyName("nro_autorizacion")]
+        [SwaggerSchema("Recibe un texto, se coloca el número de autorización del vehículo, este campo es opcional", Nullable = true)]
+        [MinLength(3)]
+        [MaxLength(50)]
+        public string? NroAutorizacion { get; set; }
 
         [JsonPropertyName("empleado_id_edicion")]
         [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = false)]

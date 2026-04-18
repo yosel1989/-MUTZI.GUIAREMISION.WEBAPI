@@ -8,6 +8,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
 {
     public class DatosEnvioGT_DTO
     {
+        [JsonPropertyName("datos_envio_id")]
+        [SwaggerSchema("Devuelve en entero el ID de datos_envio asociado a la guía de remisión.", Nullable = false)]
+        public int DatosEnvioId { get; set; }
+
         [JsonPropertyName("fecha_envio")]
         [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
         public string FechaEnvio { get; set; }
@@ -41,6 +45,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
         // Unidad de transporte
         [JsonPropertyName("unidad_transporte")]
         [SwaggerSchema("Devuelve el transporte asociado a los datos de envío.", Nullable = false)]
-        public List<TransporteGuiaDTO> TransporteGuia { get; set; }
+        public List<UnidadTransporteGuiaDTO> TransporteGuia { get; set; }
     }
 }

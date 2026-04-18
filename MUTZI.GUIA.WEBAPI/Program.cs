@@ -12,8 +12,10 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Transportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
@@ -23,10 +25,11 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.Pais;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Transportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Mappings;
+using MUTZI.GUIA.APPLICATION.Services.Catalogos;
 using MUTZI.GUIA.APPLICATION.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente;
@@ -36,7 +39,7 @@ using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
-using MUTZI.GUIA.APPLICATION.Services.Pais;
+using MUTZI.GUIA.APPLICATION.Services.Transportista;
 using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Services.VentaConfig;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
@@ -95,9 +98,10 @@ builder.Services.AddScoped<IGuiaTransportistaRepository, GuiaTransportistaReposi
 builder.Services.AddScoped<IRemitenteRepository, RemitenteRepository>();
 builder.Services.AddScoped<IDestinatarioRepository, DestinatarioRepository>();
 builder.Services.AddScoped<IConductorRepository, ConductorRepository>();
-builder.Services.AddScoped<ITransporteRepository, TransporteRepository>();
+builder.Services.AddScoped<IUnidadTransporteRepository, UnidadTransporteRepository>();
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<IUbigeoRepository, UbigeoRepository>();
+builder.Services.AddScoped<ITransportistaRepository, TransportistaRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -108,15 +112,16 @@ builder.Services.AddScoped<IGuiaTransportistaUBLService, GuiaTransportistaUBLSer
 builder.Services.AddScoped<IGuiaRemitenteService, GuiaRemitenteService>();
 builder.Services.AddScoped<IGuiaTransportistaService, GuiaTransportistaService>();
 builder.Services.AddScoped<IEnvioService, EnvioService>();
-builder.Services.AddScoped<IPaisService, PaisService>();
+builder.Services.AddScoped<ICatalogoService, CatalogoService>();
 
 builder.Services.AddScoped<IRemitenteService, RemitenteService>();
 builder.Services.AddScoped<IDestinatarioService, DestinatarioService>();
 builder.Services.AddScoped<IConductorService, ConductorService>();
-builder.Services.AddScoped<ITransporteService, TransporteService>();
+builder.Services.AddScoped<IUnidadTransporteService, UnidadTransporteService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<IUbigeoService, UbigeoService>();
 builder.Services.AddScoped<IS3FileService, S3FileService>();
+builder.Services.AddScoped<ITransportistaService, TransportistaService>();
 builder.Services.AddMemoryCache();
 
 //aGREGAR SWAGGER

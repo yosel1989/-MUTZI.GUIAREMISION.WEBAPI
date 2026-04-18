@@ -99,7 +99,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     DeliveryCustomerParty = new List<DeliveryCustomerParty>{ new DeliveryCustomerParty {
                         Party = new List<Party>{ new Party {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
-                                ID = new List<ID>{ new ID { _ = guia.Destinatario.NumeroDocumento , schemeID = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento)  }}
+                                ID = new List<ID>{ new ID { _ = guia.Destinatario.NumeroDocumento , schemeID = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento)  }}
                             }},
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
                                 ID = new List<ID> { new ID { _ = guia.Destinatario.UbigeoId}},
@@ -135,7 +135,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     //El proveedor se crea solo si el tipo de traslado es compra
                     SellerSupplierParty = guia.TipoTraslado == "COMPRA" ? new List<SellerSupplierParty>{ new SellerSupplierParty {
                         Party = new List<Party>{ new Party {
-                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Proveedor.NumeroDocumento,  schemeID = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento)  }}}},
+                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Proveedor.NumeroDocumento,  schemeID = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento, guia.Proveedor.NumeroDocumento)  }}}},
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
                                 ID = new List<ID> { new ID { _ = guia.Proveedor.UbigeoId } },
                                 CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Proveedor.Departamento } },
@@ -163,7 +163,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 HandlingCode = new List<HandlingCode>{ new HandlingCode { _ = guia.TipoTrasladoCode20() }},
                 HandlingInstructions = new List<HandlingInstruction>{ new HandlingInstruction { _ = guia.DatosEnvio.MotivoEnvio }},
                 GrossWeightMeasure = new List<GrossWeightMeasure>{ new GrossWeightMeasure { _ =guia.DatosEnvio.PesoBruto.ToString() , unitCode = guia.DatosEnvio?.CodigoUM??"KGM" }},
-
+                SpecialInstructions= guia.DatosEnvio?.IndicadorVehiculoConductor==false?null: new List<SpecialInstructions>{ new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" } },
                 ShipmentStage = new List<ShipmentStage>{ new ShipmentStage {
                     TransportModeCode = new List<TransportModeCode>{ new TransportModeCode { _ = guia.TipoTRansporteCode18() }},
                     TransitPeriod = new List<TransitPeriod>{ new TransitPeriod {
@@ -172,19 +172,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
 
                 }},
                 Delivery= new List<Delivery>{ new Delivery {
-                    //DeliveryAddress = new List<DeliveryAddress>{ new DeliveryAddress {
-                    //    ID = new List<ID>{ new ID { _ = guia.Destino.UbigeoId }},
-                    //    AddressTypeCode = new List<AddressTypeCode>{new AddressTypeCode {
-                    //        _ ="0000",
-                    //        listID = guia.Destinatario.NumeroDocumento
-                    //    }},
-                    //    CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destino.Departamento } },
-                    //    CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _= guia.Destino.Departamento }},
-                    //    CityName = new List<CityName>{ new CityName { _ = guia.Destino.Provincia }},
-                    //    District = new List<District>{ new District { _ = guia.Destino.Distrito}},
-                    //    AddressLine = new List<AddressLine>{ new AddressLine { Line = new List<Line> { new Line { _  = guia.Destino.Direccion }}}},
-                    //    Country = new List<Country>{ new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destino.Pais } }}}
-                    //}},
                     //Punto de llegada
                     DeliveryAddress = guia.Destino.Select(destino => new DeliveryAddress {
                         ID = new List<ID>{ new ID { _ = destino.UbigeoId }},
@@ -215,11 +202,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                                 listID = guia.Remitente.Ruc
                              }}
                              ,
-                            // AddressTypeCode = string.IsNullOrWhiteSpace(guia.Remitente.CodigoSunat)?null: new List<AddressTypeCode>{new AddressTypeCode {
-                            //    _ =guia.Remitente.CodigoSunat, 
-                            //    //Si es compra, se coloca el numeroDoc del proveedor, si es venta o traslado, el ruc del remitente
-                            //    listID = guia.TipoTraslado=="COMPRA" ? guia.Proveedor.NumeroDocumento: guia.Remitente.Ruc
-                            //}},
                             CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Origen.Departamento } },
                             CityName = new List<CityName>{ new CityName { _ = guia.Origen.Provincia }},
                             District = new List<District>{ new District { _ = guia.Origen.Distrito}},
@@ -243,32 +225,32 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             }};
 
 
-            if (guia.TipoTransporte == "PRIVADO")
+            //////////if (guia.TipoTransporte == "PRIVADO")
+            //////////{
+            //Conductor en Lista
+            if (guia.DatosEnvio.ConductorGuia != null)
             {
-                //Conductor en Lista
-                if (guia.DatosEnvio.ConductorGuia != null)
+                root.DespatchAdvice[0].Shipment[0].ShipmentStage[0].DriverPerson = guia.DatosEnvio.ConductorGuia.Select(conductor => new DriverPerson
                 {
-                    root.DespatchAdvice[0].Shipment[0].ShipmentStage[0].DriverPerson = guia.DatosEnvio.ConductorGuia.Select(conductor => new DriverPerson
-                    {
-                        ID = new List<ID> { new ID { _ = conductor.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(conductor.TipoDocumento) } },
-                        FirstName = new List<FirstName> { new FirstName { _ = conductor.Nombres } },
-                        FamilyName = new List<FamilyName> { new FamilyName { _ = conductor.Apellidos } },
-                        JobTitle = new List<JobTitle> { new JobTitle { _ = conductor.JobTitle } },
-                        IdentityDocumentReference = new List<IdentityDocumentReference>{ new IdentityDocumentReference {
+                    ID = new List<ID> { new ID { _ = conductor.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(conductor.TipoDocumento, conductor.NumeroDocumento) } },
+                    FirstName = new List<FirstName> { new FirstName { _ = conductor.Nombres } },
+                    FamilyName = new List<FamilyName> { new FamilyName { _ = conductor.Apellidos } },
+                    JobTitle = new List<JobTitle> { new JobTitle { _ = conductor.JobTitle } },
+                    IdentityDocumentReference = new List<IdentityDocumentReference>{ new IdentityDocumentReference {
                             ID = new List<ID> { new ID { _ = conductor.Licencia  }}
                         }}
-                    }).ToList();
-                }
-                if (guia.DatosEnvio.TransporteGuia != null && guia.DatosEnvio.TransporteGuia.Any())
-                {
-                    var transportes = guia.DatosEnvio.TransporteGuia.ToList();
-                    var transportEquipments = new List<TransportEquipment>();
+                }).ToList();
+            }
+            if (guia.DatosEnvio.TransporteGuia != null && guia.DatosEnvio.TransporteGuia.Any())
+            {
+                var transportes = guia.DatosEnvio.TransporteGuia.ToList();
+                var transportEquipments = new List<TransportEquipment>();
 
-                    // Primer transporte como TransportEquipment principal
-                    transportEquipments.Add(new TransportEquipment
-                    {
-                        ID = new List<ID> { new ID { _ = transportes[0].Placa } },
-                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0].NumeroRegistroMTC) ? null : new List<ShipmentDocumentReference>
+                // Primer transporte como TransportEquipment principal
+                transportEquipments.Add(new TransportEquipment
+                {
+                    ID = new List<ID> { new ID { _ = transportes[0].Placa } },
+                    ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0].NroAutorizacion) ? null : new List<ShipmentDocumentReference>
                         {
                             new ShipmentDocumentReference
                             {
@@ -276,27 +258,30 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                                 {
                                     new ID
                                     {
-                                        _ = transportes[0].NumeroRegistroMTC,
-                                        schemeID = "06"
+                                        _ = transportes[0].NroAutorizacion,
+                                        schemeID = transportes[0].CodEmisorVehicular
                                     }
                                 }
                             }
-                        }
-                    });
+                        },
+                    ApplicableTransportMeans = guia.TipoTransporte != "PUBLICO" ? null : new List<ApplicableTransportMean>{ new ApplicableTransportMean {//Tarjeta  IS ES PRIVADO NO VA??
+                        RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = transportes[0].Tarjeta }}
+                            }}
+                });
 
-                    // Los siguientes como TransportEquipment con AttachedTransportEquipment
-                    if (transportes.Count > 1)
+                // Los siguientes como TransportEquipment con AttachedTransportEquipment
+                if (transportes.Count > 1)
+                {
+                    foreach (var t in transportes.Skip(1))
                     {
-                        foreach (var t in transportes.Skip(1))
+                        transportEquipments.Add(new TransportEquipment
                         {
-                            transportEquipments.Add(new TransportEquipment
-                            {
-                                AttachedTransportEquipment = new List<AttachedTransportEquipment>
+                            AttachedTransportEquipment = new List<AttachedTransportEquipment>
                                 {
                                     new AttachedTransportEquipment
                                     {
                                         ID = new List<ID> { new ID { _ = t.Placa } },
-                                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(t.NumeroRegistroMTC)?null: new List<ShipmentDocumentReference>
+                                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(t.NroAutorizacion)?null: new List<ShipmentDocumentReference>
                                         {
                                             new ShipmentDocumentReference
                                             {
@@ -304,59 +289,27 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                                                 {
                                                     new ID
                                                     {
-                                                        _ = t.Placa,
-                                                        schemeID = "06"
+                                                        _ = t.NroAutorizacion,
+                                                        schemeID = t.CodEmisorVehicular
                                                     }
                                                 }
                                             }
-                                        }
+                                        },
+                                        ApplicableTransportMeans = guia.TipoTransporte!="PUBLICO"?null: new List<ApplicableTransportMean>{ new ApplicableTransportMean {//Tarjeta  IS ES PRIVADO NO VA??
+                                            RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = t.Tarjeta }}
+                                                }}
                                     }
                                 }
-                            });
-                        }
+                        });
                     }
-
-                    root.DespatchAdvice[0].Shipment[0].TransportHandlingUnit = new List<TransportHandlingUnit>
+                }
+                root.DespatchAdvice[0].Shipment[0].TransportHandlingUnit = new List<TransportHandlingUnit>
                     {
                         new TransportHandlingUnit
                         {
                             TransportEquipment = transportEquipments
                         }
                     };
-                }
-
-
-
-                //if (guia.DatosEnvio.TransporteGuia != null)
-                //    root.DespatchAdvice[0].Shipment[0].TransportHandlingUnit=guia.DatosEnvio.TransporteGuia.Select(transporte => new TransportHandlingUnit {
-                //        TransportEquipment = new List<TransportEquipment>{new TransportEquipment {
-                //            ID = new List<ID>{ new ID { _ = transporte.Placa}},
-                //            ShipmentDocumentReference = new List<ShipmentDocumentReference>{new ShipmentDocumentReference {
-                //                ID = new List<ID>{new ID {
-                //                    _ = transporte.Placa,
-                //                    schemeID = "06"
-                //                }}
-                //            }}
-                //            //ApplicableTransportMeans = new List<ApplicableTransportMean>{ new ApplicableTransportMean {//Tarjeta  IS ES PRIVADO NO VA??
-                //            //    RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = transporte.Tarjeta }}
-                //            //}}
-                //        }}
-                //    }).ToList();
-
-                //root.DespatchAdvice[0].Shipment[0].TransportHandlingUnit = new List<TransportHandlingUnit> { new TransportHandlingUnit {
-                //        TransportEquipment = new List<TransportEquipment>{new TransportEquipment {
-                //            ID = new List<ID>{ new ID { _ = "PLACA1"}},
-                //            ShipmentDocumentReference = new List<ShipmentDocumentReference>{new ShipmentDocumentReference {
-                //                ID = new List<ID>{new ID {
-                //                    _ =  guia.DatosEnvio.UnidadTransporte.Placa,
-                //                    schemeID = "06"
-                //                }}
-                //            }}
-                //            //ApplicableTransportMeans = new List<ApplicableTransportMean>{ new ApplicableTransportMean {//Tarjeta  IS ES PRIVADO NO VA??
-                //            //    RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = guia.datosEnvio.unidadTransporte.Tarjeta }}
-                //            //}}
-                //        }}
-                //    }};
             }
 
             if (guia.TipoTransporte == "PUBLICO")
@@ -368,12 +321,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                             //Condicional: Corresponde al número de registro del MTC del transportista.
                             CompanyID = new List<CompanyID>{ new CompanyID { _ = guia.DatosEnvio.RegistroMtcCurrier ?? "NUMREGISTRANS" }}
                         }},
-                        //AgentParty = new List<AgentParty>{ new AgentParty { 
-                        //    PartyLegalEntity = new List<PartyLegalEntity> { new PartyLegalEntity { 
-                        //        //Condicional: Corresponde al Número de la autorización especial emitido por la entidad emisora autorizada.
-                        //        CompanyID = new List<CompanyID> { new CompanyID { _ = "NUMAUTRANS" ,schemeID = "06" }}
-                        //    }}
-                        //}},
                    }};
             }
 

@@ -35,6 +35,10 @@ public partial class GuiaRemision
 
     public int? ProveedorId { get; set; }
 
+    public string? Area { get; set; }
+
+    public string? RegistroMtc { get; set; }
+
     public string RespuestaTicket { get; set; } = null!;
 
     public DateTime? FechaCreacion { get; set; }
@@ -49,9 +53,13 @@ public partial class GuiaRemision
 
     public string? EmpleadoNombreEdicion { get; set; }
 
-    public string Estado { get; set; } = null!;
+    public string Estado { get; set; }
 
     public sbyte IdEstado { get; set; }
+
+    public string EstadoSunat { get; set; }
+
+    public sbyte IdEstadoSunat { get; set; }
 
     public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
 

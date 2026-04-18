@@ -11,7 +11,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor
     [SwaggerSchema("Devuelve un objeto conductor asociado a los datos de envío de una guía de remisión")]
     public class ConductorGuiaDTO
     {
-        [JsonPropertyName("conductor_guid_id")]
+        [JsonPropertyName("conductor_guia_id")]
         [SwaggerSchema("Devuelve en entero el ID del conductor asociado a los datos de envío de una guía de remisión.", Nullable = false)]
         public int ConductorGuidId { get; set; }
 

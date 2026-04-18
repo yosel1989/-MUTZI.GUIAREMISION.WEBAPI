@@ -15,296 +15,179 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<(List<GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request, bool export = false)
         {
-            var query = _context.GuiaRemisions.AsQueryable();
-            if (request.Columns != null && request.Columns.Any())
+            try
             {
-                foreach (var col in request.Columns)
+                var query = _context.GuiaRemisions.AsQueryable();
+                if (request.Columns != null && request.Columns.Any())
                 {
-                    var val = col.Search.Value?.ToLower();
-                    var key = col.Data?.ToLower();
-                    if (string.IsNullOrEmpty(val)) continue;
-                    if (key.Contains("fecha"))
+                    foreach (var col in request.Columns)
                     {
-                        var parts = val.Split('|', StringSplitOptions.RemoveEmptyEntries);
+                        var val = col.Search.Value?.ToLower();
+                        var key = col.Data?.ToLower();
+                        if (string.IsNullOrEmpty(val)) continue;
+                        if (key.Contains("fecha"))
+                        {
+                            var parts = val.Split('|', StringSplitOptions.RemoveEmptyEntries);
 
-                        if (parts.Length == 1)
-                        {
-                            if (DateTime.TryParse(parts[0], out var fechaDt))
+                            if (parts.Length == 1)
                             {
-                                var fecha = DateOnly.FromDateTime(fechaDt);
-                                query = key switch
+                                if (DateTime.TryParse(parts[0], out var fechaDt))
                                 {
-                                    "fecha_registro" => query.Where(x => DateOnly.FromDateTime(x.FechaCreacion.Value) == fecha),
-                                    "fecha_emision" => query.Where(x => x.Fecha == fecha),
-                                    _ => query
-                                };
+                                    var fecha = DateOnly.FromDateTime(fechaDt);
+                                    query = key switch
+                                    {
+                                        "fecha_registro" => query.Where(x => DateOnly.FromDateTime(x.FechaCreacion.Value) == fecha),
+                                        "fecha_emision" => query.Where(x => x.Fecha == fecha),
+                                        _ => query
+                                    };
+                                }
                             }
-                        }
-                        else
-                        {
-                            if (DateTime.TryParse(parts[0], out var iniDt) && DateTime.TryParse(parts[1], out var finDt))
+                            else
                             {
-                                var fechaIni = DateOnly.FromDateTime(iniDt);
-                                var fechaFin = DateOnly.FromDateTime(finDt);
-                                query = key switch
+                                if (DateTime.TryParse(parts[0], out var iniDt) && DateTime.TryParse(parts[1], out var finDt))
                                 {
-                                    "fecha_registro" => query.Where(x => DateOnly.FromDateTime(x.FechaCreacion.Value) >= fechaIni
-                                                                      && DateOnly.FromDateTime(x.FechaCreacion.Value) <= fechaFin),
-                                    "fecha_emision" => query.Where(x => x.Fecha >= fechaIni && x.Fecha <= fechaFin),
-                                    _ => query
-                                };
+                                    var fechaIni = DateOnly.FromDateTime(iniDt);
+                                    var fechaFin = DateOnly.FromDateTime(finDt);
+                                    query = key switch
+                                    {
+                                        "fecha_registro" => query.Where(x => DateOnly.FromDateTime(x.FechaCreacion.Value) >= fechaIni
+                                                                          && DateOnly.FromDateTime(x.FechaCreacion.Value) <= fechaFin),
+                                        "fecha_emision" => query.Where(x => x.Fecha >= fechaIni && x.Fecha <= fechaFin),
+                                        _ => query
+                                    };
+                                }
                             }
+                            continue;
                         }
-                        continue;
-                    }
-                    if (key.Contains("id_remitente"))
-                    {
-                        var idsStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                        if (idsStrings.Length == 1)
+                        if (key.Contains("id_remitente"))
                         {
-                            if (int.TryParse(idsStrings[0], out int idUnico))
-                                query = query.Where(x => x.RemitenteId == idUnico);
+                            var idsStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                            if (idsStrings.Length == 1)
+                            {
+                                if (int.TryParse(idsStrings[0], out int idUnico))
+                                    query = query.Where(x => x.RemitenteId == idUnico);
+                            }
+                            else
+                            {
+                                var idsInt = idsStrings.Select(int.Parse).ToList();
+                                query = query.Where(x => idsInt.Contains(x.RemitenteId));
+                            }
+                            continue;
                         }
-                        else
+                        if (key.Contains("tipo_traslado"))
                         {
-                            var idsInt = idsStrings.Select(int.Parse).ToList();
-                            query = query.Where(x => idsInt.Contains(x.RemitenteId));
+                            var tipoStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                            if (tipoStrings.Length == 1)
+                            {
+                                query = query.Where(x => x.TipoTraslado.ToLower() == tipoStrings[0]);
+                            }
+                            else
+                            {
+                                query = query.Where(x => tipoStrings.Contains(x.TipoTraslado.ToLower()));
+                            }
+                            continue;
                         }
-                        continue;
-                    }
-                    if (key.Contains("tipo_traslado"))
-                    {
-                        var tipoStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                        if (tipoStrings.Length == 1)
+                        if (key.Contains("estado"))
                         {
-                            query = query.Where(x => x.TipoTraslado.ToLower() == tipoStrings[0]);
+                            var estadoStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                            if (estadoStrings.Length == 1)
+                            {
+                                query = query.Where(x => x.Estado.ToLower() == estadoStrings[0]);
+                            }
+                            else
+                            {
+                                query = query.Where(x => estadoStrings.Contains(x.Estado.ToLower()));
+                            }
+                            continue;
                         }
-                        else
+                        switch (key)
                         {
-                            query = query.Where(x => tipoStrings.Contains(x.TipoTraslado.ToLower()));
+                            case "ruc": query = query.Where(x => x.Ruc == val); break;
+                            case "tipo_guia": query = query.Where(x => x.TipoGuia.ToLower().Contains(val)); break;
+                            case "correlativo": query = query.Where(x => x.Correlativo.ToLower() == val); break;
+                            case "serie_guia": query = query.Where(x => x.Serie.ToLower() == val); break;
+                            //case "tipo_traslado": query = query.Where(x => x.TipoTraslado == val); break;
+                            case "tipo_transporte": query = query.Where(x => x.TipoTransporte.ToLower() == val); break;
+                            case "id_destinatario":
+                                if (int.TryParse(val, out int idD))
+                                    query = query.Where(x => x.DestinatarioId == idD);
+                                break;
+                            case "search":
+                                query = query.Where(x => x.Ruc.Contains(val) ||
+                                x.RucNavigation.Empresa.ToLower().Contains(val) || x.Ruc.Contains(val) ||
+                                x.Remitente.Descripcion.ToLower().Contains(val) || x.TipoGuia.ToLower().Contains(val) ||
+                                x.NumeroGuia.Contains(val) || x.TipoTraslado.ToLower().Contains(val) ||
+                                x.TipoTransporte.ToLower().Contains(val) || //x.Hora.Contains(val)||
+                                x.Destinatario.RazonSocial.ToLower().Contains(val) || x.Destinatario.NumeroDocumento.Contains(val) ||
+                                x.Origens.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
+                                x.Destinos.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
+                                x.EmpleadoNombreCreacion.ToLower().Contains(val) || x.EmpleadoNombreEdicion.ToLower().Contains(val) ||
+                                x.Estado.Contains(val)
+                                );
+                                break;
                         }
-                        continue;
-                    }
-                    if (key.Contains("estado"))
-                    {
-                        var estadoStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                        if (estadoStrings.Length == 1)
-                        {
-                            query = query.Where(x => x.Estado.ToLower() == estadoStrings[0]);
-                        }
-                        else
-                        {
-                            query = query.Where(x => estadoStrings.Contains(x.Estado.ToLower()));
-                        }
-                        continue;
-                    }
-                    switch (key)
-                    {
-                        case "ruc": query = query.Where(x => x.Ruc == val); break;
-                        case "tipo_guia": query = query.Where(x => x.TipoGuia.ToLower().Contains(val)); break;
-                        case "correlativo": query = query.Where(x => x.Correlativo.ToLower() == val); break;
-                        case "serie_guia": query = query.Where(x => x.Serie.ToLower() == val); break;
-                        //case "tipo_traslado": query = query.Where(x => x.TipoTraslado == val); break;
-                        case "tipo_transporte": query = query.Where(x => x.TipoTransporte.ToLower() == val); break;
-                        case "id_destinatario":
-                            if (int.TryParse(val, out int idD)) query = query.Where(x => x.DestinatarioId == idD);
-                            break;
-                        case "search":
-                            query = query.Where(x => x.Ruc.Contains(val) ||
-                            x.RucNavigation.Empresa.ToLower().Contains(val) || x.Ruc.Contains(val) ||
-                            x.Remitente.Descripcion.ToLower().Contains(val) || x.TipoGuia.ToLower().Contains(val) ||
-                            x.NumeroGuia.Contains(val) || x.TipoTraslado.ToLower().Contains(val) ||
-                            x.TipoTransporte.ToLower().Contains(val) || //x.Hora.Contains(val)||
-                            x.Destinatario.RazonSocial.ToLower().Contains(val) || x.Destinatario.NumeroDocumento.Contains(val) ||
-                            x.Origens.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
-                            x.Destinos.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
-                            x.EmpleadoNombreCreacion.ToLower().Contains(val) || x.EmpleadoNombreEdicion.ToLower().Contains(val) ||
-                            x.Estado.Contains(val)
-                            );
-                            break;
                     }
                 }
-            }
-            var totalRecords = await query.CountAsync();
-            if (!export)
-            {
-                query = query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize);
-            }
-            var data = await query
-                .OrderByDescending(x => x.FechaCreacion)
-                //.Skip((pageNumber - 1) * pageSize)
-                //.Take(pageSize)
-                .Select(g => new GuiaRemision
+
+                query = query.OrderByDescending(x => x.GuiaId);
+
+                var totalRecords = await query.CountAsync();
+                if (!export)
                 {
-                    GuiaId = g.GuiaId,
-                    TipoGuia = g.TipoGuia,
-                    Ruc = g.Ruc,
-                    RucNavigation = new VentaConfig
-                    {
-                        EmailPrincipal = g.RucNavigation.EmailPrincipal,
-                        Empresa = g.RucNavigation.Empresa
-                    },
-                    TipoTransporte = g.TipoTransporte,
-                    TipoTraslado = g.TipoTraslado,
-                    NumeroGuia = g.NumeroGuia,
-                    Fecha = g.Fecha,
-                    Hora = g.Hora,
-                    RespuestaTicket = g.RespuestaTicket,
-                    Remitente = new Remitente { Descripcion = g.Remitente.Descripcion },
-                    Destinatario = new Destinatario
-                    {
-                        TipoDocumento = g.Destinatario.TipoDocumento,
-                        NumeroDocumento = g.Destinatario.NumeroDocumento,
-                        RazonSocial = g.Destinatario.RazonSocial
-                    },
-                    Proveedor = g.Proveedor == null ? null : new Proveedor
-                    {
-                        TipoDocumento = g.Proveedor.TipoDocumento,
-                        NumeroDocumento = g.Proveedor.NumeroDocumento,
-                        RazonSocial = g.Proveedor.RazonSocial
-                    },
-                    Origens = g.Origens.Select(o => new Origen { Ubigeo = o.Ubigeo }).ToList(),
-                    Destinos = g.Destinos.Select(d => new Destino { Ubigeo = d.Ubigeo }).ToList(),
-                    FechaCreacion = g.FechaCreacion,
-                    EmpleadoNombreCreacion = g.EmpleadoNombreCreacion,
-                    FechaEdicion = g.FechaEdicion,
-                    EmpleadoNombreEdicion = g.EmpleadoNombreEdicion,
-                    Estado = g.Estado,
-                    IdEstado = g.IdEstado
-                })
-                .AsNoTracking()
-                .ToListAsync();
-
-            return (data, totalRecords);
-        }
-        public async Task<(List<GuiaRemision>, int)> GetListAsync2(int pageNumber, int pageSize, DataTableDTO request)
-        {
-            var query = _context.GuiaRemisions.AsQueryable();
-
-            if (request.Columns != null && request.Columns.Any())
-            {
-                foreach (var col in request.Columns)
-                {
-                    var val = col.Search.Value;
-                    var key = col.Data?.ToLower();
-
-                    if (string.IsNullOrEmpty(val)) continue;
-
-                    if (key.Contains("fecha") && val.Contains("|"))
-                    {
-                        var parts = val.Split('|');
-                        if (DateTime.TryParse(parts[0], out var dIni) && DateTime.TryParse(parts[1], out var dFin))
-                        {
-                            var dFinSiguiente = dFin.AddDays(1);
-                            query = query.Where(x => x.FechaCreacion >= dIni && x.FechaCreacion < dFinSiguiente);
-                        }
-                        continue;
-                    }
-
-                    if ((key.Contains("id") || key.Contains("ruc")) && val.Contains(","))
-                    {
-                        var idsStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
-                        if (key == "id_remitente")
-                        {
-                            var idsInt = idsStrings.Select(int.Parse).ToList();
-                            query = query.Where(x => idsInt.Contains(x.RemitenteId));
-                        }
-                        else if (key == "ruc")
-                        {
-                            query = query.Where(x => idsStrings.Contains(x.Ruc));
-                        }
-                        continue;
-                    }
-
-                    // Filtros unitarios normales
-                    switch (key)
-                    {
-                        case "ruc": query = query.Where(x => x.Ruc == val); break;
-                        case "tipo_guia": query = query.Where(x => x.TipoGuia.Contains(val)); break;
-                        case "numero_guia": query = query.Where(x => x.NumeroGuia == val); break;
-                        case "serie_guia": query = query.Where(x => x.Serie == val); break;
-                        case "id_remitente":
-                            if (int.TryParse(val, out int idR)) query = query.Where(x => x.RemitenteId == idR);
-                            break;
-                    }
+                    query = query
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize);
                 }
+                var data = await query
+                    .Select(g => new GuiaRemision
+                    {
+                        GuiaId = g.GuiaId,
+                        TipoGuia = g.TipoGuia,
+                        Ruc = g.Ruc,
+                        RucNavigation = new VentaConfig
+                        {
+                            EmailPrincipal = g.RucNavigation.EmailPrincipal,
+                            Empresa = g.RucNavigation.Empresa
+                        },
+                        TipoTransporte = g.TipoTransporte,
+                        TipoTraslado = g.TipoTraslado,
+                        NumeroGuia = g.NumeroGuia,
+                        Fecha = g.Fecha,
+                        Hora = g.Hora,
+                        RespuestaTicket = g.RespuestaTicket,
+                        Remitente = new Remitente { Descripcion = g.Remitente.Descripcion },
+                        Destinatario = new Destinatario
+                        {
+                            TipoDocumento = g.Destinatario.TipoDocumento,
+                            NumeroDocumento = g.Destinatario.NumeroDocumento,
+                            RazonSocial = g.Destinatario.RazonSocial
+                        },
+                        Proveedor = g.Proveedor == null ? null : new Proveedor
+                        {
+                            TipoDocumento = g.Proveedor.TipoDocumento,
+                            NumeroDocumento = g.Proveedor.NumeroDocumento,
+                            RazonSocial = g.Proveedor.RazonSocial
+                        },
+                        Origens = g.Origens.Select(o => new Origen { Ubigeo = o.Ubigeo }).ToList(),
+                        Destinos = g.Destinos.Select(d => new Destino { Ubigeo = d.Ubigeo }).ToList(),
+                        FechaCreacion = g.FechaCreacion,
+                        EmpleadoNombreCreacion = g.EmpleadoNombreCreacion,
+                        FechaEdicion = g.FechaEdicion,
+                        EmpleadoNombreEdicion = g.EmpleadoNombreEdicion,
+                        Estado = g.Estado,
+                        IdEstado = g.IdEstado,
+                        EstadoSunat = g.EstadoSunat,
+                        IdEstadoSunat = g.IdEstadoSunat
+                    })
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                return (data, totalRecords);
             }
-
-            var totalRecords = await query.CountAsync();
-
-            var data = await query
-                .OrderByDescending(x => x.FechaCreacion)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .AsNoTracking()
-                .ToListAsync();
-
-            return (data, totalRecords);
-        }
-        public async Task<(List<GuiaRemision>, int)> GetListAsync1(int pageNumber, int pageSize, DataTableDTO request)
-        {
-            var query = _context.GuiaRemisions
-                .Select(g => new GuiaRemision
-                {
-                    GuiaId = g.GuiaId,
-                    TipoGuia = g.TipoGuia,
-                    Ruc = g.Ruc,
-                    RucNavigation = new VentaConfig
-                    {
-                        EmailPrincipal = g.RucNavigation.EmailPrincipal,
-                        Empresa = g.RucNavigation.Empresa
-                    },
-                    TipoTransporte = g.TipoTransporte,
-                    TipoTraslado = g.TipoTraslado,
-                    NumeroGuia = g.NumeroGuia,
-                    Fecha = g.Fecha,
-                    Hora = g.Hora,
-                    RespuestaTicket = g.RespuestaTicket,
-                    Remitente = new Remitente
-                    {
-                        Descripcion = g.Remitente.Descripcion
-                    },
-                    Destinatario = new Destinatario
-                    {
-                        TipoDocumento = g.Destinatario.TipoDocumento,
-                        NumeroDocumento = g.Destinatario.NumeroDocumento,
-                        RazonSocial = g.Destinatario.RazonSocial
-                    },
-                    Proveedor = g.Proveedor == null ? null : new Proveedor
-                    {
-                        TipoDocumento = g.Proveedor.TipoDocumento,
-                        NumeroDocumento = g.Proveedor.NumeroDocumento,
-                        RazonSocial = g.Proveedor.RazonSocial
-                    },
-                    Origens = g.Origens.Select(o => new Origen
-                    {
-                        Ubigeo = o.Ubigeo
-                    }).ToList(),
-                    Destinos = g.Destinos.Select(d => new Destino
-                    {
-                        Ubigeo = d.Ubigeo
-                    }).ToList(),
-                    FechaCreacion = g.FechaCreacion,
-                    EmpleadoNombreCreacion = g.EmpleadoNombreCreacion,
-                    FechaEdicion = g.FechaEdicion,
-                    EmpleadoNombreEdicion = g.EmpleadoNombreEdicion,
-                    Estado = g.Estado,
-                    IdEstado = g.IdEstado
-                })
-                 .OrderByDescending(x => x.FechaCreacion);
-
-            var totalRecords = await query.CountAsync();
-
-            var data = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .AsNoTracking()
-                .Take(pageSize)
-                .ToListAsync();
-
-            return (data, totalRecords);
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
         public async Task<List<GuiaRemision>> GetAllAsync()
         {
@@ -376,6 +259,25 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Estado = g.Remitente.Estado,
                         IdEstado = g.Remitente.IdEstado
                     },
+                    RemiteTransportista = g.RemiteTransportista == null ? null : new RemiteTransportistum
+                    {
+                        RemiteTransportistaId = g.RemiteTransportista.RemiteTransportistaId,
+                        TipoDocumento = g.RemiteTransportista.TipoDocumento,
+                        NumeroDocumento = g.RemiteTransportista.NumeroDocumento,
+                        RazonSocial = g.RemiteTransportista.RazonSocial,
+                        UbigeoId = g.RemiteTransportista.UbigeoId,
+                        Ubigeo= g.RemiteTransportista.Ubigeo,
+                        Direccion = g.RemiteTransportista.Direccion,
+                        Pais = g.RemiteTransportista.Pais,
+                        CodigoSunat = g.RemiteTransportista.CodigoSunat,
+                        FechaCreacion = g.RemiteTransportista.FechaCreacion,
+                        EmpleadoNombreCreacion = g.RemiteTransportista.EmpleadoNombreCreacion,
+                        FechaEdicion = g.RemiteTransportista.FechaEdicion,
+                        EmpleadoNombreEdicion = g.RemiteTransportista.EmpleadoNombreEdicion,
+                        EmailRemiteTransportistaGuids = g.EmailRemiteTransportistaGuids,
+                        Estado = g.RemiteTransportista.Estado,
+                        IdEstado = g.RemiteTransportista.IdEstado
+                    },
                     Destinatario = new Destinatario
                     {
                         DestinatarioId = g.Destinatario.DestinatarioId,
@@ -430,6 +332,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     // Datos de Envío y Conductores
                     DatosEnvios = g.DatosEnvios.Select(env => new DatosEnvio
                     {
+                        DatosEnvioId = env.DatosEnvioId,
                         MotivoEnvio = env.MotivoEnvio,
                         FechaEnvio = env.FechaEnvio,
                         PesoBruto = env.PesoBruto,
@@ -437,6 +340,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         RucEmpresaCurrier = env.RucEmpresaCurrier,
                         RazonSocialCurrier = env.RazonSocialCurrier,
                         RegistroMtcCurrier = env.RegistroMtcCurrier,
+                        IndicadorVehiculoConductor = env.IndicadorVehiculoConductor,
                         ConductorGuids = env.ConductorGuids.Select(cg => new ConductorGuid
                         {
                             ConductorGuidId = cg.ConductorGuidId,
@@ -453,22 +357,25 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 Licencia = cg.Conductor.Licencia
                             }
                         }).ToList(),
-                        TransporteGuids = env.TransporteGuids.Select(tg => new TransporteGuid
+                        TransporteGuids = env.TransporteGuids.Select(tg => new UnidadTransporteGuid
                         {
                             TransporteGuidId = tg.TransporteGuidId,
                             DatosEnvioId = tg.DatosEnvioId,
                             TransporteId = tg.TransporteId,
-                            Transporte = new Transporte
+                            Transporte = new UnidadTransporte
                             {
                                 TransporteId = tg.Transporte.TransporteId,
                                 Placa = tg.Transporte.Placa,
                                 Tarjeta = tg.Transporte.Tarjeta,
-                                NumeroRegistroMtc = tg.Transporte.NumeroRegistroMtc
+                                NroAutorizacion = tg.Transporte.NroAutorizacion,
+                                EmisorVehicular = tg.Transporte.EmisorVehicular,
+                                CodEmisorVehicular = tg.Transporte.CodEmisorVehicular,
                             }
                         }).ToList(),
                     }).ToList(),
                     Origens = g.Origens.Select(o => new Origen
                     {
+                        OrigenId = o.OrigenId,
                         UbigeoId = o.UbigeoId,
                         Direccion = o.Direccion,
                         Ubigeo = o.Ubigeo,
@@ -476,6 +383,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     }).ToList(),
                     Destinos = g.Destinos.Select(d => new Destino
                     {
+                        DestinoId = d.DestinoId,
                         UbigeoId = d.UbigeoId,
                         Direccion = d.Direccion,
                         Ubigeo = d.Ubigeo,
@@ -517,16 +425,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(erm => erm.EmailRemiteTransportistaGuids)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
         }
-        public async Task<int> CreateGuiaRemisionTransactionalAsync(
+        public async Task<(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(
             Remitente remitente,
             Destinatario destinatario,
             Proveedor proveedor,
-            List<Conductor> conductor,
-            List<Transporte> transporte,
+            List<ConductorGuid> conductor,
+            List<UnidadTransporteGuid> transporte,
             GuiaRemision guiaRemision,
             DatosEnvio datosEnvio,
             Origen origen,
-            //Destino destino,
             List<Destino> destino,
             List<GuiaDetalle> detalles,
             List<DocRelacionado> docRelacionados,
@@ -540,10 +447,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var existingRemitente = await GetRemitenteByNameAsync(remitente.Descripcion);
                 if (existingRemitente == null)
                 {
-                    //remitente.EmpleadoIdcreacion= guiaRemision.EmpleadoIdcreacion;
-                    //remitente.EmpleadoNombreCreacion=guiaRemision.EmpleadoNombreCreacion;
-                    //await _context.Remitentes.AddAsync(remitente);
-                    //await _context.SaveChangesAsync();
                     throw new Exception("No existe este remitente.");
                 }
                 else
@@ -551,46 +454,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     remitente = existingRemitente;
                 }
 
-                // Destinatario
-                var existingDestinatario = await GetDestinatarioByRucAsync(destinatario.NumeroDocumento);
-                if (existingDestinatario == null)
-                {
-                    destinatario.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
-                    destinatario.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                    //await _context.Destinatarios.AddAsync(destinatario);
-                    //await _context.SaveChangesAsync();
-                    await CreateDestinatarioAsync(destinatario);
-                }
-                else
-                {
-                    destinatario = existingDestinatario;
-                    await UpdateDestinatarioAsync(destinatario);
-                }
-
-                // Proveedor
-                if (guiaRemision.TipoTraslado == "COMPRA")
-                {
-                    var existingProveedor = await GetProveedorByRucAsync(proveedor.NumeroDocumento);
-                    if (existingProveedor == null)
-                    {
-                        proveedor.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
-                        proveedor.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                        //await _context.Proveedors.AddAsync(proveedor);
-                        //await _context.SaveChangesAsync();
-                        await CreateProveedorAsync(proveedor);
-                    }
-                    else
-                    {
-                        proveedor = existingProveedor;
-                    }
-                }
-
 
                 // Guía
                 guiaRemision.RemitenteId = remitente.RemitenteId;
                 guiaRemision.Ruc = remitente.Ruc;
                 guiaRemision.DestinatarioId = destinatario.DestinatarioId;
-                guiaRemision.Estado = "CREADO";
+                guiaRemision.Estado = "REGISTRADO";
                 guiaRemision.IdEstado = 0;
                 if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
 
@@ -619,76 +488,39 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
 
                 guiaRemision.TipoGuia = "REMITENTE";
-                guiaRemision.RespuestaTicket = "tc11446_no_enviado_REMITENTE";
+                guiaRemision.RespuestaTicket = "REGISTRADO";
                 await _context.GuiaRemisions.AddAsync(guiaRemision);
                 await _context.SaveChangesAsync();
 
                 // Datos Envío
                 datosEnvio.GuiaId = guiaRemision.GuiaId;
-                //if (guiaRemision.TipoTransporte == "PRIVADO")
-                //{
-                //    datosEnvio.ConductorId = conductor.ConductorId;
-                //    datosEnvio.TransporteId = transporte.TransporteId;
-                //}
                 await _context.DatosEnvios.AddAsync(datosEnvio);
                 await _context.SaveChangesAsync();
 
-                // Conductor
+                // ConductorgUID
                 //Registrar en lista
                 foreach (var condu in conductor)
                 {
-                    if (guiaRemision.TipoTransporte == "PRIVADO")
+                    var conductorGuia = new ConductorGuid
                     {
-                        var existingConductor = await GetConductorByNumeroDocumentoAsync(condu.NumeroDocumento);
-                        if (existingConductor == null)
-                        {
-                            condu.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
-                            condu.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                            //await _context.Conductors.AddAsync(condu);
-                            //await _context.SaveChangesAsync();
-                            await CreateConductorAsync(condu);
-                        }
-                        else
-                        {
-                            condu.ConductorId = existingConductor.ConductorId;
-                        }
-                        var conductorGuia = new ConductorGuid
-                        {
-                            ConductorId = condu.ConductorId,
-                            DatosEnvioId = datosEnvio.DatosEnvioId
-                        };
-                        await _context.ConductorGuids.AddAsync(conductorGuia);
-                        await _context.SaveChangesAsync();
-                    }
+                        ConductorId = condu.ConductorId,
+                        DatosEnvioId = datosEnvio.DatosEnvioId
+                    };
+                    await _context.ConductorGuids.AddAsync(conductorGuia);
+                    await _context.SaveChangesAsync();
                 }
 
-                // Transporte
+                // TransportegUID
                 //Registrar en lista
                 foreach (var tr in transporte)
                 {
-                    if (guiaRemision.TipoTransporte == "PRIVADO")
+                    var transporteGuia = new UnidadTransporteGuid
                     {
-                        var existingTransporte = await GetTransporteByPlacaAsync(tr.Placa);
-                        if (existingTransporte == null)
-                        {
-                            tr.EmpleadoIdcreacion = guiaRemision.EmpleadoIdcreacion;
-                            tr.EmpleadoNombreCreacion = guiaRemision.EmpleadoNombreCreacion;
-                            //await _context.Transportes.AddAsync(tr);
-                            //await _context.SaveChangesAsync();
-                            await CreateTransporteAsync(tr);
-                        }
-                        else
-                        {
-                            tr.TransporteId = existingTransporte.TransporteId;
-                        }
-                        var transporteGuia = new TransporteGuid
-                        {
-                            TransporteId = tr.TransporteId,
-                            DatosEnvioId = datosEnvio.DatosEnvioId
-                        };
-                        await _context.TransporteGuids.AddAsync(transporteGuia);
-                        await _context.SaveChangesAsync();
-                    }
+                        TransporteId = tr.TransporteId,
+                        DatosEnvioId = datosEnvio.DatosEnvioId
+                    };
+                    await _context.UnidadTransporteGuids.AddAsync(transporteGuia);
+                    await _context.SaveChangesAsync();
                 }
 
                 // DocRelacionados
@@ -736,32 +568,35 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 await transaction.CommitAsync();
 
-                //retornar el ID de la guía creada
-                return guiaRemision.GuiaId;
+                //retornar el ID de la guía creada y asimismo el número de guía.
+                return (guiaRemision.GuiaId, guiaRemision.NumeroGuia);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 throw;
             }
         }
-        public async Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado)
+        public async Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estadoSunat, int idEstadoSunat)
         {
             var guia = await _context.GuiaRemisions.FindAsync(guiaId);
             if (guia == null)
                 throw new KeyNotFoundException("Guía no encontrada");
 
             guia.RespuestaTicket = ticket;
-            guia.Estado = estado;
-            guia.IdEstado = (sbyte)idEstado;
+            guia.EstadoSunat = estadoSunat;
+            guia.IdEstadoSunat = (sbyte)idEstadoSunat;
+            guia.Estado = estadoSunat;
+            guia.IdEstado = (sbyte)idEstadoSunat;
             guia.FechaEdicion = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
+        //Actualizar guía de remisión remitente
         public async Task UpdateAsync(GuiaRemision guiaRemision)
         {
             if (guiaRemision == null)
             {
-                throw new ArgumentNullException(nameof(guiaRemision), "El objeto guiaRemision no puede ser nulo");
+                throw new ArgumentNullException(nameof(guiaRemision), "La guía de remisión remitente no puede ser nula");
             }
             _context.GuiaRemisions.Update(guiaRemision);
             await _context.SaveChangesAsync();
@@ -890,11 +725,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
         //Transporte
-        public async Task<Transporte> GetTransporteByPlacaAsync(string placa)
+        public async Task<UnidadTransporte> GetTransporteByPlacaAsync(string placa)
         {
-            return await _context.Transportes.FirstOrDefaultAsync(t => t.Placa == placa);
+            return await _context.UnidadTransportes.FirstOrDefaultAsync(t => t.Placa == placa);
         }
-        public async Task<Transporte> CreateTransporteAsync(Transporte transporte)
+        public async Task<UnidadTransporte> CreateTransporteAsync(UnidadTransporte transporte)
         {
             try
             {
@@ -902,7 +737,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     throw new ArgumentException(nameof(transporte), "El objeto transporte no puede ser nulo");
                 }
-                await _context.Transportes.AddAsync(transporte);
+                await _context.UnidadTransportes.AddAsync(transporte);
                 await _context.SaveChangesAsync();
                 return transporte;
             }

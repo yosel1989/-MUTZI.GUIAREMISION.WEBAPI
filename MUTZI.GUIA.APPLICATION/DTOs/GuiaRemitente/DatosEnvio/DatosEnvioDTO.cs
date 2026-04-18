@@ -8,6 +8,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
 {
     public class DatosEnvioDTO
     {
+        [JsonPropertyName("datos_envio_id")]
+        [SwaggerSchema("Devuelve en entero el ID de datos_envio asociado a la guía de remisión.", Nullable = false)]
+        public int DatosEnvioId { get; set; }
+
         [JsonPropertyName("motivo_envio")]
         [SwaggerSchema("Devuelve en texto el motivo del envío. Ejm: Venta de mercadería, etc.", Nullable = false)]
         public string MotivoEnvio { get; set; }
@@ -36,10 +40,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
         [SwaggerSchema("Devuelve en texto el registro MTC de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = true)]
         public string? RegistroMtcCurrier { get; set; }
 
+        [JsonPropertyName("indicador_vehiculo_conductor")]
+        [SwaggerSchema("Devuelve en booleano el indicador de vehículo y conductor: true o false", Nullable = true)]
+        public bool IndicadorVehiculoConductor { get; set; }
+
         [JsonPropertyName("conductor")]
         public List<ConductorGuiaDTO?> ConductorGuia { get; set; }
 
         [JsonPropertyName("unidad_transporte")]
-        public List<TransporteGuiaDTO?> TransporteGuia { get; set; }
+        public List<UnidadTransporteGuiaDTO?> TransporteGuia { get; set; }
     }
 }

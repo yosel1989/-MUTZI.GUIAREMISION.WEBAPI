@@ -162,134 +162,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
         //    }
         //}
 
-        public async Task<object> ProcesarGuiaRemisionAsync(string ruc, GuiaRemitenteCreateDTO doc)
-        {
-            string ticket = "";
-            string estado = "";
-            int idEstado = 0;
-
-            try
-            {
-                var (esValido, error) = _guiaRemitenteBDService.ValidarDatosGuiaRemitente(doc, ruc);
-                if (!esValido)
-                {
-                    return new BadRequestResponseDTO
-                    {
-                        Error = "Error en datos enviados",
-                        Detalle = error
-                    };
-                }
-
-                GuiaRemitenteDTO guiaCreada;
-                try
-                {
-                    guiaCreada = await _guiaRemitenteBDService.CreateAsync(doc);
-                }
-                catch (Exception ex)
-                {
-                    string errorMsg = ex.InnerException?.Message ?? ex.Message;
-                    if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-
-                    string errorBox = errorMsg.Contains("FOREIGN KEY") ? "Error de clave foránea."
-                                    : errorMsg.Contains("UnidadMedida") ? "Unidad de medida no válida."
-                                    : errorMsg.Contains("String") ? "Error de longitud de campo."
-                                    : "";
-
-                    return new BadRequestResponseDTO
-                    {
-                        Error = "Error al guardar la guía",
-                        Detalle = $"{errorBox} Más detalle: {errorMsg}"
-                    };
-                }
-                //Generar JSON
-                var nombreArchivo = await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaCreada);
-                //Enviar a EFACT
-                string efactRawResponse;
-                try
-                {
-                    efactRawResponse = await EnviarGuiaElectronicaAsync(ruc, nombreArchivo);
-                }
-                catch (Exception ex)
-                {
-                    estado = "RECHAZADO";
-                    idEstado = -1;
-                    string errorMsg = ex.InnerException?.Message ?? ex.Message;
-                    if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-
-                    //EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, errorMsg);
-                    return new InternalErrorResponseDTO
-                    {
-                        Error = "Error al enviar a EFACT",
-                        Detalle = errorMsg
-                    };
-                }
-
-                EfactResponseDTO efactParsed;
-                try
-                {
-                    var json = JsonDocument.Parse(efactRawResponse).RootElement;
-                    efactParsed = new EfactResponseDTO
-                    {
-                        Code = json.GetProperty("code").GetString() ?? "",
-                        Description = json.GetProperty("description").GetString() ?? ""
-                    };
-
-                    ticket = efactParsed.Description;
-                    estado = "ENVIADO";
-                    idEstado = 1;
-                }
-                catch
-                {
-                    ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
-                    estado = "RECHAZADO";
-                    idEstado = -1;
-                    efactParsed = new EfactResponseDTO
-                    {
-                        Code = "-1",
-                        Description = ticket
-                    };
-                }
-
-                await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaCreada.GuiaID, ticket, estado, idEstado);
-                //EscribirLog("GUIAREMITENTE", ruc, guiaCreada.SerieCorrelativo, estado, ticket, efactRawResponse);
-                if (estado == "ENVIADO" && doc.TipoTraslado == "TRASLADO")
-                {
-                    try
-                    {
-                        await _hubContext.Clients.Group(doc.Destinatario.NumeroDocumento)
-                        .SendAsync("NuevaGuiaRecibida", new
-                        {
-                            serie = guiaCreada.SerieCorrelativo,
-                            remitente = ruc,
-                            mensaje = "Se ha emitido una nueva guía de traslado para "+doc.Destinatario.RazonSocial
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-                }
-                return new SendGuiaResponseDTO
-                {
-                    Success = true,
-                    EfactResponse = efactParsed
-                };
-            }
-            catch (Exception ex)
-            {
-                estado = "RECHAZADO";
-                idEstado = -1;
-                string errorMsg = ex.InnerException?.Message ?? ex.Message;
-                if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-
-                //EscribirLog("GUIAREMITENTE", ruc, "Remitente Ruc:" + doc.Remitente.Ruc, estado, ticket, errorMsg);
-
-                return new InternalErrorResponseDTO
-                {
-                    Error = "Error inesperado",
-                    Detalle = errorMsg
-                };
-            }
-        }
         public async Task<object> ReenviarGuiaRemisionAsync(string ruc, int guiaId)
         {
             string ticket = "";
@@ -308,17 +180,49 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                         Detalle = $"No se encontró una guía de remisión con ID {guiaId}."
                     };
                 }
-
-                string nombreArchivo = guiaExistente switch
+                string nombreArchivo;
+                if (guiaExistente is GuiaRemitenteDTO guiaRemitente)
                 {
-                    GuiaRemitenteDTO guiaRemitente =>
-                        await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaRemitente),
+                    var (esValido, error) = _guiaRemitenteBDService.ValidarDatosGuiaRemitente(guiaRemitente, ruc);
+                    if (!esValido)
+                    {
+                        return new BadRequestResponseDTO
+                        {
+                            Error = "Error en datos enviados",
+                            Detalle = error
+                        };
+                    }
 
-                    GuiaTransportistaDTO guiaTransportista =>
-                        await _guiaTransportistaUBLService.GenerarGuiaTransportistaJson(guiaTransportista),
+                    nombreArchivo = await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaRemitente);
+                }
+                else if (guiaExistente is GuiaTransportistaDTO guiaTransportista)
+                {
+                    var (esValido, error) = _guiaTransportistaBDService.ValidarDatosGuiaTransportista(guiaTransportista, ruc);
+                    if (!esValido)
+                    {
+                        return new BadRequestResponseDTO
+                        {
+                            Error = "Error en datos enviados",
+                            Detalle = error
+                        };
+                    }
 
-                    _ => throw new KeyNotFoundException("Tipo de guía no válido.")
-                };
+                    nombreArchivo = await _guiaTransportistaUBLService.GenerarGuiaTransportistaJson(guiaTransportista);
+                }
+                else
+                {
+                    throw new KeyNotFoundException("Tipo de guía no válido.");
+                }
+                //string nombreArchivo = guiaExistente switch
+                //{
+                //    GuiaRemitenteDTO guiaRemitente =>
+                //        await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaRemitente),
+
+                //    GuiaTransportistaDTO guiaTransportista =>
+                //        await _guiaTransportistaUBLService.GenerarGuiaTransportistaJson(guiaTransportista),
+
+                //    _ => throw new KeyNotFoundException("Tipo de guía no válido.")
+                //};
 
                 string efactRawResponse;
 
@@ -328,12 +232,12 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 }
                 catch (Exception ex)
                 {
-                    estado = "RECHAZADO";
+                    estado = "ERROR";
                     idEstado = -1;
 
                     string errorMsg = ex.InnerException?.Message ?? ex.Message;
                     if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-
+                    await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaId, errorMsg, estado, idEstado);
                     return new InternalErrorResponseDTO
                     {
                         Error = "Error al enviar a EFACT",
@@ -360,9 +264,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 catch
                 {
                     ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
-                    estado = "RECHAZADO";
+                    estado = "ERROR";
                     idEstado = -1;
-
+                    await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaId, ticket, estado, idEstado);
                     efactParsed = new EfactResponseDTO
                     {
                         Code = "-1",
@@ -380,9 +284,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             }
             catch (Exception ex)
             {
+                estado = "ERROR";
+                idEstado = -1;
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-
+                await _guiaRemitenteBDService.UpdateRespuestaTicketAsync(guiaId, errorMsg, estado, idEstado);
                 return new InternalErrorResponseDTO
                 {
                     Error = "Error inesperado",
@@ -410,7 +316,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 GuiaTransportistaDTO guiaCreada;
                 try
                 {
-                    guiaCreada = await _guiaTransportistaBDService.CreateAsync(doc);
+                    //guiaCreada = await _guiaTransportistaBDService.CreateAsync(doc);
+                    guiaCreada = new GuiaTransportistaDTO();
                 }
                 catch (Exception ex)
                 {

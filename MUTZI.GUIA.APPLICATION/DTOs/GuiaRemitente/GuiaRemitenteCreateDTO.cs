@@ -49,6 +49,16 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [MaxLength(100)]
         public string? Observacion { get; set; }
 
+        [JsonPropertyName("area")]
+        [SwaggerSchema("Recibe un texto, se coloca el área o departamento de la empresa", Nullable = true)]
+        [MaxLength(100)]
+        public string? Area { get; set; }
+
+        [JsonPropertyName("registro_mtc")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el registro MTC del vehículo, este campo solo se llena si el tipo_guia es 'TRANSPORTISTA'", Nullable = true)]
+        [MaxLength(20)]
+        public string? RegistroMTC { get; set; }
+
         [JsonPropertyName("empleado_id_creacion")]
         [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = false)]
         [Required]
@@ -70,10 +80,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("destinatario")]
         [Required]
-        public DestinatarioCreateDTO? Destinatario { get; set; }
+        public DestinatarioCreateGuiaDTO? Destinatario { get; set; }
 
         [JsonPropertyName("proveedor")]
-        public ProveedorCreateDTO? Proveedor { get; set; }
+        [SwaggerSchema("Recibe un objeto con el ID del proveedor que va a ser asociado a la guía", Nullable = true)]
+        public ProveedorCreateGuiaDTO? Proveedor { get; set; }
         
         [JsonPropertyName("datos_envio")]
         [Required]

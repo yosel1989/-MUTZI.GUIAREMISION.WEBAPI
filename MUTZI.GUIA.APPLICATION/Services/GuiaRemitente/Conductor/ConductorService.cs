@@ -140,6 +140,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
                 Id = existing.ConductorId,
                 IdEstado = Convert.ToInt32(existing.IdEstado),
                 Estado = existing.Estado,
+                FechaEdicion = existing.FechaEdicion,
+                EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
                 Detalle = $"Conductor con ID {existing.ConductorId} ha sido actualizado a estado '{existing.Estado}'."
             };
         }

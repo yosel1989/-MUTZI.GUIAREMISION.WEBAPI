@@ -55,15 +55,39 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, donde se detalla una observación o comentario sobre la guía de remisión", Nullable = true)]
         public string? Observacion { get; set; }
 
+        [JsonPropertyName("area")]
+        [SwaggerSchema("Devuelve en texto el área o departamento de la empresa", Nullable = true)]
+        public string? Area { get; set; }
+
+        [JsonPropertyName("registro_mtc")]
+        [SwaggerSchema("Devuelve en texto el número de registro MTC, este campo tiene valor si tipo_guia es 'TRANSPORTISTA'")]
+        public string? RegistroMTC { get; set; }
+
         [JsonPropertyName("doc_relacionado")]
         public List<DocRelacionadoDTO>? DocRelacionados { get; set; }
+
+        [JsonPropertyName("remitente")]
         public RemitenteDTO Remitente { get; set; }
+
+        [JsonPropertyName("destinatario")]
         public DestinatarioDTO Destinatario { get; set; }
+
+        [JsonPropertyName("proveedor")]
         public ProveedorDTO? Proveedor { get; set; }
+
+        [JsonPropertyName("datos_envio")]
         public DatosEnvioDTO DatosEnvio { get; set; }
+
+        [JsonPropertyName("origen")]
         public OrigenDTO Origen { get; set; }
+
+        [JsonPropertyName("destino")]
         public List<DestinoDTO> Destino { get; set; }
+
+        [JsonPropertyName("productos")]
         public List<ProductosDTO> Productos { get; set; }
+
+        [JsonPropertyName("fecha_creacion")]
         public DateTime FechaCreacion { get; set; }
 
         [JsonPropertyName("empleado_nombre_creacion")]
@@ -83,10 +107,16 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
             switch (this.TipoTraslado)
             {
                 case "VENTA":
+                    if (this.Remitente.Ruc == this.Destinatario.NumeroDocumento)
+                        throw new System.Exception("Si el tipo de traslado es VENTA, el 'Tipo y Número de documento de identidad del destinatario' no puede ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "01";
                 case "COMPRA":
+                    if (this.Remitente.Ruc != this.Destinatario.NumeroDocumento)
+                        throw new System.Exception("Si el tipo de traslado es COMPRA, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "02";
                 case "TRASLADO":
+                    if (this.Remitente.Ruc != this.Destinatario.NumeroDocumento)
+                        throw new System.Exception("Si el tipo de traslado es TRASLADO, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "04";
                 default:
                     throw new System.Exception("Catálogo No. 20: Códigos – Motivos de traslado no definido. Debe elegir entre: VENTA, COMPRA ó TRASLADO");
@@ -106,14 +136,32 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
             }
         }
 
-        public string getTipoCodigoDocumento(string tipo)
+        public string getTipoCodigoDocumento(string tipo, string numeroDocumento)
         {
             if (tipo == "DNI")
+            {
+                if (numeroDocumento.Length != 8)
+                {
+                    throw new Exception("El DNI: '" + numeroDocumento + "' debe tener 8 digitos.");
+                }
                 return EspacioNombreGuiaRemision._DocumentType01;
+            }
             if (tipo == "CE")
+            {
+                if (numeroDocumento.Length < 8 || numeroDocumento.Length > 15)
+                {
+                    throw new Exception("El número de CE o Pasaporte: '" + numeroDocumento + "' debe tener entre 8 y 15 dígitos.");
+                }
                 return EspacioNombreGuiaRemision._DocumentType04;
+            }
             if (tipo == "RUC")
+            {
+                if (numeroDocumento.Length != 11)
+                {
+                    throw new Exception("El RUC: '" + numeroDocumento + "' debe tener 11 digitos.");
+                }
                 return EspacioNombreGuiaRemision._DocumentType06;
+            }
             if (tipo == "PASAPORTE")
                 return EspacioNombreGuiaRemision._DocumentType07;
             throw new System.Exception("Tipo de documento de identidad no especificado, coloque entre: DNI, CE, RUC, PASAPORTE");
