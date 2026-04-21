@@ -164,7 +164,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
             }
             if (tipo == "PASAPORTE")
                 return EspacioNombreGuiaRemision._DocumentType07;
-            throw new System.Exception("Tipo de documento de identidad no especificado, coloque entre: DNI, CE, RUC, PASAPORTE");
+            throw new System.Exception("Tipo de documento de identidad no especificado, coloque entre: DNI, CE, RUC, PASAPORTE dependiendo del caso");
         }
     }
 }
