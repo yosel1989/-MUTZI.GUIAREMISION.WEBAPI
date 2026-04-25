@@ -13,7 +13,6 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista;
 using MUTZI.GUIA.APPLICATION.DTOs.VentaConfig;
 using MUTZI.GUIA.DOMAIN.Entities;
-using System.Globalization;
 using MUTZI.GUIA.APPLICATION.DTOs.Ubigeo;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
