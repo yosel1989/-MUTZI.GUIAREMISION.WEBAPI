@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
+[Table("establecimiento")]
 public partial class Establecimiento
 {
     [Key]
@@ -30,7 +31,7 @@ public partial class Establecimiento
     public string Serie { get; set; } = null!;
 
     [Column("codigoSunat")]
-    public string? CodigoSunat { get; set; }
+    public string CodigoSunat { get; set; }
 
     [Column("fechaCreacion")]
     public DateTime? FechaCreacion { get; set; }

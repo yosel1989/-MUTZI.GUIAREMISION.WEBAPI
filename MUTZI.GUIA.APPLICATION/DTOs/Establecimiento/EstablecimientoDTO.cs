@@ -13,7 +13,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("descripcion")]
         public string Descripcion { get; set; } = null!;
 
-        [JsonPropertyName("ubigeo_id")]
+        [JsonPropertyName("ubigeoId")]
         public string UbigeoId { get; set; } = null!;
 
         [JsonPropertyName("departamento")]
@@ -46,16 +46,16 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("fechaEdicion")]
         public DateTime? FechaEdicion { get; set; }
 
-        [JsonPropertyName("empleadoIDCreacion")]
+        [JsonPropertyName("empleadoIdCreacion")]
         public int? EmpleadoIdcreacion { get; set; }
 
         [JsonPropertyName("empleadoNombreCreacion")]
         public string? EmpleadoNombreCreacion { get; set; }
 
-        [JsonPropertyName("empleadoIDEdicion")]
+        [JsonPropertyName("empleadoIdEdicion")]
         public int? EmpleadoIdedicion { get; set; }
 
-        [JsonPropertyName("EmpleadoNombreEdicion")]
+        [JsonPropertyName("empleadoNombreEdicion")]
         public string? EmpleadoNombreEdicion { get; set; }
 
         [JsonPropertyName("estado")]
@@ -66,5 +66,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 
         [JsonPropertyName("tipo")]
         public string Tipo { get; set; }
+
+        [JsonPropertyName("razonSocial")]
+        public string RazonSocial { get; set; }
     }
 }

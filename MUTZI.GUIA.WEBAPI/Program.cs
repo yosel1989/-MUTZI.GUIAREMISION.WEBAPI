@@ -15,6 +15,7 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Transportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
@@ -29,6 +30,7 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.Transportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Mappings;
+using MUTZI.GUIA.APPLICATION.Services;
 using MUTZI.GUIA.APPLICATION.Services.Catalogos;
 using MUTZI.GUIA.APPLICATION.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Services.Envio;
@@ -42,6 +44,7 @@ using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Services.Transportista;
 using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Services.VentaConfig;
+using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
 using Serilog;
@@ -87,6 +90,7 @@ builder.Services.AddDbContext<LogisticaContext>(options =>
 );
 //Registrar AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingEstablecimiento).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -102,6 +106,7 @@ builder.Services.AddScoped<IUnidadTransporteRepository, UnidadTransporteReposito
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<IUbigeoRepository, UbigeoRepository>();
 builder.Services.AddScoped<ITransportistaRepository, TransportistaRepository>();
+builder.Services.AddScoped<IEstablecimientoRepository, EstablecimientoRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -121,7 +126,7 @@ builder.Services.AddScoped<IUnidadTransporteService, UnidadTransporteService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<IUbigeoService, UbigeoService>();
 builder.Services.AddScoped<IS3FileService, S3FileService>();
-builder.Services.AddScoped<ITransportistaService, TransportistaService>();
+builder.Services.AddScoped<IEstablecimientoService, EstablecimientoService>();
 builder.Services.AddMemoryCache();
 
 //aGREGAR SWAGGER

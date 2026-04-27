@@ -12,22 +12,52 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             _context = context;
         }
-        public async Task<List<Establecimiento>> GetAllByRucToSelectAsync()
+        public async Task<List<Establecimiento>> GetAllByRucToSelectAsync(string ruc)
         {
             return await _context.Establecimiento
+                .Where(e => e.Ruc == ruc && e.IdEstado == 1)
                 .Include(r=>r.Ubigeo)
+                .OrderBy(e => e.Descripcion)
                 .ToListAsync();
         }
-        /*public async Task<List<Remitente>> GetOnlyNameAsync()
+        public async Task<List<Establecimiento>> GetAllByRucToSelectModal(string ruc)
         {
-            return await _context.Remitentes
-            .Select(r => new Remitente
+            return await _context.Establecimiento
+            .Select(r => new Establecimiento
             {
-                RemitenteId = r.RemitenteId,
-                Descripcion = r.Descripcion
+                EstablecimientoId = r.EstablecimientoId,
+                Descripcion = r.Descripcion,
+                CodigoSunat = r.CodigoSunat
             })
             .ToListAsync();
         }
+
+        public async Task<List<Establecimiento>> GetListBySuggestion(string ruc, string? search)
+        {
+            return await _context.Establecimiento
+                .Include(r => r.Ubigeo)
+                .Where(c =>
+                    c.IdEstado == 1 &&
+                    (string.IsNullOrEmpty(search) ||
+                     c.CodigoSunat.Contains(search) ||
+                     c.Descripcion.Contains(search)) &&
+                    c.Ruc == ruc
+                )
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<Establecimiento?> GetByIdAsync(int id)
+        {
+            return await _context.Establecimiento
+                .Include(r => r.Ubigeo)
+                .Include(r => r.RucNavigation)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.EstablecimientoId == id);
+        }
+
+
+        /*
         public async Task<List<Remitente>> GetListBySuggestion(string numeroDoc)
         {
             return await _context.Remitentes
