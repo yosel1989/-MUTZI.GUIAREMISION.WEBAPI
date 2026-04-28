@@ -1,10 +1,5 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
 {
@@ -107,6 +102,28 @@ namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
                 new PaisDTO { Pais = "Uruguay", Codigo = "UY" },
                 new PaisDTO { Pais = "Venezuela", Codigo = "VE" },
                 new PaisDTO { Pais = "Vietnam", Codigo = "VN" }
+            };
+
+            listPaises.AddRange(paises);
+
+            return listPaises;
+        }
+
+
+        public IEnumerable<TipoEstablecimientoDTO> GetTiposEstablecimiento()
+        {
+            var listPaises = new List<TipoEstablecimientoDTO>();
+
+            var paises = new[]
+            {
+                new TipoEstablecimientoDTO { Tipo = "DOMICILIO FISCAL", Codigo = "domicilio_fiscal" },
+                new TipoEstablecimientoDTO { Tipo = "CASA MATRIZ", Codigo = "casa_matriz" },
+                new TipoEstablecimientoDTO { Tipo = "SUCURSAL", Codigo = "sucursal" },
+                new TipoEstablecimientoDTO { Tipo = "AGENDA", Codigo = "agenda" },
+                new TipoEstablecimientoDTO { Tipo = "LOCAL COMERCIAL O DE SERVICIOS", Codigo = "local_comercial" },
+                new TipoEstablecimientoDTO { Tipo = "SEDE PRODUCTIVA", Codigo = "sede_productiva" },
+                new TipoEstablecimientoDTO { Tipo = "DEPOSITO (ALMACÉN)", Codigo = "almacen" },
+                new TipoEstablecimientoDTO { Tipo = "OFICINA ADMINISTRATIVA", Codigo = "oficina_administrativa" }
             };
 
             listPaises.AddRange(paises);

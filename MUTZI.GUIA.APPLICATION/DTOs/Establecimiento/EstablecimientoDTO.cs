@@ -13,7 +13,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("descripcion")]
         public string Descripcion { get; set; } = null!;
 
-        [JsonPropertyName("ubigeoId")]
+        [JsonPropertyName("ubigeo_id")]
         public string UbigeoId { get; set; } = null!;
 
         [JsonPropertyName("departamento")]
@@ -37,37 +37,37 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("serie")]
         public string Serie { get; set; } = null!;
 
-        [JsonPropertyName("codigoSunat")]
+        [JsonPropertyName("codigo_sunat")]
         public string? CodigoSunat { get; set; }
 
-        [JsonPropertyName("fechaCreacion")]
+        [JsonPropertyName("fecha_creacion")]
         public DateTime? FechaCreacion { get; set; }
 
-        [JsonPropertyName("fechaEdicion")]
+        [JsonPropertyName("fecha_edicion")]
         public DateTime? FechaEdicion { get; set; }
 
-        [JsonPropertyName("empleadoIdCreacion")]
+        [JsonPropertyName("empleado_id_creacion")]
         public int? EmpleadoIdcreacion { get; set; }
 
-        [JsonPropertyName("empleadoNombreCreacion")]
+        [JsonPropertyName("empleado_nombre_creacion")]
         public string? EmpleadoNombreCreacion { get; set; }
 
-        [JsonPropertyName("empleadoIdEdicion")]
+        [JsonPropertyName("empleado_id_edicion")]
         public int? EmpleadoIdedicion { get; set; }
 
-        [JsonPropertyName("empleadoNombreEdicion")]
+        [JsonPropertyName("empleado_nombre_edicion")]
         public string? EmpleadoNombreEdicion { get; set; }
 
         [JsonPropertyName("estado")]
         public string? Estado { get; set; }
 
-        [JsonPropertyName("idEstado")]
+        [JsonPropertyName("id_estado")]
         public sbyte? IdEstado { get; set; }
 
         [JsonPropertyName("tipo")]
         public string Tipo { get; set; }
 
-        [JsonPropertyName("razonSocial")]
+        [JsonPropertyName("razon_social")]
         public string RazonSocial { get; set; }
     }
 }

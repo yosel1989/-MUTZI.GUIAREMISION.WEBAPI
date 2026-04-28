@@ -19,6 +19,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito));
+
+            CreateMap<EstablecimientoCreateDTO, Establecimiento>();
+            CreateMap<EstablecimientoUpdateDTO, Establecimiento>();
         }
     }
 }

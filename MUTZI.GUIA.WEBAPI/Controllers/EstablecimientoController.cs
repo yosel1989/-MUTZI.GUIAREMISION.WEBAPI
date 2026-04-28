@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
@@ -10,27 +11,26 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
     [ApiController]
     public class EstablecimientoController : ControllerBase
     {
-        private readonly IEstablecimientoService _establecimientoService;
+        private readonly IEstablecimientoService _service;
         public EstablecimientoController(IEstablecimientoService establecimientoService)
         {
-            _establecimientoService = establecimientoService;
+            _service = establecimientoService;
         }
 
-        /*[HttpGet]
+        [HttpGet]
         [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
-        Summary = "Listar remitentes",
-        Description = "Lista los remitentes por página. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
-        OperationId = "listar_remitente")]
+        Summary = "Listar establecimientos",
+        Description = "Lista los establecimientos por página. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
+        OperationId = "listar_establecimiento")]
         [ProducesResponseType(typeof(PagedResult<EstablecimientoDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<EstablecimientoDTO>>> GetAll(int pageNumber, int pageSize)
+        public async Task<ActionResult<PagedResult<EstablecimientoDTO>>> GetAll(int pageNumber, int pageSize, [FromQuery] string? search)
         {
             try
             {
-                var q = Request.Query;
-                var remitentes = await _establecimientoService.GetListAsync(pageNumber, pageSize, q);
+                var remitentes = await _service.GetListAsync(pageNumber, pageSize, search);
                 return Ok(remitentes);
             }
             catch (Exception ex)
@@ -38,11 +38,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
-                    Error = "Error al listar remitentes.",
+                    Error = "Error al listar establecimientos.",
                     Detalle = errorMsg
                 });
             }
-        }*/
+        }
 
         [HttpGet]
         [Route("listar-select/por-ruc/{ruc}")]
@@ -58,7 +58,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var remitentes = await _establecimientoService.GetAllByRucToSelectAsync(ruc);
+                var remitentes = await _service.GetAllByRucToSelectAsync(ruc);
                 return Ok(remitentes);
             }
             catch (Exception ex)
@@ -86,7 +86,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var data = await _establecimientoService.GetListBySuggestionAsync(ruc, search);
+                var data = await _service.GetListBySuggestionAsync(ruc, search);
                 return Ok(data);
             }
             catch (Exception ex)
@@ -114,7 +114,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var remitente = await _establecimientoService.GetByIdAsync(id);
+                var remitente = await _service.GetByIdAsync(id);
                 if (remitente == null)
                 {
                     return BadRequest(new BadRequestResponseDTO
@@ -136,7 +136,112 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
 
+        [HttpDelete]
+        [Route("{id}")]
+        [SwaggerOperation(
+        Summary = "Eliminar establecimiento",
+        Description = "Elimina un establecimiento de la bbdd",
+        OperationId = "eliminar_establecimiento")]
+        [ProducesResponseType(typeof(DeletedDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _service.DeleteAsync(id);
+                return Ok(new DeletedDTO { Id = id });
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al eliminar remitente.",
+                    Detalle = errorMsg
+                });
+            }
+        }
 
+        [HttpPut]
+        [Route("{id}/actualizar-estado")]
+        [SwaggerOperation(
+        Summary = "Actualizar estado de un establecimiento",
+        Description = "Actualizar el estado de un establecimiento en la bbdd. 1='activo', 0='inactivo'.",
+        OperationId = "actualizar_estado_establecimiento")]
+        [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] InfoRequestDTO infoRequestDto)
+        {
+            try
+            {
+                var result = await _service.CambiarEstadoAsync(id, infoRequestDto);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar el estado de un establecimiento.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+        [HttpPost]
+        [SwaggerOperation(
+        Summary = "Registrar un establecimiento",
+        Description = "Registra un establecimiento en la bbdd",
+        OperationId = "registrar_establecimiento")]
+        [ProducesResponseType(typeof(CreatedDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<int>> Create([FromBody] EstablecimientoCreateDTO createDTO)
+        {
+            try
+            {
+                var createdId = await _service.CreateAsync(createDTO);
+                return StatusCode(201, new CreatedDTO { Id = createdId });
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al registrar establecimiento.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        [SwaggerOperation(
+        Summary = "Actualizar un establecimiento",
+        Description = "Actualiza establecimiento en la bbdd",
+        OperationId = "actualizar_establecimiento")]
+        [ProducesResponseType(typeof(EstablecimientoDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<EstablecimientoDTO>> Update(int id, [FromBody] EstablecimientoUpdateDTO updateDTO)
+        {
+            try
+            {
+                var updated = await _service.UpdateAsync(id, updateDTO);
+                return Ok(updated);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar establecimiento.",
+                    Detalle = errorMsg
+                });
+            }
+        }
 
         /*
         [HttpGet]
@@ -152,7 +257,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var remitentes = await _establecimientoService.GetOnlynameAsync();
+                var remitentes = await _service.GetOnlynameAsync();
                 return Ok(remitentes);
             }
             catch (Exception ex)
@@ -178,7 +283,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var proveedores = await _establecimientoService.GetListBySuggestion(numeroDoc);
+                var proveedores = await _service.GetListBySuggestion(numeroDoc);
                 return Ok(proveedores);
             }
             catch (Exception ex)
@@ -204,7 +309,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var remitente = await _establecimientoService.GetByIdAsync(id);
+                var remitente = await _service.GetByIdAsync(id);
                 if (remitente == null)
                 {
                     return BadRequest(new BadRequestResponseDTO
@@ -238,7 +343,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var remitente = await _establecimientoService.GetByIdForGuiaAsync(id, tipoGuia);
+                var remitente = await _service.GetByIdForGuiaAsync(id, tipoGuia);
                 if (remitente == null)
                 {
                     return BadRequest(new BadRequestResponseDTO
@@ -259,57 +364,8 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
-        [HttpPost]
-        [SwaggerOperation(
-        Summary = "Registrar un remitente",
-        Description = "Registra un remitente en la bbdd",
-        OperationId = "registrar_remitente")]
-        [ProducesResponseType(typeof(CreatedDTO), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> Create([FromBody] EstablecimientoCreateDTO createDTO)
-        {
-            try
-            {
-                var createdId = await _establecimientoService.CreateAsync(createDTO);
-                return StatusCode(201, new CreatedDTO { Id = createdId });
-            }
-            catch (Exception ex)
-            {
-                string errorMsg = ex.InnerException?.Message ?? ex.Message;
-                return StatusCode(500, new InternalErrorResponseDTO
-                {
-                    Error = "Error al registrar remitente.",
-                    Detalle = errorMsg
-                });
-            }
-        }
-        [HttpPut]
-        [Route("{id}")]
-        [SwaggerOperation(
-        Summary = "Actualizar un remitente",
-        Description = "Actualiza remitente en la bbdd",
-        OperationId = "actualizar_remitente")]
-        [ProducesResponseType(typeof(EstablecimientoDTO), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<EstablecimientoDTO>> Update(int id, [FromBody] EstablecimientoUpdateDTO updateDTO)
-        {
-            try
-            {
-                var updated = await _establecimientoService.UpdateAsync(id, updateDTO);
-                return Ok(updated);
-            }
-            catch (Exception ex)
-            {
-                string errorMsg = ex.InnerException?.Message ?? ex.Message;
-                return StatusCode(500, new InternalErrorResponseDTO
-                {
-                    Error = "Error al actualizar remitente.",
-                    Detalle = errorMsg
-                });
-            }
-        }
+        
+        
         [HttpDelete]
         [Route("{id}")]
         [SwaggerOperation(
@@ -323,7 +379,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                await _establecimientoService.DeleteAsync(id);
+                await _service.DeleteAsync(id);
                 return Ok(new DeletedDTO { Id = id });
             }
             catch (Exception ex)
@@ -336,31 +392,6 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
-        [HttpPut]
-        [Route("{id}/actualizar-estado")]
-        [SwaggerOperation(
-        Summary = "Actualizar estado de un remitente",
-        Description = "Actualizar el estado de un remitente en la bbdd. 1='activo', 0='inactivo'.",
-        OperationId = "actualizar_estado_remitente")]
-        [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CambiarEstado(int id, [FromBody] InfoRequestDTO infoRequestDto)
-        {
-            try
-            {
-                var result = await _establecimientoService.CambiarEstadoAsync(id, infoRequestDto);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                string errorMsg = ex.InnerException?.Message ?? ex.Message;
-                return StatusCode(500, new InternalErrorResponseDTO
-                {
-                    Error = "Error al actualizar el estado de un remitente.",
-                    Detalle = errorMsg
-                });
-            }
-        }*/
+        */
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
@@ -56,11 +57,78 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .FirstOrDefaultAsync(r => r.EstablecimientoId == id);
         }
 
+        public async Task<(List<Establecimiento>, int)> GetListAsync(int pageNumber, int pageSize, string? search)
+        {
+            var query = _context.Establecimiento
+                .Include(r => r.Ubigeo)
+                .Include(e => e.RucNavigation)
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                var val = search.ToLower();
+                query = query.Where(x =>
+                    x.RucNavigation.Empresa.ToLower().Contains(val) ||
+                    x.Ruc.Contains(val) ||
+                    x.Descripcion.ToLower().Contains(val) ||
+                    x.Ubigeo.Departamento.ToLower().Contains(val) ||
+                    x.Ubigeo.Provincia.ToLower().Contains(val) ||
+                    x.Ubigeo.Distrito.ToLower().Contains(val) ||
+                    x.Direccion.ToLower().Contains(val) ||
+                    x.Email.ToLower().Contains(val) ||
+                    x.Pais.ToLower().Contains(val) ||
+                    x.Serie.Contains(val) ||
+                    x.CodigoSunat.ToLower().Contains(val) ||
+                    x.EmpleadoNombreCreacion.ToLower().Contains(val) ||
+                    x.Estado.ToLower().Contains(val) ||
+                    x.EmpleadoNombreEdicion.ToLower().Contains(val)
+                );
+            }
+            var totalRecords = await query.CountAsync();
+
+            var data = await query
+                .OrderByDescending(r => r.EstablecimientoId)
+                .Skip((pageNumber - 1) * pageSize)
+                .AsNoTracking()
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (data, totalRecords);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var model = await _context.Establecimiento.FindAsync(id);
+            if (model != null)
+            {
+                _context.Establecimiento.Remove(model);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateAsync(Establecimiento establecimiento)
+        {
+            _context.Establecimiento.Update(establecimiento);
+            establecimiento.FechaEdicion = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreateAsync(Establecimiento nuevoEstablecimiento)
+        {
+            await _context.Establecimiento.AddAsync(nuevoEstablecimiento);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> GetBySerieAsync(string ruc, string serie)
+        {
+            var existe = await _context.Establecimiento
+                .AnyAsync(r => r.Ruc == ruc && r.Serie == serie);
+            return existe;
+        }
 
         /*
         public async Task<List<Remitente>> GetListBySuggestion(string numeroDoc)
         {
-            return await _context.Remitentes
+            return await _context.Establecimiento
                 .Include(r => r.Ubigeo)
                 .Include(e => e.RucNavigation)
                 .Where(c => c.IdEstado == 1 &&
@@ -69,7 +137,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<(List<Remitente>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
         {
-            var query=_context.Remitentes.AsQueryable();
+            var query=_context.Establecimiento.AsQueryable();
             if (request.Columns != null && request.Columns.Any())
             {
                 var val = request.Columns[0].Search.Value?.ToLower();
@@ -87,7 +155,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
             }
             var totalRecords = await query.CountAsync();
-            //var query = _context.Remitentes
+            //var query = _context.Establecimiento
             //    .Include(r => r.Ubigeo)
             //    .Include(e => e.RucNavigation)
             //    .OrderByDescending(r=>r.FechaCreacion);
@@ -113,38 +181,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .OrderByDescending(g => g.Correlativo)
                 .FirstOrDefaultAsync();
         }
-        public async Task<DOMAIN.Entities.Remitente?> GetByIdAsync(int id)
-        {
-            return await _context.Remitentes
-                .Include(r => r.Ubigeo)
-                .Include(e => e.RucNavigation)
-                .FirstOrDefaultAsync(r => r.RemitenteId == id);
-        }
-        public async Task<bool> GetBySerieAsync(string ruc, string serie)
-        {
-            var existe = await _context.Remitentes
-                .AnyAsync(r => r.Ruc == ruc && r.Serie == serie);
-            return existe;
-        }
-        public async Task CreateAsync(DOMAIN.Entities.Remitente remitente)
-        {
-            await _context.Remitentes.AddAsync(remitente);
-            await _context.SaveChangesAsync();
-        }
-        public async Task UpdateAsync(DOMAIN.Entities.Remitente remitente)
-        {
-            _context.Remitentes.Update(remitente);
-            remitente.FechaEdicion = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
-        }
-        public async Task DeleteAsync(int id)
-        {
-            var remitente = await _context.Remitentes.FindAsync(id);
-            if (remitente != null)
-            {
-                _context.Remitentes.Remove(remitente);
-                await _context.SaveChangesAsync();
-            }
-        }*/
+        
+        
+
+        */
     }
 }
