@@ -461,7 +461,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.DestinatarioId = destinatario.DestinatarioId;
                 guiaRemision.Estado = "REGISTRADO";
                 guiaRemision.IdEstado = 0;
-                if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
+                //if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
 
                 //string serie = guiaRemision.Serie ?? "T001";
                 string serie = "T" + remitente.Serie.Trim();
@@ -544,6 +544,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         await _context.EmailDestinatarioGuids.AddAsync(email);
                     }
                     await _context.SaveChangesAsync();
+                }
+
+                // Proveedor
+                if(guiaRemision.TipoTraslado == "COMPRA" || guiaRemision.TipoTraslado == "RECOJO_BIENES_TRANSFORMADOS"  || guiaRemision.TipoTraslado == "OTROS")
+                {
+                    guiaRemision.ProveedorId = proveedor.ProveedorId;
                 }
 
                 //Origen
