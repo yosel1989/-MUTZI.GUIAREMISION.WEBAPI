@@ -105,11 +105,32 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task UpdateAsync(Establecimiento establecimiento)
+        public async Task<Establecimiento> UpdateAsync(Establecimiento actualizarEstablecimiento)
         {
-            _context.Establecimiento.Update(establecimiento);
-            establecimiento.FechaEdicion = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            var entity = await _context.Establecimiento
+                .Include(e => e.RucNavigation)
+                .Include(e => e.Ubigeo)
+                .FirstOrDefaultAsync(e => e.EstablecimientoId == actualizarEstablecimiento.EstablecimientoId) ??
+                throw new KeyNotFoundException($"Establecimiento con ID {actualizarEstablecimiento.EstablecimientoId} no encontrado.");
+
+            if (entity != null)
+            {
+
+                entity.Ruc = actualizarEstablecimiento.Ruc;
+                entity.Descripcion = actualizarEstablecimiento.Descripcion;
+                entity.UbigeoId = actualizarEstablecimiento.UbigeoId;
+                entity.Direccion = actualizarEstablecimiento.Direccion;
+                entity.Email = actualizarEstablecimiento.Email;
+                entity.Serie = actualizarEstablecimiento.Serie;
+                entity.CodigoSunat = actualizarEstablecimiento.CodigoSunat;
+                entity.Tipo = actualizarEstablecimiento.Tipo;
+                entity.EmpleadoIdedicion = actualizarEstablecimiento.EmpleadoIdedicion;
+                entity.EmpleadoNombreEdicion = actualizarEstablecimiento.EmpleadoNombreEdicion;
+                entity.FechaEdicion = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+
+            return entity;
         }
 
         public async Task CreateAsync(Establecimiento nuevoEstablecimiento)
@@ -123,6 +144,31 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             var existe = await _context.Establecimiento
                 .AnyAsync(r => r.Ruc == ruc && r.Serie == serie);
             return existe;
+        }
+
+        public async Task<GuiaRemision?> GetLastBySerieAsync(string serie, string ruc)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(serie))
+                    return null;
+
+                if (string.IsNullOrWhiteSpace(ruc))
+                    return null;
+
+                var data = await _context.GuiaRemisions
+                    .Where(g => g.Serie == serie)
+                    .OrderByDescending(g => g.Correlativo)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
         }
 
         /*

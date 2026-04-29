@@ -2,6 +2,7 @@
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -242,6 +243,43 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
+
+        [HttpGet]
+        [Route("buscar-por-id-para-guia/{id}/{tipoGuia}")]
+        [SwaggerOperation(
+        Summary = "Buscar establecimiento remitente por ID y por tipo de guía",
+        Description = "Buscar objeto por ID y tipo de guía. En 'tipoGuia', colocar: 'REMITENTE' ó 'TRANSPORTISTA'.",
+        OperationId = "buscar_establecimiento_por_id_guia")]
+        [ProducesResponseType(typeof(EstablecimientoRemitenteDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<EstablecimientoRemitenteDTO>> GetForGuiaById(int id, string tipoGuia)
+        {
+            try
+            {
+                var establecimientoRemitente = await _service.GetByIdForGuiaAsync(id, tipoGuia);
+                if (establecimientoRemitente == null)
+                {
+                    return BadRequest(new BadRequestResponseDTO
+                    {
+                        Error = "No se encontraron registros",
+                        Detalle = $"No se pudo obtener el establecimiento remitente con el ID: {id}. Verifique si el ID existe en la bbdd."
+                    });
+                }
+                return Ok(establecimientoRemitente);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al buscar establecimiento remitente.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
 
         /*
         [HttpGet]

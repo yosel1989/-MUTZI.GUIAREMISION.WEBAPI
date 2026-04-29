@@ -18,5 +18,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
         Task<int> CreateAsync(EstablecimientoCreateDTO createDTO);
 
         Task<EstablecimientoDTO> UpdateAsync(int id, EstablecimientoUpdateDTO updateDTO);
+        Task<EstablecimientoRemitenteDTO?> GetByIdForGuiaAsync(int id, string tipoGuia);
     }
 }

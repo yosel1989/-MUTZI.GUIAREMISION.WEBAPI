@@ -7,6 +7,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
     [SwaggerSchema("Recibe un objeto establecimiento para actualizar", Nullable = false)]
     public class EstablecimientoUpdateDTO
     {
+        [JsonPropertyName("establecimiento_id")]
+        [SwaggerSchema("Recibe un número, es el id del establecimiento", Nullable = false)]
+        [Required(ErrorMessage = "El id del establecimiento es requerido")]
+        public int EstablecimientoId { get; set; }
+
         [JsonPropertyName("ruc")]
         [SwaggerSchema("Recibe un texto, es el ruc del establecimiento", Nullable = false)]
         [Required(ErrorMessage = "El Nro documento del establecimiento es obligatoria")]

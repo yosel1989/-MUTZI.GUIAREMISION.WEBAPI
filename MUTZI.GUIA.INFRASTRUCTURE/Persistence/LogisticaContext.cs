@@ -494,7 +494,7 @@ public partial class LogisticaContext : DbContext
                 .HasForeignKey(d => d.RemiteTransportistaId)
                 .HasConstraintName("guiaRemision_ibfk_3");
 
-            entity.HasOne(d => d.Remitente).WithMany(p => p.GuiaRemisions)
+            entity.HasOne(d => d.Establecimiento).WithMany(p => p.GuiaRemisions)
                 .HasForeignKey(d => d.RemitenteId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("guiaRemision_ibfk_1");

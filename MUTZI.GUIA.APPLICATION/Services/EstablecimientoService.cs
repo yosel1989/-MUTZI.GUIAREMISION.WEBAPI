@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
@@ -8,7 +7,6 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace MUTZI.GUIA.APPLICATION.Services
 {
@@ -120,15 +118,58 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var existe = await _repository.GetBySerieAsync(updateDTO.Ruc, updateDTO.Serie);
                     if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
                 }
-                _mapper.Map(updateDTO, existingEstablecimiento);
-                await _repository.UpdateAsync(existingEstablecimiento);
-                return _mapper.Map<EstablecimientoDTO>(existingEstablecimiento);
+                var establecimientoDomain = _mapper.Map(updateDTO, existingEstablecimiento);
+                var establecimientoActualizado = await _repository.UpdateAsync(establecimientoDomain);
+                return _mapper.Map<EstablecimientoDTO>(establecimientoActualizado);
             }
             catch (Exception ex)
             {
                 string msg = ex.InnerException?.Message ?? ex.Message;
                 if (msg.Contains("razonSocial_UNIQUE")) { msg = "La razón social social o sucursal del establecimiento ya se encuentra registrado."; }
                 throw new Exception(msg);
+            }
+        }
+
+        public async Task<EstablecimientoRemitenteDTO?> GetByIdForGuiaAsync(int id, string tipoGuia)
+        {
+            try
+            {
+                var establecimiento = await _repository.GetByIdAsync(id);
+                if (establecimiento == null) return null;
+
+                var dto = _mapper.Map<EstablecimientoRemitenteDTO>(establecimiento);
+
+                // Calcular serie completa según tipo de guía
+                var prefix = string.Equals(tipoGuia, "TRANSPORTISTA", StringComparison.OrdinalIgnoreCase) ? "V" : "T";
+                var serieBase = establecimiento.Serie?.Trim();
+                if (!string.IsNullOrEmpty(serieBase))
+                {
+                    var serieCompleta = prefix + serieBase;
+
+                    // Obtener la última guía registrada para esa serie
+                    var lastGuia = await _repository.GetLastBySerieAsync(serieCompleta, establecimiento.Ruc);
+
+                    // Calcular el siguiente correlativo (si no existe, iniciar en 1)
+                    int nextCorrelativo = 1;
+                    if (lastGuia != null && !string.IsNullOrWhiteSpace(lastGuia.Correlativo))
+                    {
+                        if (int.TryParse(lastGuia.Correlativo, out int lastCorr))
+                            nextCorrelativo = lastCorr + 1;
+                    }
+
+                    // Formatear correlativo a 8 dígitos y construir número de guía
+                    string correlativoStr = nextCorrelativo.ToString("D8");
+
+                    dto.NuevaSerie = serieCompleta;
+                    dto.NuevoCorrelativo = nextCorrelativo;
+                    dto.NuevoNumeroGuia = $"{serieCompleta}-{correlativoStr}";
+                }
+
+                return dto;
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
     }

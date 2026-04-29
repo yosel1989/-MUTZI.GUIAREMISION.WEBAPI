@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
+[Table("guiaRemision")]
 public partial class GuiaRemision
 {
     public int GuiaId { get; set; }
@@ -63,7 +65,8 @@ public partial class GuiaRemision
 
     public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
 
-    public virtual Destinatario Destinatario { get; set; } = null!;
+    [ForeignKey(nameof(DestinatarioId))]
+    public virtual Establecimiento Destinatario { get; set; } = null!;
 
     public virtual ICollection<Destino> Destinos { get; set; } = new List<Destino>();
 
@@ -81,7 +84,8 @@ public partial class GuiaRemision
 
     public virtual RemiteTransportistum? RemiteTransportista { get; set; }
 
-    public virtual Remitente Remitente { get; set; } = null!;
+    [ForeignKey(nameof(RemitenteId))]
+    public virtual Establecimiento Remitente { get; set; } = null!;
 
     public virtual VentaConfig RucNavigation { get; set; } = null!;
 }

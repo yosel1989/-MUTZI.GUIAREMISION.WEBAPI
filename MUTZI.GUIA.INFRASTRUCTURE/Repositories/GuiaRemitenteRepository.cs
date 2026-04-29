@@ -118,7 +118,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 x.Remitente.Descripcion.ToLower().Contains(val) || x.TipoGuia.ToLower().Contains(val) ||
                                 x.NumeroGuia.Contains(val) || x.TipoTraslado.ToLower().Contains(val) ||
                                 x.TipoTransporte.ToLower().Contains(val) || //x.Hora.Contains(val)||
-                                x.Destinatario.RazonSocial.ToLower().Contains(val) || x.Destinatario.NumeroDocumento.Contains(val) ||
+                                x.Destinatario.RucNavigation.Empresa.ToLower().Contains(val) || x.Destinatario.Ruc.Contains(val) ||
                                 x.Origens.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
                                 x.Destinos.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
                                 x.EmpleadoNombreCreacion.ToLower().Contains(val) || x.EmpleadoNombreEdicion.ToLower().Contains(val) ||
@@ -155,12 +155,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Fecha = g.Fecha,
                         Hora = g.Hora,
                         RespuestaTicket = g.RespuestaTicket,
-                        Remitente = new Remitente { Descripcion = g.Remitente.Descripcion },
-                        Destinatario = new Destinatario
+                        Remitente = new Establecimiento { Descripcion = g.Remitente.Descripcion },
+                        Destinatario = new Establecimiento
                         {
-                            TipoDocumento = g.Destinatario.TipoDocumento,
-                            NumeroDocumento = g.Destinatario.NumeroDocumento,
-                            RazonSocial = g.Destinatario.RazonSocial
+                            Ruc = g.Destinatario.Ruc
                         },
                         Proveedor = g.Proveedor == null ? null : new Proveedor
                         {
@@ -240,10 +238,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     Fecha = g.Fecha,
                     Hora = g.Hora,
                     Observacion = g.Observacion,
-                    Remitente = new Remitente
+                    Remitente = new Establecimiento
                     {
-                        RemitenteId = g.Remitente.RemitenteId,
-                        Ruc = g.Remitente.Ruc,
+                        EstablecimientoId = g.Remitente.EstablecimientoId,
+                        Ruc = g.Remitente.Ruc!,
                         Descripcion = g.Remitente.Descripcion,
                         UbigeoId = g.Remitente.UbigeoId,
                         Ubigeo = g.Remitente.Ubigeo,
@@ -278,12 +276,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Estado = g.RemiteTransportista.Estado,
                         IdEstado = g.RemiteTransportista.IdEstado
                     },
-                    Destinatario = new Destinatario
+                    Destinatario = new Establecimiento
                     {
-                        DestinatarioId = g.Destinatario.DestinatarioId,
-                        TipoDocumento = g.Destinatario.TipoDocumento,
-                        NumeroDocumento = g.Destinatario.NumeroDocumento,
-                        RazonSocial = g.Destinatario.RazonSocial,
+                        EstablecimientoId = g.Destinatario.EstablecimientoId,
+                        Ruc = g.Destinatario.Ruc,
                         UbigeoId = g.Destinatario.UbigeoId,
                         Ubigeo = g.Destinatario.Ubigeo,
                         Direccion = g.Destinatario.Direccion,
@@ -293,7 +289,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         EmpleadoNombreCreacion = g.Destinatario.EmpleadoNombreCreacion,
                         FechaEdicion = g.Destinatario.FechaEdicion,
                         EmpleadoNombreEdicion = g.Destinatario.EmpleadoNombreEdicion,
-                        EmailDestinatarioGuids = g.EmailDestinatarioGuids,
                         Estado = g.Destinatario.Estado,
                         IdEstado = g.Destinatario.IdEstado
                     },
