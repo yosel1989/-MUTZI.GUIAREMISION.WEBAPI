@@ -2,8 +2,6 @@
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
@@ -70,7 +68,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
             }
             existing.Estado = _status;
-            existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
+            existing.IdEstado = (sbyte)infoRequestDto.IdEstado;
             existing.EmpleadoIdedicion = infoRequestDto.EditedEmployeeId;
             existing.EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName;
             await _repository.UpdateAsync(existing);

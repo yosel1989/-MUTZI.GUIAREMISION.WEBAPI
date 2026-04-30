@@ -157,16 +157,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     return null;
 
                 var data = await _context.GuiaRemisions
-                    .Where(g => g.Serie == serie)
-                    .OrderByDescending(g => g.Correlativo)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync() ?? null;
 
                 return data;
             }
             catch (Exception ex)
             {
-                throw;
+                    throw;
             }
             
         }
@@ -222,7 +219,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             if (string.IsNullOrWhiteSpace(serie))
                 return null;
 
-            return await _context.GuiaRemisions
+            return await _context.GuiaRemisionsRemitente
                 .Where(g => g.Serie == serie)
                 .OrderByDescending(g => g.Correlativo)
                 .FirstOrDefaultAsync();

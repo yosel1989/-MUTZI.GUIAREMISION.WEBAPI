@@ -85,7 +85,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<LogisticaContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("cs_logistica"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("cs_logistica"))
+        //ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("cs_logistica"))
+        ServerVersion.Parse("8.0.45-mysql")
     )
 );
 //Registrar AutoMapper
@@ -127,6 +128,7 @@ builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<IUbigeoService, UbigeoService>();
 builder.Services.AddScoped<IS3FileService, S3FileService>();
 builder.Services.AddScoped<IEstablecimientoService, EstablecimientoService>();
+builder.Services.AddScoped<ITransportistaService, TransportistaService>();
 builder.Services.AddMemoryCache();
 
 //aGREGAR SWAGGER

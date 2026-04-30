@@ -73,9 +73,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
 
                 // Guía
-                guiaRemision.RemitenteId = remitente.RemitenteId;
+                guiaRemision.EstablecimientoRemitenteId = remitente.RemitenteId;
                 guiaRemision.Ruc = remitente.Ruc;
-                guiaRemision.DestinatarioId = destinatario.DestinatarioId;
+                guiaRemision.EstablecimientoDestinatarioId = destinatario.DestinatarioId;
                 guiaRemision.RemiteTransportistaId = remiteTransportista.RemiteTransportistaId;
                 guiaRemision.Estado = "REGISTRADO";
                 guiaRemision.IdEstado = 0;

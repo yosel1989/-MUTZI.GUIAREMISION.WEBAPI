@@ -17,7 +17,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.GuiaRemisions.AsQueryable();
+                var query = _context.GuiaRemisions
+                    .Include(m => m.Destinatario)
+                    .Include(m => m.Remitente)
+                    .AsQueryable();
                 if (request.Columns != null && request.Columns.Any())
                 {
                     foreach (var col in request.Columns)
@@ -65,12 +68,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             if (idsStrings.Length == 1)
                             {
                                 if (int.TryParse(idsStrings[0], out int idUnico))
-                                    query = query.Where(x => x.RemitenteId == idUnico);
+                                    query = query.Where(x => x.EstablecimientoRemitenteId == idUnico);
                             }
                             else
                             {
                                 var idsInt = idsStrings.Select(int.Parse).ToList();
-                                query = query.Where(x => idsInt.Contains(x.RemitenteId));
+                                query = query.Where(x => idsInt.Contains(x.EstablecimientoRemitenteId));
                             }
                             continue;
                         }
@@ -110,7 +113,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             case "tipo_transporte": query = query.Where(x => x.TipoTransporte.ToLower() == val); break;
                             case "id_destinatario":
                                 if (int.TryParse(val, out int idD))
-                                    query = query.Where(x => x.DestinatarioId == idD);
+                                    query = query.Where(x => x.EstablecimientoDestinatarioId == idD);
                                 break;
                             case "search":
                                 query = query.Where(x => x.Ruc.Contains(val) ||
@@ -451,9 +454,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
 
                 // Guía
-                guiaRemision.RemitenteId = remitente.RemitenteId;
+                guiaRemision.EstablecimientoRemitenteId = remitente.RemitenteId;
                 guiaRemision.Ruc = remitente.Ruc;
-                guiaRemision.DestinatarioId = destinatario.DestinatarioId;
+                guiaRemision.EstablecimientoDestinatarioId = destinatario.DestinatarioId;
                 guiaRemision.Estado = "REGISTRADO";
                 guiaRemision.IdEstado = 0;
                 //if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }

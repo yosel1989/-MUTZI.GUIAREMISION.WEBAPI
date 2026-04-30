@@ -41,14 +41,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
 
         [JsonPropertyName("emisor_vehicular")]
         [SwaggerSchema("Recibe un texto, se coloca la abreviación del emisor vehicular. Ejm: 'MTC', este campo es opcional", Nullable = true)]
-        [MinLength(2)]
-        [MaxLength(100)]
+        [StringLength(100, MinimumLength = 2)]
         public string? EmisorVehicular { get; set; }
 
         [JsonPropertyName("nro_autorizacion")]
         [SwaggerSchema("Recibe un texto, se coloca el número de autorización del vehículo, este campo es opcional", Nullable = true)]
-        [MinLength(3)]
-        [MaxLength(50)]
+        [StringLength(50, MinimumLength = 3)]
         public string? NroAutorizacion { get; set; }
 
         [JsonPropertyName("empleado_id_creacion")]

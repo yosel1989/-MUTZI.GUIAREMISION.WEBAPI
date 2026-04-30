@@ -35,7 +35,7 @@ public partial class Establecimiento
     public string CodigoSunat { get; set; }
 
     [Column("fechaCreacion")]
-    public DateTime FechaCreacion { get; set; }
+    public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
 
     [Column("fechaEdicion")]
     public DateTime? FechaEdicion { get; set; }
@@ -61,11 +61,15 @@ public partial class Establecimiento
     [Column("tipo")]
     public string Tipo { get; set; }
 
-    public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
-
     [ForeignKey(nameof(Ruc))]
     public virtual VentaConfig RucNavigation { get; set; } = null!;
 
     [ForeignKey(nameof(UbigeoId))]
     public virtual Ubigeo Ubigeo { get; set; } = null!;
+
+    public virtual ICollection<GuiaRemision> GuiaRemisionsRemitente { get; set; } = new List<GuiaRemision>();
+
+    public virtual ICollection<GuiaRemision> GuiaRemisionsDestinatario { get; set; } = new List<GuiaRemision>();
+
+
 }
