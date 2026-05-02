@@ -47,7 +47,7 @@ public class UnidadTransporte
     public string? Tipo { get; set; }
 
     [Column("fechaCreacion")]
-    public DateTime? FechaCreacion { get; set; }
+    public DateTime? FechaCreacion { get; set; } = DateTime.UtcNow;
 
     [Column("fechaEdicion")]
     public DateTime? FechaEdicion { get; set; }
@@ -67,10 +67,10 @@ public class UnidadTransporte
     public string? EmpleadoNombreEdicion { get; set; }
 
     [Column("estado", TypeName = "enum('activo','inactivo')")]
-    public string? Estado { get; set; }
+    public string? Estado { get; set; } = "activo";
 
     [Column("idEstado")]
-    public sbyte? IdEstado { get; set; }
+    public sbyte? IdEstado { get; set; } = 1;
 
     public virtual ICollection<UnidadTransporteGuid> TransporteGuids { get; set; } = new List<UnidadTransporteGuid>();
 }

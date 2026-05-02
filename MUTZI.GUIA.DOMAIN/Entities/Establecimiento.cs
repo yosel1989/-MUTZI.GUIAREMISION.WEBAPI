@@ -71,5 +71,4 @@ public partial class Establecimiento
 
     public virtual ICollection<GuiaRemision> GuiaRemisionsDestinatario { get; set; } = new List<GuiaRemision>();
 
-
 }

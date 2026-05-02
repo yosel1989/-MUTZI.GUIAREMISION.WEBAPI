@@ -18,11 +18,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<GuiaRemision> GetByIdAsync(int id)
         {
             return await _context.GuiaRemisions
-                .Include(r => r.Remitente)
+                .Include(r => r.EstablecimientoRemitente)
                     .ThenInclude(rem => rem.Ubigeo)
                 .Include(rt => rt.RemiteTransportista)
                     .ThenInclude(re => re.Ubigeo)
-                .Include(d => d.Destinatario)
+                .Include(d => d.EstablecimientoDestinatario)
                     .ThenInclude(des => des.Ubigeo)
                 .Include(dest => dest.Destinos)
                     .ThenInclude(de => de.Ubigeo)
@@ -61,7 +61,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // Remitente
+                // EstablecimientoRemitente
                 var existingRemitente = await _repository.GetRemitenteByNameAsync(remitente.Descripcion);
                 if (existingRemitente == null)
                 {

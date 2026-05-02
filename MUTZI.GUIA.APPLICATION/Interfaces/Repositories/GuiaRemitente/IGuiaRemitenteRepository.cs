@@ -1,5 +1,6 @@
 ﻿
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
 {
@@ -12,8 +13,8 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync2(int id);
         Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket);
         Task <(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(
-            DOMAIN.Entities.Remitente remitente,
-            DOMAIN.Entities.Destinatario destinatario,
+            Establecimiento remitente,
+            Establecimiento destinatario,
             DOMAIN.Entities.Proveedor proveedor,
             List<DOMAIN.Entities.ConductorGuid> conductor,
             List<DOMAIN.Entities.UnidadTransporteGuid> transporte,
@@ -25,10 +26,10 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
             List<DOMAIN.Entities.DocRelacionado> docRelacionados,
             List<DOMAIN.Entities.EmailDestinatarioGuid> emailDestinatarioGuia
             );
-        //Remitente
+        //EstablecimientoRemitente
         Task<DOMAIN.Entities.Remitente> GetRemitenteByNameAsync(string name);
         Task<DOMAIN.Entities.Remitente> CreateRemitenteAsync(DOMAIN.Entities.Remitente remitente);
-        //Destinatario
+        //EstablecimientoDestinatario
         Task<DOMAIN.Entities.Destinatario> GetDestinatarioByRucAsync(string ruc);
         Task<DOMAIN.Entities.Destinatario> CreateDestinatarioAsync(DOMAIN.Entities.Destinatario destinatario);
         Task<DOMAIN.Entities.Destinatario> UpdateDestinatarioAsync(DOMAIN.Entities.Destinatario destinatario);

@@ -66,7 +66,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                             ExternalReference = new List<ExternalReference>{new ExternalReference { URI = new List<URI> { new URI() {_ = "IDSignature" }}}}
                         }}
                     }},
-                    //Remitente
+                    //EstablecimientoRemitente
                     DespatchSupplierParty = new List<DespatchSupplierParty>{ new DespatchSupplierParty {
                         Party = new List<Party>{ new Party {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Remitente.Ruc,  schemeID = EspacioNombreGuiaRemision._DocumentType06  }}}},
@@ -95,7 +95,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                             }
                         }},
                     }},
-                    //Destinatario
+                    //EstablecimientoDestinatario
                     DeliveryCustomerParty = new List<DeliveryCustomerParty>{ new DeliveryCustomerParty {
                         Party = new List<Party>{ new Party {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
@@ -178,7 +178,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                         AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
                             _ = guia.Destinatario.CodigoSunat,
                             //Si es traslado, se coloca el ruc del remitente, ya que es traslado entre sucursales nomas; si es venta o compra, el numeroDoc del destinatario
-                            //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.Ruc : guia.Destinatario.NumeroDocumento
+                            //listID = guia.TipoTraslado=="TRASLADO"? guia.EstablecimientoRemitente.Ruc : guia.EstablecimientoDestinatario.NumeroDocumento
                             listID=guia.Destinatario.NumeroDocumento
                         }},
                         CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},
@@ -358,7 +358,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
 
             //Se está guardando en la carpeta ahora mismo. Actualización, se pasó a producción y ahora se guarda en AWS
             var nombreArchivo = getNombreDocumentoFile(guia, guia.Remitente.Ruc);
-            //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.Ruc));//Ya no se usa
+            //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.EstablecimientoRemitente.Ruc));//Ya no se usa
 
             // Convertir el string JSON a un stream de memoria
             var jsonBytes = System.Text.Encoding.UTF8.GetBytes(guiaJson);

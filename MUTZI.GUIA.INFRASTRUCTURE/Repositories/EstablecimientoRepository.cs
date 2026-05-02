@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
@@ -169,7 +168,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
 
         /*
-        public async Task<List<Remitente>> GetListBySuggestion(string numeroDoc)
+        public async Task<List<EstablecimientoRemitente>> GetListBySuggestion(string numeroDoc)
         {
             return await _context.Establecimiento
                 .Include(r => r.Ubigeo)
@@ -178,7 +177,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 (c.Ruc.Contains(numeroDoc) || c.Descripcion.Contains(numeroDoc)))
                 .ToListAsync();
         }
-        public async Task<(List<Remitente>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
+        public async Task<(List<EstablecimientoRemitente>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
         {
             var query=_context.Establecimiento.AsQueryable();
             if (request.Columns != null && request.Columns.Any())

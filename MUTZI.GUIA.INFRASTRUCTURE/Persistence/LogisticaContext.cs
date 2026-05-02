@@ -64,16 +64,19 @@ public partial class LogisticaContext : DbContext
 
         modelBuilder.Entity<GuiaRemision>(entity =>
         {
-            entity.HasOne(g => g.Remitente)
+            entity.HasOne(g => g.EstablecimientoRemitente)
                   .WithMany(e => e.GuiaRemisionsRemitente)
                   .HasForeignKey(g => g.EstablecimientoRemitenteId)
                   .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(g => g.Destinatario)
+            entity.HasOne(g => g.EstablecimientoDestinatario)
                   .WithMany(e => e.GuiaRemisionsDestinatario)
                   .HasForeignKey(g => g.EstablecimientoDestinatarioId)
                   .OnDelete(DeleteBehavior.ClientSetNull);
         });
+
+        modelBuilder.Entity<EmailDestinatarioGuid>()
+            .HasOne(g => g.EstablecimientoDestinatario);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

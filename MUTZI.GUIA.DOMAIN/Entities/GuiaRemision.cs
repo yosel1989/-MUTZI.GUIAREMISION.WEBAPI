@@ -109,11 +109,8 @@ public partial class GuiaRemision
 
     public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
 
-    [ForeignKey(nameof(EstablecimientoRemitenteId))]
-    public Establecimiento Remitente { get; set; } = null!;
-
-    [ForeignKey(nameof(EstablecimientoDestinatarioId))]
-    public Establecimiento Destinatario { get; set; } = null!;
+    public Establecimiento EstablecimientoRemitente { get; set; } = null!;
+    public Establecimiento EstablecimientoDestinatario { get; set; } = null!;
 
 
     public virtual ICollection<Destino> Destinos { get; set; } = new List<Destino>();

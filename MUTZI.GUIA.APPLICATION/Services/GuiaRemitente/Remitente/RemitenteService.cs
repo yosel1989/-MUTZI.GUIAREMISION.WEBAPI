@@ -124,7 +124,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
                 var existingRemitente = await _repository.GetByIdAsync(id);
                 if (existingRemitente == null)
                 {
-                    throw new KeyNotFoundException($"Remitente con ID {id} no encontrado.");
+                    throw new KeyNotFoundException($"EstablecimientoRemitente con ID {id} no encontrado.");
                 }
                 if (updateDTO.Serie != existingRemitente.Serie)
                 {
@@ -166,7 +166,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null)
             {
-                throw new KeyNotFoundException($"Remitente con ID {id} no encontrado.");
+                throw new KeyNotFoundException($"EstablecimientoRemitente con ID {id} no encontrado.");
             }
             existing.Estado = _status;
             existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
@@ -181,7 +181,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente
                 Estado = existing.Estado,
                 FechaEdicion = existing.FechaEdicion,
                 EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
-                Detalle = $"Remitente con ID {existing.RemitenteId} actualizado a estado '{existing.Estado}'."
+                Detalle = $"EstablecimientoRemitente con ID {existing.RemitenteId} actualizado a estado '{existing.Estado}'."
             };
         }
     }

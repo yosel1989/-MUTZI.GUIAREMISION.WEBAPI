@@ -18,7 +18,7 @@
             List<DOMAIN.Entities.EmailDestinatarioGuid> emailDestinatarioGuia,
             List<DOMAIN.Entities.EmailRemiteTransportistaGuid> emailRemiteTransportistas
             );
-        //Remitente
+        //EstablecimientoRemitente
         Task<DOMAIN.Entities.RemiteTransportistum> GetRemiteTransportistaByRucAsync(string numeroDocumento);
         Task UpdateAsync(DOMAIN.Entities.GuiaRemision guiaRemision);
     }

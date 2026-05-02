@@ -19,9 +19,7 @@ public partial class EmailDestinatarioGuid
 
     [Column("destinatarioID")]
     public int DestinatarioId { get; set; }
-
-    [ForeignKey(nameof(DestinatarioId))]
-    public virtual Destinatario Destinatario { get; set; } = null!;
+    public virtual Establecimiento EstablecimientoDestinatario { get; set; } = null!;
 
     [ForeignKey(nameof(GuiaId))]
     public virtual GuiaRemision Guia { get; set; } = null!;

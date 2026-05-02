@@ -7,23 +7,28 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
-using MUTZI.GUIA.DOMAIN.Entities;
-using System;
-using System.Drawing;
-using System.Text.Json;
+using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
 {
     public class GuiaRemitenteService : IGuiaRemitenteService
     {
         private readonly IGuiaRemitenteRepository _repository;
+        private readonly IEstablecimientoRepository _establecimientoRepository;
         private readonly IVentaConfigRepository _ventaConfigRepository;
         private readonly IMapper _mapper;
-        public GuiaRemitenteService(IGuiaRemitenteRepository repository, IVentaConfigRepository ventaConfigRepository, IMapper mapper)
+        public GuiaRemitenteService(
+            IGuiaRemitenteRepository repository,
+            IVentaConfigRepository ventaConfigRepository,
+            IEstablecimientoRepository establecimientoRepository,
+            IMapper mapper
+        )
         {
             _repository = repository;
+            _establecimientoRepository = establecimientoRepository;
             _ventaConfigRepository = ventaConfigRepository;
             _mapper = mapper;
         }
@@ -110,9 +115,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     var worksheet = workbook.Worksheets.Add("Reporte de Guías");
 
                     string[] headers = {
-                        "#", "Código", "Empresa", "RUC Empresa", "Remitente / Local",
+                        "#", "Código", "Empresa", "RUC Empresa", "EstablecimientoRemitente / Local",
                         "Tipo Guía", "N° Guía", "T. Traslado", "T. Transporte",
-                        "F. Emisión", "H. Emisión", "Destinatario", "N° Doc. Destinatario",
+                        "F. Emisión", "H. Emisión", "EstablecimientoDestinatario", "N° Doc. EstablecimientoDestinatario",
                         "Origen", "Destino", "Estado", "F. Registro", "U. Registro"
                     };
 
@@ -219,8 +224,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 try
                 {
                     // Mapear todos los objetos
-                    var remitente = _mapper.Map<DOMAIN.Entities.Remitente>(dto.Remitente);
-                    var destinatario = _mapper.Map<DOMAIN.Entities.Destinatario>(dto.Destinatario);
+                    var remitente = await _establecimientoRepository.GetByIdAsync(dto.Remitente.RemitenteId);
+                    var destinatario = await _establecimientoRepository.GetByIdAsync(dto.Destinatario.DestinatarioId);
                     var proveedor = _mapper.Map<DOMAIN.Entities.Proveedor>(dto.Proveedor);
                     var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<DOMAIN.Entities.ConductorGuid>(p)).ToList();
                     var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<DOMAIN.Entities.UnidadTransporteGuid>(p)).ToList();
@@ -232,11 +237,15 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.DocRelacionado>(p)).ToList();
                     var emailDestinatarioGuia = dto.Destinatario?.EmailDestinatarioGuia?.Select(p => _mapper.Map<DOMAIN.Entities.EmailDestinatarioGuid>(p)).ToList();
 
+                    if(remitente is null) throw new Exception("No existe este remitente.");
+                    if(destinatario is null) throw new Exception("No existe este destinatario.");
+
                     // Llamar al repositorio
                     var (guia_id, numero_guia) = await _repository.CreateGuiaRemisionTransactionalAsync(
                         remitente, destinatario, proveedor, conductor, transporte,
                         guiaRemision, datosEnvio, origen, destino, detalles, docRelacionados, emailDestinatarioGuia
                     );
+
                     return new GuiaCreatedResponseDTO
                     {
                         GuiaID = guia_id,
@@ -304,10 +313,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 {
                     return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");
                 }
-                if (guia.Remitente.Ruc != ventaConfig.Ruc)
-                    return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
+                if (guia.Remitente.NumeroDocumento != ventaConfig.Ruc)
+                    return (false, $"El RUC del remitente ({guia.Remitente.NumeroDocumento}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
                 _ = guia.TipoTRansporteCode18();
                 _ = guia.TipoTrasladoCode20();
+
                 if (guia.TipoTransporte=="PUBLICO")
                 {
                     if (guia.DatosEnvio.RucEmpresaCurrier.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
