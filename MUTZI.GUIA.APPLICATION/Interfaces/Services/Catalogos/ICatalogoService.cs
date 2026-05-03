@@ -11,5 +11,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos
     {
         IEnumerable<EmisorAutorizadorVehicularDTO> GetEmisoresVehiculares();
         IEnumerable<PaisDTO> GetPaises();
+        IEnumerable<TipoEstablecimientoDTO> GetTiposEstablecimiento();
     }
 }

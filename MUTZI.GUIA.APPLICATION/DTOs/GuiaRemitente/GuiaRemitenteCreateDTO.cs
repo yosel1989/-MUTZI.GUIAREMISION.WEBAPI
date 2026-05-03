@@ -75,12 +75,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("remitente")]
         [Required]
-        //public RemitenteCreateDTO Remitente { get; set; }
+        //public RemitenteCreateDTO EstablecimientoRemitente { get; set; }
         public RemitenteCreateGuiaDTO Remitente { get; set; }
 
         [JsonPropertyName("destinatario")]
         [Required]
-        public DestinatarioCreateGuiaDTO? Destinatario { get; set; }
+        public DestinatarioCreateGuiaDTO Destinatario { get; set; }
 
         [JsonPropertyName("proveedor")]
         [SwaggerSchema("Recibe un objeto con el ID del proveedor que va a ser asociado a la guía", Nullable = true)]
@@ -107,15 +107,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
             switch (this.TipoTraslado)
             {
                 case "VENTA":
-                    if (this.Remitente.Ruc == this.Destinatario.NumeroDocumento)
+                    if (this.Remitente.RemitenteId == this.Destinatario.DestinatarioId)
                         throw new System.Exception("Si el tipo de traslado es VENTA, el 'Tipo y Número de documento de identidad del destinatario' no puede ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "01";
                 case "COMPRA":
-                    if (this.Remitente.Ruc!=this.Destinatario.NumeroDocumento)
+                    if (this.Remitente.RemitenteId != this.Destinatario.DestinatarioId)
                         throw new System.Exception("Si el tipo de traslado es COMPRA, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "02";
                 case "TRASLADO":
-                    if (this.Remitente.Ruc != this.Destinatario.NumeroDocumento)
+                    if (this.Remitente.RemitenteId != this.Destinatario.DestinatarioId)
                         throw new System.Exception("Si el tipo de traslado es TRASLADO, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "04";
                 default:

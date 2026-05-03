@@ -1,27 +1,25 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente
 {
     public class RemitenteCreateGuiaDTO
     {
-        [JsonPropertyName("ruc")]
-        [SwaggerSchema("Recibe un texto, es el ruc del remitente", Nullable = false)]
-        [Required(ErrorMessage = "El Nro documento del remitente es obligatoria")]
-        [StringLength(11, ErrorMessage = "El número de documento del remitente no puede exceder los 11 caracteres")]
-        [MinLength(11)]
-        public string Ruc { get; set; }
-
-        [JsonPropertyName("descripcion")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la descripción o nombre del remitente", Nullable = false)]
-        [MaxLength(200)]
+        [JsonPropertyName("remitente_id")]
+        [SwaggerSchema("Recibe un entero, aquí se coloca el ID del remitente que se va a asociar a la guía de remisión.", Nullable = false)]
         [Required]
-        public string Descripcion { get; set; }
+        public int RemitenteId { get; set; }
+
+        [JsonPropertyName("numero_documento")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el número de documento del remitente.", Nullable = false)]
+        [Required(ErrorMessage = "El Nro documento del remitente es obligatorio")]
+        [MaxLength(21)]
+        [MinLength(8)]
+        public string NumeroDocumento { get; set; }
+
+        [JsonPropertyName("email_remitente")]
+        [SwaggerSchema("Recibe un arreglo de textos, aquí se coloca el correo electrónico del destinatario al cual le llegara la notificación de la guía emitida", Nullable = true)]
+        public List<string>? EmailDestinatarioGuia { get; set; }
     }
 }

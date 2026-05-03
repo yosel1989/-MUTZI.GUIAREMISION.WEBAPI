@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
@@ -121,7 +120,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                 {
                     return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador.");
                 }
-                if (guia.RemiteTransportista.NumeroDocumento== guia.Remitente.Ruc)
+                if (guia.RemiteTransportista.NumeroDocumento== guia.Remitente.NumeroDocumento)
                 {
                     return (false, $"'El 'Número de documento de identidad del remitente', no debe ser igual al número de RUC del transportista.'.");
                 }

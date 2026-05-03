@@ -29,7 +29,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         c.Placa.Contains(numeroDoc) ||
                         c.Tarjeta.Contains(numeroDoc));
                 }
-                return await query.ToListAsync();
+                var data = await query.ToListAsync();
+                return data;
             }
             catch (Exception e)
             {
@@ -73,6 +74,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task CreateAsync(DOMAIN.Entities.UnidadTransporte transporte)
         {
+            transporte.FechaCreacion = DateTime.UtcNow;
             await _context.UnidadTransportes.AddAsync(transporte);
             await _context.SaveChangesAsync();
         }

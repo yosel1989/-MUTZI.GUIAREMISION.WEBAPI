@@ -17,7 +17,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.GuiaRemisions.AsQueryable();
+                var query = _context.GuiaRemisions
+                    .Include(m => m.EstablecimientoDestinatario)
+                    .Include(m => m.EstablecimientoRemitente)
+                    .AsQueryable();
                 if (request.Columns != null && request.Columns.Any())
                 {
                     foreach (var col in request.Columns)
@@ -65,12 +68,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             if (idsStrings.Length == 1)
                             {
                                 if (int.TryParse(idsStrings[0], out int idUnico))
-                                    query = query.Where(x => x.RemitenteId == idUnico);
+                                    query = query.Where(x => x.EstablecimientoRemitenteId == idUnico);
                             }
                             else
                             {
                                 var idsInt = idsStrings.Select(int.Parse).ToList();
-                                query = query.Where(x => idsInt.Contains(x.RemitenteId));
+                                query = query.Where(x => idsInt.Contains(x.EstablecimientoRemitenteId));
                             }
                             continue;
                         }
@@ -110,15 +113,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             case "tipo_transporte": query = query.Where(x => x.TipoTransporte.ToLower() == val); break;
                             case "id_destinatario":
                                 if (int.TryParse(val, out int idD))
-                                    query = query.Where(x => x.DestinatarioId == idD);
+                                    query = query.Where(x => x.EstablecimientoDestinatarioId == idD);
                                 break;
                             case "search":
                                 query = query.Where(x => x.Ruc.Contains(val) ||
                                 x.RucNavigation.Empresa.ToLower().Contains(val) || x.Ruc.Contains(val) ||
-                                x.Remitente.Descripcion.ToLower().Contains(val) || x.TipoGuia.ToLower().Contains(val) ||
+                                x.EstablecimientoRemitente.Descripcion.ToLower().Contains(val) || x.TipoGuia.ToLower().Contains(val) ||
                                 x.NumeroGuia.Contains(val) || x.TipoTraslado.ToLower().Contains(val) ||
                                 x.TipoTransporte.ToLower().Contains(val) || //x.Hora.Contains(val)||
-                                x.Destinatario.RazonSocial.ToLower().Contains(val) || x.Destinatario.NumeroDocumento.Contains(val) ||
+                                x.EstablecimientoDestinatario.RucNavigation.Empresa.ToLower().Contains(val) || x.EstablecimientoDestinatario.Ruc.Contains(val) ||
                                 x.Origens.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
                                 x.Destinos.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
                                 x.EmpleadoNombreCreacion.ToLower().Contains(val) || x.EmpleadoNombreEdicion.ToLower().Contains(val) ||
@@ -155,12 +158,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Fecha = g.Fecha,
                         Hora = g.Hora,
                         RespuestaTicket = g.RespuestaTicket,
-                        Remitente = new Remitente { Descripcion = g.Remitente.Descripcion },
-                        Destinatario = new Destinatario
+                        EstablecimientoRemitente = new Establecimiento { Descripcion = g.EstablecimientoRemitente.Descripcion },
+                        EstablecimientoDestinatario = new Establecimiento
                         {
-                            TipoDocumento = g.Destinatario.TipoDocumento,
-                            NumeroDocumento = g.Destinatario.NumeroDocumento,
-                            RazonSocial = g.Destinatario.RazonSocial
+                            Ruc = g.EstablecimientoDestinatario.Ruc
                         },
                         Proveedor = g.Proveedor == null ? null : new Proveedor
                         {
@@ -192,11 +193,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<List<GuiaRemision>> GetAllAsync()
         {
             return await _context.GuiaRemisions
-                .Include(r => r.Remitente)
+                .Include(r => r.EstablecimientoRemitente)
                     .ThenInclude(rem => rem.Ubigeo)
-                .Include(r => r.Remitente)
+                .Include(r => r.EstablecimientoRemitente)
                     .ThenInclude(rem => rem.RucNavigation)
-                .Include(d => d.Destinatario)
+                .Include(d => d.EstablecimientoDestinatario)
                     .ThenInclude(des => des.Ubigeo)
                 .Include(p => p.Proveedor)
                     .ThenInclude(pro => pro.Ubigeo)
@@ -218,7 +219,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<GuiaRemision> GetByTicketAsync(string ticket)
         {
-            return await _context.GuiaRemisions.Include(r => r.Remitente)
+            return await _context.GuiaRemisions.Include(r => r.EstablecimientoRemitente)
                 .FirstOrDefaultAsync(g => g.RespuestaTicket == ticket);
         }
         public async Task<GuiaRemision> GetByIdAsync(int id)
@@ -240,24 +241,24 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     Fecha = g.Fecha,
                     Hora = g.Hora,
                     Observacion = g.Observacion,
-                    Remitente = new Remitente
+                    EstablecimientoRemitente = new Establecimiento
                     {
-                        RemitenteId = g.Remitente.RemitenteId,
-                        Ruc = g.Remitente.Ruc,
-                        Descripcion = g.Remitente.Descripcion,
-                        UbigeoId = g.Remitente.UbigeoId,
-                        Ubigeo = g.Remitente.Ubigeo,
-                        Direccion = g.Remitente.Direccion,
-                        Email = g.Remitente.Email,
-                        Pais = g.Remitente.Pais,
-                        Serie = g.Remitente.Serie,
-                        CodigoSunat = g.Remitente.CodigoSunat,
-                        FechaCreacion = g.Remitente.FechaCreacion,
-                        FechaEdicion = g.Remitente.FechaEdicion,
-                        EmpleadoNombreCreacion = g.Remitente.EmpleadoNombreCreacion,
-                        EmpleadoNombreEdicion = g.Remitente.EmpleadoNombreEdicion,
-                        Estado = g.Remitente.Estado,
-                        IdEstado = g.Remitente.IdEstado
+                        EstablecimientoId = g.EstablecimientoRemitente.EstablecimientoId,
+                        Ruc = g.EstablecimientoRemitente.Ruc!,
+                        Descripcion = g.EstablecimientoRemitente.Descripcion,
+                        UbigeoId = g.EstablecimientoRemitente.UbigeoId,
+                        Ubigeo = g.EstablecimientoRemitente.Ubigeo,
+                        Direccion = g.EstablecimientoRemitente.Direccion,
+                        Email = g.EstablecimientoRemitente.Email,
+                        Pais = g.EstablecimientoRemitente.Pais,
+                        Serie = g.EstablecimientoRemitente.Serie,
+                        CodigoSunat = g.EstablecimientoRemitente.CodigoSunat,
+                        FechaCreacion = g.EstablecimientoRemitente.FechaCreacion,
+                        FechaEdicion = g.EstablecimientoRemitente.FechaEdicion,
+                        EmpleadoNombreCreacion = g.EstablecimientoRemitente.EmpleadoNombreCreacion,
+                        EmpleadoNombreEdicion = g.EstablecimientoRemitente.EmpleadoNombreEdicion,
+                        Estado = g.EstablecimientoRemitente.Estado,
+                        IdEstado = g.EstablecimientoRemitente.IdEstado
                     },
                     RemiteTransportista = g.RemiteTransportista == null ? null : new RemiteTransportistum
                     {
@@ -278,24 +279,21 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Estado = g.RemiteTransportista.Estado,
                         IdEstado = g.RemiteTransportista.IdEstado
                     },
-                    Destinatario = new Destinatario
+                    EstablecimientoDestinatario = new Establecimiento
                     {
-                        DestinatarioId = g.Destinatario.DestinatarioId,
-                        TipoDocumento = g.Destinatario.TipoDocumento,
-                        NumeroDocumento = g.Destinatario.NumeroDocumento,
-                        RazonSocial = g.Destinatario.RazonSocial,
-                        UbigeoId = g.Destinatario.UbigeoId,
-                        Ubigeo = g.Destinatario.Ubigeo,
-                        Direccion = g.Destinatario.Direccion,
-                        Pais = g.Destinatario.Pais,
-                        CodigoSunat = g.Destinatario.CodigoSunat,
-                        FechaCreacion = g.Destinatario.FechaCreacion,
-                        EmpleadoNombreCreacion = g.Destinatario.EmpleadoNombreCreacion,
-                        FechaEdicion = g.Destinatario.FechaEdicion,
-                        EmpleadoNombreEdicion = g.Destinatario.EmpleadoNombreEdicion,
-                        EmailDestinatarioGuids = g.EmailDestinatarioGuids,
-                        Estado = g.Destinatario.Estado,
-                        IdEstado = g.Destinatario.IdEstado
+                        EstablecimientoId = g.EstablecimientoDestinatario.EstablecimientoId,
+                        Ruc = g.EstablecimientoDestinatario.Ruc,
+                        UbigeoId = g.EstablecimientoDestinatario.UbigeoId,
+                        Ubigeo = g.EstablecimientoDestinatario.Ubigeo,
+                        Direccion = g.EstablecimientoDestinatario.Direccion,
+                        Pais = g.EstablecimientoDestinatario.Pais,
+                        CodigoSunat = g.EstablecimientoDestinatario.CodigoSunat,
+                        FechaCreacion = g.EstablecimientoDestinatario.FechaCreacion,
+                        EmpleadoNombreCreacion = g.EstablecimientoDestinatario.EmpleadoNombreCreacion,
+                        FechaEdicion = g.EstablecimientoDestinatario.FechaEdicion,
+                        EmpleadoNombreEdicion = g.EstablecimientoDestinatario.EmpleadoNombreEdicion,
+                        Estado = g.EstablecimientoDestinatario.Estado,
+                        IdEstado = g.EstablecimientoDestinatario.IdEstado
                     },
                     Proveedor = g.Proveedor == null ? null : new Proveedor
                     {
@@ -400,11 +398,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<GuiaRemision> GetByIdAsync2(int id)
         {
             return await _context.GuiaRemisions
-                .Include(r => r.Remitente)
+                .Include(r => r.EstablecimientoRemitente)
                     .ThenInclude(rem => rem.Ubigeo)
                 .Include(rt => rt.RemiteTransportista)
                     .ThenInclude(rtu => rtu.Ubigeo)
-                .Include(d => d.Destinatario)
+                .Include(d => d.EstablecimientoDestinatario)
                     .ThenInclude(des => des.Ubigeo)
                 .Include(p => p.Proveedor)
                     .ThenInclude(pro => pro.Ubigeo)
@@ -425,9 +423,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(erm => erm.EmailRemiteTransportistaGuids)
                 .FirstOrDefaultAsync(g => g.GuiaId == id);
         }
+
         public async Task<(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(
-            Remitente remitente,
-            Destinatario destinatario,
+            Establecimiento remitente,
+            Establecimiento destinatario,
             Proveedor proveedor,
             List<ConductorGuid> conductor,
             List<UnidadTransporteGuid> transporte,
@@ -438,27 +437,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             List<GuiaDetalle> detalles,
             List<DocRelacionado> docRelacionados,
             List<EmailDestinatarioGuid> emailDestinatarioGuia
-            )
+        )
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // Remitente
-                var existingRemitente = await GetRemitenteByNameAsync(remitente.Descripcion);
-                if (existingRemitente == null)
-                {
-                    throw new Exception("No existe este remitente.");
-                }
-                else
-                {
-                    remitente = existingRemitente;
-                }
-
-
                 // Guía
-                guiaRemision.RemitenteId = remitente.RemitenteId;
+                guiaRemision.EstablecimientoRemitenteId = remitente.EstablecimientoId;
                 guiaRemision.Ruc = remitente.Ruc;
-                guiaRemision.DestinatarioId = destinatario.DestinatarioId;
+                guiaRemision.EstablecimientoDestinatarioId = destinatario.EstablecimientoId;
                 guiaRemision.Estado = "REGISTRADO";
                 guiaRemision.IdEstado = 0;
                 //if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
@@ -540,7 +527,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     foreach (var email in emailDestinatarioGuia)
                     {
                         email.GuiaId = guiaRemision.GuiaId;
-                        email.DestinatarioId = destinatario.DestinatarioId;
+                        email.DestinatarioId = destinatario.EstablecimientoId;
                         await _context.EmailDestinatarioGuids.AddAsync(email);
                     }
                     await _context.SaveChangesAsync();
@@ -617,7 +604,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             _context.GuiaRemisions.Remove(guiaRemision);
             await _context.SaveChangesAsync();
         }
-        //Remitente
+        //EstablecimientoRemitente
         public async Task<Remitente> GetRemitenteByNameAsync(string name)
         {
             return await _context.Remitentes.FirstOrDefaultAsync(r => r.Descripcion == name);
@@ -641,7 +628,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 throw new Exception(msg);
             }
         }
-        //Destinatario
+        //EstablecimientoDestinatario
         public async Task<Destinatario> GetDestinatarioByRucAsync(string ruc)
         {
             return await _context.Destinatarios.FirstOrDefaultAsync(d => d.NumeroDocumento == ruc);

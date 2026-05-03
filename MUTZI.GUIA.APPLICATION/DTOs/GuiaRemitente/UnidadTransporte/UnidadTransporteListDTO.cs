@@ -1,6 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -33,5 +34,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
         [JsonPropertyName("tarjeta")]
         [SwaggerSchema("Devuelve un texto, la tarjeta de circulación del transporte", Nullable = false)]
         public string Tarjeta { get; set; }
+
+        [JsonPropertyName("tipo")]
+        [SwaggerSchema("Devuelve un texto, se coloca el tipo de la unidad de transporte, Ejm: INTERNO, INTERNO", Nullable = false)]
+        public string Tipo { get; set; }
     }
 }

@@ -42,6 +42,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpGet]
         [Route("emisor-vehicular")]
         [SwaggerOperation(
@@ -64,6 +65,33 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al listar emisores vehiculares.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+        [HttpGet]
+        [Route("tipo-establecimiento")]
+        [SwaggerOperation(
+        Summary = "Listar tipos de establecimiento",
+        Description = "Lista tipos de establecimiento según SUNAT.",
+        OperationId = "listar_tipo_establecimiento")]
+        [ProducesResponseType(typeof(IEnumerable<TipoEstablecimientoDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public ActionResult<IEnumerable<TipoEstablecimientoDTO>> GetTipoEstablecimientoLista()
+        {
+            try
+            {
+                var result = _service.GetTiposEstablecimiento();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar tipos de establecimiento.",
                     Detalle = errorMsg
                 });
             }

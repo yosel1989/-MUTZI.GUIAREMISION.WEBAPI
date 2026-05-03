@@ -4,6 +4,13 @@ using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
 {
+    public enum EnumTipoUnidadTransporte
+    {
+        INTERNO,
+        EXTERNO
+    }
+
+
     [SwaggerSchema("Recibe un objeto unidad_transporte.('En caso de guía de remisión remitente se completa solo si el tipo_transporte es 'PRIVADO', de lo contrario, no se completa nada.' && 'En caso de guía de remisión transportista si es obligatorio este objeto unidad_transporte')", Nullable = true)]
     public class UnidadTransporteCreateDTO
     {
@@ -41,14 +48,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
 
         [JsonPropertyName("emisor_vehicular")]
         [SwaggerSchema("Recibe un texto, se coloca la abreviación del emisor vehicular. Ejm: 'MTC', este campo es opcional", Nullable = true)]
-        [MinLength(2)]
-        [MaxLength(100)]
+        [StringLength(100, MinimumLength = 2)]
         public string? EmisorVehicular { get; set; }
 
         [JsonPropertyName("nro_autorizacion")]
         [SwaggerSchema("Recibe un texto, se coloca el número de autorización del vehículo, este campo es opcional", Nullable = true)]
-        [MinLength(3)]
-        [MaxLength(50)]
+        [StringLength(50, MinimumLength = 3)]
         public string? NroAutorizacion { get; set; }
 
         [JsonPropertyName("empleado_id_creacion")]
@@ -59,5 +64,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte
         [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha realizado la transacción en el sistema", Nullable = true)]
         [MaxLength(100)]
         public string? EmpleadoNombreCreacion { get; set; }
+
+        [JsonPropertyName("tipo")]
+        [SwaggerSchema("Recibe un texto, se coloca el tipo de la unidad de transporte, Ejm: INTERNO, INTERNO", Nullable = false)]
+        [MaxLength(20)]
+        [EnumDataType(typeof(EnumTipoUnidadTransporte))]
+        public string Tipo { get; set; }
     }
 }

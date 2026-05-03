@@ -8,5 +8,11 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
         Task<List<Establecimiento>> GetAllByRucToSelectModal(string ruc);
         Task<List<Establecimiento>> GetListBySuggestion(string ruc, string? search);
         Task<Establecimiento?> GetByIdAsync(int id);
+        Task<(List<Establecimiento>, int)> GetListAsync(int pageNumber, int pageSize, string? search);
+        Task DeleteAsync(int id);
+        Task<Establecimiento> UpdateAsync(Establecimiento establecimiento);
+        Task CreateAsync(Establecimiento nuevoEstablecimiento);
+        Task<bool> GetBySerieAsync(string ruc, string serie);
+        Task<GuiaRemision?> GetLastBySerieAsync(string serie, string ruc);
     }
 }

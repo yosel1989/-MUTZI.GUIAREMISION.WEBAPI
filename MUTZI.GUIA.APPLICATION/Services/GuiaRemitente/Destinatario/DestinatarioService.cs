@@ -86,7 +86,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
                 var existingDestinatario = await _repository.GetByIdAsync(id);
                 if (existingDestinatario == null)
                 {
-                    throw new KeyNotFoundException($"Destinatario con ID {id} no encontrado.");
+                    throw new KeyNotFoundException($"EstablecimientoDestinatario con ID {id} no encontrado.");
                 }
                 _mapper.Map(updateDTO, existingDestinatario);
                 await _repository.UpdateAsync(existingDestinatario);
@@ -123,7 +123,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null)
             {
-                throw new KeyNotFoundException($"Destinatario con ID {id} no encontrado.");
+                throw new KeyNotFoundException($"EstablecimientoDestinatario con ID {id} no encontrado.");
             }
             existing.Estado = _status;
             existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
@@ -138,7 +138,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario
                 Estado = existing.Estado,
                 FechaEdicion = existing.FechaEdicion,
                 EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
-                Detalle = $"Destinatario con ID {existing.DestinatarioId} ha sido actualizado a estado '{existing.Estado}'."
+                Detalle = $"EstablecimientoDestinatario con ID {existing.DestinatarioId} ha sido actualizado a estado '{existing.Estado}'."
             };
         }
     }
