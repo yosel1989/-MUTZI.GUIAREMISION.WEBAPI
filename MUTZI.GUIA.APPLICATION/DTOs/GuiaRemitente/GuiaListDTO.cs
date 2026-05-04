@@ -1,10 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
@@ -62,9 +57,17 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, es el número de documento del destinatario de la guía de remisión", Nullable = false)]
         public string NroDocumentoDestinatario { get; set; }
 
+        [JsonPropertyName("direccion_destino")]
+        [SwaggerSchema("Devuelve un texto, es la dirección destino de la guía de remisión", Nullable = false)]
+        public string DireccionDestino{ get; set; }
+
         [JsonPropertyName("distrito_origen")]
         [SwaggerSchema("Devuelve en texto el distrito de origen o del punto de partida", Nullable = false)]
         public string DistritoOrigen { get; set; }
+
+        [JsonPropertyName("direccion_origen")]
+        [SwaggerSchema("Devuelve en texto la dirección de origen", Nullable = false)]
+        public string DireccionOrigen { get; set; }
 
         [JsonPropertyName("distrito_destino")]
         [SwaggerSchema("Devuelve en texto el distrito de destino o del punto de llegada", Nullable = false)]

@@ -45,5 +45,5 @@ public partial class VentaConfig
 
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 
-    public virtual ICollection<Remitente> Remitentes { get; set; } = new List<Remitente>();
+    public virtual ICollection<Establecimiento> Establecimientos { get; set; } = new List<Establecimiento>();
 }

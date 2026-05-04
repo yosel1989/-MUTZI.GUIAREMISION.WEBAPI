@@ -7,7 +7,6 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
@@ -115,9 +114,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     var worksheet = workbook.Worksheets.Add("Reporte de Guías");
 
                     string[] headers = {
-                        "#", "Código", "Empresa", "RUC Empresa", "EstablecimientoRemitente / Local",
+                        "#", "Código", "Empresa", "RUC Empresa", "Remitente / Local",
                         "Tipo Guía", "N° Guía", "T. Traslado", "T. Transporte",
-                        "F. Emisión", "H. Emisión", "EstablecimientoDestinatario", "N° Doc. EstablecimientoDestinatario",
+                        "F. Emisión", "H. Emisión", "Destinatario", "N° Doc. Destinatario",
                         "Origen", "Destino", "Estado", "F. Registro", "U. Registro"
                     };
 

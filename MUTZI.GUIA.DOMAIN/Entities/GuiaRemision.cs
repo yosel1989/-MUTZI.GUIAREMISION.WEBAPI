@@ -50,13 +50,13 @@ public partial class GuiaRemision
     public string? Observacion { get; set; }
 
     [Column("remitenteID")]
-    public int EstablecimientoRemitenteId { get; set; }
+    public int RemitenteId { get; set; }
 
     [Column("remiteTransportistaID")]
     public int? RemiteTransportistaId { get; set; }
 
     [Column("destinatarioID")]
-    public int EstablecimientoDestinatarioId { get; set; }
+    public int DestinatarioId { get; set; }
 
     [Column("proveedorID")]
     public int? ProveedorId { get; set; }
@@ -109,8 +109,11 @@ public partial class GuiaRemision
 
     public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
 
-    public Establecimiento EstablecimientoRemitente { get; set; } = null!;
-    public Establecimiento EstablecimientoDestinatario { get; set; } = null!;
+    [ForeignKey(nameof(RemitenteId))]
+    public Establecimiento Remitente { get; set; } = null!;
+
+    [ForeignKey(nameof(DestinatarioId))]
+    public Establecimiento Destinatario { get; set; } = null!;
 
 
     public virtual ICollection<Destino> Destinos { get; set; } = new List<Destino>();

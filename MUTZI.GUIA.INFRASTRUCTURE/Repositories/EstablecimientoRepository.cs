@@ -168,7 +168,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
 
         /*
-        public async Task<List<EstablecimientoRemitente>> GetListBySuggestion(string numeroDoc)
+        public async Task<List<Remitente>> GetListBySuggestion(string numeroDoc)
         {
             return await _context.Establecimiento
                 .Include(r => r.Ubigeo)
@@ -177,7 +177,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 (c.Ruc.Contains(numeroDoc) || c.Descripcion.Contains(numeroDoc)))
                 .ToListAsync();
         }
-        public async Task<(List<EstablecimientoRemitente>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
+        public async Task<(List<Remitente>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
         {
             var query=_context.Establecimiento.AsQueryable();
             if (request.Columns != null && request.Columns.Any())

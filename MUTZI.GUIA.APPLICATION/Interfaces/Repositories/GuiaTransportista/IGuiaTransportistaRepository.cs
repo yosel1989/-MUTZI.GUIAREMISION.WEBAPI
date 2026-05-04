@@ -1,12 +1,14 @@
-﻿namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista
+﻿using MUTZI.GUIA.DOMAIN.Entities;
+
+namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista
 {
     public interface IGuiaTransportistaRepository
     {
         Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id);
         Task<(int GuiaId, string NumeroGuia)> CreateGuiaTransportistaTransactionalAsync(
-            DOMAIN.Entities.Remitente remitente,
+            Establecimiento remitente,
             DOMAIN.Entities.RemiteTransportistum remiteTransportista,
-            DOMAIN.Entities.Destinatario destinatario,
+            Establecimiento destinatario,
             List<DOMAIN.Entities.ConductorGuid> conductor,
             List<DOMAIN.Entities.UnidadTransporteGuid> transporte,
             DOMAIN.Entities.GuiaRemision guiaRemision,
@@ -18,7 +20,7 @@
             List<DOMAIN.Entities.EmailDestinatarioGuid> emailDestinatarioGuia,
             List<DOMAIN.Entities.EmailRemiteTransportistaGuid> emailRemiteTransportistas
             );
-        //EstablecimientoRemitente
+        //Remitente
         Task<DOMAIN.Entities.RemiteTransportistum> GetRemiteTransportistaByRucAsync(string numeroDocumento);
         Task UpdateAsync(DOMAIN.Entities.GuiaRemision guiaRemision);
     }

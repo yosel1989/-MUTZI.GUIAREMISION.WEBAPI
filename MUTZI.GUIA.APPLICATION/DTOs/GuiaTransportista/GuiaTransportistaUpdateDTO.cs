@@ -55,10 +55,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         [Required]
         public string EmpleadoNombreEdicion { get; set; }
 
-        // EstablecimientoRemitente
+        // Remitente
         //[JsonPropertyName("remitente")]
         //[Required]
-        //public RemitenteCreateGuiaDTO EstablecimientoRemitente { get; set; }
+        //public RemitenteCreateGuiaDTO Remitente { get; set; }
 
         [JsonPropertyName("remite_transportista_id")]
         [Required]
