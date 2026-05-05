@@ -75,7 +75,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("remitente")]
         [Required]
-        //public RemitenteCreateDTO EstablecimientoRemitente { get; set; }
+        //public RemitenteCreateDTO Remitente { get; set; }
         public RemitenteCreateGuiaDTO Remitente { get; set; }
 
         [JsonPropertyName("destinatario")]

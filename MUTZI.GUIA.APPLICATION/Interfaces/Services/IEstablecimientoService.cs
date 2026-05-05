@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
 {

@@ -37,7 +37,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         [JsonPropertyName("doc_relacionado")]
         public List<DocRelacionadoDTO>? DocRelacionados { get; set; }
 
-        // EstablecimientoRemitente
+        // Remitente
         public RemitenteDTO Remitente { get; set; }
 
         [JsonPropertyName("remite_transportista")]

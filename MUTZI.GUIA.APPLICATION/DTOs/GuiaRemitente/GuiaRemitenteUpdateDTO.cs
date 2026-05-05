@@ -82,7 +82,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         //[JsonPropertyName("remitente_id")]
         //[Required]
-        //public int EstablecimientoRemitenteId { get; set; }
+        //public int RemitenteId { get; set; }
         [JsonPropertyName("destinatario_id")]
         [Required]
         public int? DestinatarioId { get; set; }

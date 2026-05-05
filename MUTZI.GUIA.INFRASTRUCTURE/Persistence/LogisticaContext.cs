@@ -20,8 +20,6 @@ public partial class LogisticaContext : DbContext
 
     public virtual DbSet<DatosEnvio> DatosEnvios { get; set; }
 
-    public virtual DbSet<Destinatario> Destinatarios { get; set; }
-
     public virtual DbSet<Destino> Destinos { get; set; }
 
     public virtual DbSet<DocRelacionado> DocRelacionados { get; set; }
@@ -40,8 +38,6 @@ public partial class LogisticaContext : DbContext
 
     public virtual DbSet<RemiteTransportistum> RemiteTransportista { get; set; }
 
-    public virtual DbSet<Remitente> Remitentes { get; set; }
-
     public virtual DbSet<UnidadTransporte> UnidadTransportes { get; set; }
 
     public virtual DbSet<UnidadTransporteGuid> UnidadTransporteGuids { get; set; }
@@ -53,6 +49,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<VentaConfig> VentaConfigs { get; set; }
 
     public virtual DbSet<Establecimiento> Establecimiento { get; set; }
+    public virtual DbSet<Perfil> Perfil { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -62,18 +59,18 @@ public partial class LogisticaContext : DbContext
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
 
-        modelBuilder.Entity<GuiaRemision>(entity =>
+        /*modelBuilder.Entity<GuiaRemision>(entity =>
         {
-            entity.HasOne(g => g.EstablecimientoRemitente)
+            entity.HasOne(g => g.Remitente)
                   .WithMany(e => e.GuiaRemisionsRemitente)
-                  .HasForeignKey(g => g.EstablecimientoRemitenteId)
+                  .HasForeignKey(g => g.RemitenteId)
                   .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(g => g.EstablecimientoDestinatario)
+            entity.HasOne(g => g.Destinatario)
                   .WithMany(e => e.GuiaRemisionsDestinatario)
-                  .HasForeignKey(g => g.EstablecimientoDestinatarioId)
+                  .HasForeignKey(g => g.DestinatarioId)
                   .OnDelete(DeleteBehavior.ClientSetNull);
-        });
+        });*/
 
         modelBuilder.Entity<EmailDestinatarioGuid>()
             .HasOne(g => g.EstablecimientoDestinatario);

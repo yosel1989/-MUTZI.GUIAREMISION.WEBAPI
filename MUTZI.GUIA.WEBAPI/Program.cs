@@ -1,15 +1,16 @@
 using Genexs.AWS.Library;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MUTZI.GUIA.APPLICATION.Configuration;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Hubs;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Proveedor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Transportista;
@@ -21,9 +22,7 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Transportista;
@@ -36,9 +35,7 @@ using MUTZI.GUIA.APPLICATION.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor;
-using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Services.Transportista;
@@ -48,6 +45,7 @@ using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
 using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -92,6 +90,7 @@ builder.Services.AddDbContext<LogisticaContext>(options =>
 //Registrar AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingEstablecimiento).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingPerfil).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -100,14 +99,13 @@ builder.Services.AddScoped<IVentaConfigRepository, VentaConfigRepository>();
 builder.Services.AddScoped<IGuiaRemitenteRepository, GuiaRemitenteRepository>();
 builder.Services.AddScoped<IGuiaTransportistaRepository, GuiaTransportistaRepository>();
 
-builder.Services.AddScoped<IRemitenteRepository, RemitenteRepository>();
-builder.Services.AddScoped<IDestinatarioRepository, DestinatarioRepository>();
 builder.Services.AddScoped<IConductorRepository, ConductorRepository>();
 builder.Services.AddScoped<IUnidadTransporteRepository, UnidadTransporteRepository>();
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<IUbigeoRepository, UbigeoRepository>();
 builder.Services.AddScoped<ITransportistaRepository, TransportistaRepository>();
 builder.Services.AddScoped<IEstablecimientoRepository, EstablecimientoRepository>();
+builder.Services.AddScoped<IPerfilRepository, PerfilRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -119,9 +117,8 @@ builder.Services.AddScoped<IGuiaRemitenteService, GuiaRemitenteService>();
 builder.Services.AddScoped<IGuiaTransportistaService, GuiaTransportistaService>();
 builder.Services.AddScoped<IEnvioService, EnvioService>();
 builder.Services.AddScoped<ICatalogoService, CatalogoService>();
+builder.Services.AddScoped<IPerfilService, PerfilService>();
 
-builder.Services.AddScoped<IRemitenteService, RemitenteService>();
-builder.Services.AddScoped<IDestinatarioService, DestinatarioService>();
 builder.Services.AddScoped<IConductorService, ConductorService>();
 builder.Services.AddScoped<IUnidadTransporteService, UnidadTransporteService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
@@ -129,6 +126,7 @@ builder.Services.AddScoped<IUbigeoService, UbigeoService>();
 builder.Services.AddScoped<IS3FileService, S3FileService>();
 builder.Services.AddScoped<IEstablecimientoService, EstablecimientoService>();
 builder.Services.AddScoped<ITransportistaService, TransportistaService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddMemoryCache();
 
 //aGREGAR SWAGGER
@@ -148,6 +146,41 @@ builder.Services.AddSwaggerGen(c =>
     });
     c.EnableAnnotations();
 });
+
+
+builder.Services.AddHttpContextAccessor();
+var adminJwt = builder.Configuration.GetSection("JwtSettings:Admin").Get<JwtSettingsRol>();
+builder.Services
+.AddAuthentication(options =>
+{
+    //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = "AdminScheme";
+    options.DefaultAuthenticateScheme = "AdminScheme";
+    options.DefaultChallengeScheme = "CustomerScheme";
+})
+.AddJwtBearer("AdminScheme", options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(adminJwt.Key)),
+        ValidIssuer = adminJwt.Issuer,
+        ValidAudience = adminJwt.Audience,
+        ValidateIssuer = true,
+        ValidateAudience = true
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["jwt"];
+            return Task.CompletedTask;
+        }
+    };
+});
+
+
+
 
 
 // Cors

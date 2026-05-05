@@ -5,6 +5,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
 {
@@ -37,9 +38,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                 try
                 {
                     // Mapear todos los objetos
-                    var remitente = _mapper.Map<DOMAIN.Entities.Remitente>(dto.Remitente);
+                    var remitente = _mapper.Map<Establecimiento>(dto.Remitente);
                     var remiteTransportista = _mapper.Map<DOMAIN.Entities.RemiteTransportistum>(dto.RemiteTransportista);
-                    var destinatario = _mapper.Map<DOMAIN.Entities.Destinatario>(dto.Destinatario);
+                    var destinatario = _mapper.Map<Establecimiento>(dto.Destinatario);
                     var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<DOMAIN.Entities.ConductorGuid>(p)).ToList();
                     var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<DOMAIN.Entities.UnidadTransporteGuid>(p)).ToList();
                     var guiaRemision = _mapper.Map<DOMAIN.Entities.GuiaRemision>(dto);

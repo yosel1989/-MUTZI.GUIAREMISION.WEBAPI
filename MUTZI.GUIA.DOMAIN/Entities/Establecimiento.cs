@@ -67,8 +67,8 @@ public partial class Establecimiento
     [ForeignKey(nameof(UbigeoId))]
     public virtual Ubigeo Ubigeo { get; set; } = null!;
 
-    public virtual ICollection<GuiaRemision> GuiaRemisionsRemitente { get; set; } = new List<GuiaRemision>();
+    //public virtual ICollection<GuiaRemision> GuiaRemisionsRemitente { get; set; } = new List<GuiaRemision>();
 
-    public virtual ICollection<GuiaRemision> GuiaRemisionsDestinatario { get; set; } = new List<GuiaRemision>();
+    //public virtual ICollection<GuiaRemision> GuiaRemisionsDestinatario { get; set; } = new List<GuiaRemision>();
 
 }
