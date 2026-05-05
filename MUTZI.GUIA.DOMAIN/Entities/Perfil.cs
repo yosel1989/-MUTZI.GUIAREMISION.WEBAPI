@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("conf_perfiles")]
+[Table("perfil")]
 public partial class Perfil
 {
     [Key]
@@ -40,4 +40,8 @@ public partial class Perfil
 
     [Column("fecha_modifico")]
     public DateTime? FechaModifico { get; set; }
+
+
+    public virtual ICollection<PerfilPermiso> PerfilPermisos { get; set; } = new List<PerfilPermiso>();
+    public virtual ICollection<Permiso> Permisos { get; set; } = new List<Permiso>();
 }

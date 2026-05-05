@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
@@ -14,6 +15,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class GuiaRemisionController : ControllerBase
     {
         private readonly IGuiaRemitenteService _guiasRemisionBDService;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 
 
@@ -6,6 +7,7 @@ namespace SORTEO.LAGRANDE.WEBAPI.Controllers
 {
     [ApiExplorerSettings(IgnoreApi = true)]
     [Route("api/doc")]
+    [Authorize]
     public class DocsController : Controller
     {
         [HttpGet()]

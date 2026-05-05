@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.VentaConfig;
@@ -9,6 +10,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class EmpresaController : ControllerBase
     {
         private readonly IVentaConfigService _service;

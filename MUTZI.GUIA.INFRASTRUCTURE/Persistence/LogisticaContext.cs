@@ -50,6 +50,8 @@ public partial class LogisticaContext : DbContext
 
     public virtual DbSet<Establecimiento> Establecimiento { get; set; }
     public virtual DbSet<Perfil> Perfil { get; set; }
+    public virtual DbSet<Permiso> Permiso { get; set; }
+    public virtual DbSet<PerfilPermiso> PerfilPermiso { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -58,6 +60,25 @@ public partial class LogisticaContext : DbContext
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
+
+        modelBuilder.Entity<Permiso>()
+        .HasMany(p => p.Perfiles)
+        .WithMany(p => p.Permisos)
+        .UsingEntity<PerfilPermiso>(
+            j => j
+                .HasOne(pp => pp.Perfil)
+                .WithMany(p => p.PerfilPermisos)
+                .HasForeignKey(pp => pp.PerfilId),
+            j => j
+                .HasOne(pp => pp.Permiso)
+                .WithMany(p => p.PerfilPermisos)
+                .HasForeignKey(pp => pp.PermisoId),
+            j =>
+            {
+                j.HasKey(pp => new { pp.PermisoId, pp.PerfilId });
+                j.ToTable("perfil_permiso");
+            }
+        );
 
         /*modelBuilder.Entity<GuiaRemision>(entity =>
         {

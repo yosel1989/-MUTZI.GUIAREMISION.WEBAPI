@@ -5,20 +5,23 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.DOMAIN.Entities;
 using Org.BouncyCastle.Asn1.Ocsp;
 
-namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
+namespace MUTZI.GUIA.APPLICATION.Services
 {
     public class ConductorService : IConductorService
     {
         private readonly IConductorRepository _repository;
+        private readonly IAuthService _authService;
         private readonly IMapper _mapper;
-        public ConductorService(IConductorRepository repository, IMapper mapper)
+        public ConductorService(IConductorRepository repository, IMapper mapper, IAuthService authService)
         {
             _repository = repository;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<List<ConductorDTO>> GetAllAsync()
         {
@@ -70,7 +73,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
         {
             try
             {
-                var conductor = _mapper.Map<DOMAIN.Entities.Conductor>(createDTO);
+                var currentUser = _authService.CurrentUser();
+                var conductor = _mapper.Map<Conductor>(createDTO);
                 await _repository.CreateAsync(conductor);
                 return conductor.ConductorId;
             }
@@ -86,12 +90,16 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
         {
             try
             {
+                var currentUser = _authService.CurrentUser();
                 var existingConductor = await _repository.GetByIdAsync(id);
                 if (existingConductor == null)
                 {
                     throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
                 }
                 _mapper.Map(updateDTO, existingConductor);
+                existingConductor.UsuarioModifico = currentUser.UserName;
+                existingConductor.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+                existingConductor.FechaModifico = DateTime.UtcNow;
                 await _repository.UpdateAsync(existingConductor);
                 return _mapper.Map<ConductorDTO>(existingConductor);
             }
@@ -118,6 +126,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
         }
         public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
         {
+            var currentUser = _authService.CurrentUser();
+
             string _status = infoRequestDto.IdEstado switch
             {
                 1 => "activo",
@@ -131,8 +141,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
             }
             existing.Estado = _status;
             existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
-            existing.EmpleadoIdedicion = infoRequestDto.EditedEmployeeId;
-            existing.EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName;
+            existing.UsuarioModifico = currentUser.UserName;
+            existing.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+            existing.FechaModifico = DateTime.UtcNow;
             await _repository.UpdateAsync(existing);
 
             return new UpdatedStatusDto
@@ -140,7 +151,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor
                 Id = existing.ConductorId,
                 IdEstado = Convert.ToInt32(existing.IdEstado),
                 Estado = existing.Estado,
-                FechaEdicion = existing.FechaEdicion,
+                FechaEdicion = existing.FechaModifico,
                 EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
                 Detalle = $"Conductor con ID {existing.ConductorId} ha sido actualizado a estado '{existing.Estado}'."
             };

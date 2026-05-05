@@ -34,7 +34,6 @@ using MUTZI.GUIA.APPLICATION.Services.Catalogos;
 using MUTZI.GUIA.APPLICATION.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente.Transporte;
 using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
@@ -44,6 +43,7 @@ using MUTZI.GUIA.APPLICATION.Services.VentaConfig;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
+using MUTZI.GUIA.WEBAPI.Filters;
 using Serilog;
 using System.Text;
 
@@ -52,7 +52,12 @@ var builder = WebApplication.CreateBuilder(args);
 //AWS S3 Configuration
 builder.Services.AddSingleton<IS3Configuration, S3Configuration>();
 
-builder.Services.AddControllers()
+
+builder.Services.AddScoped<PermissionFilter>();
+builder.Services.AddControllers(options =>
+    {
+        options.Filters.Add<PermissionFilter>();
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new Conversion.PeruTimeZoneConverter());
@@ -73,8 +78,8 @@ builder.Services.AddControllers()
 
             return new BadRequestObjectResult(errorResponse);
         };
-    })
-    ;
+    });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -91,6 +96,8 @@ builder.Services.AddDbContext<LogisticaContext>(options =>
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingEstablecimiento).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingPerfil).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingPerfilPermiso).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingPermiso).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -106,6 +113,8 @@ builder.Services.AddScoped<IUbigeoRepository, UbigeoRepository>();
 builder.Services.AddScoped<ITransportistaRepository, TransportistaRepository>();
 builder.Services.AddScoped<IEstablecimientoRepository, EstablecimientoRepository>();
 builder.Services.AddScoped<IPerfilRepository, PerfilRepository>();
+builder.Services.AddScoped<IPermisoRepository, PermisoRepository>();
+builder.Services.AddScoped<IPerfilPermisoRepository, PerfilPermisoRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -118,6 +127,7 @@ builder.Services.AddScoped<IGuiaTransportistaService, GuiaTransportistaService>(
 builder.Services.AddScoped<IEnvioService, EnvioService>();
 builder.Services.AddScoped<ICatalogoService, CatalogoService>();
 builder.Services.AddScoped<IPerfilService, PerfilService>();
+builder.Services.AddScoped<IPermisoService, PermisoService>();
 
 builder.Services.AddScoped<IConductorService, ConductorService>();
 builder.Services.AddScoped<IUnidadTransporteService, UnidadTransporteService>();
@@ -153,12 +163,9 @@ var adminJwt = builder.Configuration.GetSection("JwtSettings:Admin").Get<JwtSett
 builder.Services
 .AddAuthentication(options =>
 {
-    //options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = "AdminScheme";
-    options.DefaultAuthenticateScheme = "AdminScheme";
-    options.DefaultChallengeScheme = "CustomerScheme";
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer("AdminScheme", options =>
+.AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -178,10 +185,6 @@ builder.Services
         }
     };
 });
-
-
-
-
 
 // Cors
 var env = builder.Environment;
@@ -230,18 +233,21 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseCors(corsPolicy);
+
 app.UseRouting();
+
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
     endpoints.MapHub<GuiasHub>("/guias-signal");
 });
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();

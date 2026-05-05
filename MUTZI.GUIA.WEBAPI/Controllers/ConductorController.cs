@@ -1,14 +1,17 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
-using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
-using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ConductorController : ControllerBase
     {
         private readonly IConductorService _service;
@@ -16,12 +19,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             _service = service;
         }
+
         [HttpGet]
         [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
-        Summary = "Listar conductores",
-        Description = "Lista los conductores. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
-        OperationId = "listar_conductor")]
+            Summary = "Listar conductores",
+            Description = "Lista los conductores. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
+            OperationId = "listar_conductor")
+        ]
+        [Permission("listar_conductor")]
         [ProducesResponseType(typeof(PagedResult<ConductorDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -43,12 +49,16 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
+
         [HttpGet]
         [Route("listar-sugerido")]
         [SwaggerOperation(
-        Summary = "Listar conductores sugeridos",
-        Description = "Lista los conductores sugeridos por número de documento o razón social",
-        OperationId = "listar_conductor_sugerido")]
+            Summary = "Listar conductores sugeridos",
+            Description = "Lista los conductores sugeridos por número de documento o razón social",
+            OperationId = "listar_conductor_sugerido"
+        )]
+        [Permission("listar_conductor_sugerido")]
         [ProducesResponseType(typeof(ConductorListDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -69,12 +79,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpGet]
         [Route("buscar-por-id/{id}")]
         [SwaggerOperation(
-        Summary = "Buscar conductor por ID",
-        Description = "Buscar objeto por conductorID",
-        OperationId = "buscar_conductor_por_id")]
+            Summary = "Buscar conductor por ID",
+            Description = "Buscar objeto por conductorID",
+            OperationId = "buscar_conductor_por_id"
+        )]
+        [Permission("buscar_conductor_por_id")]
         [ProducesResponseType(typeof(ConductorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -101,12 +114,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpGet]
         [Route("buscar-por-numero-documento/{numeroDocumento}")]
-        [SwaggerOperation(
-        Summary = "Buscar conductor por Nro documento",
-        Description = "Buscar objeto por número de documento.",
-        OperationId = "buscar_conductor_por_numero_documento")]
+            [SwaggerOperation(
+            Summary = "Buscar conductor por Nro documento",
+            Description = "Buscar objeto por número de documento.",
+            OperationId = "buscar_conductor_por_numero_documento"
+        )]
+        [Permission("buscar_conductor_por_numero_documento")]
         [ProducesResponseType(typeof(ConductorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -133,11 +149,14 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpPost]
         [SwaggerOperation(
-        Summary = "Registrar un conductor",
-        Description = "Registra un conductor en la bbdd",
-        OperationId = "registrar_conductor")]
+            Summary = "Registrar un conductor",
+            Description = "Registra un conductor en la bbdd",
+            OperationId = "registrar_conductor"
+        )]
+        [Permission("registrar_conductor")]
         [ProducesResponseType(typeof(CreatedDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -158,12 +177,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpPut]
         [Route("{id}")]
         [SwaggerOperation(
-        Summary = "Actualizar un conductor",
-        Description = "Actualiza un conductor en la bbdd",
-        OperationId = "actualizar_conductor")]
+            Summary = "Actualizar un conductor",
+            Description = "Actualiza un conductor en la bbdd",
+            OperationId = "actualizar_conductor"
+        )]
+        [Permission("editar_conductor")]
         [ProducesResponseType(typeof(ConductorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -184,12 +206,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpDelete]
         [Route("{id}")]
         [SwaggerOperation(
-        Summary = "Eliminar un conductor",
-        Description = "Elimina un conductor de la bbdd",
-        OperationId = "eliminar_conductor")]
+            Summary = "Eliminar un conductor",
+            Description = "Elimina un conductor de la bbdd",
+            OperationId = "eliminar_conductor"
+        )]
+        [Permission("eliminar_conductor")]
         [ProducesResponseType(typeof(DeletedDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -210,12 +235,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpPut]
         [Route("{id}/actualizar-estado")]
         [SwaggerOperation(
-        Summary = "Actualizar estado de un conductor",
-        Description = "Actualizar el estado de un conductor en la bbdd. 1='activo', 0='inactivo'.",
-        OperationId = "actualizar_estado_conductor")]
+            Summary = "Actualizar estado de un conductor",
+            Description = "Actualizar el estado de un conductor en la bbdd. 1='activo', 0='inactivo'.",
+            OperationId = "actualizar_estado_conductor"
+        )]
+        [Permission("editar_estado_conductor")]
         [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]

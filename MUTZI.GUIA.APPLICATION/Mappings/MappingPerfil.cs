@@ -12,6 +12,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<Perfil, PerfilListToSelectDTO>();
             CreateMap<PerfilCreateDTO, Perfil>();
             CreateMap<PerfilUpdateDTO, Perfil>();
+            CreateMap<Perfil, int>()
+                .ConvertUsing(p => p.PerfilId);
         }
     }
 }

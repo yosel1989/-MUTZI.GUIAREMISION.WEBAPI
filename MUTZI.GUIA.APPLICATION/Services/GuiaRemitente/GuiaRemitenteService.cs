@@ -157,7 +157,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                             cellEstado.Style.Fill.BackgroundColor = XLColor.FromHtml("#e5e7eb");
                         }
 
-                        //worksheet.Cell(row, 17).Value = item.FechaCreacion?.ToString("dd/MM/yyyy hh:mm:ss tt");
+                        //worksheet.Cell(row, 17).Value = item.FechaRegistro?.ToString("dd/MM/yyyy hh:mm:ss tt");
                         worksheet.Cell(row, 17).Value = item.FechaCreacion;
                         worksheet.Cell(row, 18).Value = item.EmpleadoNombreCreacion;
 

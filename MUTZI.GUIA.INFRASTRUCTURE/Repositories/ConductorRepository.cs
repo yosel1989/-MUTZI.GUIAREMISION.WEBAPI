@@ -39,18 +39,21 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 if (!string.IsNullOrEmpty(val))
                 {
                     query = query.Where(x => x.TipoDocumento.ToLower().Contains(val)||
-                    x.NumeroDocumento.ToLower().Contains(val)||
-                    x.Nombres.ToLower().Contains(val)|| x.Apellidos.ToLower().Contains(val)||
-                    x.Cargo.ToLower().Contains(val)|| x.Licencia.ToLower().Contains(val)||
-                    x.EmpleadoNombreCreacion.ToLower().Contains(val)||x.Estado.ToLower().Contains(val)||
-                    x.EmpleadoNombreEdicion.ToLower().Contains(val)
+                        x.NumeroDocumento.ToLower().Contains(val)||
+                        x.Nombres.ToLower().Contains(val)|| 
+                        x.Apellidos.ToLower().Contains(val)||
+                        x.Cargo.ToLower().Contains(val)|| 
+                        x.Licencia.ToLower().Contains(val)||
+                        x.UsuarioRegistroNombre.ToLower().Contains(val)||
+                        x.Estado.ToLower().Contains(val)||
+                        x.UsuarioModificoNombre.ToLower().Contains(val)
                     );
                 }
             }
-            //var query = _context.Conductors.OrderByDescending(x=>x.FechaCreacion);
+            //var query = _context.Conductors.OrderByDescending(x=>x.FechaRegistro);
             var totalRecords=await query.CountAsync();
             var data = await query
-                .OrderByDescending(x=>x.FechaCreacion)
+                .OrderByDescending(x=>x.FechaRegistro)
                 .Skip((pageNumber - 1) * pageSize)
                 .AsNoTracking()
                 .Take(pageSize)
@@ -66,7 +69,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             return await _context.Conductors.FirstOrDefaultAsync(c => c.NumeroDocumento == numeroDocumento);
         }
-        public async Task CreateAsync(DOMAIN.Entities.Conductor conductor)
+        public async Task CreateAsync(Conductor conductor)
         {
             await _context.Conductors.AddAsync(conductor);
             await _context.SaveChangesAsync();
@@ -74,7 +77,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task UpdateAsync(DOMAIN.Entities.Conductor conductor)
         {
             _context.Conductors.Update(conductor);
-            conductor.FechaEdicion = DateTime.UtcNow;
+            conductor.FechaModifico = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         public async Task DeleteAsync(int id)

@@ -1,14 +1,16 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
-using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class DocumentoController : ControllerBase
     {
         private readonly IVentaConfigService _ventaConfigService;

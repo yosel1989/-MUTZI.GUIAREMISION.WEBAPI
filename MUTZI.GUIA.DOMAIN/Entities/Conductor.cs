@@ -7,14 +7,14 @@ namespace MUTZI.GUIA.DOMAIN.Entities;
 public partial class Conductor
 {
     [Key]
-    [Column("conductorID")]
+    [Column("conductor_id")]
     public int ConductorId { get; set; }
 
-    [Column("tipoDocumento")]
+    [Column("tipo_documento")]
     [MaxLength(20)]
     public string? TipoDocumento { get; set; }
 
-    [Column("numeroDocumento")]
+    [Column("numero_documento")]
     [MaxLength(15)]
     public string NumeroDocumento { get; set; } = null!;
 
@@ -38,30 +38,32 @@ public partial class Conductor
     [MaxLength(20)]
     public string Licencia { get; set; } = null!;
 
-    [Column("fechaCreacion")]
-    public DateTime? FechaCreacion { get; set; }
+    [Column("fecha_registro")]
+    public DateTime FechaRegistro { get; set; }
 
-    [Column("fechaEdicion")]
-    public DateTime? FechaEdicion { get; set; }
+    [Column("fecha_modifico")]
+    public DateTime? FechaModifico { get; set; }
 
-    [Column("empleadoIDCreacion")]
-    public int? EmpleadoIdcreacion { get; set; }
+    [Column("usuario_registro")]
+    [MaxLength(75)]
+    public string UsuarioRegistro { get; set; }
 
-    [Column("empleadoNombreCreacion")]
-    [MaxLength(100)]
-    public string? EmpleadoNombreCreacion { get; set; }
+    [Column("usuario_registro_nombre")]
+    [MaxLength(150)]
+    public string UsuarioRegistroNombre { get; set; }
 
-    [Column("empleadoIDEdicion")]
-    public int? EmpleadoIdedicion { get; set; }
+    [Column("usuario_modifico")]
+    [MaxLength(75)]
+    public string? UsuarioModifico { get; set; }
 
-    [Column("empleadoNombreEdicion")]
-    [MaxLength(100)]
-    public string? EmpleadoNombreEdicion { get; set; }
+    [Column("usuario_modifico_nombre")]
+    [MaxLength(150)]
+    public string? UsuarioModificoNombre { get; set; }
 
     [Column("estado")]
     public string? Estado { get; set; } = "activo";
 
-    [Column("idEstado")]
+    [Column("id_estado")]
     public sbyte? IdEstado { get; set; } = 1;
 
     public virtual ICollection<ConductorGuid> ConductorGuids { get; set; } = new List<ConductorGuid>();

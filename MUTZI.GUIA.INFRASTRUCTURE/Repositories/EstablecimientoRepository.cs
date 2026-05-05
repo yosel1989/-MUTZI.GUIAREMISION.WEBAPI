@@ -200,10 +200,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             //var query = _context.Establecimiento
             //    .Include(r => r.Ubigeo)
             //    .Include(e => e.RucNavigation)
-            //    .OrderByDescending(r=>r.FechaCreacion);
+            //    .OrderByDescending(r=>r.FechaRegistro);
 
             var data = await query
-                .OrderByDescending(r => r.FechaCreacion)
+                .OrderByDescending(r => r.FechaRegistro)
                 .Include(r => r.Ubigeo)
                 .Include(e => e.RucNavigation)
                 .Skip((pageNumber - 1) * pageSize)

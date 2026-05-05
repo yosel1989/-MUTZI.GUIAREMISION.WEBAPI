@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
@@ -10,6 +11,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [Route("establecimientos")]
     [ApiController]
+    [Authorize]
     public class EstablecimientoController : ControllerBase
     {
         private readonly IEstablecimientoService _service;

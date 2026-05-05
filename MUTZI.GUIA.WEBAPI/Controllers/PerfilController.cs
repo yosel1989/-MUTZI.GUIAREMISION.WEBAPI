@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Perfil;
@@ -9,6 +10,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [Route("perfiles")]
     [ApiController]
+    [Authorize]
     public class PerfilController : ControllerBase
     {
         private readonly IPerfilService _service;

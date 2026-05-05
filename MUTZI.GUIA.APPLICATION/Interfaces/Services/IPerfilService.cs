@@ -12,6 +12,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
         Task<UpdatedStatusDto> CambiarEstadoAsync(int id, PerfilUpdateEstadoDTO infoRequestDto);
         Task<int> CreateAsync(PerfilCreateDTO createDTO);
         Task<PerfilDTO> UpdateAsync(int id, PerfilUpdateDTO updateDTO);
-        Task<PerfilListToSelectDTO> ListToSelectAsync();
+        Task<List<PerfilListToSelectDTO>> ListToSelectAsync();
     }
 }
