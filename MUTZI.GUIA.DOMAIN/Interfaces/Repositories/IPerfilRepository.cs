@@ -9,5 +9,7 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
         Task DeleteAsync(int id);
         Task<Perfil> UpdateAsync(Perfil actualizarPerfil);
         Task CreateAsync(Perfil nuevoPerfil);
+
+        Task<List<Perfil>> GetListToSelectAsync();
     }
 }

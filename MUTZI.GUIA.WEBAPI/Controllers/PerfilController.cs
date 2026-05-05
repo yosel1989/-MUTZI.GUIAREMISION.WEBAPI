@@ -189,5 +189,33 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("listar-para-select")]
+        [SwaggerOperation(
+            Summary = "Listar perfiles",
+            Description = "Lista los perfiles activos para seleccionar",
+            OperationId = "listar_perfiles_para_select"
+        )]
+        [ProducesResponseType(typeof(PagedResult<PerfilDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<PerfilListToSelectDTO>>> GetAllToSelect()
+        {
+            try
+            {
+                var perfiles = await _service.ListToSelectAsync();
+                return Ok(perfiles);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar perfiles.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
     }
 }

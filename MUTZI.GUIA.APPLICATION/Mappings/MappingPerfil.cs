@@ -9,6 +9,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
         {
             CreateMap<Perfil, PerfilDTO>();
             CreateMap<Perfil, PerfilListDTO>();
+            CreateMap<Perfil, PerfilListToSelectDTO>();
             CreateMap<PerfilCreateDTO, Perfil>();
             CreateMap<PerfilUpdateDTO, Perfil>();
         }

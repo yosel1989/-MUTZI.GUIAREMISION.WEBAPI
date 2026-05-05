@@ -82,5 +82,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Perfil>> GetListToSelectAsync()
+        {
+            return await _context.Perfil
+                .Where(m => m.IdEstado == 1)
+                .Select(m => new Perfil
+                {
+                    PerfilId = m.PerfilId,
+                    Nombre = m.Nombre
+                })
+                .ToListAsync();
+        }
+
     }
 }

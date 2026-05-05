@@ -117,5 +117,19 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
         }
 
+        public async Task<PerfilListToSelectDTO> ListToSelectAsync()
+        {
+            try
+            {
+                var data = await _repository.GetListToSelectAsync();
+                return _mapper.Map<PerfilListToSelectDTO>(data);
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception(msg);
+            }
+        }
+
     }
 }
