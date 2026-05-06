@@ -1,6 +1,6 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
-using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
 {
@@ -11,7 +11,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
         Task<EstablecimientoDTO?> GetByIdAsync(int id);
         Task<PagedResult<EstablecimientoDTO>> GetListAsync(int pageNumber, int pageSize, string? search);
         Task DeleteAsync(int id);
-        Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto);
+        Task<EstadoActualizadoResponseDTO> CambiarEstadoAsync(int id, EstadoActualizadoRequestDTO infoRequestDto);
         Task<int> CreateAsync(EstablecimientoCreateDTO createDTO);
 
         Task<EstablecimientoDTO> UpdateAsync(int id, EstablecimientoUpdateDTO updateDTO);

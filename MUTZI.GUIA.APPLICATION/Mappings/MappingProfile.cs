@@ -1,13 +1,8 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista;
@@ -17,6 +12,8 @@ using MUTZI.GUIA.APPLICATION.DTOs.Ubigeo;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.EmailRemiteTransportistaGuia;
+using MUTZI.GUIA.APPLICATION.DTOs.Conductor;
+using MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte;
 
 namespace MUTZI.GUIA.APPLICATION.Mappings
 {
@@ -97,7 +94,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             CreateMap<DestinoUpdateDTO, DOMAIN.Entities.Destino>();
             CreateMap<ProductosUpdateDTO, DOMAIN.Entities.GuiaDetalle>();
-            CreateMap<ConductorGuiaUpdateDTO, DOMAIN.Entities.ConductorGuid>();
+            
             CreateMap<UnidadTransporteGuiaUpdateDTO, DOMAIN.Entities.UnidadTransporteGuid>();
             //Guias de transportista
             CreateMap<DOMAIN.Entities.GuiaRemision, GuiaTransportistaDTO>()
@@ -202,34 +199,12 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<RemiteTransportistaCreateGuiaDTO, DOMAIN.Entities.RemiteTransportistum>();
             CreateMap<RemiteTransportistaUpdateDTO, DOMAIN.Entities.RemiteTransportistum>();
 
-            //Proveedor
-            CreateMap<DOMAIN.Entities.Proveedor, ProveedorDTO>()
-                .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))
-                .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
-                .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
-                ;
-            CreateMap<DOMAIN.Entities.Proveedor, ProveedorListDTO>();
-            CreateMap<ProveedorCreateDTO, DOMAIN.Entities.Proveedor>();
-            CreateMap<ProveedorCreateGuiaDTO, DOMAIN.Entities.Proveedor>();
-            CreateMap<ProveedorUpdateDTO, DOMAIN.Entities.Proveedor>();
+
             //Productos
             CreateMap<DOMAIN.Entities.GuiaDetalle, ProductosDTO>()
                 .ForMember(dest => dest.DescripcionUM, opt => opt.MapFrom(src => src.CodigoUmNavigation.Descripcion));
             CreateMap<ProductosCreateDTO, DOMAIN.Entities.GuiaDetalle>();
-            //Conductor
-            CreateMap<DOMAIN.Entities.Conductor, ConductorDTO>();
-            CreateMap<DOMAIN.Entities.Conductor, ConductorListDTO>();
-            CreateMap<ConductorCreateDTO, DOMAIN.Entities.Conductor>()
-                .ForMember(dest => dest.Nombres, opt => opt.MapFrom(src => src.Nombres.ToUpper()))
-                .ForMember(dest => dest.Apellidos, opt => opt.MapFrom(src => src.Apellidos.ToUpper()))
-                .ForMember(dest => dest.Cargo, opt => opt.MapFrom(src => src.Cargo.ToUpper()));
-            CreateMap<ConductorUpdateDTO, DOMAIN.Entities.Conductor>();
-
-            //Unidad de transporte
-            CreateMap<DOMAIN.Entities.UnidadTransporte, UnidadTransporteDTO>();
-            CreateMap<DOMAIN.Entities.UnidadTransporte, UnidadTransporteListDTO>();
-            CreateMap<UnidadTransporteCreateDTO, DOMAIN.Entities.UnidadTransporte>();
-            CreateMap<UnidadTransporteUpdateDTO, DOMAIN.Entities.UnidadTransporte>();
+            
 
             //Ubicación origen
             CreateMap<DOMAIN.Entities.Origen, OrigenDTO>()

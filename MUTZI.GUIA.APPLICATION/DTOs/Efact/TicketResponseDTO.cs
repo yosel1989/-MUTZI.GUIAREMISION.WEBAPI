@@ -79,6 +79,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         public string Detalle { get; set; } = "Registro eliminado exitosamente.";
     }
     [SwaggerSchema("Respuesta para una actualización de estado de un registro en la bbdd")]
+
+
     public class UpdatedStatusDto
     {
         [JsonPropertyName("id")]

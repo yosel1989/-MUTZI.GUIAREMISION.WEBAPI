@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Transporte;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
+using MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services;
+using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -18,21 +20,24 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             _service = service;
         }
+
         [HttpGet]
         [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
-        Summary = "Listar Unidad de Transporte",
-        Description = "Lista las unidades de transporte. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
-        OperationId = "listar_transporte")]
+            Summary = "Listar Unidad de Transporte",
+            Description = "Lista las unidades de transporte. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
+            OperationId = "listar_unidad_transporte"
+        )]
+        [Permission("listar_unidad_transporte")]
         [ProducesResponseType(typeof(PagedResult<UnidadTransporteDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<UnidadTransporteDTO>>> GetAll(int pageNumber, int pageSize)
+        public async Task<ActionResult<PagedResult<UnidadTransporteDTO>>> GetAll(int pageNumber, int pageSize, [FromQuery] string? search)
         {
             try
             {
                 var q = Request.Query;
-                var result = await _service.GetListAsync(pageNumber, pageSize, q);
+                var result = await _service.GetListAsync(pageNumber, pageSize, search);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -45,12 +50,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpGet]
         [Route("listar-sugerido")]
         [SwaggerOperation(
-        Summary = "Listar unidades de transportes sugeridos",
-        Description = "Lista las unidades de transporte sugeridos por número de documento o razón social",
-        OperationId = "listar_transporte_sugerido")]
+            Summary = "Listar unidades de transportes sugeridos",
+            Description = "Lista las unidades de transporte sugeridos por número de documento o razón social",
+            OperationId = "listar_unidad_transporte_sugerido"
+        )]
+        [Permission("listar_unidad_transporte_sugerido")]
         [ProducesResponseType(typeof(UnidadTransporteListDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -71,12 +79,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpGet]
         [Route("buscar-por-id/{id}")]
         [SwaggerOperation(
-        Summary = "Buscar unidad de transporte por ID",
-        Description = "Buscar objeto por transporteID",
-        OperationId = "buscar_transporte_por_id")]
+            Summary = "Buscar unidad de transporte por ID",
+            Description = "Buscar objeto por transporteID",
+            OperationId = "buscar_unidad_transporte_por_id"
+        )]
+        [Permission("buscar_unidad_transporte_por_id")]
         [ProducesResponseType(typeof(UnidadTransporteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -108,9 +119,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 
         [HttpPost]
         [SwaggerOperation(
-        Summary = "Registrar unidad de transporte",
-        Description = "Registra una unidad de transporte en la bbdd",
-        OperationId = "registrar_transporte")]
+            Summary = "Registrar unidad de transporte",
+            Description = "Registra una unidad de transporte en la bbdd",
+            OperationId = "registrar_unidad_transporte"
+        )]
+        [Permission("registrar_unidad_transporte")]
         [ProducesResponseType(typeof(CreatedDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -131,12 +144,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpPut]
         [Route("{id}")]
         [SwaggerOperation(
-        Summary = "Actualizar unidad de transporte",
-        Description = "Actualiza la tabla transporte en la bbdd",
-        OperationId = "actualizar_transporte")]
+            Summary = "Actualizar unidad de transporte",
+            Description = "Actualiza la tabla transporte en la bbdd",
+            OperationId = "editar_unidad_transporte"
+        )]
+        [Permission("editar_unidad_transporte")]
         [ProducesResponseType(typeof(UnidadTransporteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -157,12 +173,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpDelete]
         [Route("{id}")]
         [SwaggerOperation(
-        Summary = "Eliminar unidad de transporte",
-        Description = "Elimina una unidad de transporte de la bbdd",
-        OperationId = "eliminar_transporte")]
+            Summary = "Eliminar unidad de transporte",
+            Description = "Elimina una unidad de transporte de la bbdd",
+            OperationId = "eliminar_unidad_transporte"
+        )]
+        [Permission("eliminar_unidad_transporte")]
         [ProducesResponseType(typeof(DeletedDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -183,16 +202,19 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpPut]
         [Route("{id}/actualizar-estado")]
         [SwaggerOperation(
-        Summary = "Actualizar estado de una unidad de transporte",
-        Description = "Actualizar el estado de una unidad de transporte en la bbdd. 1='activo', 0='inactivo'.",
-        OperationId = "actualizar_estado_transporte")]
-        [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
+            Summary = "Actualizar estado de una unidad de transporte",
+            Description = "Actualizar el estado de una unidad de transporte en la bbdd. 1='activo', 0='inactivo'.",
+            OperationId = "editar_estado_unidad_transporte"
+        )]
+        [Permission("editar_estado_unidad_transporte")]
+        [ProducesResponseType(typeof(EstadoActualizadoResponseDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CambiarEstado(int id, [FromBody] InfoRequestDTO infoRequestDto)
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] EstadoActualizadoRequestDTO infoRequestDto)
         {
             try
             {

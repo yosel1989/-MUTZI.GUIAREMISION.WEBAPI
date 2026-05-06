@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
-using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
@@ -11,11 +11,17 @@ namespace MUTZI.GUIA.APPLICATION.Services
     public class EstablecimientoService : IEstablecimientoService
     {
         private readonly IEstablecimientoRepository _repository;
+        private readonly IAuthService _authService;
         private readonly IMapper _mapper;
-        public EstablecimientoService(IEstablecimientoRepository repository, IMapper mapper)
+        public EstablecimientoService(
+            IEstablecimientoRepository repository,
+            IMapper mapper,
+            IAuthService authService
+        )
         {
             _repository = repository;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<List<EstablecimientoListDTO>> GetAllByRucToSelectAsync(string ruc)
         {
@@ -54,8 +60,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             await _repository.DeleteAsync(id);
         }
 
-        public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
+        public async Task<EstadoActualizadoResponseDTO> CambiarEstadoAsync(int id, EstadoActualizadoRequestDTO infoRequestDto)
         {
+            var currentUser = _authService.CurrentUser();
             string _status = infoRequestDto.IdEstado switch
             {
                 1 => "activo",
@@ -69,28 +76,25 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
             existing.Estado = _status;
             existing.IdEstado = (sbyte)infoRequestDto.IdEstado;
-            existing.EmpleadoIdedicion = infoRequestDto.EditedEmployeeId;
-            existing.EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName;
-            await _repository.UpdateAsync(existing);
+            existing.UsuarioModifico = currentUser.UserName;
+            existing.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
+            existing.FechaModifico = DateTime.UtcNow;
+            var establecimientoActualizado = await _repository.UpdateAsync(existing);
 
-            return new UpdatedStatusDto
-            {
-                Id = existing.EstablecimientoId,
-                IdEstado = Convert.ToInt32(existing.IdEstado),
-                Estado = existing.Estado,
-                FechaEdicion = existing.FechaEdicion,
-                EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
-                Detalle = $"Establecimiento con ID {existing.EstablecimientoId} ha sido actualizado a estado '{existing.Estado}'."
-            };
+            return _mapper.Map<EstadoActualizadoResponseDTO>(establecimientoActualizado);
         }
 
         public async Task<int> CreateAsync(EstablecimientoCreateDTO createDTO)
         {
+            var currentUser = _authService.CurrentUser();
             var existe = await _repository.GetBySerieAsync(createDTO.Ruc, createDTO.Serie);
             if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
             try
             {
                 var establecimiento = _mapper.Map<Establecimiento>(createDTO);
+                establecimiento.UsuarioRegistro = currentUser.UserName;
+                establecimiento.UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
+                establecimiento.FechaRegistro = DateTime.UtcNow;
                 await _repository.CreateAsync(establecimiento);
                 return establecimiento.EstablecimientoId;
             }
@@ -106,6 +110,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         {
             try
             {
+                var currentUser = _authService.CurrentUser();
                 var existingEstablecimiento = await _repository.GetByIdAsync(id);
                 if (existingEstablecimiento == null)
                 {
@@ -117,6 +122,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
                 }
                 var establecimientoDomain = _mapper.Map(updateDTO, existingEstablecimiento);
+                establecimientoDomain.UsuarioModifico = currentUser.UserName;
+                establecimientoDomain.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
+                establecimientoDomain.FechaModifico = DateTime.UtcNow;
                 var establecimientoActualizado = await _repository.UpdateAsync(establecimientoDomain);
                 return _mapper.Map<EstablecimientoDTO>(establecimientoActualizado);
             }

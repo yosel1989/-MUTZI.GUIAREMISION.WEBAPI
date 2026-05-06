@@ -7,7 +7,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities;
 public partial class Establecimiento
 {
     [Key]
-    [Column("establecimientoID")]
+    [Column("establecimiento_id")]
     public int EstablecimientoId { get; set; }
 
     [Column("ruc")]
@@ -16,7 +16,7 @@ public partial class Establecimiento
     [Column("descripcion")]
     public string Descripcion { get; set; } = null!;
 
-    [Column("ubigeoID")]
+    [Column("ubigeo_id")]
     public string UbigeoId { get; set; } = null!;
 
     [Column("direccion")]
@@ -31,31 +31,31 @@ public partial class Establecimiento
     [Column("serie")]
     public string Serie { get; set; } = null!;
 
-    [Column("codigoSunat")]
+    [Column("codigo_sunat")]
     public string CodigoSunat { get; set; }
 
-    [Column("fechaCreacion")]
-    public DateTime FechaCreacion { get; set; } = DateTime.UtcNow;
+    [Column("fecha_registro")]
+    public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
 
-    [Column("fechaEdicion")]
-    public DateTime? FechaEdicion { get; set; }
+    [Column("fecha_modifico")]
+    public DateTime? FechaModifico { get; set; }
 
-    [Column("empleadoIDCreacion")]
-    public int EmpleadoIdcreacion { get; set; }
+    [Column("usuario_registro")]
+    public string UsuarioRegistro { get; set; }
 
-    [Column("empleadoNombreCreacion")]
-    public string EmpleadoNombreCreacion { get; set; }
+    [Column("usuario_registro_nombre")]
+    public string UsuarioRegistroNombre { get; set; }
 
-    [Column("empleadoIDEdicion")]
-    public int? EmpleadoIdedicion { get; set; }
+    [Column("usuario_modifico")]
+    public string? UsuarioModifico { get; set; }
 
-    [Column("EmpleadoNombreEdicion")]
-    public string? EmpleadoNombreEdicion { get; set; }
+    [Column("usuario_modifico_nombre")]
+    public string? UsuarioModificoNombre { get; set; }
 
     [Column("estado")]
     public string Estado { get; set; } = "activo"; 
 
-    [Column("idEstado")]
+    [Column("id_estado")]
     public sbyte IdEstado { get; set; } = 1;
 
     [Column("tipo")]

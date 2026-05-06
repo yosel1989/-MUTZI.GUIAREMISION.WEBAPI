@@ -4,12 +4,12 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Swashbuckle.AspNetCore.Annotations;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
+using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {

@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
+using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
+using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -18,21 +20,24 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             _service = service;
         }
+
         [HttpGet]
         [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
-        Summary = "Listar proveedores",
-        Description = "Lista los proveedores. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
-        OperationId = "listar_proveedor")]
+            Summary = "Listar proveedores",
+            Description = "Lista los proveedores. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
+            OperationId = "listar_proveedor"
+        )]
+        [Permission("listar_proveedor")]
         [ProducesResponseType(typeof(PagedResult<ProveedorDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<ProveedorDTO>>> GetAll(int pageNumber, int pageSize)
+        public async Task<ActionResult<PagedResult<ProveedorDTO>>> GetAll(int pageNumber, int pageSize, [FromQuery] string? search)
         {
             try
             {
                 var q = Request.Query;
-                var result = await _service.GetListAsync(pageNumber, pageSize, q);
+                var result = await _service.GetListAsync(pageNumber, pageSize, search);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -45,12 +50,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpGet]
         [Route("listar-sugerido")]
         [SwaggerOperation(
-        Summary = "Listar proveedores sugeridos",
-        Description = "Lista los proveedores sugeridos por número de documento o razón social",
-        OperationId = "listar_proveedor_sugerido")]
+            Summary = "Listar proveedores sugeridos",
+            Description = "Lista los proveedores sugeridos por número de documento o razón social",
+            OperationId = "listar_proveedor_sugerido"
+        )]
+        [Permission("listar_proveedor_sugerido")]
         [ProducesResponseType(typeof(ProveedorListDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -71,12 +79,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpGet]
         [Route("buscar-por-id/{id}")]
         [SwaggerOperation(
-        Summary = "Buscar proveedor por ID",
-        Description = "Buscar objeto por proveedorID",
-        OperationId = "buscar_proveedor_por_id")]
+            Summary = "Buscar proveedor por ID",
+            Description = "Buscar objeto por proveedorID",
+            OperationId = "buscar_proveedor_por_id"
+        )]
+        [Permission("buscar_proveedor_por_id")]
         [ProducesResponseType(typeof(ProveedorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -106,12 +117,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpGet]
         [Route("buscar-por-ruc/{numeroDocumento}")]
         [SwaggerOperation(
-        Summary = "Buscar proveedor por ruc ó número de documento",
-        Description = "Buscar objeto por numeroDocumento del proveedor",
-        OperationId = "buscar_proveedor_por_ruc")]
+            Summary = "Buscar proveedor por ruc ó número de documento",
+            Description = "Buscar objeto por numeroDocumento del proveedor",
+            OperationId = "buscar_proveedor_por_ruc"
+        )]
+        [Permission("buscar_proveedor_por_ruc")]
         [ProducesResponseType(typeof(ProveedorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -140,11 +154,14 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpPost]
         [SwaggerOperation(
-        Summary = "Registrar un proveedor",
-        Description = "Registra un proveedor en la bbdd",
-        OperationId = "registrar_proveedor")]
+            Summary = "Registrar un proveedor",
+            Description = "Registra un proveedor en la bbdd",
+            OperationId = "registrar_proveedor"
+        )]
+        [Permission("registrar_proveedor")]
         [ProducesResponseType(typeof(CreatedDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -165,12 +182,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpPut]
         [Route("{id}")]
         [SwaggerOperation(
-        Summary = "Actualizar un proveedor",
-        Description = "Actualizar proveedor en la bbdd",
-        OperationId = "actualizar_proveedor")]
+            Summary = "Actualizar un proveedor",
+            Description = "Actualizar proveedor en la bbdd",
+            OperationId = "editar_proveedor"
+        )]
+        [Permission("editar_proveedor")]
         [ProducesResponseType(typeof(ProveedorDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -191,12 +211,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpDelete]
         [Route("{id}")]
         [SwaggerOperation(
-        Summary = "Eliminar un proveedor",
-        Description = "Elimina un proveedor de la bbdd",
-        OperationId = "eliminar_proveedor")]
+            Summary = "Eliminar un proveedor",
+            Description = "Elimina un proveedor de la bbdd",
+            OperationId = "eliminar_proveedor"
+        )]
+        [Permission("eliminar_proveedor")]
         [ProducesResponseType(typeof(DeletedDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -217,16 +240,19 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpPut]
         [Route("{id}/actualizar-estado")]
         [SwaggerOperation(
-        Summary = "Actualizar estado de un proveedor",
-        Description = "Actualizar el estado de un proveedor en la bbdd. 1='activo', 0='inactivo'.",
-        OperationId = "actualizar_estado_proveedor")]
+            Summary = "Actualizar estado de un proveedor",
+            Description = "Actualizar el estado de un proveedor en la bbdd. 1='activo', 0='inactivo'.",
+            OperationId = "actualizar_estado_proveedor"
+        )]
+        [Permission("editar_estado_proveedor")]
         [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CambiarEstado(int id, [FromBody] InfoRequestDTO infoRequestDto)
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] EstadoActualizadoRequestDTO infoRequestDto)
         {
             try
             {

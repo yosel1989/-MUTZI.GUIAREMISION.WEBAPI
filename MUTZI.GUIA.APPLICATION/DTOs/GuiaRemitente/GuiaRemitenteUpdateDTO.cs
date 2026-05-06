@@ -1,12 +1,9 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.Helpers;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;

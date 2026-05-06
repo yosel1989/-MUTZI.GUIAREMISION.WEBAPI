@@ -7,22 +7,22 @@ namespace MUTZI.GUIA.DOMAIN.Entities;
 public partial class Proveedor
 {
     [Key]
-    [Column("proveedorID")]
+    [Column("proveedor_id")]
     public int ProveedorId { get; set; }
 
-    [Column("tipoDocumento")]
+    [Column("tipo_documento")]
     [MaxLength(20)]
     public string TipoDocumento { get; set; } = null!;
 
-    [Column("numeroDocumento")]
+    [Column("numero_documento")]
     [MaxLength(20)]
     public string NumeroDocumento { get; set; } = null!;
 
-    [Column("razonSocial")]
+    [Column("razon_social")]
     [MaxLength(250)]
     public string RazonSocial { get; set; } = null!;
 
-    [Column("ubigeoID")]
+    [Column("ubigeo_id")]
     [MaxLength(6)]
     public string? UbigeoId { get; set; }
 
@@ -38,35 +38,33 @@ public partial class Proveedor
     [MaxLength(50)]
     public string? Email { get; set; }
 
-    [Column("codigoSunat")]
+    [Column("codigo_sunat")]
     [MaxLength(4)]
     public string? CodigoSunat { get; set; }
 
-    [Column("fechaCreacion")]
-    public DateTime? FechaCreacion { get; set; }
+    [Column("fecha_registro")]
+    public DateTime? FechaRegistro { get; set; } = DateTime.UtcNow;
 
-    [Column("fechaEdicion")]
-    public DateTime? FechaEdicion { get; set; }
+    [Column("fecha_modifico")]
+    public DateTime? FechaModifico { get; set; }
 
-    [Column("empleadoIDCreacion")]
-    public int? EmpleadoIdcreacion { get; set; }
+    [Column("usuario_registro")]
+    public string UsuarioRegistro { get; set; }
 
-    [Column("empleadoNombreCreacion")]
-    [MaxLength(100)]
-    public string? EmpleadoNombreCreacion { get; set; }
+    [Column("usuario_registro_nombre")]
+    public string UsuarioRegistroNombre { get; set; }
 
-    [Column("empleadoIDEdicion")]
-    public int? EmpleadoIdedicion { get; set; }
+    [Column("usuario_modifico")]
+    public string? UsuarioModifico { get; set; }
 
-    [Column("empleadoNombreEdicion")]
-    [MaxLength(100)]
-    public string? EmpleadoNombreEdicion { get; set; }
+    [Column("usuario_modifico_nombre")]
+    public string? UsuarioModificoNombre { get; set; }
 
     [Column("estado", TypeName = "enum('activo','inactivo)")]
-    public string? Estado { get; set; }
+    public string? Estado { get; set; } = "activo";
 
-    [Column("idEstado")]
-    public sbyte? IdEstado { get; set; }
+    [Column("id_estado")]
+    public sbyte? IdEstado { get; set; } = 1;
 
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 

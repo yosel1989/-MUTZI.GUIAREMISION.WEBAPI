@@ -63,21 +63,5 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]
         [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
         public string? CodigoSunat { get; set; }
-
-        [JsonPropertyName("empleado_id_edicion")]
-        [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = false)]
-        [Required]
-        public int EmpleadoIDEdicion { get; set; }
-
-        [JsonPropertyName("empleado_nombre_edicion")]
-        [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha editado la transacción en el sistema", Nullable = false)]
-        [MaxLength(100)]
-        [Required]
-        public string EmpleadoNombreEdicion { get; set; }
-
-        [JsonPropertyName("tipo")]
-        [SwaggerSchema("Recibe un texto, se coloca el tipo de establecimiento segpun sunat : 'domicilio_fiscal', 'casa_matriz', 'sucursal', 'agencia', 'local_comercial', 'sede_productiva', 'almacen', 'oficina_administrativa'", Nullable = true)]
-        [MaxLength(100)]
-        public string Tipo { get; set; }
     }
 }

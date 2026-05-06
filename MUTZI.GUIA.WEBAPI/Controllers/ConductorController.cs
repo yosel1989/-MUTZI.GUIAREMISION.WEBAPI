@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs.Conductor;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
-    [Route("[controller]")]
+    [Route("conductores")]
     [ApiController]
     [Authorize]
     public class ConductorController : ControllerBase
@@ -31,12 +32,12 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(PagedResult<ConductorDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<ConductorDTO>>> GetAll(int pageNumber, int pageSize)
+        public async Task<ActionResult<PagedResult<ConductorDTO>>> GetAll(int pageNumber, int pageSize, [FromQuery] string? search)
         {
             try
             {
                 var q = Request.Query;
-                var result = await _service.GetListAsync(pageNumber, pageSize, q);
+                var result = await _service.GetListAsync(pageNumber, pageSize, search);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -244,10 +245,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "actualizar_estado_conductor"
         )]
         [Permission("editar_estado_conductor")]
-        [ProducesResponseType(typeof(UpdatedStatusDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EstadoActualizadoResponseDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CambiarEstado(int id, [FromBody] InfoRequestDTO infoRequestDto)
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] EstadoActualizadoRequestDTO infoRequestDto)
         {
             try
             {

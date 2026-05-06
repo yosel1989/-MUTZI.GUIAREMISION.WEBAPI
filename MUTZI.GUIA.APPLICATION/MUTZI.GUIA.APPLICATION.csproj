@@ -23,8 +23,4 @@
     <ProjectReference Include="..\MUTZI.GUIA.DOMAIN\MUTZI.GUIA.DOMAIN.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\GuiaRemitente\Conductor\" />
-  </ItemGroup>
-
 </Project>

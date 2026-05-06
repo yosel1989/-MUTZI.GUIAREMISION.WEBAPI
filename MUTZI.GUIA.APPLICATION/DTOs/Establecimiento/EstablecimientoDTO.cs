@@ -40,23 +40,23 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("codigo_sunat")]
         public string? CodigoSunat { get; set; }
 
-        [JsonPropertyName("fecha_creacion")]
-        public DateTime? FechaCreacion { get; set; }
+        [JsonPropertyName("fecha_registro")]
+        public DateTime? FechaRegistro { get; set; }
 
-        [JsonPropertyName("fecha_edicion")]
-        public DateTime? FechaEdicion { get; set; }
+        [JsonPropertyName("fecha_modifico")]
+        public DateTime? FechaModifico { get; set; }
 
-        [JsonPropertyName("empleado_id_creacion")]
-        public int? EmpleadoIdcreacion { get; set; }
+        [JsonPropertyName("usuario_registro")]
+        public string UsuarioRegistro { get; set; }
 
-        [JsonPropertyName("empleado_nombre_creacion")]
-        public string? EmpleadoNombreCreacion { get; set; }
+        [JsonPropertyName("usuario_registro_nombre")]
+        public string UsuarioRegistroNombre { get; set; }
 
-        [JsonPropertyName("empleado_id_edicion")]
-        public int? EmpleadoIdedicion { get; set; }
+        [JsonPropertyName("usuario_modifico")]
+        public string? UsuarioModifico { get; set; }
 
-        [JsonPropertyName("empleado_nombre_edicion")]
-        public string? EmpleadoNombreEdicion { get; set; }
+        [JsonPropertyName("usuario_modifico_nombre")]
+        public string? UsuarioModificoNombre { get; set; }
 
         [JsonPropertyName("estado")]
         public string? Estado { get; set; }

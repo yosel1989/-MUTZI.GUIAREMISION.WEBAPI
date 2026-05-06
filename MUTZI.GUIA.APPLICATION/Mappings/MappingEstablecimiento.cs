@@ -1,5 +1,6 @@
-﻿using MUTZI.GUIA.DOMAIN.Entities;
-using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Mappings
 {
@@ -28,6 +29,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))
                 .ForMember(dest => dest.RazonSocial, opt => opt.MapFrom(src => src.RucNavigation.Empresa));
+
+            CreateMap<Establecimiento, EstadoActualizadoResponseDTO>()
+                .ForMember(dest => dest.Detalle, opt => opt.MapFrom(src => $"Establecimiento con ID {src.EstablecimientoId} ha sido actualizado a estado '{src.Estado}'."));
         }
     }
 }

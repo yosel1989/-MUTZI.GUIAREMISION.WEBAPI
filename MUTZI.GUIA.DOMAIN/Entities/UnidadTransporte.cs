@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("unidadTransporte")]
+[Table("unidad_transporte")]
 public class UnidadTransporte
 {
     [Key]
-    [Column("transporteID")]
-    public int TransporteId { get; set; }
+    [Column("unidad_transporte_id")]
+    public int UnidadTransporteId { get; set; }
 
     [Column("descripcion")]
     [MaxLength(50)]
@@ -30,46 +30,46 @@ public class UnidadTransporte
     [MaxLength(20)]
     public string? Tarjeta { get; set; }
 
-    [Column("codEmisorVehicular")]
+    [Column("cod_emisor_vehicular")]
     [MaxLength(2)]
     public string? CodEmisorVehicular { get; set; }
 
-    [Column("emisorVehicular")]
+    [Column("emisor_vehicular")]
     [MaxLength(100)]
     public string? EmisorVehicular { get; set; }
 
-    [Column("nroAutorizacion")]
+    [Column("nro_autorizacion")]
     [MaxLength(50)]
     public string? NroAutorizacion { get; set; }
 
-    [Column("tipo")]
+    [Column("tipo", TypeName = "enum('interno','externo')")]
     [MaxLength(20)]
-    public string? Tipo { get; set; }
+    public string? Tipo { get; set; } = "interno";
 
-    [Column("fechaCreacion")]
-    public DateTime? FechaCreacion { get; set; } = DateTime.UtcNow;
+    [Column("fecha_registro")]
+    public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
 
-    [Column("fechaEdicion")]
-    public DateTime? FechaEdicion { get; set; }
+    [Column("fecha_modifico")]
+    public DateTime? FechaModifico { get; set; }
 
-    [Column("empleadoIDCreacion")]
-    public int? EmpleadoIdcreacion { get; set; }
+    [Column("usuario_registro")]
+    public string UsuarioRegistro { get; set; }
 
-    [Column("empleadoNombreCreacion")]
-    [MaxLength(100)]
-    public string? EmpleadoNombreCreacion { get; set; }
+    [Column("usuario_registro_nombre")]
+    [MaxLength(150)]
+    public string UsuarioRegistroNombre { get; set; }
 
-    [Column("empleadoIDEdicion")]
-    public int? EmpleadoIdedicion { get; set; }
+    [Column("usuario_modifico")]
+    public string? UsuarioModifico { get; set; }
 
-    [Column("empleadoNombreEdicion")]
-    [MaxLength(100)]
-    public string? EmpleadoNombreEdicion { get; set; }
+    [Column("usuario_modifico_nombre")]
+    [MaxLength(150)]
+    public string? UsuarioModificoNombre { get; set; }
 
     [Column("estado", TypeName = "enum('activo','inactivo')")]
     public string? Estado { get; set; } = "activo";
 
-    [Column("idEstado")]
+    [Column("id_estado")]
     public sbyte? IdEstado { get; set; } = 1;
 
     public virtual ICollection<UnidadTransporteGuid> TransporteGuids { get; set; } = new List<UnidadTransporteGuid>();

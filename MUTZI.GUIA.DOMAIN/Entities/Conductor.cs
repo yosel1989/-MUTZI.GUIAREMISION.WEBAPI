@@ -12,7 +12,7 @@ public partial class Conductor
 
     [Column("tipo_documento")]
     [MaxLength(20)]
-    public string? TipoDocumento { get; set; }
+    public string TipoDocumento { get; set; }
 
     [Column("numero_documento")]
     [MaxLength(15)]
@@ -61,10 +61,10 @@ public partial class Conductor
     public string? UsuarioModificoNombre { get; set; }
 
     [Column("estado")]
-    public string? Estado { get; set; } = "activo";
+    public string Estado { get; set; } = "activo";
 
     [Column("id_estado")]
-    public sbyte? IdEstado { get; set; } = 1;
+    public sbyte IdEstado { get; set; } = 1;
 
     public virtual ICollection<ConductorGuid> ConductorGuids { get; set; } = new List<ConductorGuid>();
 }

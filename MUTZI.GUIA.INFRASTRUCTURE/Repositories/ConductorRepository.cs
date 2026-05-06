@@ -1,8 +1,8 @@
-﻿using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
+using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -13,80 +13,140 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             _context = context;
         }
-        public async Task<List<DOMAIN.Entities.Conductor>> GetAllAsync()
+        public async Task<List<Conductor>> GetAllAsync()
         {
-            return await _context.Conductors.ToListAsync();
+            try
+            {
+                var conductor = await _context.Conductors.ToListAsync();
+                return conductor;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
         }
         public async Task<List<Conductor>> GetListBySuggestion(string numeroDoc)
         {
-            var query = _context.Conductors.Where(c => c.IdEstado == 1);
-            if (!string.IsNullOrEmpty(numeroDoc))
+            try
             {
-                query=query.Where(c =>
-                    c.NumeroDocumento.Contains(numeroDoc) ||
-                    c.Nombres.Contains(numeroDoc) ||
-                    c.Apellidos.Contains(numeroDoc));
-            }
-            return await query.ToListAsync();
-        }
-        public async Task<(List<Conductor>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
-        {
-            var query=_context.Conductors.AsQueryable();
-            if (request.Columns!=null&&request.Columns.Any())
-            {
-                var val = request.Columns[0].Search.Value?.ToLower();
-                var key = request.Columns[0].Data?.ToLower();
-                if (!string.IsNullOrEmpty(val))
+                var query = _context.Conductors.Where(c => c.IdEstado == 1);
+                if (!string.IsNullOrEmpty(numeroDoc))
                 {
-                    query = query.Where(x => x.TipoDocumento.ToLower().Contains(val)||
-                        x.NumeroDocumento.ToLower().Contains(val)||
-                        x.Nombres.ToLower().Contains(val)|| 
-                        x.Apellidos.ToLower().Contains(val)||
-                        x.Cargo.ToLower().Contains(val)|| 
-                        x.Licencia.ToLower().Contains(val)||
-                        x.UsuarioRegistroNombre.ToLower().Contains(val)||
-                        x.Estado.ToLower().Contains(val)||
+                    query = query.Where(c =>
+                        c.NumeroDocumento.Contains(numeroDoc) ||
+                        c.Nombres.Contains(numeroDoc) ||
+                        c.Apellidos.Contains(numeroDoc));
+                }
+                return await query.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public async Task<(List<Conductor>, int)> GetListAsync(int pageNumber, int pageSize, string? search)
+        {
+            try
+            {
+                var query = _context.Conductors.AsQueryable();
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    var val = search.ToLower().Trim();
+                    query = query.Where(x => x.TipoDocumento.ToLower().Contains(val) ||
+                        x.NumeroDocumento.ToLower().Contains(val) ||
+                        x.Nombres.ToLower().Contains(val) ||
+                        x.Apellidos.ToLower().Contains(val) ||
+                        x.Cargo.ToLower().Contains(val) ||
+                        x.Licencia.ToLower().Contains(val) ||
+                        x.UsuarioRegistroNombre.ToLower().Contains(val) ||
+                        x.Estado.ToLower().Contains(val) ||
                         x.UsuarioModificoNombre.ToLower().Contains(val)
                     );
                 }
-            }
-            //var query = _context.Conductors.OrderByDescending(x=>x.FechaRegistro);
-            var totalRecords=await query.CountAsync();
-            var data = await query
-                .OrderByDescending(x=>x.FechaRegistro)
-                .Skip((pageNumber - 1) * pageSize)
-                .AsNoTracking()
-                .Take(pageSize)
-                .ToListAsync();
 
-            return (data, totalRecords);
+                //var query = _context.Conductors.OrderByDescending(x=>x.FechaRegistro);
+                var totalRecords = await query.CountAsync();
+                var data = await query
+                    .OrderByDescending(x => x.FechaRegistro)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .AsNoTracking()
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                return (data, totalRecords);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
-        public async Task<DOMAIN.Entities.Conductor?> GetByIdAsync(int id)
+        public async Task<Conductor?> GetByIdAsync(int id)
         {
-            return await _context.Conductors.FirstOrDefaultAsync(c => c.ConductorId == id);
+            try
+            {
+                var conductor = await _context.Conductors.FirstOrDefaultAsync(c => c.ConductorId == id);
+                return conductor;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
         public async Task<Conductor?> GetByNumeroDocumentoAsync(string numeroDocumento)
         {
-            return await _context.Conductors.FirstOrDefaultAsync(c => c.NumeroDocumento == numeroDocumento);
+            try
+            {
+                var conductor = await _context.Conductors.FirstOrDefaultAsync(c => c.NumeroDocumento == numeroDocumento);
+                return conductor;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
         public async Task CreateAsync(Conductor conductor)
         {
-            await _context.Conductors.AddAsync(conductor);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Conductors.AddAsync(conductor);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
-        public async Task UpdateAsync(DOMAIN.Entities.Conductor conductor)
+        public async Task<Conductor> UpdateAsync(Conductor conductor)
         {
-            _context.Conductors.Update(conductor);
-            conductor.FechaModifico = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Conductors.Update(conductor);
+                conductor.FechaModifico = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+                await _context.Entry(conductor).ReloadAsync();
+                return conductor;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
         public async Task DeleteAsync(int id)
         {
-            var conductor = await _context.Conductors.FindAsync(id);
-            if (conductor != null)
+            try
             {
-                _context.Conductors.Remove(conductor);
-                await _context.SaveChangesAsync();
+                var conductor = await _context.Conductors.FindAsync(id);
+                if (conductor != null)
+                {
+                    _context.Conductors.Remove(conductor);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
             }
         }
     }

@@ -1,14 +1,12 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+using MUTZI.GUIA.APPLICATION.DTOs.Conductor;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente.Conductor;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.DOMAIN.Entities;
-using Org.BouncyCastle.Asn1.Ocsp;
+using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
 namespace MUTZI.GUIA.APPLICATION.Services
 {
@@ -33,22 +31,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
             var conductors = await _repository.GetListBySuggestion(numeroDoc);
             return _mapper.Map<List<ConductorListDTO>>(conductors);
         }
-        public async Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
+        public async Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize, string? search)
         {
-            var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
-            var searchValue = q[$"columns[{0}][search][value]"];
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                request.Columns.Add(new RequestFiltroDTO
-                {
-                    Data = q[$"columns[{0}][data]"],
-                    Search = new SearchDTO
-                    {
-                        Value = searchValue
-                    }
-                });
-            }
-            var (conductor, totalRecords)=await _repository.GetListAsync(pageNumber, pageSize, request);
+
+            var (conductor, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize, search);
             var conductorDTO = _mapper.Map<List<ConductorDTO>>(conductor);
             return new PagedResult<ConductorDTO>
             {
@@ -75,6 +61,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 var currentUser = _authService.CurrentUser();
                 var conductor = _mapper.Map<Conductor>(createDTO);
+                conductor.UsuarioRegistro = currentUser.UserName;
+                conductor.UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
+                conductor.FechaRegistro = DateTime.UtcNow;
                 await _repository.CreateAsync(conductor);
                 return conductor.ConductorId;
             }
@@ -98,10 +87,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 }
                 _mapper.Map(updateDTO, existingConductor);
                 existingConductor.UsuarioModifico = currentUser.UserName;
-                existingConductor.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+                existingConductor.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
                 existingConductor.FechaModifico = DateTime.UtcNow;
-                await _repository.UpdateAsync(existingConductor);
-                return _mapper.Map<ConductorDTO>(existingConductor);
+
+                var conductorActualizado = await _repository.UpdateAsync(existingConductor);
+                return _mapper.Map<ConductorDTO>(conductorActualizado);
             }
             catch (Exception ex)
             {
@@ -124,37 +114,36 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 throw new Exception(msg);
             }
         }
-        public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
+        public async Task<EstadoActualizadoResponseDTO> CambiarEstadoAsync(int id, EstadoActualizadoRequestDTO infoRequestDto)
         {
-            var currentUser = _authService.CurrentUser();
+            try
+            {
+                var currentUser = _authService.CurrentUser();
 
-            string _status = infoRequestDto.IdEstado switch
-            {
-                1 => "activo",
-                0 => "inactivo",
-                _ => throw new KeyNotFoundException("El nuevo estado solo acepta valores de '0' ó '1'"),
-            };
-            var existing = await _repository.GetByIdAsync(id);
-            if (existing == null)
-            {
-                throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
+                string _status = infoRequestDto.IdEstado switch
+                {
+                    1 => "activo",
+                    0 => "inactivo",
+                    _ => throw new KeyNotFoundException("El nuevo estado solo acepta valores de '0' ó '1'"),
+                };
+                var existing = await _repository.GetByIdAsync(id);
+                if (existing == null)
+                {
+                    throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
+                }
+                existing.Estado = _status;
+                existing.IdEstado = (sbyte)infoRequestDto.IdEstado;
+                existing.UsuarioModifico = currentUser.UserName;
+                existing.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
+                existing.FechaModifico = DateTime.UtcNow;
+                var conductorActualizado = await _repository.UpdateAsync(existing);
+
+                return _mapper.Map<EstadoActualizadoResponseDTO>(conductorActualizado);
             }
-            existing.Estado = _status;
-            existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
-            existing.UsuarioModifico = currentUser.UserName;
-            existing.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-            existing.FechaModifico = DateTime.UtcNow;
-            await _repository.UpdateAsync(existing);
-
-            return new UpdatedStatusDto
+            catch (Exception ex)
             {
-                Id = existing.ConductorId,
-                IdEstado = Convert.ToInt32(existing.IdEstado),
-                Estado = existing.Estado,
-                FechaEdicion = existing.FechaModifico,
-                EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
-                Detalle = $"Conductor con ID {existing.ConductorId} ha sido actualizado a estado '{existing.Estado}'."
-            };
+                throw;
+            }
         }
     }
 }

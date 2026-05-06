@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
-using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Proveedor;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor
 {
@@ -9,12 +8,12 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor
     {
         Task<List<ProveedorDTO>> GetAllAsync();
         Task<List<ProveedorListDTO>> GetListBySuggestion(string numeroDoc);
-        Task<PagedResult<ProveedorDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q);
+        Task<PagedResult<ProveedorDTO>> GetListAsync(int pageNumber, int pageSize, string? search);
         Task<ProveedorDTO?> GetByIdAsync(int id);
         Task<ProveedorDTO?> GetByNumeroDocumentoAsync(string numeroDocumento);
         Task<int> CreateAsync(ProveedorCreateDTO createDTO);
         Task<ProveedorDTO> UpdateAsync(int id, ProveedorUpdateDTO updateDTO);
         Task DeleteAsync(int id);
-        Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto);
+        Task<EstadoActualizadoResponseDTO> CambiarEstadoAsync(int id, EstadoActualizadoRequestDTO infoRequestDto);
     }
 }

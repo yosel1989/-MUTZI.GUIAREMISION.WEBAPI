@@ -1,5 +1,5 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Conductor;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.Conductor;
+using MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;

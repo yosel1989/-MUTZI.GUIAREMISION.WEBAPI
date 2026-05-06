@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.UnidadTransporte;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Transportista
