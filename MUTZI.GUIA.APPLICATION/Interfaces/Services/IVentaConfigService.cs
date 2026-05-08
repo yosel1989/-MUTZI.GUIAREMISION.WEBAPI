@@ -1,7 +1,7 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.VentaConfig;
 
-namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig
+namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
 {
     public interface IVentaConfigService
     {

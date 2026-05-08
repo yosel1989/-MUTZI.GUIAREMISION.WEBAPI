@@ -1,15 +1,10 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
+namespace MUTZI.GUIA.APPLICATION.DTOs.Transportista
 {
-    public class RemiteTransportistaCreateGuiaDTO
+    public class TransportistaCreateGuiaDTO
     {
         [JsonPropertyName("remite_transportista_id")]
         [SwaggerSchema("Recibe un entero, aquí se coloca el ID del remite_transportista que se va a asociar a la guía de remisión TRANSPORTISTA.", Nullable = false)]

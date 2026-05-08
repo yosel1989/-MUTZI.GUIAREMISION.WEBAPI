@@ -43,7 +43,7 @@ public partial class DatosEnvio
     public sbyte? IndicadorVehiculoConductor { get; set; } = 0;
 
     [ForeignKey(nameof(CodigoUm))]
-    public virtual UnidadMedidum CodigoUmNavigation { get; set; } = null!;
+    public virtual UnidadMedida CodigoUmNavigation { get; set; } = null!;
 
     [ForeignKey(nameof(GuiaId))]
     public virtual GuiaRemision Guia { get; set; } = null!;

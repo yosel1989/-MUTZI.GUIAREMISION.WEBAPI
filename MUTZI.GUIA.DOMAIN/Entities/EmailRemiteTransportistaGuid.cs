@@ -24,5 +24,5 @@ public partial class EmailRemiteTransportistaGuid
     public virtual GuiaRemision Guia { get; set; } = null!;
 
     [ForeignKey(nameof(RemiteTransportistaId))]
-    public virtual RemiteTransportistum RemiteTransportista { get; set; } = null!;
+    public virtual Transportista RemiteTransportista { get; set; } = null!;
 }

@@ -10,9 +10,7 @@ using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Hubs;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Transportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Ubigeo;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento;
@@ -21,20 +19,14 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Proveedor;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.Transportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Ubigeo;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Mappings;
 using MUTZI.GUIA.APPLICATION.Services;
 using MUTZI.GUIA.APPLICATION.Services.Catalogos;
 using MUTZI.GUIA.APPLICATION.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Services.Envio;
-using MUTZI.GUIA.APPLICATION.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
-using MUTZI.GUIA.APPLICATION.Services.Transportista;
 using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
-using MUTZI.GUIA.APPLICATION.Services.VentaConfig;
-using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
@@ -49,10 +41,12 @@ builder.Services.AddSingleton<IS3Configuration, S3Configuration>();
 
 
 builder.Services.AddScoped<PermissionFilter>();
-builder.Services.AddControllers(options =>
+builder.Services.AddControllers(
+    options =>
     {
         options.Filters.Add<PermissionFilter>();
-    })
+    }
+)
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.Converters.Add(new Conversion.PeruTimeZoneConverter());
@@ -94,7 +88,8 @@ builder.Services.AddAutoMapper(typeof(MappingPerfil).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingPerfilPermiso).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingPermiso).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingConductor).Assembly);
-builder.Services.AddAutoMapper(typeof(UnidadTransporte).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingUnidadTransporte).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingTransportista).Assembly);
 
 builder.Services.AddSignalR();
 

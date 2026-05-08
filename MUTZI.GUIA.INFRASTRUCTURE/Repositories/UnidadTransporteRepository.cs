@@ -17,7 +17,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var data = await _context.UnidadTransportes.ToListAsync();
+                var data = await _context.UnidadTransporte.ToListAsync();
                 return data;
             }
             catch (Exception ex)
@@ -30,7 +30,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.UnidadTransportes.Where(c => c.IdEstado == 1);
+                var query = _context.UnidadTransporte.Where(c => c.IdEstado == 1);
                 if (!string.IsNullOrEmpty(numeroDoc))
                 {
                     query = query.Where(c =>
@@ -52,7 +52,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.UnidadTransportes.AsQueryable();
+                var query = _context.UnidadTransporte.AsQueryable();
                 if (!string.IsNullOrEmpty(search))
                 {
                     var val = search.ToLower().Trim();
@@ -90,7 +90,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var unidadTransporte = await _context.UnidadTransportes.FirstOrDefaultAsync(t => t.UnidadTransporteId == id);
+                var unidadTransporte = await _context.UnidadTransporte.FirstOrDefaultAsync(t => t.UnidadTransporteId == id);
                 return unidadTransporte;
             }
             catch (Exception ex)
@@ -103,7 +103,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                await _context.UnidadTransportes.AddAsync(transporte);
+                await _context.UnidadTransporte.AddAsync(transporte);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -115,7 +115,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                _context.UnidadTransportes.Update(transporte);
+                _context.UnidadTransporte.Update(transporte);
                 await _context.SaveChangesAsync();
                 await _context.Entry(transporte).ReloadAsync();
 
@@ -130,10 +130,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var transporte = await _context.UnidadTransportes.FindAsync(id);
+                var transporte = await _context.UnidadTransporte.FindAsync(id);
                 if (transporte != null)
                 {
-                    _context.UnidadTransportes.Remove(transporte);
+                    _context.UnidadTransporte.Remove(transporte);
                     await _context.SaveChangesAsync();
                 }
             }

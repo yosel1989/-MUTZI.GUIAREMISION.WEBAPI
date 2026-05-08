@@ -23,19 +23,25 @@ namespace MUTZI.GUIA.WEBAPI.Filters
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var user = _authService.CurrentUser();
-            var appId = _configuration.GetValue<int>("App:Id");
+            
 
-            // 1. Filtrar perfiles del usuario por IdApp
-            var codigosPerfilesFiltrados = user.Profiles
-                .Where(p => p.IdApp == appId)
-                .Select(p => p.Id) // ⚠️ Este Id corresponde al "Codigo" en la tabla Perfil
-                .ToList();
-
-            // 2. Obtener el único atributo Permission aplicado
             var permissionAttr = context.ActionDescriptor.EndpointMetadata
                 .OfType<PermissionAttribute>()
                 .FirstOrDefault();
+
+            if (permissionAttr == null)
+            {
+                await next();
+                return;
+            }
+
+            var user = _authService.CurrentUser();
+            var appId = _configuration.GetValue<int>("App:Id");
+
+            var codigosPerfilesFiltrados = user.Profiles
+                .Where(p => p.IdApp == appId)
+                .Select(p => p.Id)
+                .ToList();
 
             if (permissionAttr != null)
             {

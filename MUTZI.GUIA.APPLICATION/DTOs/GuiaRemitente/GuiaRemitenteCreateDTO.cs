@@ -1,15 +1,12 @@
 ﻿using MUTZI.GUIA.APPLICATION.Helpers;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
-using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
@@ -59,32 +56,24 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [MaxLength(20)]
         public string? RegistroMTC { get; set; }
 
-        [JsonPropertyName("empleado_id_creacion")]
-        [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = false)]
-        [Required]
-        public int EmpleadoIDCreacion { get; set; }
-
-        [JsonPropertyName("empleado_nombre_creacion")]
-        [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha registrado la transacción en el sistema", Nullable = false)]
-        [MaxLength(100)]
-        [Required]
-        public string EmpleadoNombreCreacion { get; set; }
-
         [JsonPropertyName("doc_relacionado")]
         public List<DocRelacionadoCreateDTO>? DocRelacionado { get; set; }
 
-        [JsonPropertyName("remitente")]
+        [JsonPropertyName("remitente_id")]
         [Required]
-        //public RemitenteCreateDTO Remitente { get; set; }
-        public RemitenteCreateGuiaDTO Remitente { get; set; }
+        public int RemitenteId { get; set; }
 
-        [JsonPropertyName("destinatario")]
+        [JsonPropertyName("destinatario_id")]
         [Required]
-        public DestinatarioCreateGuiaDTO Destinatario { get; set; }
+        public int DestinatarioId { get; set; }
+
+        [JsonPropertyName("destinatario_email")]
+        [Required]
+        public List<string> DestinatarioEmail { get; set; } = new List<string>();
 
         [JsonPropertyName("proveedor")]
         [SwaggerSchema("Recibe un objeto con el ID del proveedor que va a ser asociado a la guía", Nullable = true)]
-        public ProveedorCreateGuiaDTO? Proveedor { get; set; }
+        public int? ProveedorId { get; set; }
         
         [JsonPropertyName("datos_envio")]
         [Required]
@@ -107,15 +96,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
             switch (this.TipoTraslado)
             {
                 case "VENTA":
-                    if (this.Remitente.RemitenteId == this.Destinatario.DestinatarioId)
+                    if (this.RemitenteId == this.DestinatarioId)
                         throw new System.Exception("Si el tipo de traslado es VENTA, el 'Tipo y Número de documento de identidad del destinatario' no puede ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "01";
                 case "COMPRA":
-                    if (this.Remitente.RemitenteId != this.Destinatario.DestinatarioId)
+                    if (this.RemitenteId != this.DestinatarioId)
                         throw new System.Exception("Si el tipo de traslado es COMPRA, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "02";
                 case "TRASLADO":
-                    if (this.Remitente.RemitenteId != this.Destinatario.DestinatarioId)
+                    if (this.RemitenteId != this.DestinatarioId)
                         throw new System.Exception("Si el tipo de traslado es TRASLADO, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "04";
                 default:

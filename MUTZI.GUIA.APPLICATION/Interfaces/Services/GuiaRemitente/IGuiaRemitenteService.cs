@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
+using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
 {
@@ -11,12 +12,11 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
         Task<byte[]> ExportGuiasAsync(int pageNumber, int pageSize, IQueryCollection q);
         Task<object> GetByIdAsync(int id);
         Task<GuiaPorTicketDTO> GetByTicketAsync(string ticket);
-        //Task<GuiaRemitenteDTO> CreateAsync(GuiaRemitenteCreateDTO guiaRemisionDto);
         Task<object> CreateAsync(string ruc, GuiaRemitenteCreateDTO guiaRemisionDto);
         Task<GuiaRemitenteDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto);
         Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado);
-        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO doc, string ruc);
-        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO doc, string ruc);
+        (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO doc, string ruc, Establecimiento? remitente, Establecimiento? destinatario, VentaConfig? ventaConfig);
+        (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO doc, string ruc, Establecimiento? remitente, Establecimiento? destinatario, VentaConfig? ventaConfig);
         Task DeleteAsync(int id);
     }
 }

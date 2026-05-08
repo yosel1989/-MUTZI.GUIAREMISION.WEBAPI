@@ -16,14 +16,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<List<Proveedor>> GetAllAsync()
         {
-            return await _context.Proveedors
+            return await _context.Proveedor
                 .Include(p => p.Ubigeo)
                 .ToListAsync();
         }
 
         public async Task<List<Proveedor>> GetListBySuggestion(string numeroDoc)
         {
-            var query = _context.Proveedors.Where(c => c.IdEstado == 1);
+            var query = _context.Proveedor.Where(c => c.IdEstado == 1);
             if (!string.IsNullOrEmpty(numeroDoc))
             {
                 query = query.Where(c =>
@@ -35,7 +35,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<(List<Proveedor>, int)> GetListAsync(int pageNumber, int pageSize, string? search)
         {
-            var query = _context.Proveedors
+            var query = _context.Proveedor
                 .Include(p => p.Ubigeo)
                 .AsQueryable();
 
@@ -72,27 +72,27 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<Proveedor?> GetByIdAsync(int id)
         {
-            return await _context.Proveedors
+            return await _context.Proveedor
                 .Include(p => p.Ubigeo)
                 .FirstOrDefaultAsync(p => p.ProveedorId == id);
         }
 
         public async Task<Proveedor?> GetByNumeroDocumentoAsync(string numeroDocumento)
         {
-            return await _context.Proveedors
+            return await _context.Proveedor
                 .Include(p => p.Ubigeo)
                 .FirstOrDefaultAsync(p => p.NumeroDocumento == numeroDocumento);
         }
 
         public async Task CreateAsync(Proveedor proveedor)
         {
-            await _context.Proveedors.AddAsync(proveedor);
+            await _context.Proveedor.AddAsync(proveedor);
             await _context.SaveChangesAsync();
         }
 
         public async Task<Proveedor> UpdateAsync(Proveedor proveedor)
         {
-            _context.Proveedors.Update(proveedor);
+            _context.Proveedor.Update(proveedor);
             proveedor.FechaModifico = DateTime.UtcNow;
             await _context.SaveChangesAsync();
             await _context.Entry(proveedor).ReloadAsync();
@@ -102,10 +102,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var proveedor = await _context.Proveedors.FindAsync(id);
+            var proveedor = await _context.Proveedor.FindAsync(id);
             if (proveedor != null)
             {
-                _context.Proveedors.Remove(proveedor);
+                _context.Proveedor.Remove(proveedor);
                 await _context.SaveChangesAsync();
             }
         }

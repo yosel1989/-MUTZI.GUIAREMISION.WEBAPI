@@ -17,7 +17,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<GuiaRemision> GetByIdAsync(int id)
         {
-            return await _context.GuiaRemisions
+            return await _context.GuiaRemision
                 .Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
                 .Include(rt => rt.RemiteTransportista)
@@ -35,24 +35,24 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .ThenInclude(de => de.TransporteGuids)
                         .ThenInclude(tr => tr.Transporte)
                 .Include(det => det.GuiaDetalles)
-                    .ThenInclude(gd => gd.CodigoUmNavigation)
+                    .ThenInclude(gd => gd.UnidadMedida)
                 .Include(doc => doc.DocRelacionados)
                 .Include(e=>e.EmailRemiteTransportistaGuids)
                 .Include(e => e.EmailDestinatarioGuids)
-                .FirstOrDefaultAsync(g => g.GuiaId == id);
-            //?? throw new KeyNotFoundException("Guia de remisión no encontrada");
+                .FirstOrDefaultAsync(g => g.GuiaRemisionId == id);
+            //?? throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
         }
         public async Task<(int GuiaId, string NumeroGuia)> CreateGuiaTransportistaTransactionalAsync(
             Establecimiento remitente,
-            RemiteTransportistum remiteTransportista,
+            Transportista remiteTransportista,
             Establecimiento destinatario,
             List<ConductorGuid> conductor,
             List<UnidadTransporteGuid> transporte,
             GuiaRemision guiaRemision,
             DatosEnvio datosEnvio,
-            Origen origen,
-            List<Destino> destino,
-            List<GuiaDetalle> detalles,
+            GuiaRemisionOrigen origen,
+            List<GuiaRemisionDestino> destino,
+            List<GuiaRemisionDetalle> detalles,
             List<DocRelacionado> docRelacionados,
             List<EmailDestinatarioGuid> emailDestinatarioGuia,
             List<EmailRemiteTransportistaGuid> emailRemiteTransportistas
@@ -66,7 +66,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.RemitenteId = remitente.EstablecimientoId;
                 guiaRemision.Ruc = remitente.Ruc;
                 guiaRemision.DestinatarioId = destinatario.EstablecimientoId;
-                guiaRemision.RemiteTransportistaId = remiteTransportista.RemiteTransportistaId;
+                guiaRemision.RemiteTransportistaId = remiteTransportista.TransportistaId;
                 guiaRemision.Estado = "REGISTRADO";
                 guiaRemision.IdEstado = 0;
 
@@ -74,7 +74,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 string serie = "V" + remitente.Serie.Trim();
 
                 //Buscar el último correlativo para esa serie
-                var lastGuia = await _context.GuiaRemisions
+                var lastGuia = await _context.GuiaRemision
                     .Where(g => g.Serie == serie)
                     .OrderByDescending(g => g.Correlativo)
                     .FirstOrDefaultAsync();
@@ -98,11 +98,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 guiaRemision.TipoGuia = "TRANSPORTISTA";
                 guiaRemision.RespuestaTicket = "REGISTRADO";
-                await _context.GuiaRemisions.AddAsync(guiaRemision);
+                await _context.GuiaRemision.AddAsync(guiaRemision);
                 await _context.SaveChangesAsync();
 
                 // Datos Envío
-                datosEnvio.GuiaId = guiaRemision.GuiaId;
+                datosEnvio.GuiaId = guiaRemision.GuiaRemisionId;
 
                 await _context.DatosEnvios.AddAsync(datosEnvio);
                 await _context.SaveChangesAsync();
@@ -138,7 +138,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     foreach (var doc in docRelacionados)
                     {
-                        doc.GuiaId = guiaRemision.GuiaId;
+                        doc.GuiaId = guiaRemision.GuiaRemisionId;
                         await _context.DocRelacionados.AddAsync(doc);
                     }
                     await _context.SaveChangesAsync();
@@ -148,7 +148,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     foreach (var emailDest in emailDestinatarioGuia)
                     {
-                        emailDest.GuiaId = guiaRemision.GuiaId;
+                        emailDest.GuiaId = guiaRemision.GuiaRemisionId;
                         emailDest.DestinatarioId = destinatario.EstablecimientoId;
                         await _context.EmailDestinatarioGuids.AddAsync(emailDest);
                     }
@@ -160,37 +160,37 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     foreach (var emailRemite in emailRemiteTransportistas)
                     {
-                        emailRemite.GuiaId = guiaRemision.GuiaId;
-                        emailRemite.RemiteTransportistaId = remiteTransportista.RemiteTransportistaId;
+                        emailRemite.GuiaId = guiaRemision.GuiaRemisionId;
+                        emailRemite.RemiteTransportistaId = remiteTransportista.TransportistaId;
                         await _context.EmailRemiteTransportistaGuids.AddAsync(emailRemite);
                     }
                     await _context.SaveChangesAsync();
                 }
 
                 //Origen
-                origen.GuiaId = guiaRemision.GuiaId;
-                await _context.Origens.AddAsync(origen);
+                origen.GuiaId = guiaRemision.GuiaRemisionId;
+                await _context.GuiaRemisionOrigen.AddAsync(origen);
                 await _context.SaveChangesAsync();
 
                 foreach (var dest in destino)
                 {
-                    dest.GuiaId = guiaRemision.GuiaId;
-                    await _context.Destinos.AddAsync(dest);
+                    dest.GuiaId = guiaRemision.GuiaRemisionId;
+                    await _context.GuiaRemisionDestino.AddAsync(dest);
                 }
                 await _context.SaveChangesAsync();
 
                 // Detalles
                 foreach (var detalle in detalles)
                 {
-                    detalle.GuiaId = guiaRemision.GuiaId;
-                    await _context.GuiaDetalles.AddAsync(detalle);
+                    detalle.GuiaId = guiaRemision.GuiaRemisionId;
+                    await _context.GuiaRemisionDetalle.AddAsync(detalle);
                 }
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
 
                 //retornar el ID de la guía creada y asimismo el número de guía generado
-                return (guiaRemision.GuiaId, guiaRemision.NumeroGuia);
+                return (guiaRemision.GuiaRemisionId, guiaRemision.NumeroGuia);
             }
             catch
             {
@@ -198,9 +198,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 throw;
             }
         }
-        public async Task<RemiteTransportistum> GetRemiteTransportistaByRucAsync(string numeroDocumento)
+        public async Task<Transportista> GetRemiteTransportistaByRucAsync(string numeroDocumento)
         {
-            return await _context.RemiteTransportista.FirstOrDefaultAsync(r => r.NumeroDocumento == numeroDocumento);
+            return await _context.Transportista.FirstOrDefaultAsync(r => r.NumeroDocumento == numeroDocumento);
         }
         //Actualizar guía de remisión transportista
         public async Task UpdateAsync(GuiaRemision guiaRemision)
@@ -209,7 +209,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 throw new ArgumentNullException(nameof(guiaRemision), "La guía de remisión transportista no puede ser nula");
             }
-            _context.GuiaRemisions.Update(guiaRemision);
+            _context.GuiaRemision.Update(guiaRemision);
             await _context.SaveChangesAsync();
         }
     }

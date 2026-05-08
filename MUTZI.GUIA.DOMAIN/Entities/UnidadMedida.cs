@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
 [Table("unidadMedida")]
-public partial class UnidadMedidum
+public partial class UnidadMedida
 {
     [Key]
     [Column("codigoUM")]
@@ -36,5 +36,5 @@ public partial class UnidadMedidum
 
     public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
 
-    public virtual ICollection<GuiaDetalle> GuiaDetalles { get; set; } = new List<GuiaDetalle>();
+    public virtual ICollection<GuiaRemisionDetalle> GuiaDetalles { get; set; } = new List<GuiaRemisionDetalle>();
 }

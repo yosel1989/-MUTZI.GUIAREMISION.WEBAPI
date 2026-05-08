@@ -1,14 +1,13 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista;
+using MUTZI.GUIA.APPLICATION.DTOs.Transportista;
 using MUTZI.GUIA.APPLICATION.Helpers;
 using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
@@ -38,11 +37,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         public List<DocRelacionadoDTO>? DocRelacionados { get; set; }
 
         // Remitente
-        public RemitenteDTO Remitente { get; set; }
+        public EstablecimientoDTO Remitente { get; set; }
 
         [JsonPropertyName("remite_transportista")]
-        public RemiteTransportistaDTO RemiteTransportista { get; set; }
-        public DestinatarioDTO Destinatario { get; set; }
+        public TransportistaDTO RemiteTransportista { get; set; }
+
+        public EstablecimientoDTO Destinatario { get; set; }
+
+        public List<EmailDestinatarioGuiaDTO> DestinatarioEmail { get; set; } = new List<EmailDestinatarioGuiaDTO>();
 
         [JsonPropertyName("datos_envio")]
         public DatosEnvioGT_DTO DatosEnvio { get; set; }

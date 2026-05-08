@@ -20,9 +20,9 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
             List<DOMAIN.Entities.UnidadTransporteGuid> transporte,
             DOMAIN.Entities.GuiaRemision guiaRemision,
             DOMAIN.Entities.DatosEnvio datosEnvio,
-            DOMAIN.Entities.Origen origen,
-            List<DOMAIN.Entities.Destino> destino,
-            List<DOMAIN.Entities.GuiaDetalle> detalles,
+            DOMAIN.Entities.GuiaRemisionOrigen origen,
+            List<DOMAIN.Entities.GuiaRemisionDestino> destino,
+            List<DOMAIN.Entities.GuiaRemisionDetalle> detalles,
             List<DOMAIN.Entities.DocRelacionado> docRelacionados,
             List<DOMAIN.Entities.EmailDestinatarioGuid> emailDestinatarioGuia
             );
@@ -39,11 +39,11 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         //Datos envio
         Task<DOMAIN.Entities.DatosEnvio> CreateDatosEnvioAsync(DOMAIN.Entities.DatosEnvio datosEnvio);
         //Ubicación origen
-        Task<DOMAIN.Entities.Origen> CreateOrigenAsync(DOMAIN.Entities.Origen origen);
+        Task<DOMAIN.Entities.GuiaRemisionOrigen> CreateOrigenAsync(DOMAIN.Entities.GuiaRemisionOrigen origen);
         //Ubicación destino
-        Task<DOMAIN.Entities.Destino> CreateDestinoAsync(DOMAIN.Entities.Destino destino);
-        //Guia detalle
-        Task<DOMAIN.Entities.GuiaDetalle> CreateGuiaDetalleAsync(DOMAIN.Entities.GuiaDetalle guiaDetalle);
+        Task<DOMAIN.Entities.GuiaRemisionDestino> CreateDestinoAsync(DOMAIN.Entities.GuiaRemisionDestino destino);
+        //GuiaRemision detalle
+        Task<DOMAIN.Entities.GuiaRemisionDetalle> CreateGuiaDetalleAsync(DOMAIN.Entities.GuiaRemisionDetalle guiaDetalle);
         Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado);
         Task UpdateAsync(DOMAIN.Entities.GuiaRemision guiaRemision);
         Task DeleteAsync(int id);

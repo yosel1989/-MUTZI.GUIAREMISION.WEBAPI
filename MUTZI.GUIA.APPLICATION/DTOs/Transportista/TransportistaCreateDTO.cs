@@ -1,12 +1,11 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.EmailRemiteTransportistaGuia;
-using Swashbuckle.AspNetCore.Annotations;
+﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
+namespace MUTZI.GUIA.APPLICATION.DTOs.Transportista
 {
     [SwaggerSchema("Recibe un objeto remite_transportista, tener en cuenta que, si Carolina SAC o la empresa que esté asociada al facturador actúa como transportista este objeto pasa a ser remitente y según Efact, menciona que: 'El 'Número de documento de identidad del remitente', no debe ser igual al número de RUC del transportista.'.", Nullable=false)]
-    public class   RemiteTransportistaCreateDTO
+    public class   TransportistaCreateDTO
     {
         [JsonPropertyName("tipo_documento")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el tipo de documento del REMITE_TRANSPORTISTA. Solo recibe los siguientes valores: DNI, CE, RUC y PASAPORTE", Nullable = false)]
@@ -41,13 +40,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         [MaxLength(250)]
         public string? Direccion { get; set; }
 
-        //[JsonPropertyName("email")]
-        //[SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del remite_transportista", Nullable = false)]
-        //[MaxLength(50)]
-        //[Required]
-        //[EmailAddress(ErrorMessage = "El formato del correo es inválido")]
-        //public string Email { get; set; }
-
         [JsonPropertyName("pais")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el codigo de PAIS referente, ejm: PE", Nullable = true)]
         [MaxLength(3)]
@@ -58,16 +50,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista
         [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
         public string? CodigoSunat { get; set; }
 
-        [JsonPropertyName("empleado_id_creacion")]
-        [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = true)]
-        public int? EmpleadoIDCreacion { get; set; }
+        [JsonPropertyName("registro_mtc")]
+        [SwaggerSchema("Recibe un texto, el codigo de registro MTC del transportista", Nullable = true)]
+        public string? RegistroMTC { get; set; }
 
-        [JsonPropertyName("empleado_nombre_creacion")]
-        [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha realizado la transacción en el sistema", Nullable = true)]
-        [MaxLength(100)]
-        public string? EmpleadoNombreCreacion { get; set; }
-
-        //[JsonPropertyName("email_remite_transportista")]
-        //public List<EmailRemiteTransportistaGuiaCreateDTO>? EmailRemiteTransportista { get; set; }
+        [JsonPropertyName("email_contacto")]
+        [SwaggerSchema("Recibe un texto, el email de contacto del transportista", Nullable = false)]
+        public string? EmailContacto { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
@@ -7,7 +6,7 @@ using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using Newtonsoft.Json;
 
-namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
+namespace MUTZI.GUIA.APPLICATION.Services
 {
     public class GuiaRemitenteUBLService : IGuiaRemitenteUBLService
     {
@@ -71,7 +70,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                         Party = new List<Party>{ new Party {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Remitente.Ruc,  schemeID = EspacioNombreGuiaRemision._DocumentType06  }}}},
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
-                                ID = new List<ID> { new ID { _ = guia.Remitente.UbigeoID } },
+                                ID = new List<ID> { new ID { _ = guia.Remitente.UbigeoId } },
                                 CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Remitente.Departamento } },
                                 CityName = new List<CityName>{ new CityName { _ = guia.Remitente.Provincia} },
                                 StreetName = new List<StreetName>{ new StreetName { _ = guia.Remitente.Direccion } },
@@ -99,7 +98,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                     DeliveryCustomerParty = new List<DeliveryCustomerParty>{ new DeliveryCustomerParty {
                         Party = new List<Party>{ new Party {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
-                                ID = new List<ID>{ new ID { _ = guia.Destinatario.NumeroDocumento , schemeID = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento)  }}
+                                ID = new List<ID>{ new ID { _ = guia.Destinatario.Ruc , schemeID = guia.getTipoCodigoDocumento("RUC", guia.Destinatario.Ruc)  }}
                             }},
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
                                 ID = new List<ID> { new ID { _ = guia.Destinatario.UbigeoId}},
@@ -117,7 +116,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                             PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity {
                                 RegistrationName = new List<RegistrationName>{ new RegistrationName { _ = guia.Destinatario.RazonSocial } }
                             }},
-                            Contact = guia.Destinatario.EmailDestinatariosGuia != null ? new List<Contact>
+                            Contact = guia.DestinatarioCorreo.Count > 0 ? new List<Contact>
                             {
                                 new Contact
                                 {
@@ -125,7 +124,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                                     {
                                         new ElectronicMail
                                         {
-                                            _ = string.Join(",", guia.Destinatario.EmailDestinatariosGuia.Select(email => email.Email))
+                                            _ = string.Join(",", guia.DestinatarioCorreo.Select(email => email.Email))
                                         }
                                     }
                                 }
@@ -179,7 +178,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                             _ = guia.Destinatario.CodigoSunat,
                             //Si es traslado, se coloca el ruc del remitente, ya que es traslado entre sucursales nomas; si es venta o compra, el numeroDoc del destinatario
                             //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.Ruc : guia.Destinatario.NumeroDocumento
-                            listID=guia.Destinatario.NumeroDocumento
+                            listID=guia.Destinatario.Ruc
                         }},
                         CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},
                         CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = destino.Departamento }},

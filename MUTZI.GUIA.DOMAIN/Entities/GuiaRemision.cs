@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("guiaRemision")]
+[Table("guia_remision")]
 public partial class GuiaRemision
 {
     [Key]
-    [Column("guiaID")]
-    public int GuiaId { get; set; }
+    [Column("guia_remision_id")]
+    public int GuiaRemisionId { get; set; }
 
-    [Column("numeroGuia")]
+    [Column("numero_guia")]
     [MaxLength(15)]
     public string NumeroGuia { get; set; } = null!;
 
@@ -26,15 +26,15 @@ public partial class GuiaRemision
     [MaxLength(8)]
     public string Correlativo { get; set; } = null!;
 
-    [Column("tipoGuia")]
+    [Column("tipo_guia")]
     [MaxLength(20)]
     public string TipoGuia { get; set; } = null!;
 
-    [Column("tipoTransporte")]
+    [Column("tipo_transporte")]
     [MaxLength(10)]
     public string TipoTransporte { get; set; } = null!;
 
-    [Column("tipoTraslado")]
+    [Column("tipo_traslado")]
     [MaxLength(12)]
     public string TipoTraslado { get; set; } = null!;
 
@@ -49,62 +49,62 @@ public partial class GuiaRemision
     [MaxLength(100)]
     public string? Observacion { get; set; }
 
-    [Column("remitenteID")]
+    [Column("remitente_id")]
     public int RemitenteId { get; set; }
 
-    [Column("remiteTransportistaID")]
+    [Column("remite_transportista_id")]
     public int? RemiteTransportistaId { get; set; }
 
-    [Column("destinatarioID")]
+    [Column("destinatario_id")]
     public int DestinatarioId { get; set; }
 
-    [Column("proveedorID")]
+    [Column("proveedor_id")]
     public int? ProveedorId { get; set; }
 
     [Column("area")]
     [MaxLength(100)]
     public string? Area { get; set; }
 
-    [Column("registroMTC")]
+    [Column("registro_mtc")]
     [MaxLength(20)]
     public string? RegistroMtc { get; set; }
 
-    [Column("respuestaTicket")]
+    [Column("respuesta_ticket")]
     [MaxLength(500)]
     public string RespuestaTicket { get; set; } = null!;
 
-    [Column("fechaCreacion")]
-    public DateTime? FechaCreacion { get; set; } = DateTime.UtcNow;
+    [Column("fecha_registro")]
+    public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
 
-    [Column("fechaEdicion")]
-    public DateTime? FechaEdicion { get; set; }
+    [Column("fecha_modifico")]
+    public DateTime? FechaModifico { get; set; }
 
-    [Column("empleadoIDCreacion")]
-    public int? EmpleadoIdcreacion { get; set; }
+    [Column("usuario_registro")]
+    public string UsuarioRegistro { get; set; }
 
-    [Column("empleadoNombreCreacion")]
+    [Column("usuario_registro_nombre")]
+    [MaxLength(150)]
+    public string UsuarioRegistroNombre { get; set; }
+
+    [Column("usuario_modifico")]
+    public string? UsuarioModifico { get; set; }
+
+    [Column("usuario_modifico_nombre")]
     [MaxLength(100)]
-    public string? EmpleadoNombreCreacion { get; set; }
-
-    [Column("empleadoIDEdicion")]
-    public int? EmpleadoIdedicion { get; set; }
-
-    [Column("empleadoNombreEdicion")]
-    [MaxLength(100)]
-    public string? EmpleadoNombreEdicion { get; set; }
+    public string? UsuarioModificoNombre { get; set; }
 
     [Column("estado")]
     [MaxLength(50)]
     public string Estado { get; set; }
 
-    [Column("idEstado")]
+    [Column("id_estado")]
     public sbyte IdEstado { get; set; }
 
-    [Column("estadoSunat")]
+    [Column("estado_sunat")]
     [MaxLength(50)]
     public string EstadoSunat { get; set; } = "PENDIENTE";
 
-    [Column("idEstadoSunat")]
+    [Column("id_estado_sunat")]
     public sbyte IdEstadoSunat { get; set; }
 
     public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
@@ -116,7 +116,7 @@ public partial class GuiaRemision
     public Establecimiento Destinatario { get; set; } = null!;
 
 
-    public virtual ICollection<Destino> Destinos { get; set; } = new List<Destino>();
+    public virtual ICollection<GuiaRemisionDestino> Destinos { get; set; } = new List<GuiaRemisionDestino>();
 
     public virtual ICollection<DocRelacionado> DocRelacionados { get; set; } = new List<DocRelacionado>();
 
@@ -124,15 +124,15 @@ public partial class GuiaRemision
 
     public virtual ICollection<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; } = new List<EmailRemiteTransportistaGuid>();
 
-    public virtual ICollection<GuiaDetalle> GuiaDetalles { get; set; } = new List<GuiaDetalle>();
+    public virtual ICollection<GuiaRemisionDetalle> GuiaDetalles { get; set; } = new List<GuiaRemisionDetalle>();
 
-    public virtual ICollection<Origen> Origens { get; set; } = new List<Origen>();
+    public virtual ICollection<GuiaRemisionOrigen> Origens { get; set; } = new List<GuiaRemisionOrigen>();
 
     [ForeignKey(nameof(ProveedorId))]
     public virtual Proveedor? Proveedor { get; set; }
 
     [ForeignKey(nameof(RemiteTransportistaId))]
-    public virtual RemiteTransportistum? RemiteTransportista { get; set; }
+    public virtual Transportista? RemiteTransportista { get; set; }
 
     [ForeignKey(nameof(Ruc))]
     public virtual VentaConfig RucNavigation { get; set; } = null!;

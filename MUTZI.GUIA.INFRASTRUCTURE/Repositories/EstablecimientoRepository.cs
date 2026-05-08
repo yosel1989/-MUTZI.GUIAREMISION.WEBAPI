@@ -57,15 +57,22 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var data = await _context.Establecimiento
+                var query = _context.Establecimiento
                 .Include(r => r.Ubigeo)
-                .Where(c =>
-                    c.IdEstado == 1 &&
-                    (string.IsNullOrEmpty(search) ||
-                     c.CodigoSunat.Contains(search) ||
-                     c.Descripcion.Contains(search)) &&
-                    c.Ruc == ruc
-                )
+                .AsQueryable();
+
+                if (!String.IsNullOrWhiteSpace(search))
+                {
+                    query = query.Where(c =>
+                        c.IdEstado == 1 &&
+                        (string.IsNullOrEmpty(search) ||
+                         c.CodigoSunat.Contains(search) ||
+                         c.Descripcion.Contains(search))
+                    );
+                }
+
+                var data = await query
+                .Where(q => q.Ruc == ruc)
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -213,7 +220,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 if (string.IsNullOrWhiteSpace(ruc))
                     return null;
 
-                var data = await _context.GuiaRemisions
+                var data = await _context.GuiaRemision
                     .FirstOrDefaultAsync() ?? null;
 
                 return data;

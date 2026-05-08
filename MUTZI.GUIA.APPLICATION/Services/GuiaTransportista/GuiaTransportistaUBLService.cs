@@ -55,7 +55,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
 
                     // Firma (emite la guía: el transportista)
                     // Edit 2: Aquí se pone quien tiene acceso a EFACT, es decir; Carolina SAC u otro con acceso
-                    // Edit 3: En este contexto de Guia Transportista el que hace la guía debe ser el transportista(supongo que Carolina SAC a veces hará de transportista o no lo sé).
+                    // Edit 3: En este contexto de GuiaRemision Transportista el que hace la guía debe ser el transportista(supongo que Carolina SAC a veces hará de transportista o no lo sé).
                     Signature = new List<Signature> {
                         new Signature {
                             ID = new List<ID> { new ID { _ = "IDSignature" }},
@@ -91,7 +91,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                     },
                                     PostalAddress = guia.Origen == null ? null : new List<PostalAddress> {
                                         new PostalAddress {
-                                            ID                 = new List<ID>                { new ID                { _ = guia.Remitente.UbigeoID }},
+                                            ID                 = new List<ID>                { new ID                { _ = guia.Remitente.UbigeoId }},
                                             StreetName         = new List<StreetName>        { new StreetName        { _ = guia.Remitente.Direccion }},
                                             CitySubdivisionName= new List<CitySubdivisionName>{ new CitySubdivisionName{ _ = guia.Remitente.Departamento }},
                                             CityName           = new List<CityName>          { new CityName          { _ = guia.Remitente.Provincia }},
@@ -115,7 +115,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                 new Party {
                                     PartyIdentification = new List<PartyIdentification> {
                                         new PartyIdentification {
-                                            ID = new List<ID> { new ID { _ = guia.Destinatario.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento) } }
+                                            ID = new List<ID> { new ID { _ = guia.Destinatario.Ruc, schemeID = guia.getTipoCodigoDocumento("RUC") } }
                                         }
                                     },
                                     PostalAddress = guia.Destino == null ? null : new List<PostalAddress> {
@@ -132,7 +132,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                     PartyLegalEntity = new List<PartyLegalEntity> {
                                         new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.Destinatario.RazonSocial } } }
                                     },
-                                    Contact = guia.Destinatario.EmailDestinatariosGuia != null ? new List<Contact>
+                                    Contact = guia.DestinatarioEmail.Count > 0 ? new List<Contact>
                                     {
                                         new Contact
                                         {
@@ -140,7 +140,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                             {
                                                 new ElectronicMail
                                                 {
-                                                    _ = string.Join(", ", guia.Destinatario.EmailDestinatariosGuia.Select(email => email.Email))
+                                                    _ = string.Join(", ", guia.DestinatarioEmail.Select(email => email.Email))
                                                 }
                                             }
                                         }
@@ -207,7 +207,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                         ID = new List<ID>{ new ID { _ = destino.UbigeoId }},
                         AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
                             _ = guia.Destinatario.CodigoSunat,
-                            listID = guia.Destinatario.NumeroDocumento
+                            listID = guia.Destinatario.Ruc
                         }},
                             CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},
                             CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = destino.Departamento }},
@@ -240,7 +240,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                             },
                                             PostalAddress = guia.RemiteTransportista == null ? null : new List<PostalAddress> {
                                                 new PostalAddress {
-                                                    ID                 = new List<ID>                { new ID                { _ = guia.RemiteTransportista.UbigeoID }},
+                                                    ID                 = new List<ID>                { new ID                { _ = guia.RemiteTransportista.UbigeoId }},
                                                     StreetName         = new List<StreetName>        { new StreetName        { _ = guia.RemiteTransportista.Direccion }},
                                                     CitySubdivisionName= new List<CitySubdivisionName>{ new CitySubdivisionName{ _ = guia.RemiteTransportista.Departamento}},
                                                     CityName           = new List<CityName>          { new CityName          { _ = guia.RemiteTransportista.Provincia }},

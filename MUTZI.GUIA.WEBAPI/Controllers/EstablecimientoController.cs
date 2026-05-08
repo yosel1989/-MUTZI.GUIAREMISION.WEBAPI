@@ -268,9 +268,9 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [SwaggerOperation(
             Summary = "Buscar establecimiento remitente por ID y por tipo de guía",
             Description = "Buscar objeto por ID y tipo de guía. En 'tipoGuia', colocar: 'REMITENTE' ó 'TRANSPORTISTA'.",
-            OperationId = "buscar_establecimiento_por_id_guia"
+            OperationId = "obtener_serie_numero_establecimiento"
         )]
-        [Permission("buscar_establecimiento_por_id_guia")]
+        [Permission("obtener_serie_numero_establecimiento")]
         [ProducesResponseType(typeof(EstablecimientoRemitenteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]

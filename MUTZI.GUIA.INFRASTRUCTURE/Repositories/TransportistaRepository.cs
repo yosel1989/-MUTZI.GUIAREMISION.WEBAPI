@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Transportista;
 using MUTZI.GUIA.DOMAIN.Entities;
+using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
@@ -9,80 +8,142 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
     public class TransportistaRepository: ITransportistaRepository
     {
         private readonly LogisticaContext _context;
+
         public TransportistaRepository(LogisticaContext context)
         {
             _context = context;
         }
-        public async Task<List<RemiteTransportistum>> GetAllAsync()
+
+        public async Task<List<Transportista>> GetAllAsync()
         {
-            return await _context.RemiteTransportista.ToListAsync();
-        }
-        public async Task<List<RemiteTransportistum>> GetListBySuggestion(string numeroDoc)
-        {
-            var query = _context.RemiteTransportista.Where(c => c.IdEstado == 1);
-            if (!string.IsNullOrEmpty(numeroDoc))
+            try
             {
-                query = query.Where(c =>
-                    c.RazonSocial.Contains(numeroDoc) ||
-                    c.NumeroDocumento.Contains(numeroDoc)
-                );
+                var data = await _context.Transportista.ToListAsync();
+                return data;
             }
-            return await query.ToListAsync();
-        }
-        public async Task<(List<RemiteTransportistum>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO request)
-        {
-            var query = _context.RemiteTransportista
-                .Include(x => x.Ubigeo)
-                .AsQueryable();
-            if (request.Columns != null && request.Columns.Any())
+            catch (Exception ex)
             {
-                var val = request.Columns[0].Search.Value?.ToLower();
-                var key = request.Columns[0].Data?.ToLower();
-                if (!string.IsNullOrEmpty(val))
+                throw;
+            }
+            
+        }
+
+        public async Task<List<Transportista>> GetListBySuggestion(string numeroDoc)
+        {
+            try
+            {
+                var query = _context.Transportista.Where(c => c.IdEstado == 1);
+                if (!string.IsNullOrEmpty(numeroDoc))
                 {
-                    query = query.Where(x => x.NumeroDocumento.Contains(val) ||
-                    x.RazonSocial.ToLower().Contains(val)||
-                    x.RegistroMTC.ToLower().Contains(val)
+                    query = query.Where(c =>
+                        c.RazonSocial.Contains(numeroDoc) ||
+                        c.NumeroDocumento.Contains(numeroDoc)
                     );
                 }
+                return await query.ToListAsync();
             }
-            var totalRecords = await query.CountAsync();
-            //var query = _context.UnidadTransportes.OrderByDescending(t => t.FechaRegistro);
-
-            var data = await query
-                .OrderByDescending(t=>t.FechaCreacion)
-                .Skip((pageNumber - 1) * pageSize)
-                .AsNoTracking()
-                .Take(pageSize)
-                .ToListAsync();
-
-            return (data, totalRecords);
-        }
-        public async Task<RemiteTransportistum> GetByIdAsync(int id)
-        {
-            return await _context.RemiteTransportista.FirstOrDefaultAsync(t => t.RemiteTransportistaId == id);
-        }
-        public async Task CreateAsync(RemiteTransportistum transporte)
-        {
-            await _context.RemiteTransportista.AddAsync(transporte);
-            await _context.SaveChangesAsync();
-        }
-        public async Task UpdateAsync(RemiteTransportistum transporte)
-        {
-            _context.RemiteTransportista.Update(transporte);
-            transporte.FechaEdicion = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
-        }
-        public async Task DeleteAsync(int id)
-        {
-            var transporte = await _context.RemiteTransportista.FindAsync(id);
-            if (transporte != null)
+            catch (Exception ex)
             {
-                _context.RemiteTransportista.Remove(transporte);
+                throw;
+            }
+        }
+
+        public async Task<(List<Transportista>, int)> GetListAsync(int pageNumber, int pageSize, string? search)
+        {
+            try
+            {
+                var query = _context.Transportista
+                .Include(x => x.Ubigeo)
+                .AsQueryable();
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    var val = search.ToLower().Trim();
+                    query = query.Where(x =>
+                        x.NumeroDocumento.Contains(val) ||
+                        x.RazonSocial.ToLower().Contains(val) ||
+                        x.RegistroMTC.ToLower().Contains(val)
+                    );
+                }
+
+                var totalRecords = await query.CountAsync();
+
+                var data = await query
+                    .OrderByDescending(t => t.TransportistaId)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                return (data, totalRecords);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<Transportista?> GetByIdAsync(int id)
+        {
+            try
+            {
+                var data = await _context.Transportista
+                .FirstOrDefaultAsync(t => t.TransportistaId == id);
+
+                return data;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task CreateAsync(Transportista transporte)
+        {
+            try
+            {
+                await _context.Transportista.AddAsync(transporte);
                 await _context.SaveChangesAsync();
             }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
-        
+        public async Task<Transportista> UpdateAsync(Transportista transporte)
+        {
+            try
+            {
+                _context.Transportista.Update(transporte);
+                await _context.SaveChangesAsync();
+                await _context.Entry(transporte).ReloadAsync();
+
+                return transporte;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            try
+            {
+                var transporte = await _context.Transportista.FindAsync(id);
+                if (transporte != null)
+                {
+                    _context.Transportista.Remove(transporte);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
+        }
+
     }
 }

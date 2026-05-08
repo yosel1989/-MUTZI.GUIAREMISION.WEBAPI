@@ -17,7 +17,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var conductor = await _context.Conductors.ToListAsync();
+                var conductor = await _context.Conductor.ToListAsync();
                 return conductor;
             }
             catch (Exception ex)
@@ -30,7 +30,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.Conductors.Where(c => c.IdEstado == 1);
+                var query = _context.Conductor.Where(c => c.IdEstado == 1);
                 if (!string.IsNullOrEmpty(numeroDoc))
                 {
                     query = query.Where(c =>
@@ -49,7 +49,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.Conductors.AsQueryable();
+                var query = _context.Conductor.AsQueryable();
 
                 if (!string.IsNullOrEmpty(search))
                 {
@@ -66,7 +66,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     );
                 }
 
-                //var query = _context.Conductors.OrderByDescending(x=>x.FechaRegistro);
+                //var query = _context.Conductor.OrderByDescending(x=>x.FechaRegistro);
                 var totalRecords = await query.CountAsync();
                 var data = await query
                     .OrderByDescending(x => x.FechaRegistro)
@@ -86,7 +86,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var conductor = await _context.Conductors.FirstOrDefaultAsync(c => c.ConductorId == id);
+                var conductor = await _context.Conductor.FirstOrDefaultAsync(c => c.ConductorId == id);
                 return conductor;
             }
             catch (Exception ex)
@@ -98,7 +98,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var conductor = await _context.Conductors.FirstOrDefaultAsync(c => c.NumeroDocumento == numeroDocumento);
+                var conductor = await _context.Conductor.FirstOrDefaultAsync(c => c.NumeroDocumento == numeroDocumento);
                 return conductor;
             }
             catch (Exception ex)
@@ -110,7 +110,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                await _context.Conductors.AddAsync(conductor);
+                await _context.Conductor.AddAsync(conductor);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                _context.Conductors.Update(conductor);
+                _context.Conductor.Update(conductor);
                 conductor.FechaModifico = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
                 await _context.Entry(conductor).ReloadAsync();
@@ -137,10 +137,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var conductor = await _context.Conductors.FindAsync(id);
+                var conductor = await _context.Conductor.FindAsync(id);
                 if (conductor != null)
                 {
-                    _context.Conductors.Remove(conductor);
+                    _context.Conductor.Remove(conductor);
                     await _context.SaveChangesAsync();
                 }
             }

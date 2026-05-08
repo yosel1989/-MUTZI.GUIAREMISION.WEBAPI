@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.VentaConfig;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers

@@ -2,13 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
+namespace MUTZI.GUIA.APPLICATION.Services
 {
     public class S3FileService: IS3FileService
     {

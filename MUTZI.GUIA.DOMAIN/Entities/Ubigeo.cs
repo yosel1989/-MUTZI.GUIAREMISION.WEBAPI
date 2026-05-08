@@ -23,16 +23,16 @@ public partial class Ubigeo
     [MaxLength(100)]
     public string? Distrito { get; set; }
 
-    [InverseProperty(nameof(Entities.Destino.Ubigeo))]
-    public virtual ICollection<Destino> Destinos { get; set; } = new List<Destino>();
+    [InverseProperty(nameof(Entities.GuiaRemisionDestino.Ubigeo))]
+    public virtual ICollection<GuiaRemisionDestino> Destinos { get; set; } = new List<GuiaRemisionDestino>();
 
-    [InverseProperty(nameof(Entities.Origen.Ubigeo))]
-    public virtual ICollection<Origen> Origens { get; set; } = new List<Origen>();
+    [InverseProperty(nameof(Entities.GuiaRemisionOrigen.Ubigeo))]
+    public virtual ICollection<GuiaRemisionOrigen> Origens { get; set; } = new List<GuiaRemisionOrigen>();
 
     [InverseProperty(nameof(Entities.Proveedor.Ubigeo))]
     public virtual ICollection<Proveedor> Proveedors { get; set; } = new List<Proveedor>();
 
-    [InverseProperty(nameof(Entities.RemiteTransportistum.Ubigeo))]
-    public virtual ICollection<RemiteTransportistum> RemiteTransportista { get; set; } = new List<RemiteTransportistum>();
+    [InverseProperty(nameof(Entities.Transportista.Ubigeo))]
+    public virtual ICollection<Transportista> RemiteTransportista { get; set; } = new List<Transportista>();
 
 }

@@ -14,13 +14,13 @@ public partial class LogisticaContext : DbContext
     {
     }
 
-    public virtual DbSet<Conductor> Conductors { get; set; }
+    public virtual DbSet<Conductor> Conductor { get; set; }
 
     public virtual DbSet<ConductorGuid> ConductorGuids { get; set; }
 
     public virtual DbSet<DatosEnvio> DatosEnvios { get; set; }
 
-    public virtual DbSet<Destino> Destinos { get; set; }
+    public virtual DbSet<GuiaRemisionDestino> GuiaRemisionDestino { get; set; }
 
     public virtual DbSet<DocRelacionado> DocRelacionados { get; set; }
 
@@ -28,25 +28,25 @@ public partial class LogisticaContext : DbContext
 
     public virtual DbSet<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; }
 
-    public virtual DbSet<GuiaDetalle> GuiaDetalles { get; set; }
+    public virtual DbSet<GuiaRemisionDetalle> GuiaRemisionDetalle { get; set; }
 
-    public virtual DbSet<GuiaRemision> GuiaRemisions { get; set; }
+    public virtual DbSet<GuiaRemision> GuiaRemision { get; set; }
 
-    public virtual DbSet<Origen> Origens { get; set; }
+    public virtual DbSet<GuiaRemisionOrigen> GuiaRemisionOrigen { get; set; }
 
-    public virtual DbSet<Proveedor> Proveedors { get; set; }
+    public virtual DbSet<Proveedor> Proveedor { get; set; }
 
-    public virtual DbSet<RemiteTransportistum> RemiteTransportista { get; set; }
+    public virtual DbSet<Transportista> Transportista { get; set; }
 
-    public virtual DbSet<UnidadTransporte> UnidadTransportes { get; set; }
+    public virtual DbSet<UnidadTransporte> UnidadTransporte { get; set; }
 
     public virtual DbSet<UnidadTransporteGuid> UnidadTransporteGuids { get; set; }
 
-    public virtual DbSet<Ubigeo> Ubigeos { get; set; }
+    public virtual DbSet<Ubigeo> Ubigeo { get; set; }
 
-    public virtual DbSet<UnidadMedidum> UnidadMedida { get; set; }
+    public virtual DbSet<UnidadMedida> UnidadMedida { get; set; }
 
-    public virtual DbSet<VentaConfig> VentaConfigs { get; set; }
+    public virtual DbSet<VentaConfig> VentaConfig { get; set; }
 
     public virtual DbSet<Establecimiento> Establecimiento { get; set; }
     public virtual DbSet<Perfil> Perfil { get; set; }

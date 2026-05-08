@@ -5,10 +5,10 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Hubs;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
 using System.Net.Http.Headers;
 using System.Text.Json;
 
@@ -183,7 +183,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 string nombreArchivo;
                 if (guiaExistente is GuiaRemitenteDTO guiaRemitente)
                 {
-                    var (esValido, error) = _guiaRemitenteBDService.ValidarDatosGuiaRemitente(guiaRemitente, ruc);
+                    var (esValido, error) = _guiaRemitenteBDService.ValidarDatosGuiaRemitente(guiaRemitente, ruc, null, null, null);
                     if (!esValido)
                     {
                         return new BadRequestResponseDTO
@@ -197,7 +197,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 }
                 else if (guiaExistente is GuiaTransportistaDTO guiaTransportista)
                 {
-                    var (esValido, error) = _guiaTransportistaBDService.ValidarDatosGuiaTransportista(guiaTransportista, ruc);
+                    var (esValido, error) = _guiaTransportistaBDService.ValidarDatosGuiaTransportista(guiaTransportista, ruc, null, null, null, null);
                     if (!esValido)
                     {
                         return new BadRequestResponseDTO
@@ -303,7 +303,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             int idEstado = 0;
             try
             {
-                var (esValido, error) = _guiaTransportistaBDService.ValidarDatosGuiaTransportista(doc, ruc);
+                var (esValido, error) = _guiaTransportistaBDService.ValidarDatosGuiaTransportista(doc, ruc, null, null, null, null);
                 if (!esValido)
                 {
                     return new BadRequestResponseDTO

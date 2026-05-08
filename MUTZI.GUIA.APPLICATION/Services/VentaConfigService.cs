@@ -2,15 +2,14 @@
 using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.VentaConfig;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
-using System.Text;
 using Microsoft.Extensions.Configuration;
 using MUTZI.GUIA.APPLICATION.Helpers;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services;
+using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
-namespace MUTZI.GUIA.APPLICATION.Services.VentaConfig
+namespace MUTZI.GUIA.APPLICATION.Services
 {
     public class VentaConfigService : IVentaConfigService
     {

@@ -1,6 +1,5 @@
 ﻿
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.VentaConfig;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -8,6 +7,7 @@ using System;
 using System.Net.Http.Headers;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento;
 using Microsoft.Extensions.Configuration;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 
 namespace MUTZI.GUIA.APPLICATION.Services.Documento
 {

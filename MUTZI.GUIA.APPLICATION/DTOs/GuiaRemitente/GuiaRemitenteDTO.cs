@@ -1,15 +1,14 @@
 ﻿using MUTZI.GUIA.APPLICATION.Helpers;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destinatario;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Remitente;
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Swashbuckle.AspNetCore.Annotations;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
+using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
@@ -17,7 +16,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
     {
         [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, es el número ID de la guía.", Nullable = false)]
-        public int GuiaID { get; set; }
+        public int GuiaRemisionId { get; set; }
 
         [JsonPropertyName("tipo_guia")]
         [SwaggerSchema("Devuelve en texto el tipo de guía: REMITENTE ó TRANSPORTISTA", Nullable = false)]
@@ -67,10 +66,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public List<DocRelacionadoDTO>? DocRelacionados { get; set; }
 
         [JsonPropertyName("remitente")]
-        public RemitenteDTO Remitente { get; set; }
+        public EstablecimientoDTO Remitente { get; set; }
 
         [JsonPropertyName("destinatario")]
-        public DestinatarioDTO Destinatario { get; set; }
+        public EstablecimientoDTO Destinatario { get; set; }
+
+        [JsonPropertyName("destinatario_correo")]
+        public List<EmailDestinatarioGuiaDTO> DestinatarioCorreo { get; set; } = new List<EmailDestinatarioGuiaDTO>();
 
         [JsonPropertyName("proveedor")]
         public ProveedorDTO? Proveedor { get; set; }
@@ -87,12 +89,27 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [JsonPropertyName("productos")]
         public List<ProductosDTO> Productos { get; set; }
 
-        [JsonPropertyName("fecha_creacion")]
-        public DateTime FechaCreacion { get; set; }
+        [JsonPropertyName("fecha_registro")]
+        public DateTime FechaRegistro { get; set; }
 
-        [JsonPropertyName("empleado_nombre_creacion")]
-        [SwaggerSchema("Devuelve un texto, el nombre del empleado que ha registrado la transacción en el sistema", Nullable = false)]
-        public string EmpleadoNombreCreacion { get; set; }
+        [JsonPropertyName("usuario_registro")]
+        [SwaggerSchema("Devuelve un texto, el usuario que ha registrado la transacción en el sistema", Nullable = false)]
+        public string UsuarioRegistro { get; set; }
+
+        [JsonPropertyName("usuario_registro_nombre")]
+        [SwaggerSchema("Devuelve un texto, el nombre del usuario que ha registrado la transacción en el sistema", Nullable = false)]
+        public string UsuarioRegistroNombre { get; set; }
+
+        [JsonPropertyName("fecha_modifico")]
+        public DateTime? FechaModifico { get; set; }
+
+        [JsonPropertyName("usuario_modifico")]
+        [SwaggerSchema("Devuelve un texto, el usuario que ha modificado el registro.", Nullable = false)]
+        public string? UsuarioModifico { get; set; }
+
+        [JsonPropertyName("usuario_modifico_nombre")]
+        [SwaggerSchema("Devuelve un texto, el nombre del usuario que ha modificado el registro.", Nullable = false)]
+        public string? UsuarioModificoNombre { get; set; }
 
         [JsonPropertyName("estado")]
         [SwaggerSchema("Devuelve un texto, el estado de la guía de remisión.", Nullable = false)]
@@ -107,15 +124,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
             switch (this.TipoTraslado)
             {
                 case "VENTA":
-                    if (this.Remitente.Ruc == this.Destinatario.NumeroDocumento)
+                    if (this.Remitente.Ruc == this.Destinatario.Ruc)
                         throw new System.Exception("Si el tipo de traslado es VENTA, el 'Tipo y Número de documento de identidad del destinatario' no puede ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "01";
                 case "COMPRA":
-                    if (this.Remitente.Ruc != this.Destinatario.NumeroDocumento)
+                    if (this.Remitente.Ruc != this.Destinatario.Ruc)
                         throw new System.Exception("Si el tipo de traslado es COMPRA, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "02";
                 case "TRASLADO":
-                    if (this.Remitente.Ruc != this.Destinatario.NumeroDocumento)
+                    if (this.Remitente.Ruc != this.Destinatario.Ruc)
                         throw new System.Exception("Si el tipo de traslado es TRASLADO, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "04";
                 default:

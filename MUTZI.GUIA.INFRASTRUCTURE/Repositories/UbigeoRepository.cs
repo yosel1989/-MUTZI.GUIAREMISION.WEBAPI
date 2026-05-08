@@ -18,7 +18,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<IEnumerable<UbigeoDistritoDto>> GetDistritoAsync(string ubigeoProvincia)
         {
-            return await _context.Ubigeos
+            return await _context.Ubigeo
                 .Where(u => u.UbigeoId.StartsWith(ubigeoProvincia))
                 .GroupBy(u => new { Code = u.UbigeoId.Substring(0, 6), u.Distrito })
                 .Select(g => new UbigeoDistritoDto
@@ -31,7 +31,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<IEnumerable<UbigeoProvinciaDto>> GetProvinciaAsync(string ubigeoDepartamento)
         {
-            return await _context.Ubigeos
+            return await _context.Ubigeo
                 .Where(u => u.UbigeoId.StartsWith(ubigeoDepartamento))
                 .GroupBy(u => new { Code = u.UbigeoId.Substring(0, 4), u.Provincia })
                 .Select(g => new UbigeoProvinciaDto
@@ -44,7 +44,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<IEnumerable<UbigeoDepartamentoDto>> GetDepartamentoAsync()
         {
-            return await _context.Ubigeos
+            return await _context.Ubigeo
                 .GroupBy(u => new { Id = u.UbigeoId.Substring(0, 2), u.Departamento })
                 .Select(g => new UbigeoDepartamentoDto
                 {
@@ -57,7 +57,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<UbigeoDto> FindByIdAsync(string ubigeo)
         {
-            var entity = await _context.Ubigeos.FindAsync(ubigeo); 
+            var entity = await _context.Ubigeo.FindAsync(ubigeo); 
             if (entity == null) throw new Exception("No se encontró el ubigeo."); 
             return _mapper.Map<UbigeoDto>(entity);
         }

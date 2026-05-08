@@ -7,29 +7,36 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.VentaConfig;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
+using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
-namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
+namespace MUTZI.GUIA.APPLICATION.Services
 {
     public class GuiaRemitenteService : IGuiaRemitenteService
     {
         private readonly IGuiaRemitenteRepository _repository;
         private readonly IEstablecimientoRepository _establecimientoRepository;
+        private readonly IProveedorRepository _proveedorRepository;
         private readonly IVentaConfigRepository _ventaConfigRepository;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
         public GuiaRemitenteService(
             IGuiaRemitenteRepository repository,
             IVentaConfigRepository ventaConfigRepository,
             IEstablecimientoRepository establecimientoRepository,
-            IMapper mapper
+            IProveedorRepository proveedorRepository,
+            IMapper mapper,
+            IAuthService authService
         )
         {
             _repository = repository;
             _establecimientoRepository = establecimientoRepository;
+            _proveedorRepository = proveedorRepository;
             _ventaConfigRepository = ventaConfigRepository;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<List<GuiaRemitenteDTO>> GetAllAsync()
         {
@@ -209,40 +216,48 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
         {
             try
             {
-                var (esValido, error) = ValidarDatosGuiaRemitente(dto, ruc);
-                if (!esValido)
-                {
-                    return new BadRequestResponseDTO
-                    {
-                        Error = "Error en datos enviados",
-                        Detalle = error
-                    };
-                }
-
-                GuiaRemitenteDTO guiaCreada;
+               
                 try
                 {
+                    var currentUser = _authService.CurrentUser();
                     // Mapear todos los objetos
-                    var remitente = await _establecimientoRepository.GetByIdAsync(dto.Remitente.RemitenteId);
-                    var destinatario = await _establecimientoRepository.GetByIdAsync(dto.Destinatario.DestinatarioId);
-                    var proveedor = _mapper.Map<DOMAIN.Entities.Proveedor>(dto.Proveedor);
-                    var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<DOMAIN.Entities.ConductorGuid>(p)).ToList();
-                    var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<DOMAIN.Entities.UnidadTransporteGuid>(p)).ToList();
-                    var guiaRemision = _mapper.Map<DOMAIN.Entities.GuiaRemision>(dto);
-                    var datosEnvio = _mapper.Map<DOMAIN.Entities.DatosEnvio>(dto.DatosEnvio);
-                    var origen = _mapper.Map<DOMAIN.Entities.Origen>(dto.Origen);
-                    var destino = dto.Destino.Select(p => _mapper.Map<DOMAIN.Entities.Destino>(p)).ToList();
-                    var detalles = dto.Productos.Select(p => _mapper.Map<DOMAIN.Entities.GuiaDetalle>(p)).ToList();
-                    var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.DocRelacionado>(p)).ToList();
-                    var emailDestinatarioGuia = dto.Destinatario?.EmailDestinatarioGuia?.Select(p => _mapper.Map<DOMAIN.Entities.EmailDestinatarioGuid>(p)).ToList();
+                    var remitente = await _establecimientoRepository.GetByIdAsync(dto.RemitenteId);
+                    var destinatario = await _establecimientoRepository.GetByIdAsync(dto.DestinatarioId);
+                    var destinatarioEmails = dto.DestinatarioEmail.Select(p => _mapper.Map<EmailDestinatarioGuid>(p)).ToList();
+                    var proveedor = await _proveedorRepository.GetByIdAsync(dto.ProveedorId ?? 0);
+                    var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<ConductorGuid>(p)).ToList();
+                    var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<UnidadTransporteGuid>(p)).ToList();
+                    var guiaRemision = _mapper.Map<GuiaRemision>(dto);
+                    var datosEnvio = _mapper.Map<DatosEnvio>(dto.DatosEnvio);
+                    var origen = _mapper.Map<GuiaRemisionOrigen>(dto.Origen);
+                    var destino = dto.Destino.Select(p => _mapper.Map<GuiaRemisionDestino>(p)).ToList();
+                    var detalles = dto.Productos.Select(p => _mapper.Map<GuiaRemisionDetalle>(p)).ToList();
+                    var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DocRelacionado>(p)).ToList();
+                    var ventaConfig = await _ventaConfigRepository.GetByRucAsync(ruc);
 
                     if(remitente is null) throw new Exception("No existe este remitente.");
                     if(destinatario is null) throw new Exception("No existe este destinatario.");
+                    if(ventaConfig is null) throw new Exception($"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");
+
+                    var (esValido, error) = ValidarDatosGuiaRemitente(dto, ruc, remitente, destinatario, ventaConfig);
+                    if (!esValido)
+                    {
+                        return new BadRequestResponseDTO
+                        {
+                            Error = "Error en datos enviados",
+                            Detalle = error
+                        };
+                    }
+
+                    guiaRemision.UsuarioRegistro = currentUser.UserName;
+                    guiaRemision.UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+                    guiaRemision.FechaRegistro = DateTime.UtcNow;
+
 
                     // Llamar al repositorio
                     var (guia_id, numero_guia) = await _repository.CreateGuiaRemisionTransactionalAsync(
                         remitente, destinatario, proveedor, conductor, transporte,
-                        guiaRemision, datosEnvio, origen, destino, detalles, docRelacionados, emailDestinatarioGuia
+                        guiaRemision, datosEnvio, origen, destino, detalles, docRelacionados, destinatarioEmails
                     );
 
                     return new GuiaCreatedResponseDTO
@@ -289,7 +304,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
             var existingGuiaRemision = await _repository.GetByIdAsync2(id);
             if (existingGuiaRemision == null)
             {
-                throw new KeyNotFoundException("Guia de remisión no encontrada");
+                throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
             }
             _mapper.Map(guiaRemisionDto, existingGuiaRemision);
             await _repository.UpdateAsync(existingGuiaRemision);
@@ -299,7 +314,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
         {
             await _repository.UpdateRespuestaTicketAsync(guiaId, ticket, estado, idEstado);
         }
-        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO guia, string ruc)
+        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO guia, string ruc, Establecimiento remitente, Establecimiento destinatario, VentaConfig ventaConfig)
         {
             try
             {
@@ -307,13 +322,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 {
                     return (false, "Solo se permite hasta 3 documentos relacionados como referencia en la guía de remisión transportista.");
                 }
-                    var ventaConfig = _ventaConfigRepository.GetByRucAsync(ruc).Result;
-                if (ventaConfig == null || string.IsNullOrEmpty(ventaConfig.Ruc))
-                {
-                    return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");
-                }
-                if (guia.Remitente.NumeroDocumento != ventaConfig.Ruc)
-                    return (false, $"El RUC del remitente ({guia.Remitente.NumeroDocumento}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
+
+                if (remitente.Ruc != ventaConfig.Ruc)
+                    return (false, $"El RUC del remitente ({remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
                 _ = guia.TipoTRansporteCode18();
                 _ = guia.TipoTrasladoCode20();
 
@@ -331,7 +342,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 return (false, ex.Message);
             }
         }
-        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO guia, string ruc)
+        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO guia, string ruc, Establecimiento remitente, Establecimiento destinatario, VentaConfig ventaConfig)
         {
             try
             {
@@ -339,16 +350,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaRemitente
                 {
                     return (false, "Solo se permite hasta 3 documentos relacionados como referencia en la guía de remisión transportista.");
                 }
-                var ventaConfig = _ventaConfigRepository.GetByRucAsync(ruc).Result;
-                if (ventaConfig == null || string.IsNullOrEmpty(ventaConfig.Ruc))
-                {
-                    return (false, $"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");
-                }
                 if (guia.Remitente.Ruc != ventaConfig.Ruc)
                     return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
                 _ = guia.TipoTRansporteCode18();
                 _ = guia.TipoTrasladoCode20();
-                _ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento);
+                _ = guia.getTipoCodigoDocumento("RUC", "RUC");
+                //_ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento);
+
                 if (guia.Proveedor != null)
                 {
                     _ = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento, guia.Proveedor.NumeroDocumento);

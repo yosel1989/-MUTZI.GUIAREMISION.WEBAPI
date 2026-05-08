@@ -1,52 +1,46 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
-using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.RemiteTransportista;
-using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Transportista;
-using MUTZI.GUIA.APPLICATION.Interfaces.Services.Transportista;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
+using MUTZI.GUIA.APPLICATION.DTOs.Transportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.DOMAIN.Entities;
+using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
-namespace MUTZI.GUIA.APPLICATION.Services.Transportista
+namespace MUTZI.GUIA.APPLICATION.Services
 {
     public class TransportistaService: ITransportistaService
     {
         private readonly ITransportistaRepository _repository;
+        private readonly IAuthService _authService;
         private readonly IMapper _mapper;
-        public TransportistaService(ITransportistaRepository repository, IMapper mapper)
+        public TransportistaService(
+            ITransportistaRepository repository, 
+            IMapper mapper,
+            IAuthService authService
+        )
         {
             _repository = repository;
+            _authService = authService;
             _mapper = mapper;
         }
-        public async Task<List<RemiteTransportistaDTO>> GetAllAsycn()
+
+        public async Task<List<TransportistaDTO>> GetAllAsycn()
         {
             var transportes = await _repository.GetAllAsync();
-            return _mapper.Map<List<RemiteTransportistaDTO>>(transportes);
+            return _mapper.Map<List<TransportistaDTO>>(transportes);
         }
-        public async Task<List<RemiteTransportistaDTO>> GetListBySuggestion(string numeroDoc)
+
+        public async Task<List<TransportistaDTO>> GetListBySuggestion(string numeroDoc)
         {
             var transportes=await _repository.GetListBySuggestion(numeroDoc);
-            return _mapper.Map<List<RemiteTransportistaDTO>>(transportes);
+            return _mapper.Map<List<TransportistaDTO>>(transportes);
         }
-        public async Task<PagedResult<RemiteTransportistaDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
+
+        public async Task<PagedResult<TransportistaDTO>> GetListAsync(int pageNumber, int pageSize, string? search)
         {
-            var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
-            var searchValue = q[$"columns[{0}][search][value]"];
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                request.Columns.Add(new RequestFiltroDTO
-                {
-                    Data = q[$"columns[{0}][data]"],
-                    Search = new SearchDTO
-                    {
-                        Value = searchValue
-                    }
-                });
-            }
-            var (transporte, totalRecords)= await _repository.GetListAsync(pageNumber, pageSize, request);
-            var transporteDto = _mapper.Map<List<RemiteTransportistaDTO>>(transporte);
-            return new PagedResult<RemiteTransportistaDTO>
+            var (transporte, totalRecords)= await _repository.GetListAsync(pageNumber, pageSize, search);
+            var transporteDto = _mapper.Map<List<TransportistaDTO>>(transporte);
+            return new PagedResult<TransportistaDTO>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -55,18 +49,23 @@ namespace MUTZI.GUIA.APPLICATION.Services.Transportista
                 Data = transporteDto
             };
         }
-        public async Task<RemiteTransportistaDTO?> GetByIdAsync(int id)
+        public async Task<TransportistaDTO?> GetByIdAsync(int id)
         {
             var transporte = await _repository.GetByIdAsync(id);
-            return transporte == null ? null : _mapper.Map<RemiteTransportistaDTO>(transporte);
+            return transporte == null ? null : _mapper.Map<TransportistaDTO>(transporte);
         }
-        public async Task<int> CreateAsync(RemiteTransportistaCreateDTO createDTO)
+        public async Task<int> CreateAsync(TransportistaCreateDTO createDTO)
         {
             try
             {
-                var transporte = _mapper.Map<RemiteTransportistum>(createDTO);
+                var currentUser = _authService.CurrentUser();
+                var transporte = _mapper.Map<Transportista>(createDTO);
+                transporte.UsuarioRegistro = currentUser.UserName;
+                transporte.UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
+                transporte.FechaRegistro = DateTime.UtcNow;
+
                 await _repository.CreateAsync(transporte);
-                return transporte.RemiteTransportistaId;
+                return transporte.TransportistaId;
             }
             catch (Exception ex)
             {
@@ -76,18 +75,23 @@ namespace MUTZI.GUIA.APPLICATION.Services.Transportista
                 throw new Exception(msg);
             }
         }
-        public async Task<RemiteTransportistaDTO> UpdateAsync(int id, RemiteTransportistaUpdateDTO updateDTO)
+        public async Task<TransportistaDTO> UpdateAsync(int id, TransportistaUpdateDTO updateDTO)
         {
             try
             {
+                var currentUser = _authService.CurrentUser();
                 var existingTransporte = await _repository.GetByIdAsync(id);
                 if (existingTransporte == null)
                 {
                     throw new KeyNotFoundException($"Transporte con ID {id} no encontrado.");
                 }
                 _mapper.Map(updateDTO, existingTransporte);
-                await _repository.UpdateAsync(existingTransporte);
-                return _mapper.Map<RemiteTransportistaDTO>(existingTransporte);
+                existingTransporte.UsuarioModifico = currentUser.UserName;
+                existingTransporte.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+                existingTransporte.FechaModifico = DateTime.UtcNow;
+
+                var transporteActualizado = await _repository.UpdateAsync(existingTransporte);
+                return _mapper.Map<TransportistaDTO>(transporteActualizado);
             }
             catch (Exception ex)
             {
@@ -110,8 +114,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.Transportista
                 throw new Exception(msg);
             }
         }
-        public async Task<UpdatedStatusDto> CambiarEstadoAsync(int id, InfoRequestDTO infoRequestDto)
+        public async Task<EstadoActualizadoResponseDTO> CambiarEstadoAsync(int id, EstadoActualizadoRequestDTO infoRequestDto)
         {
+            var currentUser = _authService.CurrentUser();
             string _status = infoRequestDto.IdEstado switch
             {
                 1 => "activo",
@@ -125,19 +130,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.Transportista
             }
             existing.Estado = _status;
             existing.IdEstado = (sbyte?)infoRequestDto.IdEstado;
-            existing.EmpleadoIdedicion = infoRequestDto.EditedEmployeeId;
-            existing.EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName;
-            await _repository.UpdateAsync(existing);
+            existing.UsuarioModifico = currentUser.UserName;
+            existing.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+            existing.FechaModifico = DateTime.UtcNow;
 
-            return new UpdatedStatusDto
-            {
-                Id = existing.RemiteTransportistaId,
-                IdEstado = (Int32)existing.IdEstado,
-                Estado = existing.Estado,
-                FechaEdicion = existing.FechaEdicion,
-                EmpleadoNombreEdicion = infoRequestDto.EditedEmployeeName,
-                Detalle = $"Unidad de Transporte con ID {existing.RemiteTransportistaId} ha sido actualizado a estado '{existing.Estado}'."
-            };
+            var transportistaActualizado = await _repository.UpdateAsync(existing);
+
+            return _mapper.Map<EstadoActualizadoResponseDTO>(transportistaActualizado);
         }
     }
 }

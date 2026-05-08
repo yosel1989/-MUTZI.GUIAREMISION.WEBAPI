@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
@@ -9,6 +8,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
+using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -27,12 +27,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             _guiasTransportistaBDService = guiaTransportistaService;
             _envioService = envioService;
         }
+
         [HttpGet]
         [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
-        Summary = "Listar guías de remisión y transportista",
-        Description = "Lista las guías de remisión y transportista. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
-        OperationId = "listar_guias")]
+            Summary = "Listar guías de remisión y transportista",
+            Description = "Lista las guías de remisión y transportista. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
+            OperationId = "listar_guia_remision"
+        )]
+        [Permission("listar_guia_remision")]
         [ProducesResponseType(typeof(PagedResult<GuiaListDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -56,12 +59,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpGet]
         [Route("exportar")]
         [SwaggerOperation(
-        Summary = "Exportar guías de remisión y transportista",
-        Description = "Exporta las guías de remisión y transportista.",
-        OperationId = "exportar_guias")]
+            Summary = "Exportar guías de remisión y transportista",
+            Description = "Exporta las guías de remisión y transportista.",
+            OperationId = "exportar_lista_guia_remision"
+        )]
+        [Permission("exportar_lista_guia_remision")]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -87,12 +93,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpGet]
         [Route("buscar-por-id/{id}")]
         [SwaggerOperation(
-        Summary = "Buscar guía de remisión por ID",
-        Description = "Busca guía de remisión remitente o transportista por ID desde la bbdd",
-        OperationId = "buscar_guia_remision")]
+            Summary = "Buscar guía de remisión por ID",
+            Description = "Busca guía de remisión remitente o transportista por ID desde la bbdd",
+            OperationId = "buscar_guia_remision_por_id"
+        )]
+        [Permission("buscar_guia_remision_por_id")]
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -121,12 +130,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+        
         [HttpPost]
         [Route("registrar-remitente/{ruc}")]
         [SwaggerOperation(
-        Summary = "Registrar guía remitente",
-        Description = "Registra guía de remisión remitente y lo guarda en la bbdd.",
-        OperationId = "registrar_guia_remitente")]
+            Summary = "Registrar guía remitente",
+            Description = "Registra guía de remisión remitente y lo guarda en la bbdd.",
+            OperationId = "registrar_guia_remision"
+        )]
+        [Permission("registrar_guia_remision")]
         [ProducesResponseType(typeof(GuiaCreatedResponseDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -155,13 +167,14 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 })
             };
         }
+
         [HttpPost]
         [Route("registrar-transportista/{ruc}")]
         [SwaggerOperation(
             Summary = "Registrar guía transportista",
             Description = "Registra guía de remisión transportista en la bbdd.",
             OperationId = "registrar_guia_transportista"
-            )]
+        )]
         [ProducesResponseType(typeof(GuiaCreatedResponseDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -188,12 +201,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 })
             };
         }
+
         [HttpPut]
         [Route("actualizar-remitente{id}")]
         [SwaggerOperation(
-        Summary = "Actualizar guía remitente",
-        Description = "Actualiza guía de remisión remitente por ID.",
-        OperationId = "actualizar_guia_remitente")]
+            Summary = "Actualizar guía remitente",
+            Description = "Actualiza guía de remisión remitente por ID.",
+            OperationId = "editar_guia_remision"
+        )]
+        [Permission("editar_guia_remision")]
         [ProducesResponseType(typeof(GuiaRemitenteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -214,6 +230,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpPut]
         [Route("actualizar-transportista{id}")]
         [SwaggerOperation(
@@ -240,12 +257,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
         [HttpPost]
         [Route("{ruc}/enviar/{guiaId}")]
         [SwaggerOperation(
-        Summary = "Enviar guia remisión",
-        Description = "Envía una guía existente(REMITENTE ó TRANSPORTISTA) al facturador electrónico.",
-        OperationId = "enviar_guia_remision")]
+            Summary = "Enviar guia remisión",
+            Description = "Envía una guía existente(REMITENTE ó TRANSPORTISTA) al facturador electrónico.",
+            OperationId = "aprobar_guia_remision"
+        )]
+        [Permission("aprobar_guia_remision")]
         [ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
