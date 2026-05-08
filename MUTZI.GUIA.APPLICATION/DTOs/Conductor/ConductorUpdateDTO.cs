@@ -41,5 +41,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Conductor
         [MaxLength(10)]
         [Required]
         public string Licencia { get; set; }
+
+        [JsonPropertyName("tipo")]
+        [SwaggerSchema("Recibe un texto, se coloca el tipo de conductor: 'interno', 'externo'", Nullable = false)]
+        [Required]
+        public string Tipo { get; set; }
     }
 }

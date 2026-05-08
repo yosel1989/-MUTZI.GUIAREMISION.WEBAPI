@@ -44,7 +44,7 @@ public class UnidadTransporte
 
     [Column("tipo", TypeName = "enum('interno','externo')")]
     [MaxLength(20)]
-    public string? Tipo { get; set; } = "interno";
+    public string Tipo { get; set; } = "interno";
 
     [Column("fecha_registro")]
     public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;

@@ -8,7 +8,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
     public interface IGuiaRemitenteService
     {
         Task<List<GuiaRemitenteDTO>> GetAllAsync();
-        Task<PagedResult<GuiaListDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q);
+        Task<PagedResult<GuiaRemisionListDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q);
         Task<byte[]> ExportGuiasAsync(int pageNumber, int pageSize, IQueryCollection q);
         Task<object> GetByIdAsync(int id);
         Task<GuiaPorTicketDTO> GetByTicketAsync(string ticket);

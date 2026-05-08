@@ -16,5 +16,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("codigo_sunat")]
         [SwaggerSchema("Devuelve el código de establecimiento registrado en SUNAT. Ejem: 0001, 0012", Nullable = false)]
         public string CodigoSunat { get; set; }
+
+        [JsonPropertyName("entidad")]
+        [SwaggerSchema("Devuelve el nombre de la entidad a la que pertenece.", Nullable = false)]
+        public string Entidad { get; set; }
     }
 }

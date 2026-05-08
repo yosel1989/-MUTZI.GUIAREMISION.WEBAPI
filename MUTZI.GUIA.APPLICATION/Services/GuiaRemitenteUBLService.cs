@@ -177,7 +177,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
                             _ = guia.Destinatario.CodigoSunat,
                             //Si es traslado, se coloca el ruc del remitente, ya que es traslado entre sucursales nomas; si es venta o compra, el numeroDoc del destinatario
-                            //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.Ruc : guia.Destinatario.NumeroDocumento
+                            //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.NumeroDocumentoRemitente : guia.Destinatario.NumeroDocumento
                             listID=guia.Destinatario.Ruc
                         }},
                         CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},
@@ -357,7 +357,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             //Se está guardando en la carpeta ahora mismo. Actualización, se pasó a producción y ahora se guarda en AWS
             var nombreArchivo = getNombreDocumentoFile(guia, guia.Remitente.Ruc);
-            //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.Ruc));//Ya no se usa
+            //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.NumeroDocumentoRemitente));//Ya no se usa
 
             // Convertir el string JSON a un stream de memoria
             var jsonBytes = System.Text.Encoding.UTF8.GetBytes(guiaJson);

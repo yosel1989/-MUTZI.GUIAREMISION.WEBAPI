@@ -190,7 +190,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             try
             {
                 await _service.DeleteAsync(id);
-                return Ok(new DeletedDTO { Id = id });
+                return Ok(new DeletedDTO { Id = id, Detalle = "Se eliminó la unidad de transporte con éxito." });
             }
             catch (Exception ex)
             {

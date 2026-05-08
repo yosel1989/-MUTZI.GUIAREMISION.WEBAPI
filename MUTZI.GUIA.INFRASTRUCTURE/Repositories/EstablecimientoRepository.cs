@@ -58,7 +58,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 var query = _context.Establecimiento
-                .Include(r => r.Ubigeo)
+                .Include(r => r.RucNavigation)
                 .AsQueryable();
 
                 if (!String.IsNullOrWhiteSpace(search))
@@ -73,6 +73,16 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 var data = await query
                 .Where(q => q.Ruc == ruc)
+                .Select(m => new Establecimiento
+                {
+                    EstablecimientoId = m.EstablecimientoId,
+                    Descripcion = m.Descripcion,
+                    CodigoSunat = m.CodigoSunat,
+                    RucNavigation = new VentaConfig
+                    {
+                        Empresa = m.RucNavigation.Empresa
+                    }
+                })
                 .AsNoTracking()
                 .ToListAsync();
 

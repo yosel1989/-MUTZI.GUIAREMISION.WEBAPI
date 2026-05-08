@@ -36,11 +36,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "listar_guia_remision"
         )]
         [Permission("listar_guia_remision")]
-        [ProducesResponseType(typeof(PagedResult<GuiaListDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<GuiaRemisionListDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
 
-        public async Task<ActionResult<PagedResult<GuiaListDTO>>> GetAllGuias(int pageNumber, int pageSize)
+        public async Task<ActionResult<PagedResult<GuiaRemisionListDTO>>> GetAllGuias(int pageNumber, int pageSize)
         {
             try
             {
@@ -272,6 +272,34 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         public async Task<IActionResult> ReenviarGuiaRemision(string ruc, int guiaId)
         {
             var resultado = await _envioService.ReenviarGuiaRemisionAsync(ruc, guiaId);
+
+            return resultado switch
+            {
+                SendGuiaResponseDTO ok => Created(string.Empty, ok),
+                BadRequestResponseDTO bad => BadRequest(bad),
+                InternalErrorResponseDTO error => StatusCode(500, error),
+                _ => StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error desconocido",
+                    Detalle = "Ocurrió un error desconocido al procesar la solicitud."
+                })
+            };
+        }
+
+        [HttpPut]
+        [Route("{guiaId}/confirmar")]
+        [SwaggerOperation(
+            Summary = "Confirmar guia remisión",
+            Description = "Confirma una guia de remisión y le pone el estado 'confirmado'.",
+            OperationId = "confirmar_guia_remision"
+        )]
+        [Permission("confirmar_guia_remision")]
+        //[ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ConfirmarGuiaRemision(int guiaId)
+        {
+            var resultado = await _envioService.ConfirmarGuiaRemisionAsync(guiaId);
 
             return resultado switch
             {

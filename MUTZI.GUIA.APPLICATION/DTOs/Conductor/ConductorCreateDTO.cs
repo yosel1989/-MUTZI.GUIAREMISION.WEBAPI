@@ -45,5 +45,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Conductor
         [RegularExpression("^[A-Z0-9]{9,10}$", ErrorMessage = "El N° de licencia o brevete debe ser alfanumérico de 9 a 10 dígitos.")]
         public string Licencia { get; set; }
 
+        [JsonPropertyName("tipo")]
+        [SwaggerSchema("Recibe un texto, se coloca el tipo de conductor: 'interno', 'externo'", Nullable = false)]
+        [Required]
+        public string Tipo { get; set; }
+
     }
 }

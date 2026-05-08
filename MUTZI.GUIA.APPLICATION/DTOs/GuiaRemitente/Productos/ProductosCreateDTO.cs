@@ -30,23 +30,20 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
 
         [JsonPropertyName("codigo_sunat")]
         [SwaggerSchema("Recibe un texto, solo sí existe el código del producto en la sunat.", Nullable = true)]
-        [Required]
         public string? CodigoSunat { get; set; }
 
         [JsonPropertyName("gtin")]
         [SwaggerSchema("Recibe un texto, codigo de barras del producto", Nullable = true)]
-        [Required]
         public string? Gtin { get; set; }
 
         [JsonPropertyName("codigo_subnacional")]
         [SwaggerSchema("Recibe un texto, codigo de la clasificación arancelaria de mercancias asignado al producto", Nullable = true)]
-        [Required]
         public string? CodigoSubnacional { get; set; }
 
         [JsonPropertyName("bien_normalizado")]
         [SwaggerSchema("Recibe un boolean, indica si el producto es un bien normalizado o no", Nullable = true)]
         [Required]
-        public sbyte BienNormalizado { get; set; }
+        public bool BienNormalizado { get; set; }
 
     }
 }

@@ -49,5 +49,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
         [MinLength(3)]
         [MaxLength(50)]
         public string? NroAutorizacion { get; set; }
+
+        [JsonPropertyName("tipo")]
+        [SwaggerSchema("Recibe un texto, se coloca el tipo de la unidad de transporte, Ejm: INTERNO, INTERNO", Nullable = false)]
+        [MaxLength(20)]
+        [EnumDataType(typeof(EnumTipoUnidadTransporte))]
+        public string Tipo { get; set; }
     }
 }

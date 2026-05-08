@@ -42,7 +42,7 @@ public partial class GuiaRemisionDetalle
     public string? CodigoSubnacional { get; set; }
 
     [Column("bien_normalizado")]
-    public sbyte BienNormalizado { get; set; } = 1;
+    public bool BienNormalizado { get; set; } = false;
 
     [ForeignKey(nameof(CodigoUm))]
     public virtual UnidadMedida UnidadMedida { get; set; } = null!;

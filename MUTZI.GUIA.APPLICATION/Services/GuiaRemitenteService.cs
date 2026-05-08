@@ -43,7 +43,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             var guiaRemisions = await _repository.GetAllAsync();
             return _mapper.Map<List<GuiaRemitenteDTO>>(guiaRemisions);
         }
-        public async Task<PagedResult<GuiaListDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
+        public async Task<PagedResult<GuiaRemisionListDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
         {
             var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
 
@@ -71,9 +71,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize, request);
 
-            var guiasDTO = _mapper.Map<List<GuiaListDTO>>(guias);
+            var guiasDTO = _mapper.Map<List<GuiaRemisionListDTO>>(guias);
 
-            return new PagedResult<GuiaListDTO>
+            return new PagedResult<GuiaRemisionListDTO>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -114,14 +114,14 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 }
 
                 var (guias, _) = await _repository.GetListAsync(pageNumber, pageSize, request, true);
-                var guiasDTO = _mapper.Map<List<GuiaListDTO>>(guias);
+                var guiasDTO = _mapper.Map<List<GuiaRemisionListDTO>>(guias);
 
                 using (var workbook = new XLWorkbook())
                 {
                     var worksheet = workbook.Worksheets.Add("Reporte de Guías");
 
                     string[] headers = {
-                        "#", "Código", "Empresa", "RUC Empresa", "Remitente / Local",
+                        "#", "Código", "EntidadRemitente", "RUC EntidadRemitente", "Remitente / Local",
                         "Tipo Guía", "N° Guía", "T. Traslado", "T. Transporte",
                         "F. Emisión", "H. Emisión", "Destinatario", "N° Doc. Destinatario",
                         "Origen", "Destino", "Estado", "F. Registro", "U. Registro"
@@ -136,18 +136,18 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     foreach (var item in guiasDTO)
                     {
                         worksheet.Cell(row, 1).Value = row - 1;
-                        worksheet.Cell(row, 2).Value = $"COD-{item.GuiaID.ToString("D4")}";
-                        worksheet.Cell(row, 3).Value = item.Empresa;
-                        worksheet.Cell(row, 4).Value = item.Ruc;
-                        worksheet.Cell(row, 5).Value = item.RazonRemitente;
+                        worksheet.Cell(row, 2).Value = $"COD-{item.GuiaRemisionId.ToString("D4")}";
+                        worksheet.Cell(row, 3).Value = item.EntidadRemitente;
+                        worksheet.Cell(row, 4).Value = item.NumeroDocumentoRemitente;
+                        worksheet.Cell(row, 5).Value = item.EstablecimientoRemitente;
                         worksheet.Cell(row, 6).Value = item.TipoGuia;
                         worksheet.Cell(row, 7).Value = item.NumeroGuia;
                         worksheet.Cell(row, 8).Value = item.TipoTraslado;
                         worksheet.Cell(row, 9).Value = item.TipoTransporte;
                         worksheet.Cell(row, 10).Value = item.FechaEmision;
                         worksheet.Cell(row, 11).Value = item.HoraEmision;
-                        worksheet.Cell(row, 12).Value = item.RazonDestinatario;
-                        worksheet.Cell(row, 13).Value = item.NroDocumentoDestinatario;
+                        worksheet.Cell(row, 12).Value = item.EstablecimientoDestinatario;
+                        worksheet.Cell(row, 13).Value = item.NumeroDocumentoDestinatario;
                         worksheet.Cell(row, 14).Value = item.DistritoOrigen;
                         worksheet.Cell(row, 15).Value = item.DistritoDestino;
 
@@ -165,8 +165,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         }
 
                         //worksheet.Cell(row, 17).Value = item.FechaRegistro?.ToString("dd/MM/yyyy hh:mm:ss tt");
-                        worksheet.Cell(row, 17).Value = item.FechaCreacion;
-                        worksheet.Cell(row, 18).Value = item.EmpleadoNombreCreacion;
+                        worksheet.Cell(row, 17).Value = item.FechaRegistro;
+                        worksheet.Cell(row, 18).Value = item.UsuarioRegistro;
 
                         row++;
                     }
@@ -350,11 +350,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     return (false, "Solo se permite hasta 3 documentos relacionados como referencia en la guía de remisión transportista.");
                 }
-                if (guia.Remitente.Ruc != ventaConfig.Ruc)
-                    return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
+                if (guia.Remitente.Ruc != ruc)
+                    return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ruc}).");
                 _ = guia.TipoTRansporteCode18();
                 _ = guia.TipoTrasladoCode20();
-                _ = guia.getTipoCodigoDocumento("RUC", "RUC");
+                _ = guia.getTipoCodigoDocumento("RUC", guia.Remitente.Ruc);
                 //_ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento);
 
                 if (guia.Proveedor != null)

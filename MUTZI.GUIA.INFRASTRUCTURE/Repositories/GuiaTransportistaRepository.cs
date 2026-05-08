@@ -182,7 +182,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 // Detalles
                 foreach (var detalle in detalles)
                 {
-                    detalle.GuiaId = guiaRemision.GuiaRemisionId;
+                    detalle.GuiaRemisionId = guiaRemision.GuiaRemisionId;
                     await _context.GuiaRemisionDetalle.AddAsync(detalle);
                 }
                 await _context.SaveChangesAsync();

@@ -60,11 +60,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Conductor
         public string? UsuarioModificoNombre { get; set; }
 
         [JsonPropertyName("estado")]
-        [SwaggerSchema("Devuelve un texto, el estado del conductor solo puede ser: ACTIVO o INACTIVO", Nullable = false)]
+        [SwaggerSchema("Devuelve un texto, el estado del conductor solo puede ser: activo o inactivo", Nullable = false)]
         public string Estado { get; set; }
 
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Devuelve un entero, el ID del estado del conductor en la bbdd", Nullable = false)]
         public int IdEstado { get; set; }
+
+        [JsonPropertyName("tipo")]
+        [SwaggerSchema("Devuelve un texto, el tipo de conducto solo puede ser: interno o externo", Nullable = false)]
+        public string Tipo { get; set; }
     }
 }

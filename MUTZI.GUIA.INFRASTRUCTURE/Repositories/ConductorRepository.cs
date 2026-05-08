@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.DOMAIN.Entities;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
@@ -36,9 +35,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     query = query.Where(c =>
                         c.NumeroDocumento.Contains(numeroDoc) ||
                         c.Nombres.Contains(numeroDoc) ||
-                        c.Apellidos.Contains(numeroDoc));
+                        c.Apellidos.Contains(numeroDoc)
+                    );
                 }
-                return await query.ToListAsync();
+                var data = await query.ToListAsync();
+                return data;
             }
             catch (Exception ex)
             {

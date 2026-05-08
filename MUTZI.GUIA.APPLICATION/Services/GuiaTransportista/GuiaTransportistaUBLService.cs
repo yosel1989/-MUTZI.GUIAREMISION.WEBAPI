@@ -379,7 +379,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
             );
 
             var nombreArchivo = getNombreDocumentoFile(guia, guia.Remitente.Ruc);
-            //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.Ruc));
+            //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.NumeroDocumentoRemitente));
 
             // Convertir el string JSON a un stream de memoria
             var jsonBytes = System.Text.Encoding.UTF8.GetBytes(guiaJson);

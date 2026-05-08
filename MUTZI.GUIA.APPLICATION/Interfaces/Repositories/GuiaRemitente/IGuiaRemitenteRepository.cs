@@ -9,7 +9,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<List<DOMAIN.Entities.GuiaRemision>> GetAllAsync();
         Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO? request, bool export = false);
         //Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, List<ColumnFilterDTO> columnFilterDTOs);
-        Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id);
+        Task<DOMAIN.Entities.GuiaRemision?> GetByIdAsync(int id);
         Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync2(int id);
         Task<DOMAIN.Entities.GuiaRemision> GetByTicketAsync(string ticket);
         Task <(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(

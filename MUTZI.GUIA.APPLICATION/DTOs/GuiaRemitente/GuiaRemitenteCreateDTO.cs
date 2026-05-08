@@ -7,6 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
+using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
@@ -63,9 +64,17 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [Required]
         public int RemitenteId { get; set; }
 
+        [JsonPropertyName("remitente")]
+        [Required]
+        public EstablecimientoDTO Remitente { get; set; }
+
         [JsonPropertyName("destinatario_id")]
         [Required]
         public int DestinatarioId { get; set; }
+
+        [JsonPropertyName("destinatario")]
+        [Required]
+        public EstablecimientoDTO Destinatario { get; set; }
 
         [JsonPropertyName("destinatario_email")]
         [Required]
@@ -96,15 +105,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
             switch (this.TipoTraslado)
             {
                 case "VENTA":
-                    if (this.RemitenteId == this.DestinatarioId)
+                    if (this.Remitente.Ruc == this.Destinatario.Ruc)
                         throw new System.Exception("Si el tipo de traslado es VENTA, el 'Tipo y Número de documento de identidad del destinatario' no puede ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "01";
                 case "COMPRA":
-                    if (this.RemitenteId != this.DestinatarioId)
+                    if (this.Remitente.Ruc != this.Remitente.Ruc)
                         throw new System.Exception("Si el tipo de traslado es COMPRA, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "02";
                 case "TRASLADO":
-                    if (this.RemitenteId != this.DestinatarioId)
+                    if (this.Remitente.Ruc != this.Remitente.Ruc)
                         throw new System.Exception("Si el tipo de traslado es TRASLADO, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "04";
                 default:
