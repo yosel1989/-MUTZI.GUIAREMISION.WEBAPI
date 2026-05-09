@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
-using DocumentFormat.OpenXml.Drawing;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -19,10 +18,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 var query = _context.GuiaRemision
-                    .Include(m => m.Remitente)
-                        .ThenInclude(m => m.RucNavigation)
-                    .Include(m => m.Destinatario)
-                        .ThenInclude(m => m.RucNavigation)
+                    //.Include(m => m.Remitente)
+                    //    .ThenInclude(m => m.RucNavigation)
+                    //.Include(m => m.Destinatario)
+                    //    .ThenInclude(m => m.RucNavigation)
                     .AsQueryable();
                 if (request.Columns != null && request.Columns.Any())
                 {
@@ -263,6 +262,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Where(g => g.GuiaRemisionId == id)
                 .Select(g => new GuiaRemision
                 {
+                   
+
                     GuiaRemisionId = g.GuiaRemisionId,
                     TipoGuia = g.TipoGuia,
                     Ruc = g.Ruc,
@@ -443,7 +444,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<GuiaRemision> GetByIdAsync2(int id)
         {
-            return await _context.GuiaRemision
+            var data = await _context.GuiaRemision
                 .Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
                 .Include(rt => rt.RemiteTransportista)
@@ -468,6 +469,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(e => e.EmailDestinatarioGuids)
                 .Include(erm => erm.EmailRemiteTransportistaGuids)
                 .FirstOrDefaultAsync(g => g.GuiaRemisionId == id);
+
+            return data;
         }
 
         public async Task<(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(
@@ -631,14 +634,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             await _context.SaveChangesAsync();
         }
         //Actualizar guía de remisión remitente
-        public async Task UpdateAsync(GuiaRemision guiaRemision)
+        public async Task<GuiaRemision> UpdateAsync(GuiaRemision guiaRemision)
         {
             if (guiaRemision == null)
             {
                 throw new ArgumentNullException(nameof(guiaRemision), "La guía de remisión remitente no puede ser nula");
             }
-            _context.GuiaRemision.Update(guiaRemision);
+            //_context.GuiaRemision.Update(guiaRemision);
             await _context.SaveChangesAsync();
+            await _context.Entry(guiaRemision).ReloadAsync();
+
+            return guiaRemision;
         }
         public async Task DeleteAsync(int id)
         {
@@ -651,16 +657,71 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task ConfirmarGuia(int id)
+        public async Task<GuiaRemision?> FindWithDetail(int id)
         {
-            var guiaRemision = await _context.GuiaRemision.FindAsync(id);
-            if (guiaRemision == null)
-            {
-                throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
-            }
-            guiaRemision.Estado = "confirmado";
-            await _context.SaveChangesAsync();
+             var guiaRemision = await _context.GuiaRemision
+                .Where(g => g.GuiaRemisionId == id)
+                    .Select(g => new GuiaRemision
+                    {
+                        GuiaRemisionId = g.GuiaRemisionId,
+                        TipoGuia = g.TipoGuia,
+                        Ruc = g.Ruc,
+                        RucNavigation = new VentaConfig
+                        {
+                            EmailPrincipal = g.RucNavigation.EmailPrincipal,
+                            Empresa = g.RucNavigation.Empresa
+                        },
+                        TipoTransporte = g.TipoTransporte,
+                        TipoTraslado = g.TipoTraslado,
+                        NumeroGuia = g.NumeroGuia,
+                        Serie = g.Serie,
+                        Correlativo = g.Correlativo,
+                        Fecha = g.Fecha,
+                        Hora = g.Hora,
+                        RespuestaTicket = g.RespuestaTicket,
+                        Remitente = new Establecimiento
+                        {
+                            Ruc = g.Remitente.Ruc,
+                            Descripcion = g.Remitente.Descripcion,
+                            Direccion = g.Remitente.Direccion,
+                            RucNavigation = new VentaConfig
+                            {
+                                Empresa = g.Remitente.RucNavigation.Empresa
+                            }
+                        },
+                        Destinatario = new Establecimiento
+                        {
+                            Ruc = g.Destinatario.Ruc,
+                            Descripcion = g.Destinatario.Descripcion,
+                            Direccion = g.Destinatario.Direccion,
+                            RucNavigation = new VentaConfig
+                            {
+                                Empresa = g.Destinatario.RucNavigation.Empresa
+                            }
+                        },
+                        Proveedor = g.Proveedor == null ? null : new Proveedor
+                        {
+                            TipoDocumento = g.Proveedor.TipoDocumento,
+                            NumeroDocumento = g.Proveedor.NumeroDocumento,
+                            RazonSocial = g.Proveedor.RazonSocial
+                        },
+                        Origens = g.Origens.Select(o => new GuiaRemisionOrigen { Ubigeo = o.Ubigeo }).ToList(),
+                        Destinos = g.Destinos.Select(d => new GuiaRemisionDestino { Ubigeo = d.Ubigeo }).ToList(),
+                        FechaRegistro = g.FechaRegistro,
+                        UsuarioRegistro = g.UsuarioRegistro,
+                        FechaModifico = g.FechaModifico,
+                        UsuarioModifico = g.UsuarioModifico,
+                        Estado = g.Estado,
+                        IdEstado = g.IdEstado,
+                        EstadoSunat = g.EstadoSunat,
+                        IdEstadoSunat = g.IdEstadoSunat
+                    })
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
+
+            return guiaRemision;
         }
+
 
         //Proveedor
         public async Task<Proveedor> GetProveedorByRucAsync(string ruc)

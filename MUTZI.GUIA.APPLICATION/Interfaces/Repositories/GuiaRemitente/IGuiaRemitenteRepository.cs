@@ -45,7 +45,9 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         //GuiaRemision detalle
         Task<DOMAIN.Entities.GuiaRemisionDetalle> CreateGuiaDetalleAsync(DOMAIN.Entities.GuiaRemisionDetalle guiaDetalle);
         Task UpdateRespuestaTicketAsync(int guiaId, string ticket, string estado, int idEstado);
-        Task UpdateAsync(DOMAIN.Entities.GuiaRemision guiaRemision);
+        Task<GuiaRemision> UpdateAsync(GuiaRemision guiaRemision);
         Task DeleteAsync(int id);
+
+        Task<GuiaRemision?> FindWithDetail(int id);
     }
 }

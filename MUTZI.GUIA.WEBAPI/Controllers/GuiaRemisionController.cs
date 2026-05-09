@@ -287,7 +287,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         }
 
         [HttpPut]
-        [Route("{guiaId}/confirmar")]
+        [Route("{id}/confirmar")]
         [SwaggerOperation(
             Summary = "Confirmar guia remisión",
             Description = "Confirma una guia de remisión y le pone el estado 'confirmado'.",
@@ -297,21 +297,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         //[ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> ConfirmarGuiaRemision(int guiaId)
+        public async Task<IActionResult> ConfirmarGuiaRemision(int id)
         {
-            var resultado = await _envioService.ConfirmarGuiaRemisionAsync(guiaId);
+            var resultado = await _guiasRemisionBDService.ConfirmarAsync(id);
 
-            return resultado switch
-            {
-                SendGuiaResponseDTO ok => Created(string.Empty, ok),
-                BadRequestResponseDTO bad => BadRequest(bad),
-                InternalErrorResponseDTO error => StatusCode(500, error),
-                _ => StatusCode(500, new InternalErrorResponseDTO
-                {
-                    Error = "Error desconocido",
-                    Detalle = "Ocurrió un error desconocido al procesar la solicitud."
-                })
-            };
+            return Ok(resultado);
         }
     }
 }

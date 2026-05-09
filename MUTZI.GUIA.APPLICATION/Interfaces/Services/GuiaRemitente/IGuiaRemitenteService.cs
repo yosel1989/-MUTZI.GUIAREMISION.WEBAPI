@@ -18,5 +18,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
         (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO doc, string ruc, Establecimiento? remitente, Establecimiento? destinatario, VentaConfig? ventaConfig);
         (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO doc, string ruc, Establecimiento? remitente, Establecimiento? destinatario, VentaConfig? ventaConfig);
         Task DeleteAsync(int id);
+
+        Task<GuiaRemisionListDTO> ConfirmarAsync(int id);
     }
 }

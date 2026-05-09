@@ -98,7 +98,7 @@ public partial class GuiaRemision
     public string Estado { get; set; }
 
     [Column("id_estado")]
-    public sbyte IdEstado { get; set; }
+    public int IdEstado { get; set; }
 
     [Column("estado_sunat")]
     [MaxLength(50)]

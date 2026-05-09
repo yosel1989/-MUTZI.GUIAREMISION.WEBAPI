@@ -6,10 +6,12 @@ using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
+using MUTZI.GUIA.DOMAIN.Enums;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
 namespace MUTZI.GUIA.APPLICATION.Services
@@ -386,6 +388,27 @@ namespace MUTZI.GUIA.APPLICATION.Services
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);
+        }
+
+        public async Task<GuiaRemisionListDTO> ConfirmarAsync(int id)
+        {
+            var currentUser = _authService.CurrentUser();
+            var guiaRemision = await _repository.GetByIdAsync2(id);
+            if (guiaRemision == null)
+            {
+                throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
+            }
+
+            var estado = EnumGuiaRemisionEstado.Confirmada;
+            guiaRemision.Estado = estado.GetDescription();
+            guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Confirmada;
+            guiaRemision.UsuarioModifico = currentUser.UserName;
+            guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision.FechaModifico = DateTime.UtcNow;
+            
+            await _repository.UpdateAsync(guiaRemision);
+            var guiaRemisionActualizada = await _repository.FindWithDetail(id);
+            return _mapper.Map<GuiaRemisionListDTO>(guiaRemisionActualizada);
         }
     }
 }
