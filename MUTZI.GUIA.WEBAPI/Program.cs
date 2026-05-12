@@ -27,7 +27,9 @@ using MUTZI.GUIA.APPLICATION.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
+using MUTZI.GUIA.DOMAIN.Interfaces;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
+using MUTZI.GUIA.INFRASTRUCTURE;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
 using MUTZI.GUIA.WEBAPI.Filters;
@@ -107,6 +109,7 @@ builder.Services.AddScoped<IEstablecimientoRepository, EstablecimientoRepository
 builder.Services.AddScoped<IPerfilRepository, PerfilRepository>();
 builder.Services.AddScoped<IPermisoRepository, PermisoRepository>();
 builder.Services.AddScoped<IPerfilPermisoRepository, PerfilPermisoRepository>();
+builder.Services.AddScoped<IGuiaRemisionHistorialRepository, GuiaRemisionHistorialRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -130,6 +133,8 @@ builder.Services.AddScoped<IEstablecimientoService, EstablecimientoService>();
 builder.Services.AddScoped<ITransportistaService, TransportistaService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddMemoryCache();
+
+builder.Services.AddScoped<IAppDBContext, AppDBContext>();
 
 //aGREGAR SWAGGER
 builder.Services.AddEndpointsApiExplorer();

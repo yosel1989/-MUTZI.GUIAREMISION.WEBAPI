@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
+using MUTZI.GUIA.DOMAIN.Enums;
+using MUTZI.GUIA.APPLICATION.Helpers;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -488,15 +490,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             List<EmailDestinatarioGuid> emailDestinatarioGuia
         )
         {
-            using var transaction = await _context.Database.BeginTransactionAsync();
+            //using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
                 // Guía
                 guiaRemision.RemitenteId = remitente.EstablecimientoId;
                 guiaRemision.Ruc = remitente.Ruc;
                 guiaRemision.DestinatarioId = destinatario.EstablecimientoId;
-                guiaRemision.Estado = "REGISTRADO";
-                guiaRemision.IdEstado = 0;
+                guiaRemision.Estado = EnumGuiaRemisionEstado.Registrada.GetDescription();
+                guiaRemision.IdEstado = EnumGuiaRemisionEstado.Registrada;
                 //if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
 
                 //string serie = guiaRemision.Serie ?? "T001";
@@ -524,7 +526,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
 
                 guiaRemision.TipoGuia = "REMITENTE";
-                guiaRemision.RespuestaTicket = "REGISTRADO";
+                guiaRemision.RespuestaTicket = "registrada";
                 await _context.GuiaRemision.AddAsync(guiaRemision);
                 await _context.SaveChangesAsync();
 
@@ -608,14 +610,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
                 await _context.SaveChangesAsync();
 
-                await transaction.CommitAsync();
+                //await transaction.CommitAsync();
 
                 //retornar el ID de la guía creada y asimismo el número de guía.
                 return (guiaRemision.GuiaRemisionId, guiaRemision.NumeroGuia);
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+                //await transaction.RollbackAsync();
                 throw;
             }
         }
@@ -628,8 +630,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             guia.RespuestaTicket = ticket;
             guia.EstadoSunat = estadoSunat;
             guia.IdEstadoSunat = (sbyte)idEstadoSunat;
-            guia.Estado = estadoSunat;
-            guia.IdEstado = (sbyte)idEstadoSunat;
+            //guia.Estado = estadoSunat;
+            //guia.IdEstado = (sbyte)idEstadoSunat;
             guia.FechaModifico = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
@@ -841,6 +843,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             await _context.SaveChangesAsync();
             return destino;
         }
+
 
     }
 }

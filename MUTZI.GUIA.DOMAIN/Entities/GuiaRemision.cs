@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MUTZI.GUIA.DOMAIN.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
@@ -98,7 +99,7 @@ public partial class GuiaRemision
     public string Estado { get; set; }
 
     [Column("id_estado")]
-    public int IdEstado { get; set; }
+    public EnumGuiaRemisionEstado IdEstado { get; set; }
 
     [Column("estado_sunat")]
     [MaxLength(50)]

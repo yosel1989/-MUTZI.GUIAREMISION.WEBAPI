@@ -52,6 +52,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<Perfil> Perfil { get; set; }
     public virtual DbSet<Permiso> Permiso { get; set; }
     public virtual DbSet<PerfilPermiso> PerfilPermiso { get; set; }
+    public virtual DbSet<GuiaRemisionHistorial> GuiaRemisionHistorial { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -92,9 +93,6 @@ public partial class LogisticaContext : DbContext
                   .HasForeignKey(g => g.DestinatarioId)
                   .OnDelete(DeleteBehavior.ClientSetNull);
         });*/
-
-        modelBuilder.Entity<EmailDestinatarioGuid>()
-            .HasOne(g => g.EstablecimientoDestinatario);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
