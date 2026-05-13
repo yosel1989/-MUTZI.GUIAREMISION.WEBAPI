@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemision;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
@@ -301,6 +302,40 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             var resultado = await _guiasRemisionBDService.ConfirmarAsync(id);
 
+            return Ok(resultado);
+        }
+
+        [HttpPut]
+        [Route("{id}/anular")]
+        [SwaggerOperation(
+            Summary = "Anular guia remisión",
+            Description = "Anular una guia de remisión y le pone el estado 'anulada'. Solo si la guía no fue emitida",
+            OperationId = "anular_guia_remision"
+        )]
+        [Permission("anular_guia_remision")]
+        //[ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AnularGuiaRemision(int id, [FromBody] GuiaRemisionCambioEstadoDTO request)
+        {
+            var resultado = await _guiasRemisionBDService.AnularAsync(request.GuiaRemisionId, request.Descripcion);
+            return Ok(resultado);
+        }
+
+        [HttpPut]
+        [Route("{id}/rechazar")]
+        [SwaggerOperation(
+            Summary = "Rechazar guia remisión",
+            Description = "Rechazar una guia de remisión y le pone el estado 'rechazada'. Solo si la guía no fue emitida",
+            OperationId = "rechazar_guia_remision"
+        )]
+        [Permission("rechazar_guia_remision")]
+        //[ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> RechazarGuiaRemision(int id, [FromBody] GuiaRemisionCambioEstadoDTO request)
+        {
+            var resultado = await _guiasRemisionBDService.RechazarAsync(request.GuiaRemisionId, request.Descripcion);
             return Ok(resultado);
         }
     }

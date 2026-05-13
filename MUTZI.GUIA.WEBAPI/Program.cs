@@ -92,6 +92,7 @@ builder.Services.AddAutoMapper(typeof(MappingPermiso).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingConductor).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingUnidadTransporte).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingTransportista).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingGuiaRemisionHistorial).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -132,6 +133,7 @@ builder.Services.AddScoped<IS3FileService, S3FileService>();
 builder.Services.AddScoped<IEstablecimientoService, EstablecimientoService>();
 builder.Services.AddScoped<ITransportistaService, TransportistaService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IGuiaRemisionHistorialService, GuiaRemisionHistorialService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAppDBContext, AppDBContext>();

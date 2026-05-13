@@ -275,7 +275,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     await _guiaRemisionHistorialRepository.RegistrarAsync(new GuiaRemisionHistorial
                     {
                         GuiaRemisionId = guia_id,
-                        Motivo = "Registro",
+                        Motivo = "Guía registrada",
                         UsuarioRegistro = currentUser.UserName,
                         UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
                         FechaRegistro = DateTime.UtcNow
@@ -436,9 +436,81 @@ namespace MUTZI.GUIA.APPLICATION.Services
             await _guiaRemisionHistorialRepository.RegistrarAsync(new GuiaRemisionHistorial
             {
                 GuiaRemisionId = guiaRemision.GuiaRemisionId,
-                Motivo = "Confirmación",
+                Motivo = "Guía confirmada",
                 ValorAnterior = anteriorValor,
                 ValorNuevo = EnumGuiaRemisionEstado.Confirmada.GetDescription(),
+                UsuarioRegistro = currentUser.UserName,
+                UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
+                FechaRegistro = DateTime.UtcNow
+            });
+
+            var guiaRemisionActualizada = await _repository.FindWithDetail(id);
+            return _mapper.Map<GuiaRemisionListDTO>(guiaRemisionActualizada);
+        }
+
+        public async Task<GuiaRemisionListDTO> AnularAsync(int id, string descripcion)
+        {
+            var currentUser = _authService.CurrentUser();
+            var guiaRemision = await _repository.GetByIdAsync2(id);
+            if (guiaRemision == null)
+            {
+                throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
+            }
+
+            var anteriorValor = guiaRemision.Estado;
+
+            guiaRemision.Estado = EnumGuiaRemisionEstado.Anulada.GetDescription();
+            guiaRemision.IdEstado = EnumGuiaRemisionEstado.Anulada;
+            guiaRemision.UsuarioModifico = currentUser.UserName;
+            guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision.FechaModifico = DateTime.UtcNow;
+
+            await _repository.UpdateAsync(guiaRemision);
+
+            // Registrar el historial
+            await _guiaRemisionHistorialRepository.RegistrarAsync(new GuiaRemisionHistorial
+            {
+                GuiaRemisionId = guiaRemision.GuiaRemisionId,
+                Motivo = "Guía anulada",
+                Descripcion = descripcion,
+                ValorAnterior = anteriorValor,
+                ValorNuevo = EnumGuiaRemisionEstado.Anulada.GetDescription(),
+                UsuarioRegistro = currentUser.UserName,
+                UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
+                FechaRegistro = DateTime.UtcNow
+            });
+
+            var guiaRemisionActualizada = await _repository.FindWithDetail(id);
+            return _mapper.Map<GuiaRemisionListDTO>(guiaRemisionActualizada);
+        }
+
+        public async Task<GuiaRemisionListDTO> RechazarAsync(int id, string descripcion)
+        {
+            var currentUser = _authService.CurrentUser();
+            var guiaRemision = await _repository.GetByIdAsync2(id);
+            if (guiaRemision == null)
+            {
+                throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
+            }
+
+            var anteriorValor = guiaRemision.Estado;
+
+            guiaRemision.Estado = EnumGuiaRemisionEstado.Rechazada.GetDescription();
+            guiaRemision.IdEstado = EnumGuiaRemisionEstado.Rechazada;
+            guiaRemision.UsuarioModifico = currentUser.UserName;
+            guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision.FechaModifico = DateTime.UtcNow;
+
+            await _repository.UpdateAsync(guiaRemision);
+
+            // Registrar el historial
+            await _guiaRemisionHistorialRepository.RegistrarAsync(new GuiaRemisionHistorial
+            {
+                GuiaRemisionId = guiaRemision.GuiaRemisionId,
+                Motivo = "Guía rechazada",
+                Descripcion = descripcion,
+                ValorAnterior = anteriorValor,
+                ValorNuevo = EnumGuiaRemisionEstado.Rechazada.GetDescription(),
                 UsuarioRegistro = currentUser.UserName,
                 UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
                 FechaRegistro = DateTime.UtcNow

@@ -19,6 +19,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 var data = await _context.GuiaRemisionHistorial
                     .AsNoTracking()
+                    .OrderBy(m => m.GuiaRemisionHistorialId)
                     .ToListAsync();
 
                 return data;
