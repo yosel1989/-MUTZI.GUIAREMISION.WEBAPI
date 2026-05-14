@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Genexs.AWS.Library;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
@@ -300,9 +301,20 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ConfirmarGuiaRemision(int id)
         {
-            var resultado = await _guiasRemisionBDService.ConfirmarAsync(id);
-
-            return Ok(resultado);
+            try
+            {
+                var resultado = await _guiasRemisionBDService.ConfirmarAsync(id);
+                return Ok(resultado);
+            }
+            catch (InvalidOperationException ex)
+            {
+                var errorResponse = new BadRequestResponseDTO
+                {
+                    Error = "Operación invalida",
+                    Detalle = ex.Message
+                };
+                return BadRequest(errorResponse);
+            }
         }
 
         [HttpPut]
@@ -318,8 +330,20 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> AnularGuiaRemision(int id, [FromBody] GuiaRemisionCambioEstadoDTO request)
         {
-            var resultado = await _guiasRemisionBDService.AnularAsync(request.GuiaRemisionId, request.Descripcion);
-            return Ok(resultado);
+            try
+            {
+                var resultado = await _guiasRemisionBDService.AnularAsync(request.GuiaRemisionId, request.Descripcion);
+                return Ok(resultado);
+            }
+            catch (InvalidOperationException ex)
+            {
+                var errorResponse = new BadRequestResponseDTO
+                {
+                    Error = "Operación invalida",
+                    Detalle = ex.Message
+                };
+                return BadRequest(errorResponse);
+            }
         }
 
         [HttpPut]
@@ -335,8 +359,20 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> RechazarGuiaRemision(int id, [FromBody] GuiaRemisionCambioEstadoDTO request)
         {
-            var resultado = await _guiasRemisionBDService.RechazarAsync(request.GuiaRemisionId, request.Descripcion);
-            return Ok(resultado);
+            try
+            {
+                var resultado = await _guiasRemisionBDService.RechazarAsync(request.GuiaRemisionId, request.Descripcion);
+                return Ok(resultado);
+            }
+            catch (InvalidOperationException ex)
+            {
+                var errorResponse = new BadRequestResponseDTO
+                {
+                    Error = "Operación invalida",
+                    Detalle = ex.Message
+                };
+                return BadRequest(errorResponse);
+            }
         }
     }
 }

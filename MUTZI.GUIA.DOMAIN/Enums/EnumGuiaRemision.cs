@@ -4,42 +4,36 @@ namespace MUTZI.GUIA.DOMAIN.Enums
     public enum EnumGuiaRemisionEstado
     {
         [Description("registrada")]
-        Registrada = 0,
+        Registrada = 1,
 
         [Description("editada")]
-        Editada = 1,
+        Editada = 2,
 
         [Description("confirmada")]
-        Confirmada = 2,
+        Confirmada = 3,
 
         [Description("aprobada")]
-        Aprobada = 3,
+        Aprobada = 4,
 
         [Description("emitida")]
-        Emitida = 4,
+        Emitida = 5,
 
-        [Description("confirmada_salida_despacho")]
-        ConfirmadaSalidaDespacho = 5,
+        [Description("salida_confirmada")]
+        SalidaConfirmada = 6,
 
         [Description("en_transito")]
-        EnTransito = 6,
+        EnTransito = 7,
 
-        [Description("registrada")]
-        ConfirmadaEntregaRecepcion = 7,
+        [Description("recepcion_confirmada")]
+        RecepcionConfirmada = 8,
 
-        [Description("confirmada_recepcion")]
-        ConfirmadaRecepcion = 8,
-
-        [Description("productos_validados_recepcion")]
-        ProductosValidadosRecepcion = 9,
-
-        [Description("guia_cerrada")]
-        GuiaCerrada = 10,
+        [Description("cerrada")]
+        Cerrada = 9,
 
         [Description("anulada")]
-        Anulada = 11,
+        Anulada = 10,
 
         [Description("rechazada")]
-        Rechazada = 12
+        Rechazada = 11
     }
 }

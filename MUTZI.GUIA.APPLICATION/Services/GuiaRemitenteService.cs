@@ -133,7 +133,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         "#", "Código", "EntidadRemitente", "RUC EntidadRemitente", "Remitente / Local",
                         "Tipo Guía", "N° Guía", "T. Traslado", "T. Transporte",
                         "F. Emisión", "H. Emisión", "Destinatario", "N° Doc. Destinatario",
-                        "Origen", "Destino", "Estado", "F. Registro", "U. Registro"
+                        "Origen", "Destino", "Nombre", "F. Registro", "U. Registro"
                     };
 
                     for (int col = 0; col < headers.Length; col++)
@@ -421,11 +421,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
             }
 
-            var anteriorValor = guiaRemision.Estado;
-
             var estado = EnumGuiaRemisionEstado.Confirmada;
-            guiaRemision.Estado = estado.GetDescription();
-            guiaRemision.IdEstado = EnumGuiaRemisionEstado.Confirmada;
+            guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Confirmada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
             guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
             guiaRemision.FechaModifico = DateTime.UtcNow;
@@ -437,7 +434,6 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 GuiaRemisionId = guiaRemision.GuiaRemisionId,
                 Motivo = "Guía confirmada",
-                ValorAnterior = anteriorValor,
                 ValorNuevo = EnumGuiaRemisionEstado.Confirmada.GetDescription(),
                 UsuarioRegistro = currentUser.UserName,
                 UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
@@ -459,8 +455,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             var anteriorValor = guiaRemision.Estado;
 
-            guiaRemision.Estado = EnumGuiaRemisionEstado.Anulada.GetDescription();
-            guiaRemision.IdEstado = EnumGuiaRemisionEstado.Anulada;
+            guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Anulada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
             guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
             guiaRemision.FechaModifico = DateTime.UtcNow;
@@ -473,7 +468,6 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 GuiaRemisionId = guiaRemision.GuiaRemisionId,
                 Motivo = "Guía anulada",
                 Descripcion = descripcion,
-                ValorAnterior = anteriorValor,
                 ValorNuevo = EnumGuiaRemisionEstado.Anulada.GetDescription(),
                 UsuarioRegistro = currentUser.UserName,
                 UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
@@ -495,8 +489,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             var anteriorValor = guiaRemision.Estado;
 
-            guiaRemision.Estado = EnumGuiaRemisionEstado.Rechazada.GetDescription();
-            guiaRemision.IdEstado = EnumGuiaRemisionEstado.Rechazada;
+            guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Rechazada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
             guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
             guiaRemision.FechaModifico = DateTime.UtcNow;
@@ -509,7 +502,6 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 GuiaRemisionId = guiaRemision.GuiaRemisionId,
                 Motivo = "Guía rechazada",
                 Descripcion = descripcion,
-                ValorAnterior = anteriorValor,
                 ValorNuevo = EnumGuiaRemisionEstado.Rechazada.GetDescription(),
                 UsuarioRegistro = currentUser.UserName,
                 UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",

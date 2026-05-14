@@ -4,7 +4,6 @@ using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Enums;
-using MUTZI.GUIA.APPLICATION.Helpers;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -99,11 +98,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             var estadoStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
                             if (estadoStrings.Length == 1)
                             {
-                                query = query.Where(x => x.Estado.ToLower() == estadoStrings[0]);
+                                query = query.Where(x => x.Estado.Nombre.ToLower() == estadoStrings[0]);
                             }
                             else
                             {
-                                query = query.Where(x => estadoStrings.Contains(x.Estado.ToLower()));
+                                query = query.Where(x => estadoStrings.Contains(x.Estado.Nombre.ToLower()));
                             }
                             continue;
                         }
@@ -134,7 +133,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                     x.Destinos.FirstOrDefault().Ubigeo.Distrito.ToLower().Contains(val) ||
                                     x.UsuarioRegistro.ToLower().Contains(val) || 
                                     x.UsuarioModifico.ToLower().Contains(val) ||
-                                    x.Estado.Contains(val)
+                                    x.Estado.Nombre.Contains(val)
                                 );
                                 break;
                         }
@@ -239,6 +238,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.UnidadMedida)
                 .Include(doc => doc.DocRelacionados)
+                .Include(doc => doc.Estado)
                 //.Include(e=>e.EmailDestinatarioGuids)
                 .ToListAsync();
         }
@@ -470,6 +470,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(doc => doc.DocRelacionados)
                 .Include(e => e.EmailDestinatarioGuids)
                 .Include(erm => erm.EmailRemiteTransportistaGuids)
+                .Include(erm => erm.Estado)
                 .FirstOrDefaultAsync(g => g.GuiaRemisionId == id);
 
             return data;
@@ -497,8 +498,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.RemitenteId = remitente.EstablecimientoId;
                 guiaRemision.Ruc = remitente.Ruc;
                 guiaRemision.DestinatarioId = destinatario.EstablecimientoId;
-                guiaRemision.Estado = EnumGuiaRemisionEstado.Registrada.GetDescription();
-                guiaRemision.IdEstado = EnumGuiaRemisionEstado.Registrada;
+                //guiaRemision.Nombre = EnumGuiaRemisionEstado.Registrada.GetDescription();
+                guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Registrada;
                 //if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
 
                 //string serie = guiaRemision.Serie ?? "T001";
@@ -630,7 +631,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             guia.RespuestaTicket = ticket;
             guia.EstadoSunat = estadoSunat;
             guia.IdEstadoSunat = (sbyte)idEstadoSunat;
-            //guia.Estado = estadoSunat;
+            //guia.Nombre = estadoSunat;
             //guia.IdEstado = (sbyte)idEstadoSunat;
             guia.FechaModifico = DateTime.UtcNow;
             await _context.SaveChangesAsync();

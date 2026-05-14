@@ -30,6 +30,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.EmailFacturador, opt => opt.MapFrom(src => src.RucNavigation.EmailPrincipal))
                 .ForMember(dest => dest.Remitente, opt => opt.MapFrom(src => src.Remitente))
                 .ForMember(dest => dest.Destinatario, opt => opt.MapFrom(src => src.Destinatario))
+                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.Nombre))
                 .ForMember(dest => dest.DatosEnvio, opt => opt.MapFrom(src => src.DatosEnvios.FirstOrDefault()))
                 //Mapear conductor y transporte dentro de DatosEnvio
                 //.ForMember(dest => dest.DatosEnvio.ConductorGuia, opt => opt.MapFrom(src => src.DatosEnvios.FirstOrDefault().ConductorGuids))
@@ -53,6 +54,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.DistritoOrigen, opt => opt.MapFrom(src => src.Origens.FirstOrDefault().Ubigeo.Distrito))
                 .ForMember(dest => dest.DireccionOrigen, opt => opt.MapFrom(src => src.Remitente.Direccion))
                 .ForMember(dest => dest.DireccionDestino, opt => opt.MapFrom(src => src.Destinatario.Direccion))
+                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.Nombre))
                 .ForMember(dest => dest.DistritoDestino, opt => opt.MapFrom(src => src.Destinos.FirstOrDefault().Ubigeo.Distrito))
                 ;
             CreateMap<GuiaRemitenteCreateDTO, DOMAIN.Entities.GuiaRemision>()

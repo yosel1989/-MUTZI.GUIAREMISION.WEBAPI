@@ -5,14 +5,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 
 public partial class LogisticaContext : DbContext
 {
-    public LogisticaContext()
-    {
-    }
-
     public LogisticaContext(DbContextOptions<LogisticaContext> options)
         : base(options)
     {
     }
+
 
     public virtual DbSet<Conductor> Conductor { get; set; }
 
@@ -53,6 +50,8 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<Permiso> Permiso { get; set; }
     public virtual DbSet<PerfilPermiso> PerfilPermiso { get; set; }
     public virtual DbSet<GuiaRemisionHistorial> GuiaRemisionHistorial { get; set; }
+    public virtual DbSet<GuiaRemisionEstado> GuiaRemisionEstado { get; set; }
+    public virtual DbSet<GuiaRemisionEstadoPermiso> GuiaRemisionEstadoPermiso { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -81,18 +80,21 @@ public partial class LogisticaContext : DbContext
             }
         );
 
-        /*modelBuilder.Entity<GuiaRemision>(entity =>
-        {
-            entity.HasOne(g => g.Remitente)
-                  .WithMany(e => e.GuiaRemisionsRemitente)
-                  .HasForeignKey(g => g.RemitenteId)
-                  .OnDelete(DeleteBehavior.ClientSetNull);
 
-            entity.HasOne(g => g.Destinatario)
-                  .WithMany(e => e.GuiaRemisionsDestinatario)
-                  .HasForeignKey(g => g.DestinatarioId)
-                  .OnDelete(DeleteBehavior.ClientSetNull);
-        });*/
+        modelBuilder.Entity<GuiaRemisionEstadoPermiso>()
+        .HasKey(pp => new { pp.GuiaRemisionEstadoId, pp.GuiaRemisionEstadoIdPermitido });
+
+        modelBuilder.Entity<GuiaRemisionEstadoPermiso>()
+            .HasOne(pp => pp.EstadoOrigen)
+            .WithMany(e => e.EstadosPermitidosDesde)
+            .HasForeignKey(pp => pp.GuiaRemisionEstadoId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<GuiaRemisionEstadoPermiso>()
+            .HasOne(pp => pp.EstadoDestino)
+            .WithMany(e => e.EstadosPermitidosHacia)
+            .HasForeignKey(pp => pp.GuiaRemisionEstadoIdPermitido)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

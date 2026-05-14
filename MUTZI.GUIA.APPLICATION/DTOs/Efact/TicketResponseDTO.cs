@@ -107,7 +107,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
 
         [JsonPropertyName("detalle")]
         [SwaggerSchema("Devuelve en texto el detalle de la transacción en la bbdd.", Nullable = false)]
-        public string Detalle { get; set; } = "Estado de registro actualizado correctamente.";
+        public string Detalle { get; set; } = "Nombre de registro actualizado correctamente.";
     }
     [SwaggerSchema("Recibe un objeto con los campos del empleado que está realizando la transacción")]
     public class InfoRequestDTO

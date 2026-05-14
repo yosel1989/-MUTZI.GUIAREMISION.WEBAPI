@@ -94,12 +94,8 @@ public partial class GuiaRemision
     [MaxLength(100)]
     public string? UsuarioModificoNombre { get; set; }
 
-    [Column("estado")]
-    [MaxLength(50)]
-    public string Estado { get; set; }
-
-    [Column("id_estado")]
-    public EnumGuiaRemisionEstado IdEstado { get; set; }
+    [Column("estado_id")]
+    public int IdEstado { get; set; }
 
     [Column("estado_sunat")]
     [MaxLength(50)]
@@ -137,4 +133,7 @@ public partial class GuiaRemision
 
     [ForeignKey(nameof(Ruc))]
     public virtual VentaConfig RucNavigation { get; set; } = null!;
+
+    [ForeignKey(nameof(IdEstado))]
+    public virtual GuiaRemisionEstado Estado { get; set; }
 }

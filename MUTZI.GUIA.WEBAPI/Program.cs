@@ -30,6 +30,7 @@ using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
 using MUTZI.GUIA.DOMAIN.Interfaces;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE;
+using MUTZI.GUIA.INFRASTRUCTURE.Interceptors;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
 using MUTZI.GUIA.WEBAPI.Filters;
@@ -76,13 +77,19 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Registrar el DbContext con la cadena de conexión desde appsettings.json
-builder.Services.AddDbContext<LogisticaContext>(options =>
+// Registrar el interceptor
+builder.Services.AddScoped<GuiaRemisionInterceptor>();
+
+builder.Services.AddDbContext<LogisticaContext>((sp,options) =>
+{
     options.UseMySql(
         builder.Configuration.GetConnectionString("cs_logistica"),
-        //ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("cs_logistica"))
         ServerVersion.Parse("8.0.45-mysql")
-    )
-);
+    );
+    options.AddInterceptors(sp.GetRequiredService<GuiaRemisionInterceptor>());
+});
+
+
 //Registrar AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingEstablecimiento).Assembly);
@@ -93,6 +100,7 @@ builder.Services.AddAutoMapper(typeof(MappingConductor).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingUnidadTransporte).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingTransportista).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingGuiaRemisionHistorial).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingGuiaRemisionEstado).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -111,6 +119,8 @@ builder.Services.AddScoped<IPerfilRepository, PerfilRepository>();
 builder.Services.AddScoped<IPermisoRepository, PermisoRepository>();
 builder.Services.AddScoped<IPerfilPermisoRepository, PerfilPermisoRepository>();
 builder.Services.AddScoped<IGuiaRemisionHistorialRepository, GuiaRemisionHistorialRepository>();
+builder.Services.AddScoped<IGuiaRemisionEstadoRepository, GuiaRemisionEstadoRepository>();
+builder.Services.AddScoped<IGuiaRemisionEstadoPermisoRepository, GuiaRemisionEstadoPermisoRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -134,6 +144,7 @@ builder.Services.AddScoped<IEstablecimientoService, EstablecimientoService>();
 builder.Services.AddScoped<ITransportistaService, TransportistaService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGuiaRemisionHistorialService, GuiaRemisionHistorialService>();
+builder.Services.AddScoped<IGuiaRemisionEstadoService, GuiaRemisionEstadoService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAppDBContext, AppDBContext>();

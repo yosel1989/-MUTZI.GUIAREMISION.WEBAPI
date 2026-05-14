@@ -39,6 +39,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(doc => doc.DocRelacionados)
                 .Include(e=>e.EmailRemiteTransportistaGuids)
                 .Include(e => e.EmailDestinatarioGuids)
+                .Include(e => e.Estado)
                 .FirstOrDefaultAsync(g => g.GuiaRemisionId == id);
             //?? throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
         }
@@ -67,7 +68,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.Ruc = remitente.Ruc;
                 guiaRemision.DestinatarioId = destinatario.EstablecimientoId;
                 guiaRemision.RemiteTransportistaId = remiteTransportista.TransportistaId;
-                guiaRemision.Estado = "REGISTRADO";
+                //guiaRemision.Nombre = "REGISTRADO";
                 guiaRemision.IdEstado = 0;
 
                 //string serie = guiaRemision.Serie ?? "V001";
