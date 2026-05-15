@@ -34,6 +34,7 @@ using MUTZI.GUIA.INFRASTRUCTURE.Interceptors;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
 using MUTZI.GUIA.WEBAPI.Filters;
+using MUTZI.GUIA.WEBAPI.Middlewares;
 using Serilog;
 using System.Text;
 
@@ -251,6 +252,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

@@ -42,7 +42,13 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [MaxLength(150)]
         public string UsuarioRegistroNombre { get; set; }
 
+        [Column("area_id")]
+        public int AreaId { get; set; }
+
         [ForeignKey(nameof(GuiaRemisionId))]
         public virtual GuiaRemision GuiaRemision { get; set; }
+
+        [ForeignKey(nameof(AreaId))]
+        public virtual Area Area { get; set; }
     }
 }

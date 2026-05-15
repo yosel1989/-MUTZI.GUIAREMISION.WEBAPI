@@ -11,6 +11,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
         Task<PagedResult<GuiaRemisionListDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q);
         Task<byte[]> ExportGuiasAsync(int pageNumber, int pageSize, IQueryCollection q);
         Task<object> GetByIdAsync(int id);
+        Task<GuiaRemitenteDTO> GetByUuidAsync(Guid uuid);
         Task<GuiaPorTicketDTO> GetByTicketAsync(string ticket);
         Task<object> CreateAsync(string ruc, GuiaRemitenteCreateDTO guiaRemisionDto);
         Task<GuiaRemitenteDTO> UpdateAsync(int id, GuiaRemitenteUpdateDTO guiaRemisionDto);
@@ -19,8 +20,8 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
         (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO doc, string ruc, Establecimiento? remitente, Establecimiento? destinatario, VentaConfig? ventaConfig);
         Task DeleteAsync(int id);
 
+        Task<GuiaRemisionListDTO> AprobarAsync(int id);
         Task<GuiaRemisionListDTO> ConfirmarAsync(int id);
-
         Task<GuiaRemisionListDTO> AnularAsync(int id, string descripcion);
         Task<GuiaRemisionListDTO> RechazarAsync(int id, string descripcion);
     }

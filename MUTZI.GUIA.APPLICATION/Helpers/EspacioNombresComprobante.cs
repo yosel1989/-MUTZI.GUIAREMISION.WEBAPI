@@ -50,9 +50,5 @@ namespace MUTZI.GUIA.APPLICATION.Helpers
         public const string _DocumentType06 = "6";//RUC
         public const string _DocumentType07 = "7";//PASAPORTE
 
-
-
-
-
     }
 }

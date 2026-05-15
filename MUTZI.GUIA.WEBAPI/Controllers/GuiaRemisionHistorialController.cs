@@ -4,6 +4,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemisionHistorial;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.WEBAPI.Attributes;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
@@ -22,8 +23,9 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [SwaggerOperation(
             Summary = "Listar el historial registrado de una guía de remisión",
             Description = "Listar el historial registrado de una guía de remisión",
-            OperationId = "listar_guia_remision_historial"
+            OperationId = "ver_historial_guia_remision"
         )]
+        [Permission("ver_historial_guia_remision")]
         [ProducesResponseType(typeof(IEnumerable<GuiaRemisionHistorialListDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]

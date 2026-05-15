@@ -153,6 +153,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .Select(g => new GuiaRemision
                     {
                         GuiaRemisionId = g.GuiaRemisionId,
+                        GuiaRemisionUuid = g.GuiaRemisionUuid,
                         TipoGuia = g.TipoGuia,
                         Ruc = g.Ruc,
                         RucNavigation = new VentaConfig
@@ -197,12 +198,20 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Destinos = g.Destinos.Select(d => new GuiaRemisionDestino { Ubigeo = d.Ubigeo }).ToList(),
                         FechaRegistro = g.FechaRegistro,
                         UsuarioRegistro = g.UsuarioRegistro,
+                        UsuarioRegistroNombre = g.UsuarioRegistroNombre,
                         FechaModifico = g.FechaModifico,
                         UsuarioModifico = g.UsuarioModifico,
+                        UsuarioModificoNombre = g.UsuarioModificoNombre,
                         Estado = g.Estado,
                         IdEstado = g.IdEstado,
                         EstadoSunat = g.EstadoSunat,
-                        IdEstadoSunat = g.IdEstadoSunat
+                        IdEstadoSunat = g.IdEstadoSunat,
+                        AreaId = g.AreaId,
+                        Area = new Area
+                        {
+                            Id = g.Area.Id,
+                            Descripcion = g.Area.Descripcion
+                        }
                     })
                     .AsNoTracking()
                     .ToListAsync();
@@ -239,6 +248,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .ThenInclude(gd => gd.UnidadMedida)
                 .Include(doc => doc.DocRelacionados)
                 .Include(doc => doc.Estado)
+                .Include(doc => doc.Area)
                 //.Include(e=>e.EmailDestinatarioGuids)
                 .ToListAsync();
         }
@@ -247,6 +257,33 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return await _context.GuiaRemision.Include(r => r.Remitente)
                 .FirstOrDefaultAsync(g => g.RespuestaTicket == ticket);
         }
+
+        public async Task<GuiaRemision?> GetByUuidAsync(Guid uuid)
+        {
+            try
+            {
+                var guiaRemision = await _context.GuiaRemision
+                .Include(g => g.Remitente)
+                .Include(g => g.Destinatario)
+                .Include(g => g.RemiteTransportista)
+                .Include(g => g.RucNavigation)
+                .Include(g => g.Proveedor)
+                .Include(g => g.GuiaDetalles)
+                .Include(g => g.DatosEnvios)
+                .Include(g => g.Origens)
+                .Include(g => g.Destinos)
+                .Include(g => g.Area)
+                .Where(g => g.GuiaRemisionUuid == uuid)
+                .FirstOrDefaultAsync();
+
+                return guiaRemision;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public async Task<GuiaRemision?> GetByIdAsync(int id)
         {
             try
@@ -267,6 +304,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                    
 
                     GuiaRemisionId = g.GuiaRemisionId,
+                    GuiaRemisionUuid = g.GuiaRemisionUuid,
                     TipoGuia = g.TipoGuia,
                     Ruc = g.Ruc,
                     RucNavigation = new VentaConfig
@@ -314,7 +352,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UsuarioModifico = g.Remitente.UsuarioModifico,
                         Estado = g.Remitente.Estado,
                         IdEstado = g.Remitente.IdEstado,
-                        //RucNavigation = g.Remitente.RucNavigation
+                        RucNavigation = g.Remitente.RucNavigation
                     },
                     Destinatario = new Establecimiento
                     {
@@ -331,7 +369,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UsuarioModifico = g.Destinatario.UsuarioModifico,
                         Estado = g.Destinatario.Estado,
                         IdEstado = g.Destinatario.IdEstado,
-                        //RucNavigation = g.Destinatario.RucNavigation
+                        RucNavigation = g.Destinatario.RucNavigation
                     },
                     Proveedor = g.Proveedor == null ? null : new Proveedor
                     {
@@ -433,7 +471,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     FechaRegistro = g.FechaRegistro,
                     UsuarioRegistro = g.UsuarioRegistro,
                     Estado = g.Estado,
-                    IdEstado = g.IdEstado
+                    IdEstado = g.IdEstado,
+                    Area = new Area
+                    {
+                        Id = g.Area.Id,
+                        Descripcion = g.Area.Descripcion
+                    }
                 })
                 .FirstOrDefaultAsync();
 
@@ -471,6 +514,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(e => e.EmailDestinatarioGuids)
                 .Include(erm => erm.EmailRemiteTransportistaGuids)
                 .Include(erm => erm.Estado)
+                .Include(erm => erm.Area)
                 .FirstOrDefaultAsync(g => g.GuiaRemisionId == id);
 
             return data;
@@ -667,6 +711,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .Select(g => new GuiaRemision
                     {
                         GuiaRemisionId = g.GuiaRemisionId,
+                        GuiaRemisionUuid = g.GuiaRemisionUuid,
                         TipoGuia = g.TipoGuia,
                         Ruc = g.Ruc,
                         RucNavigation = new VentaConfig
@@ -712,12 +757,19 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Destinos = g.Destinos.Select(d => new GuiaRemisionDestino { Ubigeo = d.Ubigeo }).ToList(),
                         FechaRegistro = g.FechaRegistro,
                         UsuarioRegistro = g.UsuarioRegistro,
+                        UsuarioRegistroNombre = g.UsuarioRegistroNombre,
                         FechaModifico = g.FechaModifico,
                         UsuarioModifico = g.UsuarioModifico,
+                        UsuarioModificoNombre = g.UsuarioModificoNombre,
                         Estado = g.Estado,
                         IdEstado = g.IdEstado,
                         EstadoSunat = g.EstadoSunat,
-                        IdEstadoSunat = g.IdEstadoSunat
+                        IdEstadoSunat = g.IdEstadoSunat,
+                        Area = new Area
+                        {
+                            Id = g.Area.Id,
+                            Descripcion = g.Area.Descripcion
+                        }
                     })
                     .AsNoTracking()
                     .FirstOrDefaultAsync();

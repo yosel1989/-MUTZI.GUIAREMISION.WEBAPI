@@ -1,5 +1,4 @@
-﻿using Genexs.AWS.Library;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
@@ -132,7 +131,44 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
-        
+
+        [HttpGet]
+        [Route("buscar-por-uuid/{guiaRemisionUuid:Guid}")]
+        [SwaggerOperation(
+            Summary = "Buscar guía de remisión por su Uuid",
+            Description = "Busca guía de remisión remitente o transportista por Uuid desde la bbdd",
+            OperationId = "buscar_guia_remision_por_uuid"
+        )]
+        [Permission("buscar_guia_remision_por_uuid")]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<object>> GetByUuid(int id)
+        {
+            try
+            {
+                var guia = await _guiasRemisionBDService.GetByIdAsync(id);
+                if (guia == null)
+                {
+                    return BadRequest(new BadRequestResponseDTO
+                    {
+                        Error = "No se encontraron registros",
+                        Detalle = $"No se pudo obtener guía de remisión con el ID: {id}. Verifique si el ID existe en la bbdd."
+                    });
+                }
+                return Ok(guia);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al buscar guía de remisión.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
         [HttpPost]
         [Route("registrar-remitente/{ruc}")]
         [SwaggerOperation(
@@ -236,9 +272,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [HttpPut]
         [Route("actualizar-transportista{id}")]
         [SwaggerOperation(
-        Summary = "Actualizar guía transportista",
-        Description = "Actualiza guía de remisión transportista por ID.",
-        OperationId = "actualizar_guia_transportista")]
+            Summary = "Actualizar guía transportista",
+            Description = "Actualiza guía de remisión transportista por ID.",
+            OperationId = "actualizar_guia_transportista"
+        )]
         [ProducesResponseType(typeof(GuiaTransportistaDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -273,6 +310,8 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ReenviarGuiaRemision(string ruc, int guiaId)
         {
+            var guiaAprobada = await _guiasRemisionBDService.AprobarAsync(guiaId);
+
             var resultado = await _envioService.ReenviarGuiaRemisionAsync(ruc, guiaId);
 
             return resultado switch

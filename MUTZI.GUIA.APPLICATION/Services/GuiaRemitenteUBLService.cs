@@ -50,11 +50,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 ID = new List<ID>{ new ID { _ = docRelacionado.RucDocRef , schemeID = EspacioNombreGuiaRemision._DocumentType06 }}
                             }}
                         }}
-                    }).ToList()
+                    }).ToList(),
 
-
-                    ,
-
+                    
                     Signature = new List<Signature>{ new Signature{
                         ID = new List<ID>{ new ID { _ = "IDSignature" } },
                         SignatoryParty = new List<SignatoryParty>{ new SignatoryParty {
@@ -79,7 +77,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.Pais } }}}
                             }},
                             PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _  = guia.Remitente.Descripcion }}}},
-                            Contact=guia.EmailFacturador==null?null: new List<Contact>
+                            Contact = guia.EmailFacturador == null ? null : new List<Contact>
                             {
                                 new Contact
                                 {

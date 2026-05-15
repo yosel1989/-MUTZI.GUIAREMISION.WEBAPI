@@ -55,8 +55,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public string? Observacion { get; set; }
 
         [JsonPropertyName("area")]
-        [SwaggerSchema("Devuelve en texto el área o departamento de la empresa", Nullable = true)]
-        public string? Area { get; set; }
+        [SwaggerSchema("Devuelve en texto el área.", Nullable = false)]
+        public string AreaNombre { get; set; } = null!;
 
         [JsonPropertyName("registro_mtc")]
         [SwaggerSchema("Devuelve en texto el número de registro MTC, este campo tiene valor si tipo_guia es 'TRANSPORTISTA'")]

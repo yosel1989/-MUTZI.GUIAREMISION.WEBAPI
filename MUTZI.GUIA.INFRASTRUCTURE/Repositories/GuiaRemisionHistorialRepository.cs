@@ -13,11 +13,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             _context = context;
         }
 
-        public async Task<List<GuiaRemisionHistorial>> ObtenerListadoByGuiaAsync(int guiaId)
+        public async Task<List<GuiaRemisionHistorial>> ObtenerListadoByGuiaAsync(int guiaRemisionId)
         {
             try
             {
                 var data = await _context.GuiaRemisionHistorial
+                    .Where(m => m.GuiaRemisionId == guiaRemisionId)
                     .AsNoTracking()
                     .OrderBy(m => m.GuiaRemisionHistorialId)
                     .ToListAsync();

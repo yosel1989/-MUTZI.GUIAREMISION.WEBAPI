@@ -52,6 +52,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<GuiaRemisionHistorial> GuiaRemisionHistorial { get; set; }
     public virtual DbSet<GuiaRemisionEstado> GuiaRemisionEstado { get; set; }
     public virtual DbSet<GuiaRemisionEstadoPermiso> GuiaRemisionEstadoPermiso { get; set; }
+    public virtual DbSet<Area> Area { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -95,6 +96,24 @@ public partial class LogisticaContext : DbContext
             .WithMany(e => e.EstadosPermitidosHacia)
             .HasForeignKey(pp => pp.GuiaRemisionEstadoIdPermitido)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<GuiaRemision>(entity =>
+        {
+            entity.ToTable("guia_remision", schema: "logistica");
+            entity.HasKey(g => g.GuiaRemisionId);
+
+            entity.HasOne(g => g.Area)
+                  .WithMany()
+                  .HasForeignKey(g => g.AreaId)
+                  .HasConstraintName("FK_GuiaRemision_Area");
+        });
+
+        // Entidad Area en schema rrhh
+        modelBuilder.Entity<Area>(entity =>
+        {
+            entity.ToTable("area", schema: "rrhh");
+            entity.HasKey(a => a.Id);
+        });
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

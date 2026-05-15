@@ -39,6 +39,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Origen, opt => opt.MapFrom(src => src.Origens.FirstOrDefault()))
                 .ForMember(dest => dest.Destino, opt => opt.MapFrom(src => src.Destinos))
                 .ForMember(dest => dest.Productos, opt => opt.MapFrom(src => src.GuiaDetalles))
+                .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Descripcion))
                 ;
             CreateMap<DOMAIN.Entities.GuiaRemision, GuiaRemisionListDTO>()
                 .ForMember(dest => dest.FechaEmision, opt => opt.MapFrom(src => src.Fecha.ToString("yyyy-MM-dd")))
@@ -56,6 +57,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.DireccionDestino, opt => opt.MapFrom(src => src.Destinatario.Direccion))
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.Nombre))
                 .ForMember(dest => dest.DistritoDestino, opt => opt.MapFrom(src => src.Destinos.FirstOrDefault().Ubigeo.Distrito))
+                .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Descripcion))
                 ;
             CreateMap<GuiaRemitenteCreateDTO, DOMAIN.Entities.GuiaRemision>()
                     .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src =>

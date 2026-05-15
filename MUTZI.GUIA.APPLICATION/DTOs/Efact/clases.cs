@@ -308,7 +308,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         public List<PartyIdentification> PartyIdentification { get; set; }
         public List<PostalAddress> PostalAddress { get; set; }
         public List<PartyLegalEntity> PartyLegalEntity { get; set; }
-        public List<Contact> Contact { get; set; }
+        public List<Contact>? Contact { get; set; }
     }
 
     public class PartyIdentification

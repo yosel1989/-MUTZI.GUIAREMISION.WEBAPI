@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
@@ -205,6 +206,18 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 throw;
             }
         }
+
+        public async Task<GuiaRemitenteDTO> GetByUuidAsync(Guid uuid)
+        {
+            var guiaRemision = await _repository.GetByUuidAsync(uuid);
+            if(guiaRemision is null)
+            {
+                throw new Exception("No se encontró la guía de remisión.");
+            }
+
+            return _mapper.Map<GuiaRemitenteDTO>(guiaRemision);
+        }
+
         public async Task<object> GetByIdAsync(int id)
         {
             var guiaRemision = await _repository.GetByIdAsync(id);
@@ -262,6 +275,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                     guiaRemision.UsuarioRegistro = currentUser.UserName;
                     guiaRemision.UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+                    guiaRemision.AreaId = currentUser.AreaId;
                     guiaRemision.FechaRegistro = DateTime.UtcNow;
 
 
@@ -278,6 +292,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         Motivo = "Guía registrada",
                         UsuarioRegistro = currentUser.UserName,
                         UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
+                        AreaId = currentUser.AreaId,
                         FechaRegistro = DateTime.UtcNow
                     });
 
@@ -412,6 +427,42 @@ namespace MUTZI.GUIA.APPLICATION.Services
             await _repository.DeleteAsync(id);
         }
 
+
+        public async Task<GuiaRemisionListDTO> AprobarAsync(int id)
+        {
+            var currentUser = _authService.CurrentUser();
+            var guiaRemision = await _repository.GetByIdAsync2(id);
+            if (guiaRemision == null)
+            {
+                throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
+            }
+            if (guiaRemision.IdEstado == (int)EnumGuiaRemisionEstado.Aprobada)
+            {
+                throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Aprobada.GetDescription()}'");
+            }
+            guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Aprobada;
+            guiaRemision.UsuarioModifico = currentUser.UserName;
+            guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision.FechaModifico = DateTime.UtcNow;
+
+            await _repository.UpdateAsync(guiaRemision);
+
+            // Registrar el historial
+            await _guiaRemisionHistorialRepository.RegistrarAsync(new GuiaRemisionHistorial
+            {
+                GuiaRemisionId = guiaRemision.GuiaRemisionId,
+                Motivo = "Guía aprobada",
+                ValorNuevo = EnumGuiaRemisionEstado.Aprobada.GetDescription(),
+                UsuarioRegistro = currentUser.UserName,
+                UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
+                AreaId = currentUser.AreaId,
+                FechaRegistro = DateTime.UtcNow
+            });
+
+            var guiaRemisionActualizada = await _repository.FindWithDetail(id);
+            return _mapper.Map<GuiaRemisionListDTO>(guiaRemisionActualizada);
+        }
+
         public async Task<GuiaRemisionListDTO> ConfirmarAsync(int id)
         {
             var currentUser = _authService.CurrentUser();
@@ -420,8 +471,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
             }
+            if (guiaRemision.IdEstado == (int)EnumGuiaRemisionEstado.Confirmada)
+            {
+                throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Confirmada.GetDescription()}'");
+            }
 
-            var estado = EnumGuiaRemisionEstado.Confirmada;
             guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Confirmada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
             guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
@@ -437,6 +491,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 ValorNuevo = EnumGuiaRemisionEstado.Confirmada.GetDescription(),
                 UsuarioRegistro = currentUser.UserName,
                 UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
+                AreaId = currentUser.AreaId,
                 FechaRegistro = DateTime.UtcNow
             });
 
@@ -452,8 +507,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
             }
-
-            var anteriorValor = guiaRemision.Estado;
+            if(guiaRemision.IdEstado == (int)EnumGuiaRemisionEstado.Anulada)
+            {
+                throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Anulada.GetDescription()}'");
+            }
 
             guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Anulada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
@@ -471,6 +528,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 ValorNuevo = EnumGuiaRemisionEstado.Anulada.GetDescription(),
                 UsuarioRegistro = currentUser.UserName,
                 UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
+                AreaId = currentUser.AreaId,
                 FechaRegistro = DateTime.UtcNow
             });
 
@@ -486,8 +544,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
             }
-
-            var anteriorValor = guiaRemision.Estado;
+            if (guiaRemision.IdEstado == (int)EnumGuiaRemisionEstado.Rechazada)
+            {
+                throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Rechazada.GetDescription()}'");
+            }
 
             guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Rechazada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
@@ -505,6 +565,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 ValorNuevo = EnumGuiaRemisionEstado.Rechazada.GetDescription(),
                 UsuarioRegistro = currentUser.UserName,
                 UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
+                AreaId = currentUser.AreaId,
                 FechaRegistro = DateTime.UtcNow
             });
 

@@ -1,5 +1,4 @@
-﻿using MUTZI.GUIA.DOMAIN.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
@@ -10,6 +9,9 @@ public partial class GuiaRemision
     [Key]
     [Column("guia_remision_id")]
     public int GuiaRemisionId { get; set; }
+
+    [Column("guia_remision_uuid")]
+    public Guid GuiaRemisionUuid { get; set; } = Guid.NewGuid();
 
     [Column("numero_guia")]
     [MaxLength(15)]
@@ -62,9 +64,8 @@ public partial class GuiaRemision
     [Column("proveedor_id")]
     public int? ProveedorId { get; set; }
 
-    [Column("area")]
-    [MaxLength(100)]
-    public string? Area { get; set; }
+    [Column("area_id")]
+    public int AreaId { get; set; }
 
     [Column("registro_mtc")]
     [MaxLength(20)]
@@ -136,4 +137,7 @@ public partial class GuiaRemision
 
     [ForeignKey(nameof(IdEstado))]
     public virtual GuiaRemisionEstado Estado { get; set; }
+
+    //[ForeignKey(nameof(AreaId))]
+    public virtual Area Area { get; set; }
 }
