@@ -76,7 +76,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 District= new List<District>{ new District { _ = guia.Remitente.Distrito } },
                                 Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.Pais } }}}
                             }},
-                            PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _  = guia.Remitente.Descripcion }}}},
+                            PartyLegalEntity = new List<PartyLegalEntity>{ 
+                                new PartyLegalEntity { 
+                                    RegistrationName = new List<RegistrationName> { 
+                                        new RegistrationName { _  = guia.Remitente.RazonSocial }}
+                                }},
                             Contact = guia.EmailFacturador == null ? null : new List<Contact>
                             {
                                 new Contact
@@ -92,6 +96,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             }
                         }},
                     }},
+
                     //Destinatario
                     DeliveryCustomerParty = new List<DeliveryCustomerParty>{ new DeliveryCustomerParty {
                         Party = new List<Party>{ new Party {
@@ -129,6 +134,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             } : null
                         }}
                     }},
+
                     //El proveedor se crea solo si el tipo de traslado es compra
                     SellerSupplierParty = guia.TipoTraslado == "COMPRA" ? new List<SellerSupplierParty>{ new SellerSupplierParty {
                         Party = new List<Party>{ new Party {
@@ -145,10 +151,6 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _  = guia.Proveedor.RazonSocial }}}}
                         }},
                     }} : null,
-
-
-
-
 
 
                     DespatchLine = new List<DespatchLine>{}
@@ -238,6 +240,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         }}
                 }).ToList();
             }
+
+
             if (guia.DatosEnvio.TransporteGuia != null && guia.DatosEnvio.TransporteGuia.Any())
             {
                 var transportes = guia.DatosEnvio.TransporteGuia.ToList();

@@ -28,7 +28,5 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemisionHistorial
         [JsonPropertyName("area")]
         public string AreaNombre { get; set; } = string.Empty;
 
-        [JsonPropertyName("area_id")]
-        public int AreaId { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
+using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
@@ -80,10 +81,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [Required]
         public List<string> DestinatarioEmail { get; set; } = new List<string>();
 
-        [JsonPropertyName("proveedor")]
+        [JsonPropertyName("proveedor_id")]
         [SwaggerSchema("Recibe un objeto con el ID del proveedor que va a ser asociado a la guía", Nullable = true)]
         public int? ProveedorId { get; set; }
-        
+
+        [JsonPropertyName("proveedor")]
+        public ProveedorDTO Proveedor { get; set; }
+
         [JsonPropertyName("datos_envio")]
         [Required]
         public DatosEnvioCreateDTO DatosEnvio { get; set; }

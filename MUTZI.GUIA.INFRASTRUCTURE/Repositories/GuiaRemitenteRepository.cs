@@ -208,9 +208,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         IdEstadoSunat = g.IdEstadoSunat,
                         AreaId = g.AreaId,
                         Area = new Area {
-                            Id = 1,
-                            Descripcion = "SISTEMAS"
-                        } //g.Area
+                            Descripcion = g.Area.Descripcion
+                        }
                     })
                     .AsNoTracking()
                     .ToListAsync();
@@ -430,7 +429,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 Licencia = cg.Conductor.Licencia
                             }
                         }).ToList(),
-                        /*TransporteGuids = env.TransporteGuids.Select(tg => new UnidadTransporteGuid
+                        TransporteGuids = env.TransporteGuids.Select(tg => new UnidadTransporteGuid
                         {
                             TransporteGuidId = tg.TransporteGuidId,
                             DatosEnvioId = tg.DatosEnvioId,
@@ -444,7 +443,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 EmisorVehicular = tg.Transporte.EmisorVehicular,
                                 CodEmisorVehicular = tg.Transporte.CodEmisorVehicular,
                             }
-                        }).ToList(),*/
+                        }).ToList(),
                     }).ToList(),
 
                     // Puntos de Origen

@@ -18,6 +18,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 var data = await _context.GuiaRemisionHistorial
+                    .Include(m => m.Area)
                     .Where(m => m.GuiaRemisionId == guiaRemisionId)
                     .AsNoTracking()
                     .OrderBy(m => m.GuiaRemisionHistorialId)

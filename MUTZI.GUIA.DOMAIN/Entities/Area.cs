@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities
 {
-    [Table("area", Schema = "rrhh")]
+    [Table("vw_rrhh_area")]
     public partial class Area
     {
         [Key]

@@ -108,7 +108,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             using var form = new MultipartFormDataContent();
             using var streamContent = new StreamContent(contentStream);
             var contentType = string.IsNullOrWhiteSpace(s3Object.ContentType) ? "application/json" : s3Object.ContentType;
-            streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
+            streamContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
             // Archivo .json
             form.Add(streamContent, "file", nombreArchivoJson);

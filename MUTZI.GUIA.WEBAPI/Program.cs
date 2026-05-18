@@ -104,6 +104,7 @@ builder.Services.AddAutoMapper(typeof(MappingUnidadTransporte).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingTransportista).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingGuiaRemisionHistorial).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingGuiaRemisionEstado).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingArea).Assembly);
 
 builder.Services.AddSignalR();
 

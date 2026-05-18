@@ -97,22 +97,6 @@ public partial class LogisticaContext : DbContext
             .HasForeignKey(pp => pp.GuiaRemisionEstadoIdPermitido)
             .OnDelete(DeleteBehavior.Restrict);
 
-        modelBuilder.Entity<Area>(entity =>
-        {
-            entity.ToTable("area", schema: "rrhh");
-            entity.HasKey(a => a.Id);
-        });
-
-        modelBuilder.Entity<GuiaRemision>(entity =>
-        {
-            entity.ToTable("guia_remision", schema: "logistica");
-            entity.HasKey(g => g.GuiaRemisionId);
-
-            /*entity.HasOne(g => g.Area)
-                  .WithMany()
-                  .HasForeignKey(g => g.AreaId)
-                  .HasConstraintName("guia_remision_ibfk_8");*/
-        });
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

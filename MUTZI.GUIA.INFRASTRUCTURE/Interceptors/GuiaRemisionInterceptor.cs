@@ -40,8 +40,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Interceptors
                         .Select(e => e.Nombre)
                         .FirstOrDefaultAsync(cancellationToken);
 
-                    throw new InvalidOperationException(
-                        $"Operación inválida, cambio de estado '{estadoOriginal}' a '{estadoNuevo}'");
+                    if(estadoNuevo != estadoOriginal)
+                    {
+                        throw new InvalidOperationException($"Operación inválida, cambio de estado '{estadoOriginal}' a '{estadoNuevo}'");
+                    }
                 }
             }
 
