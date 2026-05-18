@@ -2,7 +2,7 @@
 
 namespace MUTZI.GUIA.DOMAIN.Entities
 {
-    [Table("guia_remision_estado_permiso")]
+    [Table("guia_remision_estado_permiso", Schema = "logistica")]
     public class GuiaRemisionEstadoPermiso
     {
         [Column("guia_remision_estado_id")]

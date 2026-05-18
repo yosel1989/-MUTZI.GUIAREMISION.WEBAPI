@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("emailDestinatarioGuid")]
+[Table("emailDestinatarioGuid", Schema = "logistica")]
 public partial class EmailDestinatarioGuid
 {
     [Key]

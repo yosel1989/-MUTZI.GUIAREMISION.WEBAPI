@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("guia_remision")]
+[Table("guia_remision", Schema = "logistica")]
 public partial class GuiaRemision
 {
     [Key]
@@ -138,6 +138,6 @@ public partial class GuiaRemision
     [ForeignKey(nameof(IdEstado))]
     public virtual GuiaRemisionEstado Estado { get; set; }
 
-    //[ForeignKey(nameof(AreaId))]
+    [ForeignKey(nameof(AreaId))]
     public virtual Area Area { get; set; }
 }

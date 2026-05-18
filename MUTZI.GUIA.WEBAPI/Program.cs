@@ -81,11 +81,13 @@ builder.Services.AddSwaggerGen();
 // Registrar el interceptor
 builder.Services.AddScoped<GuiaRemisionInterceptor>();
 
+
+var connectionString = builder.Configuration.GetConnectionString("cs_logistica");
 builder.Services.AddDbContext<LogisticaContext>((sp,options) =>
 {
     options.UseMySql(
-        builder.Configuration.GetConnectionString("cs_logistica"),
-        ServerVersion.Parse("8.0.45-mysql")
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
     );
     options.AddInterceptors(sp.GetRequiredService<GuiaRemisionInterceptor>());
 });
@@ -122,6 +124,7 @@ builder.Services.AddScoped<IPerfilPermisoRepository, PerfilPermisoRepository>();
 builder.Services.AddScoped<IGuiaRemisionHistorialRepository, GuiaRemisionHistorialRepository>();
 builder.Services.AddScoped<IGuiaRemisionEstadoRepository, GuiaRemisionEstadoRepository>();
 builder.Services.AddScoped<IGuiaRemisionEstadoPermisoRepository, GuiaRemisionEstadoPermisoRepository>();
+builder.Services.AddScoped<IAreaRepository, AreaRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -146,6 +149,7 @@ builder.Services.AddScoped<ITransportistaService, TransportistaService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGuiaRemisionHistorialService, GuiaRemisionHistorialService>();
 builder.Services.AddScoped<IGuiaRemisionEstadoService, GuiaRemisionEstadoService>();
+builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAppDBContext, AppDBContext>();

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("unidadMedida")]
+[Table("unidadMedida", Schema = "logistica")]
 public partial class UnidadMedida
 {
     [Key]

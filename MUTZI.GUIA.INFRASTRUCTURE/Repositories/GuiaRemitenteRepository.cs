@@ -19,7 +19,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 var query = _context.GuiaRemision
-                    //.Include(m => m.Remitente)
+                    //.Include(m => m.Area)
                     //    .ThenInclude(m => m.RucNavigation)
                     //.Include(m => m.Destinatario)
                     //    .ThenInclude(m => m.RucNavigation)
@@ -207,11 +207,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         EstadoSunat = g.EstadoSunat,
                         IdEstadoSunat = g.IdEstadoSunat,
                         AreaId = g.AreaId,
-                        Area = new Area
-                        {
-                            Id = g.Area.Id,
-                            Descripcion = g.Area.Descripcion
-                        }
+                        Area = new Area {
+                            Id = 1,
+                            Descripcion = "SISTEMAS"
+                        } //g.Area
                     })
                     .AsNoTracking()
                     .ToListAsync();
