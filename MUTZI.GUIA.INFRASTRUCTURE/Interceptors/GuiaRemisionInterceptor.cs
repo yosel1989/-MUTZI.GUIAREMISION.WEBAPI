@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.InkML;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.Area;
+using MUTZI.GUIA.APPLICATION.DTOs.Conductor;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
+using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -33,6 +35,35 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             try
             {
                 var areas = await _service.ListToSelectAsync();
+                return Ok(areas);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar areas.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+        [HttpGet]
+        [Route("listar-sugerida")]
+        [SwaggerOperation(
+            Summary = "Listar areas sugeridas",
+            Description = "Lista las areas sugeridos por número de descripcion",
+            OperationId = "listar_area_sugerida"
+        )]
+        //[Permission("listar_area_sugerida")]
+        [ProducesResponseType(typeof(IEnumerable<AreaDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<AreaDTO>>> GetBySuggestion([FromQuery] string? text)
+        {
+            try
+            {
+                var areas = await _service.GetListBySuggestion(text);
                 return Ok(areas);
             }
             catch (Exception ex)

@@ -352,14 +352,14 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                         ID = new List<ID_Int> { new ID_Int { _ = i + 1 } },
                         Note = new List<Note> { new Note { _ = string.IsNullOrWhiteSpace(p.DescripcionUM) ? "UNIDAD" : p.DescripcionUM } },
                         DeliveredQuantity = new List<DeliveredQuantity> {
-                            new DeliveredQuantity { _ = p.cantidad, unitCode = string.IsNullOrWhiteSpace(p.CodigoUM) ? "ZZ" : p.CodigoUM }
+                            new DeliveredQuantity { _ = p.Cantidad, unitCode = string.IsNullOrWhiteSpace(p.CodigoUm) ? "ZZ" : p.CodigoUm }
                         },
                         OrderLineReference = new List<OrderLineReference> { new OrderLineReference { LineID = new List<LineID> { new LineID { _ = i + 1 } } } },
                         Item = new List<Item> {
                             new Item {
-                                Description = new List<Description> { new Description { _ = p.descripcion } },
-                                SellersItemIdentification = string.IsNullOrWhiteSpace(p.codigo) ? null : new List<SellersItemIdentification> {
-                                    new SellersItemIdentification { ID = new List<ID> { new ID { _ = p.codigo } } }
+                                Description = new List<Description> { new Description { _ = p.Descripcion } },
+                                SellersItemIdentification = string.IsNullOrWhiteSpace(p.Codigo) ? null : new List<SellersItemIdentification> {
+                                    new SellersItemIdentification { ID = new List<ID> { new ID { _ = p.Codigo } } }
                                 }
                             }
                         }

@@ -20,5 +20,25 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Area>> GetListBySuggestion(string? text)
+        {
+            try
+            {
+                var query = _context.Area.Where(c => c.Estado == 1);
+                if (!string.IsNullOrEmpty(text))
+                {
+                    query = query.Where(c =>
+                        c.Descripcion.Contains(text)
+                    );
+                }
+                var data = await query.ToListAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
     }
 }

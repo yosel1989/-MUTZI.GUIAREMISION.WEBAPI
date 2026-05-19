@@ -35,5 +35,19 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
         }
 
+        public async Task<IEnumerable<AreaDTO>> GetListBySuggestion(string? text)
+        {
+            try
+            {
+                var data = await _repository.GetListBySuggestion(text);
+                return _mapper.Map<List<AreaDTO>>(data);
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception(msg);
+            }
+        }
+
     }
 }

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("conductorGuid", Schema = "logistica")]
+[Table("conductorGuid")]
 public partial class ConductorGuid
 {
     [Key]

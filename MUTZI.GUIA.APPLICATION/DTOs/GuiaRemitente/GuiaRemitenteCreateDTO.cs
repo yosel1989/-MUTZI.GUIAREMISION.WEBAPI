@@ -86,7 +86,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public int? ProveedorId { get; set; }
 
         [JsonPropertyName("proveedor")]
-        public ProveedorDTO Proveedor { get; set; }
+        public ProveedorCreateGuiaDTO? Proveedor { get; set; }
 
         [JsonPropertyName("datos_envio")]
         [Required]

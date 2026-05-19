@@ -334,13 +334,13 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     Note = new List<Note> { new Note { _ = string.IsNullOrWhiteSpace(item.DescripcionUM) ? "UNIDAD" : item.DescripcionUM } },
                     DeliveredQuantity = new List<DeliveredQuantity>
                     {
-                        new DeliveredQuantity { _ = item.cantidad, unitCode = string.IsNullOrWhiteSpace(item.CodigoUM) ? "ZZ" : item.CodigoUM}
+                        new DeliveredQuantity { _ = item.Cantidad, unitCode = string.IsNullOrWhiteSpace(item.CodigoUm) ? "ZZ" : item.CodigoUm}
                     },
                     OrderLineReference = new List<OrderLineReference> { new OrderLineReference { LineID = new List<LineID> { new LineID { _ = i + 1 } } } },
                     Item = new List<Item> { new Item {
-                        Description = new List<Description>{ new Description { _ = item.descripcion }},
+                        Description = new List<Description>{ new Description { _ = item.Descripcion }},
                         SellersItemIdentification = new List<SellersItemIdentification>{new SellersItemIdentification {
-                            ID = new List<ID>{new ID { _ = item.codigo }}
+                            ID = new List<ID>{new ID { _ = item.Codigo }}
                         }}
                     }}
                 });

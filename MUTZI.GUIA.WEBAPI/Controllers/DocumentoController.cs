@@ -4,6 +4,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
+using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -68,9 +69,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 
         [HttpGet("pdf/{ruc}/{tipoGuia}/{numeroGuia}")]
         [SwaggerOperation(
-        Summary = "Obtener guía en PDF",
-        Description = "Obtiene un archivo PDF de la guía emitida. (En tipoGuia solo acepta valores de: 'REMITENTE' ó 'TRANSPORTISTA')",
-        OperationId = "guia_pdf")]
+            Summary = "Obtener guía en PDF",
+            Description = "Obtiene un archivo PDF de la guía emitida. (En tipoGuia solo acepta valores de: 'REMITENTE' ó 'TRANSPORTISTA')",
+            OperationId = "ver_pdf_guia_remision"
+        )]
+        [Permission("ver_pdf_guia_remision")]
         [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]

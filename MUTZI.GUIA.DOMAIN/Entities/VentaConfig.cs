@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MUTZI.GUIA.DOMAIN.Entities
 {
 
-    [Table("VentaConfig", Schema = "logistica")]
+    [Table("VentaConfig")]
     public partial class VentaConfig
     {
         [Column("ventaConfigID")]

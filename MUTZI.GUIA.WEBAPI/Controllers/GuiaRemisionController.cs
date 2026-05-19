@@ -143,17 +143,17 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<object>> GetByUuid(int id)
+        public async Task<ActionResult<object>> GetByUuid(Guid guiaRemisionUuid)
         {
             try
             {
-                var guia = await _guiasRemisionBDService.GetByIdAsync(id);
+                var guia = await _guiasRemisionBDService.GetByUuidAsync(guiaRemisionUuid);
                 if (guia == null)
                 {
                     return BadRequest(new BadRequestResponseDTO
                     {
                         Error = "No se encontraron registros",
-                        Detalle = $"No se pudo obtener guía de remisión con el ID: {id}. Verifique si el ID existe en la bbdd."
+                        Detalle = $"No se pudo obtener guía de remisión con el ID: {guiaRemisionUuid}. Verifique si el ID existe en la bbdd."
                     });
                 }
                 return Ok(guia);
