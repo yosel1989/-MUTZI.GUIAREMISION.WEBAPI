@@ -16,7 +16,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
     public class EnvioService : IEnvioService
     {
         private readonly IConfiguration _config;
-        private readonly IGuiaRemitenteService _guiaRemitenteBDService;
+        //private readonly IGuiaRemitenteService _guiaRemitenteBDService;
         private readonly IGuiaTransportistaService _guiaTransportistaBDService;
         private readonly IGuiaRemitenteUBLService _guiaRemitenteUBLService;
         private readonly IGuiaTransportistaUBLService _guiaTransportistaUBLService;
@@ -26,11 +26,20 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
         private readonly IS3FileService _s3FileService;
         private readonly string _baseUrl = "";
         private readonly IHubContext<GuiasHub> _hubContext;
-        public EnvioService(IConfiguration config, IGuiaRemitenteService guiaRemitenteBDService, IGuiaTransportistaService guiaTransportistaBDService, IGuiaRemitenteUBLService guiaRemitenteUBLService, IGuiaTransportistaUBLService guiaTransportistaUBLService, IVentaConfigService ventaConfigService, HttpClient httpClient, IS3FileService s3FileService,
-            IHubContext<GuiasHub> hubContext)
+        public EnvioService(
+            IConfiguration config, 
+            //IGuiaRemitenteService guiaRemitenteBDService, 
+            IGuiaTransportistaService guiaTransportistaBDService, 
+            IGuiaRemitenteUBLService guiaRemitenteUBLService, 
+            IGuiaTransportistaUBLService guiaTransportistaUBLService, 
+            IVentaConfigService ventaConfigService, 
+            HttpClient httpClient, 
+            IS3FileService s3FileService,
+            IHubContext<GuiasHub> hubContext
+        )
         {
             _config = config;
-            _guiaRemitenteBDService = guiaRemitenteBDService;
+            //_guiaRemitenteBDService = guiaRemitenteBDService;
             _guiaTransportistaBDService = guiaTransportistaBDService;
             _guiaRemitenteUBLService = guiaRemitenteUBLService;
             _guiaTransportistaUBLService = guiaTransportistaUBLService;
@@ -161,7 +170,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
         //    }
         //}
 
-        public async Task<object> ReenviarGuiaRemisionAsync(string ruc, int guiaId)
+        /*public async Task<object> ReenviarGuiaRemisionAsync(string ruc, int guiaId)
         {
             string ticket = "";
             string estado = "";
@@ -294,8 +303,9 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                     Detalle = errorMsg
                 };
             }
-        }
-        public async Task<object> ProcesarGuiaTransportistaAsync(string ruc, GuiaTransportistaCreateDTO doc)
+        }*/
+
+        /*public async Task<object> ProcesarGuiaTransportistaAsync(string ruc, GuiaTransportistaCreateDTO doc)
         {
             string ticket = "";
             string estado = "";
@@ -407,7 +417,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                     Detalle = errorMsg
                 };
             }
-        }
+        }*/
 
         public async Task<object> ReenviarGuiaTransportistaAsync(string ruc, int guiaId)
         {

@@ -9,11 +9,15 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.Services.Envio;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Enums;
 using MUTZI.GUIA.DOMAIN.Interfaces;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
+using System;
+using System.Text.Json;
 
 namespace MUTZI.GUIA.APPLICATION.Services
 {
@@ -22,15 +26,21 @@ namespace MUTZI.GUIA.APPLICATION.Services
         private readonly IGuiaRemitenteRepository _repository;
         private readonly IGuiaRemisionHistorialRepository _guiaRemisionHistorialRepository;
         private readonly IEstablecimientoRepository _establecimientoRepository;
+        private readonly IMotivoTrasladoRepository _motivoTrasladoRepository;
         private readonly IProveedorRepository _proveedorRepository;
         private readonly IVentaConfigRepository _ventaConfigRepository;
+        private readonly IGuiaRemitenteUBLService _guiaRemitenteUBLService;
+        private readonly IEnvioService _envioService;
         private readonly IMapper _mapper;
         private readonly IAuthService _authService;
         private readonly IAppDBContext _appDBContext;
         public GuiaRemitenteService(
             IGuiaRemitenteRepository repository,
             IGuiaRemisionHistorialRepository guiaRemisionHistorialRepository,
+            IGuiaRemitenteUBLService guiaRemitenteUBLService,
+            IEnvioService envioService,
             IVentaConfigRepository ventaConfigRepository,
+            IMotivoTrasladoRepository motivoTrasladoRepository,
             IEstablecimientoRepository establecimientoRepository,
             IProveedorRepository proveedorRepository,
             IMapper mapper,
@@ -40,7 +50,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
         {
             _repository = repository;
             _guiaRemisionHistorialRepository = guiaRemisionHistorialRepository;
+            _guiaRemitenteUBLService = guiaRemitenteUBLService;
+            _envioService = envioService;
             _establecimientoRepository = establecimientoRepository;
+            _motivoTrasladoRepository = motivoTrasladoRepository;
             _proveedorRepository = proveedorRepository;
             _ventaConfigRepository = ventaConfigRepository;
             _mapper = mapper;
@@ -151,7 +164,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         worksheet.Cell(row, 5).Value = item.EstablecimientoRemitente;
                         worksheet.Cell(row, 6).Value = item.TipoGuia;
                         worksheet.Cell(row, 7).Value = item.NumeroGuia;
-                        worksheet.Cell(row, 8).Value = item.TipoTraslado;
+                        worksheet.Cell(row, 8).Value = item.MotivoTrasladoNombre;
                         worksheet.Cell(row, 9).Value = item.TipoTransporte;
                         worksheet.Cell(row, 10).Value = item.FechaEmision;
                         worksheet.Cell(row, 11).Value = item.HoraEmision;
@@ -244,6 +257,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     var currentUser = _authService.CurrentUser();
                     // Mapear todos los objetos
+                    var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(dto.MotivoTrasladoId);
                     var remitente = await _establecimientoRepository.GetByIdAsync(dto.RemitenteId);
                     var destinatario = await _establecimientoRepository.GetByIdAsync(dto.DestinatarioId);
                     var destinatarioEmails = dto.DestinatarioEmail.Select(p => _mapper.Map<EmailDestinatarioGuid>(p)).ToList();
@@ -258,6 +272,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DocRelacionado>(p)).ToList();
                     var ventaConfig = await _ventaConfigRepository.GetByRucAsync(ruc);
 
+                    if (motivoTraslado is null) throw new Exception("No existe el motivo de traslado.");
                     if (remitente is null) throw new Exception("No existe este remitente.");
                     if (destinatario is null) throw new Exception("No existe este destinatario.");
                     if (ventaConfig is null) throw new Exception($"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");
@@ -435,10 +450,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
             }
-            if (guiaRemision.IdEstado == (int)EnumGuiaRemisionEstado.Aprobada)
+            /*if (guiaRemision.IdEstado == (int)EnumGuiaRemisionEstado.Aprobada)
             {
                 throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Aprobada.GetDescription()}'");
-            }
+            }*/
             guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Aprobada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
             guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
@@ -570,6 +585,131 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             var guiaRemisionActualizada = await _repository.FindWithDetail(id);
             return _mapper.Map<GuiaRemisionListDTO>(guiaRemisionActualizada);
+        }
+
+
+
+
+        public async Task<object> AprobarEnviarAsync(int id)
+        {
+
+            string ticket = "";
+            string estado = "";
+            int idEstado = 0;
+
+            await _appDBContext.BeginTransactionAsync();
+
+            try
+            {
+                var guiaAprobada = await AprobarAsync(id);
+
+
+                var guiaExistente = await GetByIdAsync(id);
+
+                if (guiaExistente == null)
+                {
+                    return new BadRequestResponseDTO
+                    {
+                        Error = "Guía no encontrada",
+                        Detalle = $"No se encontró una guía de remisión con ID {id}."
+                    };
+                }
+                string nombreArchivo;
+                if (guiaExistente is GuiaRemitenteDTO guiaRemitente)
+                {
+                    var (esValido, error) = ValidarDatosGuiaRemitente(guiaRemitente, guiaRemitente.Ruc, null, null, null);
+                    if (!esValido)
+                    {
+                        return new BadRequestResponseDTO
+                        {
+                            Error = "Error en datos enviados",
+                            Detalle = error
+                        };
+                    }
+
+                    nombreArchivo = await _guiaRemitenteUBLService.GenerarGuiaRemisionJson(guiaRemitente);
+                }
+                else
+                {
+                    throw new KeyNotFoundException("Tipo de guía no válido.");
+                }
+
+
+                string efactRawResponse;
+
+                try
+                {
+                    efactRawResponse = await _envioService.EnviarGuiaElectronicaAsync(guiaRemitente.Ruc, nombreArchivo);
+                }
+                catch (Exception ex)
+                {
+                    estado = "ERROR";
+                    idEstado = -1;
+
+                    string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                    if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
+                    await UpdateRespuestaTicketAsync(id, errorMsg, estado, idEstado);
+                    return new InternalErrorResponseDTO
+                    {
+                        Error = "Error al enviar a EFACT",
+                        Detalle = errorMsg
+                    };
+                }
+
+                EfactResponseDTO efactParsed;
+
+                try
+                {
+                    var json = JsonDocument.Parse(efactRawResponse).RootElement;
+
+                    efactParsed = new EfactResponseDTO
+                    {
+                        Code = json.GetProperty("code").GetString() ?? "",
+                        Description = json.GetProperty("description").GetString() ?? ""
+                    };
+
+                    ticket = efactParsed.Description;
+                    estado = "ENVIADO";
+                    idEstado = 1;
+                }
+                catch
+                {
+                    ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
+                    estado = "ERROR";
+                    idEstado = -1;
+                    await UpdateRespuestaTicketAsync(id, ticket, estado, idEstado);
+                    efactParsed = new EfactResponseDTO
+                    {
+                        Code = "-1",
+                        Description = ticket
+                    };
+                }
+
+                await UpdateRespuestaTicketAsync(id, ticket, estado, idEstado);
+
+                await _appDBContext.CommitAsync();
+
+                return new SendGuiaResponseDTO
+                {
+                    Success = true,
+                    EfactResponse = efactParsed
+                };
+
+            }
+            catch (Exception ex)
+            {
+                await _appDBContext.RollbackAsync();
+                estado = "ERROR";
+                idEstado = -1;
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
+                await UpdateRespuestaTicketAsync(id, errorMsg, estado, idEstado);
+                return new InternalErrorResponseDTO
+                {
+                    Error = "Error inesperado",
+                    Detalle = errorMsg
+                };
+            }
         }
     }
 }

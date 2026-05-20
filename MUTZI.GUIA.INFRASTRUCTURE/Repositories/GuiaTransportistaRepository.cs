@@ -94,7 +94,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.Serie = serie;
                 guiaRemision.NumeroGuia = $"{serie}-{correlativoStr}";
                 guiaRemision.TipoTransporte = "PRIVADO"; //01 por defecto
-                guiaRemision.TipoTraslado = "VENTA"; //01 por defecto
+                //guiaRemision.MotivoTrasladoId = 1; //01 por defecto
 
 
                 guiaRemision.TipoGuia = "TRANSPORTISTA";

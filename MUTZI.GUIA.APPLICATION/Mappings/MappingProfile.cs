@@ -58,6 +58,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.Nombre))
                 .ForMember(dest => dest.DistritoDestino, opt => opt.MapFrom(src => src.Destinos.FirstOrDefault().Ubigeo.Distrito))
                 .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Descripcion))
+                .ForMember(dest => dest.MotivoTrasladoNombre, opt => opt.MapFrom(src => src.MotivoTraslado.Nombre))
                 ;
             CreateMap<GuiaRemitenteCreateDTO, DOMAIN.Entities.GuiaRemision>()
                     .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src =>

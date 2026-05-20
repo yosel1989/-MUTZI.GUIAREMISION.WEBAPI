@@ -41,9 +41,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve en texto el número de guía de remisión", Nullable = false)]
         public string NumeroGuia { get; set; }
 
-        [JsonPropertyName("tipo_traslado")]
-        [SwaggerSchema("Devuelve un texto y solo pueden ser: VENTA, TRASLADO ó COMPRA", Nullable = false)]
-        public string TipoTraslado { get; set; }
+        //[JsonPropertyName("tipo_traslado")]
+        //[SwaggerSchema("Devuelve un texto y solo pueden ser: VENTA, TRASLADO ó COMPRA", Nullable = false)]
+        //public string TipoTraslado { get; set; }
 
         [JsonPropertyName("tipo_transporte")]
         [SwaggerSchema("Devuelve un texto y solo pueden ser: PUBLICO ó PRIVADO", Nullable = false)]
@@ -136,6 +136,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [JsonPropertyName("area_id")]
         [SwaggerSchema("Devuelve un número, el id del área que genero la guía.", Nullable = false)]
         public int AreaId { get; set; }
+
+        [JsonPropertyName("motivo_traslado_id")]
+        [SwaggerSchema("Devuelve un número, el id del motivo de traslado de la guía.", Nullable = false)]
+        public int MotivoTrasladoId { get; set; }
+
+        [JsonPropertyName("motivo_traslado")]
+        [SwaggerSchema("Devuelve un texto, el motivo de traslado de la guía.", Nullable = false)]
+        public string MotivoTrasladoNombre { get; set; }
 
     }
 }

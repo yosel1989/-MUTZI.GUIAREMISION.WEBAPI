@@ -1,14 +1,15 @@
-﻿using MUTZI.GUIA.APPLICATION.Helpers;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
-using System.Text.Json.Serialization;
-using Swashbuckle.AspNetCore.Annotations;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
-using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
+using MUTZI.GUIA.APPLICATION.Enums;
+using MUTZI.GUIA.APPLICATION.Helpers;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
@@ -34,9 +35,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto y solo pueden ser: PUBLICO ó PRIVADO", Nullable = false)]
         public string TipoTransporte { get; set; }
 
-        [JsonPropertyName("tipo_traslado")]
-        [SwaggerSchema("Devuelve un texto y solo pueden ser: VENTA, TRASLADO ó COMPRA", Nullable = false)]
-        public string TipoTraslado { get; set; }
+        [JsonPropertyName("motivo_traslado_id")]
+        [SwaggerSchema("Devuelve un número y solo puede ser uno registrado en el catalogo de motivos de traslado", Nullable = false)]
+        public int MotivoTrasladoId { get; set; }
 
         [JsonPropertyName("serie_correlativo")]
         [SwaggerSchema("Devuelve un texto", Nullable = false)]
@@ -121,18 +122,18 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         public string TipoTrasladoCode20()
         {
-            switch (this.TipoTraslado)
+            switch (this.MotivoTrasladoId)
             {
-                case "VENTA":
+                case (int)SunatCatalogoEnum.MotivoTraslado.VENTA:
                     if (this.Remitente.Ruc == this.Destinatario.Ruc)
                         throw new System.Exception("Si el tipo de traslado es VENTA, el 'Tipo y Número de documento de identidad del destinatario' no puede ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "01";
-                case "COMPRA":
-                    if (this.Remitente.Ruc != this.Destinatario.Ruc)
+                case (int)SunatCatalogoEnum.MotivoTraslado.COMPRA:
+                    if (this.Remitente.Ruc != this.Remitente.Ruc)
                         throw new System.Exception("Si el tipo de traslado es COMPRA, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "02";
-                case "TRASLADO":
-                    if (this.Remitente.Ruc != this.Destinatario.Ruc)
+                case (int)SunatCatalogoEnum.MotivoTraslado.TRASLADO_ENTRE_ESTABLECIMIENTOS_DE_LA_MISMA_EMPRESA:
+                    if (this.Remitente.Ruc != this.Remitente.Ruc)
                         throw new System.Exception("Si el tipo de traslado es TRASLADO, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "04";
                 default:

@@ -80,16 +80,16 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             }
                             continue;
                         }
-                        if (key.Contains("tipo_traslado"))
+                        if (key.Contains("motivo_traslado"))
                         {
                             var tipoStrings = val.Split(',', StringSplitOptions.RemoveEmptyEntries);
                             if (tipoStrings.Length == 1)
                             {
-                                query = query.Where(x => x.TipoTraslado.ToLower() == tipoStrings[0]);
+                                query = query.Where(x => x.MotivoTraslado.Nombre.ToLower() == tipoStrings[0]);
                             }
                             else
                             {
-                                query = query.Where(x => tipoStrings.Contains(x.TipoTraslado.ToLower()));
+                                query = query.Where(x => tipoStrings.Contains(x.MotivoTraslado.Nombre.ToLower()));
                             }
                             continue;
                         }
@@ -125,7 +125,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                     x.Remitente.Descripcion.ToLower().Contains(val) || 
                                     x.TipoGuia.ToLower().Contains(val) ||
                                     x.NumeroGuia.Contains(val) || 
-                                    x.TipoTraslado.ToLower().Contains(val) ||
+                                    x.MotivoTraslado.Nombre.ToLower().Contains(val) ||
                                     x.TipoTransporte.ToLower().Contains(val) || 
                                     x.Destinatario.RucNavigation.Empresa.ToLower().Contains(val) || 
                                     x.Destinatario.Ruc.Contains(val) ||
@@ -162,7 +162,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             Empresa = g.RucNavigation.Empresa
                         },
                         TipoTransporte = g.TipoTransporte,
-                        TipoTraslado = g.TipoTraslado,
+                        MotivoTraslado = g.MotivoTraslado,
                         NumeroGuia = g.NumeroGuia,
                         Serie = g.Serie,
                         Correlativo = g.Correlativo,
@@ -309,12 +309,18 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     {
                         EmailPrincipal = g.RucNavigation.EmailPrincipal
                     },
+
+                    MotivoTrasladoId = g.MotivoTrasladoId,
+                    MotivoTraslado = g.MotivoTraslado,
+
+
                     TipoTransporte = g.TipoTransporte,
-                    TipoTraslado = g.TipoTraslado,
+                    
                     NumeroGuia = g.NumeroGuia,
                     Fecha = g.Fecha,
                     Hora = g.Hora,
                     Observacion = g.Observacion,
+                    
                     
                     RemiteTransportista = g.RemiteTransportista == null ? null : new Transportista
                     {
@@ -513,6 +519,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(erm => erm.EmailRemiteTransportistaGuids)
                 .Include(erm => erm.Estado)
                 .Include(erm => erm.Area)
+                .Include(erm => erm.MotivoTraslado)
                 .FirstOrDefaultAsync(g => g.GuiaRemisionId == id);
 
             return data;
@@ -628,7 +635,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
 
                 // Proveedor
-                if(guiaRemision.TipoTraslado == "COMPRA" || guiaRemision.TipoTraslado == "RECOJO_BIENES_TRANSFORMADOS"  || guiaRemision.TipoTraslado == "OTROS")
+                if(
+                    guiaRemision.MotivoTraslado.Codigo == "02" ||  //compra
+                    guiaRemision.MotivoTraslado.Nombre == "13" // otros
+                ) 
                 {
                     guiaRemision.ProveedorId = proveedor.ProveedorId;
                 }
@@ -718,7 +728,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             Empresa = g.RucNavigation.Empresa
                         },
                         TipoTransporte = g.TipoTransporte,
-                        TipoTraslado = g.TipoTraslado,
+                        MotivoTraslado = g.MotivoTraslado,
                         NumeroGuia = g.NumeroGuia,
                         Serie = g.Serie,
                         Correlativo = g.Correlativo,

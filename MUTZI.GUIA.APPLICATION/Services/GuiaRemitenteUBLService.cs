@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
+using MUTZI.GUIA.APPLICATION.Enums;
 using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using Newtonsoft.Json;
@@ -136,7 +137,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     }},
 
                     //El proveedor se crea solo si el tipo de traslado es compra
-                    SellerSupplierParty = guia.TipoTraslado == "COMPRA" ? new List<SellerSupplierParty>{ new SellerSupplierParty {
+                    SellerSupplierParty = guia.MotivoTrasladoId == (int)SunatCatalogoEnum.MotivoTraslado.COMPRA ? new List<SellerSupplierParty>{ new SellerSupplierParty {
                         Party = new List<Party>{ new Party {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Proveedor.NumeroDocumento,  schemeID = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento, guia.Proveedor.NumeroDocumento)  }}}},
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
@@ -192,7 +193,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                          DespatchAddress = new List<DespatchAddress>{ new DespatchAddress {
                             ID = new List<ID>{ new ID { _ = guia.Origen.UbigeoId }},
                              //Se valida si tipoTrasLado es compra o no. Asimismo, se valida que no sea nulo el codSunat.
-                             AddressTypeCode=guia.TipoTraslado=="COMPRA" ? string.IsNullOrWhiteSpace(guia.Proveedor.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
+                             AddressTypeCode=guia.MotivoTrasladoId==(int)SunatCatalogoEnum.MotivoTraslado.COMPRA ? string.IsNullOrWhiteSpace(guia.Proveedor.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
                                 _ = guia.Proveedor.CodigoSunat,
                                 listID = guia.Proveedor.NumeroDocumento
                              } } : //En caso que no sea compra, se valida el codSunat del remitente 

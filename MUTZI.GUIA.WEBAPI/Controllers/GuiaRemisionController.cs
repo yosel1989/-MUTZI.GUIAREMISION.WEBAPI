@@ -310,9 +310,38 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ReenviarGuiaRemision(string ruc, int guiaId)
         {
-            var guiaAprobada = await _guiasRemisionBDService.AprobarAsync(guiaId);
+            var resultado = await _guiasRemisionBDService.AprobarEnviarAsync(guiaId);
 
-            var resultado = await _envioService.ReenviarGuiaRemisionAsync(ruc, guiaId);
+            //var resultado = await _envioService.ReenviarGuiaRemisionAsync(ruc, guiaId);
+
+            return resultado switch
+            {
+                SendGuiaResponseDTO ok => Created(string.Empty, ok),
+                BadRequestResponseDTO bad => BadRequest(bad),
+                InternalErrorResponseDTO error => StatusCode(500, error),
+                _ => StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error desconocido",
+                    Detalle = "Ocurrió un error desconocido al procesar la solicitud."
+                })
+            };
+        }
+
+        [HttpPost]
+        [Route("{id}/aprobar")]
+        [SwaggerOperation(
+            Summary = "Aprobar y enviar guia remisión",
+            Description = "Aprueba y envía una guía existente(REMITENTE ó TRANSPORTISTA) al facturador electrónico.",
+            OperationId = "aprobar_guia_remision"
+        )]
+        [Permission("aprobar_guia_remision")]
+        [ProducesResponseType(typeof(SendGuiaResponseDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> AprobarGuiaRemision(int id)
+        {
+
+            var resultado = await _guiasRemisionBDService.AprobarEnviarAsync(id);
 
             return resultado switch
             {

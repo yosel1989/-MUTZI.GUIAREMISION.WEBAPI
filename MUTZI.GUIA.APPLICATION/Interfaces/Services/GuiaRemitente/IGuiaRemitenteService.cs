@@ -24,5 +24,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
         Task<GuiaRemisionListDTO> ConfirmarAsync(int id);
         Task<GuiaRemisionListDTO> AnularAsync(int id, string descripcion);
         Task<GuiaRemisionListDTO> RechazarAsync(int id, string descripcion);
+        Task<object> AprobarEnviarAsync(int id);
     }
 }

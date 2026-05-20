@@ -37,9 +37,9 @@ public partial class GuiaRemision
     [MaxLength(10)]
     public string TipoTransporte { get; set; } = null!;
 
-    [Column("tipo_traslado")]
-    [MaxLength(12)]
-    public string TipoTraslado { get; set; } = null!;
+    //[Column("tipo_traslado")]
+    //[MaxLength(12)]
+    //public string TipoTraslado { get; set; } = null!;
 
     [Column("fecha")]
     public DateOnly Fecha { get; set; }
@@ -105,6 +105,12 @@ public partial class GuiaRemision
     [Column("id_estado_sunat")]
     public sbyte IdEstadoSunat { get; set; }
 
+
+    [Column("motivo_traslado_id")]
+    public int? MotivoTrasladoId { get; set; }
+
+
+
     public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
 
     [ForeignKey(nameof(RemitenteId))]
@@ -112,6 +118,9 @@ public partial class GuiaRemision
 
     [ForeignKey(nameof(DestinatarioId))]
     public Establecimiento Destinatario { get; set; } = null!;
+
+
+
 
 
     public virtual ICollection<GuiaRemisionDestino> Destinos { get; set; } = new List<GuiaRemisionDestino>();
@@ -140,4 +149,7 @@ public partial class GuiaRemision
 
     [ForeignKey(nameof(AreaId))]
     public virtual Area Area { get; set; }
+
+    [ForeignKey(nameof(MotivoTrasladoId))]
+    public virtual MotivoTraslado MotivoTraslado { get; set; }
 }

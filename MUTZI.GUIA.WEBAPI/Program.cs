@@ -105,6 +105,7 @@ builder.Services.AddAutoMapper(typeof(MappingTransportista).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingGuiaRemisionHistorial).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingGuiaRemisionEstado).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingArea).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingMotivoTraslado).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -126,6 +127,7 @@ builder.Services.AddScoped<IGuiaRemisionHistorialRepository, GuiaRemisionHistori
 builder.Services.AddScoped<IGuiaRemisionEstadoRepository, GuiaRemisionEstadoRepository>();
 builder.Services.AddScoped<IGuiaRemisionEstadoPermisoRepository, GuiaRemisionEstadoPermisoRepository>();
 builder.Services.AddScoped<IAreaRepository, AreaRepository>();
+builder.Services.AddScoped<IMotivoTrasladoRepository, MotivoTrasladoRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -151,6 +153,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGuiaRemisionHistorialService, GuiaRemisionHistorialService>();
 builder.Services.AddScoped<IGuiaRemisionEstadoService, GuiaRemisionEstadoService>();
 builder.Services.AddScoped<IAreaService, AreaService>();
+builder.Services.AddScoped<IMotivoTrasladoService, MotivoTrasladoService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAppDBContext, AppDBContext>();

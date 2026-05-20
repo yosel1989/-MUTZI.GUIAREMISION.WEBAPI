@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
 using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
+using MUTZI.GUIA.APPLICATION.Enums;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
@@ -22,12 +23,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [Required]
         public string TipoTransporte { get; set; }//PUBLICO, PRIVADO
 
-        [JsonPropertyName("tipo_traslado")]
-        [SwaggerSchema("Recibe un texto y solo pueden ser: VENTA, TRASLADO ó COMPRA", Nullable = false)]
-        [MaxLength(8)]
-        [MinLength(5)]
+        [JsonPropertyName("motivo_traslado_id")]
+        [SwaggerSchema("Recibe un número, el id debe existir en el catalogo de motivos de traslado", Nullable = false)]
         [Required]
-        public string TipoTraslado { get; set; }//VENTA,TRASLADO,COMPRA
+        public int MotivoTrasladoId { get; set; }
 
         [JsonPropertyName("fecha")]
         [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
@@ -47,11 +46,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Recibe un texto, donde se detalla una observación o comentario sobre la guía de remisión", Nullable = true)]
         [MaxLength(100)]
         public string? Observacion { get; set; }
-
-        [JsonPropertyName("area")]
-        [SwaggerSchema("Recibe un texto, se coloca el área o departamento de la empresa", Nullable = true)]
-        [MaxLength(100)]
-        public string AreaNombre { get; set; }
 
         [JsonPropertyName("registro_mtc")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el registro MTC del vehículo, este campo solo se llena si el tipo_guia es 'TRANSPORTISTA'", Nullable = true)]
@@ -106,17 +100,17 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         public string TipoTrasladoCode20()
         {
-            switch (this.TipoTraslado)
+            switch (this.MotivoTrasladoId)
             {
-                case "VENTA":
+                case (int)SunatCatalogoEnum.MotivoTraslado.VENTA:
                     if (this.Remitente.Ruc == this.Destinatario.Ruc)
                         throw new System.Exception("Si el tipo de traslado es VENTA, el 'Tipo y Número de documento de identidad del destinatario' no puede ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "01";
-                case "COMPRA":
+                case (int)SunatCatalogoEnum.MotivoTraslado.COMPRA:
                     if (this.Remitente.Ruc != this.Remitente.Ruc)
                         throw new System.Exception("Si el tipo de traslado es COMPRA, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "02";
-                case "TRASLADO":
+                case (int)SunatCatalogoEnum.MotivoTraslado.TRASLADO_ENTRE_ESTABLECIMIENTOS_DE_LA_MISMA_EMPRESA:
                     if (this.Remitente.Ruc != this.Remitente.Ruc)
                         throw new System.Exception("Si el tipo de traslado es TRASLADO, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "04";
