@@ -11,7 +11,6 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
-using MUTZI.GUIA.APPLICATION.Services.Envio;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Enums;
 using MUTZI.GUIA.DOMAIN.Interfaces;
@@ -67,31 +66,23 @@ namespace MUTZI.GUIA.APPLICATION.Services
         }
         public async Task<PagedResult<GuiaRemisionListDTO>> GetListAsync(int pageNumber, int pageSize, IQueryCollection q)
         {
-            var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
+            var filters = new Dictionary<string, string>();
 
             int i = 0;
             while (q.ContainsKey($"columns[{i}][data]"))
             {
-                var dataField = q[$"columns[{i}][data]"];
-                var searchValue = q[$"columns[{i}][search][value]"];
-                var regexValue = q[$"columns[{i}][search][regex]"];
+                var dataField = q[$"columns[{i}][data]"].ToString();
+                var searchValue = q[$"columns[{i}][search][value]"].ToString();
 
                 if (!string.IsNullOrEmpty(searchValue))
                 {
-                    request.Columns.Add(new RequestFiltroDTO
-                    {
-                        Data = dataField,
-                        Search = new SearchDTO
-                        {
-                            Value = searchValue,
-                            Regex = regexValue
-                        }
-                    });
+                    filters[dataField] = searchValue;
                 }
+
                 i++;
             }
 
-            var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize, request);
+            var (guias, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize, filters);
 
             var guiasDTO = _mapper.Map<List<GuiaRemisionListDTO>>(guias);
 
@@ -112,30 +103,23 @@ namespace MUTZI.GUIA.APPLICATION.Services
         {
             try
             {
-                var request = new DataTableDTO { Columns = new List<RequestFiltroDTO>() };
+                var filters = new Dictionary<string, string>();
+
                 int i = 0;
                 while (q.ContainsKey($"columns[{i}][data]"))
                 {
-                    var dataField = q[$"columns[{i}][data]"];
-                    var searchValue = q[$"columns[{i}][search][value]"];
-                    var regexValue = q[$"columns[{i}][search][regex]"];
+                    var dataField = q[$"columns[{i}][data]"].ToString();
+                    var searchValue = q[$"columns[{i}][search][value]"].ToString();
 
                     if (!string.IsNullOrEmpty(searchValue))
                     {
-                        request.Columns.Add(new RequestFiltroDTO
-                        {
-                            Data = dataField,
-                            Search = new SearchDTO
-                            {
-                                Value = searchValue,
-                                Regex = regexValue
-                            }
-                        });
+                        filters[dataField] = searchValue;
                     }
+
                     i++;
                 }
 
-                var (guias, _) = await _repository.GetListAsync(pageNumber, pageSize, request, true);
+                var (guias, _) = await _repository.GetListAsync(pageNumber, pageSize, filters, true);
                 var guiasDTO = _mapper.Map<List<GuiaRemisionListDTO>>(guias);
 
                 using (var workbook = new XLWorkbook())
@@ -265,7 +249,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<ConductorGuid>(p)).ToList();
                     var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<UnidadTransporteGuid>(p)).ToList();
                     var guiaRemision = _mapper.Map<GuiaRemision>(dto);
-                    var datosEnvio = _mapper.Map<DatosEnvio>(dto.DatosEnvio);
+                    var datosEnvio = _mapper.Map<GuiaRemisionDatoEnvio>(dto.DatosEnvio);
                     var origen = _mapper.Map<GuiaRemisionOrigen>(dto.Origen);
                     var destino = dto.Destino.Select(p => _mapper.Map<GuiaRemisionDestino>(p)).ToList();
                     var detalles = dto.Productos.Select(p => _mapper.Map<GuiaRemisionDetalle>(p)).ToList();
@@ -450,11 +434,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
             }
-            /*if (guiaRemision.IdEstado == (int)EnumGuiaRemisionEstado.Aprobada)
+            /*if (guiaRemision.EstadoId == (int)EnumGuiaRemisionEstado.Aprobada)
             {
                 throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Aprobada.GetDescription()}'");
             }*/
-            guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Aprobada;
+            guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Aprobada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
             guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
             guiaRemision.FechaModifico = DateTime.UtcNow;
@@ -485,12 +469,12 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
             }
-            if (guiaRemision.IdEstado == (int)EnumGuiaRemisionEstado.Confirmada)
+            if (guiaRemision.EstadoId == (int)EnumGuiaRemisionEstado.Confirmada)
             {
                 throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Confirmada.GetDescription()}'");
             }
 
-            guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Confirmada;
+            guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Confirmada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
             guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
             guiaRemision.FechaModifico = DateTime.UtcNow;
@@ -521,12 +505,12 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
             }
-            if(guiaRemision.IdEstado == (int)EnumGuiaRemisionEstado.Anulada)
+            if(guiaRemision.EstadoId == (int)EnumGuiaRemisionEstado.Anulada)
             {
                 throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Anulada.GetDescription()}'");
             }
 
-            guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Anulada;
+            guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Anulada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
             guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
             guiaRemision.FechaModifico = DateTime.UtcNow;
@@ -558,12 +542,12 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
             }
-            if (guiaRemision.IdEstado == (int)EnumGuiaRemisionEstado.Rechazada)
+            if (guiaRemision.EstadoId == (int)EnumGuiaRemisionEstado.Rechazada)
             {
                 throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Rechazada.GetDescription()}'");
             }
 
-            guiaRemision.IdEstado = (int)EnumGuiaRemisionEstado.Rechazada;
+            guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Rechazada;
             guiaRemision.UsuarioModifico = currentUser.UserName;
             guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
             guiaRemision.FechaModifico = DateTime.UtcNow;

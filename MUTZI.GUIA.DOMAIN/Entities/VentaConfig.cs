@@ -44,6 +44,16 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [MaxLength(100)]
         public string? RetencionDescripcion { get; set; }
 
+
+        [Column("tipo_documento")]
+        [MaxLength(45)]
+        public string? TipoDocumento { get; set; }
+
+        [Column("numero_documento")]
+        [MaxLength(45)]
+        public string? NumeroDocumento { get; set; }
+
+
         public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 
         public virtual ICollection<Establecimiento> Establecimientos { get; set; } = new List<Establecimiento>();

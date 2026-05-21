@@ -7,7 +7,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
     public interface IGuiaRemitenteRepository
     {
         Task<List<GuiaRemision>> GetAllAsync();
-        Task<(List<GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, DataTableDTO? request, bool export = false);
+        Task<(List<GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, Dictionary<string, string> filters, bool export = false);
         //Task<(List<DOMAIN.Entities.GuiaRemision>, int)> GetListAsync(int pageNumber, int pageSize, List<ColumnFilterDTO> columnFilterDTOs);
         Task<GuiaRemision?> GetByUuidAsync(Guid uuid);
         Task<GuiaRemision?> GetByIdAsync(int id);
@@ -20,7 +20,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
             List<ConductorGuid> conductor,
             List<UnidadTransporteGuid> transporte,
             GuiaRemision guiaRemision,
-            DatosEnvio datosEnvio,
+            GuiaRemisionDatoEnvio datosEnvio,
             GuiaRemisionOrigen origen,
             List<GuiaRemisionDestino> destino,
             List<GuiaRemisionDetalle> detalles,
@@ -38,7 +38,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<UnidadTransporte> GetTransporteByPlacaAsync(string placa);
         Task<UnidadTransporte> CreateTransporteAsync(UnidadTransporte transporte);
         //Datos envio
-        Task<DatosEnvio> CreateDatosEnvioAsync(DatosEnvio datosEnvio);
+        Task<GuiaRemisionDatoEnvio> CreateDatosEnvioAsync(GuiaRemisionDatoEnvio datosEnvio);
         //Ubicación origen
         Task<GuiaRemisionOrigen> CreateOrigenAsync(GuiaRemisionOrigen origen);
         //Ubicación destino

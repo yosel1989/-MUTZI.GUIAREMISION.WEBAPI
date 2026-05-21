@@ -19,8 +19,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Interceptors
 
             foreach (var entry in cambios)
             {
-                var original = (int)entry.OriginalValues["IdEstado"];
-                var nuevo = (int)entry.CurrentValues["IdEstado"];
+                var original = (int)entry.OriginalValues["EstadoId"];
+                var nuevo = (int)entry.CurrentValues["EstadoId"];
 
                 var permisos = await context.GuiaRemisionEstadoPermiso
                     .Where(p => p.GuiaRemisionEstadoId == nuevo)
@@ -72,8 +72,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Interceptors
 
             foreach (var entry in cambios)
             {
-                var original = (int)entry.OriginalValues["IdEstado"];
-                var nuevo = (int)entry.CurrentValues["IdEstado"];
+                var original = (int)entry.OriginalValues["EstadoId"];
+                var nuevo = (int)entry.CurrentValues["EstadoId"];
 
                 var permisos = await consultaContext.GuiaRemisionEstadoPermiso
                     .Where(p => p.GuiaRemisionEstadoId == nuevo)

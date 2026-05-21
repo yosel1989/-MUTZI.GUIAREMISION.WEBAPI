@@ -16,7 +16,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
         [JsonPropertyName("datos_envio_id")]
         [SwaggerSchema("Recibe un entero, aquí se coloca el ID de datos_envio que se va a actualizar", Nullable = false)]
         [Required]
-        public int DatosEnvioId { get; set; }
+        public int GuiaRemisionDatoEnvioId { get; set; }
 
         [JsonPropertyName("motivo_envio")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el motivo de envío. Ejm: Venta de mercadería, etc.", Nullable = false)]

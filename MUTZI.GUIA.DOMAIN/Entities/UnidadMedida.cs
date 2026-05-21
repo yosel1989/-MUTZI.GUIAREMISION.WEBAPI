@@ -34,7 +34,7 @@ public partial class UnidadMedida
     [Column("idEstado")]
     public sbyte? IdEstado { get; set; }
 
-    public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
+    public virtual ICollection<GuiaRemisionDatoEnvio> DatosEnvios { get; set; } = new List<GuiaRemisionDatoEnvio>();
 
     public virtual ICollection<GuiaRemisionDetalle> GuiaDetalles { get; set; } = new List<GuiaRemisionDetalle>();
 }

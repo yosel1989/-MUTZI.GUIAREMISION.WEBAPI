@@ -96,22 +96,21 @@ public partial class GuiaRemision
     public string? UsuarioModificoNombre { get; set; }
 
     [Column("estado_id")]
-    public int IdEstado { get; set; }
+    public int EstadoId { get; set; }
 
     [Column("estado_sunat")]
     [MaxLength(50)]
     public string EstadoSunat { get; set; } = "PENDIENTE";
 
-    [Column("id_estado_sunat")]
+    [Column("estado_sunat_id")]
     public sbyte IdEstadoSunat { get; set; }
 
-
     [Column("motivo_traslado_id")]
-    public int? MotivoTrasladoId { get; set; }
+    public int MotivoTrasladoId { get; set; }
 
 
 
-    public virtual ICollection<DatosEnvio> DatosEnvios { get; set; } = new List<DatosEnvio>();
+    public virtual ICollection<GuiaRemisionDatoEnvio> DatosEnvios { get; set; } = new List<GuiaRemisionDatoEnvio>();
 
     [ForeignKey(nameof(RemitenteId))]
     public Establecimiento Remitente { get; set; } = null!;
@@ -144,7 +143,7 @@ public partial class GuiaRemision
     [ForeignKey(nameof(Ruc))]
     public virtual VentaConfig RucNavigation { get; set; } = null!;
 
-    [ForeignKey(nameof(IdEstado))]
+    [ForeignKey(nameof(EstadoId))]
     public virtual GuiaRemisionEstado Estado { get; set; }
 
     [ForeignKey(nameof(AreaId))]

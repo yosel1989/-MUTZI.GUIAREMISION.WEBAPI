@@ -3,49 +3,49 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("datosEnvio")]
-public partial class DatosEnvio
+[Table("guia_remision_dato_envio")]
+public partial class GuiaRemisionDatoEnvio
 {
     [Key]
-    [Column("datosEnvioID")]
-    public int DatosEnvioId { get; set; }
+    [Column("guia_remision_dato_envio_id")]
+    public int GuiaRemisionDatoEnvioId { get; set; }
 
-    [Column("guiaID")]
-    public int GuiaId { get; set; }
+    [Column("guia_remision_id")]
+    public int GuiaRemisionId { get; set; }
 
-    [Column("motivoEnvio")]
+    [Column("motivo_envio")]
     [MaxLength(100)]
     public string? MotivoEnvio { get; set; }
 
-    [Column("fechaEnvio")]
+    [Column("fecha_envio")]
     public DateOnly FechaEnvio { get; set; }
 
-    [Column("pesoBruto", TypeName = "decimal(12,3)")]
+    [Column("peso_bruto", TypeName = "decimal(12,3)")]
     public decimal PesoBruto { get; set; }
 
-    [Column("codigoUM")]
+    [Column("codigo_um")]
     [MaxLength(10)]
     public string CodigoUm { get; set; } = null!;
 
-    [Column("rucEmpresaCurrier")]
+    [Column("ruc_empresa_currier")]
     [MaxLength(15)]
     public string? RucEmpresaCurrier { get; set; }
 
-    [Column("razonSocialCurrier")]
+    [Column("razon_social_currier")]
     [MaxLength(100)]
     public string? RazonSocialCurrier { get; set; }
 
-    [Column("registroMtcCurrier")]
+    [Column("registro_mtc_currier")]
     [MaxLength(20)]
     public string? RegistroMtcCurrier { get; set; }
 
-    [Column("indicadorVehiculoConductor")]
+    [Column("indicador_vehiculo_conductor")]
     public sbyte? IndicadorVehiculoConductor { get; set; } = 0;
 
     [ForeignKey(nameof(CodigoUm))]
     public virtual UnidadMedida CodigoUmNavigation { get; set; } = null!;
 
-    [ForeignKey(nameof(GuiaId))]
+    [ForeignKey(nameof(GuiaRemisionId))]
     public virtual GuiaRemision Guia { get; set; } = null!;
 
     public virtual ICollection<UnidadTransporteGuid> TransporteGuids { get; set; } = new List<UnidadTransporteGuid>();

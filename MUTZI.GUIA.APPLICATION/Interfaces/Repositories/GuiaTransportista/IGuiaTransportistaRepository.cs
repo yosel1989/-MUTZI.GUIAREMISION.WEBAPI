@@ -12,7 +12,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista
             List<DOMAIN.Entities.ConductorGuid> conductor,
             List<DOMAIN.Entities.UnidadTransporteGuid> transporte,
             DOMAIN.Entities.GuiaRemision guiaRemision,
-            DOMAIN.Entities.DatosEnvio datosEnvio,
+            DOMAIN.Entities.GuiaRemisionDatoEnvio datosEnvio,
             DOMAIN.Entities.GuiaRemisionOrigen origen,
             List<DOMAIN.Entities.GuiaRemisionDestino> destino,
             List<DOMAIN.Entities.GuiaRemisionDetalle> detalles,

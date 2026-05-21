@@ -7,6 +7,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
     public interface IEstablecimientoService
     {
         Task<List<EstablecimientoListDTO>> GetAllByRucToSelectAsync(string ruc);
+        Task<List<EstablecimientoToSelectDTO>> GetAllByRucToSelect2Async(string ruc);
         Task<List<EstablecimientoListToModalDTO>> GetListBySuggestionAsync(string ruc, string? search);
         Task<EstablecimientoDTO?> GetByIdAsync(int id);
         Task<PagedResult<EstablecimientoDTO>> GetListAsync(int pageNumber, int pageSize, string? search);

@@ -32,6 +32,30 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
            
         }
 
+        public async Task<List<Establecimiento>> GetAllByRucToSelect2Async(string ruc)
+        {
+            try
+            {
+                var data = await _context.Establecimiento
+                    .Include(r => r.Ubigeo)
+                    .Where(e => e.Ruc == ruc && e.IdEstado == 1)
+                    .Select(m => new Establecimiento
+                    {
+                        EstablecimientoId = m.EstablecimientoId,
+                        Descripcion = m.Descripcion
+                    })
+                    .OrderBy(e => e.Descripcion)
+                    .ToListAsync();
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+
         public async Task<List<Establecimiento>> GetAllByRucToSelectModal(string ruc)
         {
             try
@@ -64,7 +88,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 if (!String.IsNullOrWhiteSpace(search))
                 {
                     query = query.Where(c =>
-                        c.IdEstado == 1 &&
                         (string.IsNullOrEmpty(search) ||
                          c.CodigoSunat.Contains(search) ||
                          c.Descripcion.Contains(search))
@@ -73,6 +96,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 var data = await query
                 .Where(q => q.Ruc == ruc)
+                .Where(q => q.IdEstado == 1)
                 .Select(m => new Establecimiento
                 {
                     EstablecimientoId = m.EstablecimientoId,

@@ -8,6 +8,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
     {
         public MappingEstablecimiento()
         {
+            CreateMap<Establecimiento, EstablecimientoToSelectDTO>();
             CreateMap<Establecimiento, EstablecimientoDTO>()
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))

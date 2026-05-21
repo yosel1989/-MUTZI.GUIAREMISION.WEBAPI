@@ -58,14 +58,14 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "listar_establecimiento_select")
         ]
         [Permission("listar_establecimiento_select")]
-        [ProducesResponseType(typeof(EstablecimientoListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<EstablecimientoToSelectDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<EstablecimientoListDTO>>> GetToSelect(string ruc)
+        public async Task<ActionResult<List<EstablecimientoToSelectDTO>>> GetToSelect(string ruc)
         {
             try
             {
-                var remitentes = await _service.GetAllByRucToSelectAsync(ruc);
+                var remitentes = await _service.GetAllByRucToSelect2Async(ruc);
                 return Ok(remitentes);
             }
             catch (Exception ex)

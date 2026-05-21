@@ -50,7 +50,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             List<ConductorGuid> conductor,
             List<UnidadTransporteGuid> transporte,
             GuiaRemision guiaRemision,
-            DatosEnvio datosEnvio,
+            GuiaRemisionDatoEnvio datosEnvio,
             GuiaRemisionOrigen origen,
             List<GuiaRemisionDestino> destino,
             List<GuiaRemisionDetalle> detalles,
@@ -69,7 +69,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.DestinatarioId = destinatario.EstablecimientoId;
                 guiaRemision.RemiteTransportistaId = remiteTransportista.TransportistaId;
                 //guiaRemision.Nombre = "REGISTRADO";
-                guiaRemision.IdEstado = 0;
+                guiaRemision.EstadoId = 0;
 
                 //string serie = guiaRemision.Serie ?? "V001";
                 string serie = "V" + remitente.Serie.Trim();
@@ -103,7 +103,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 await _context.SaveChangesAsync();
 
                 // Datos Envío
-                datosEnvio.GuiaId = guiaRemision.GuiaRemisionId;
+                datosEnvio.GuiaRemisionId = guiaRemision.GuiaRemisionId;
 
                 await _context.DatosEnvios.AddAsync(datosEnvio);
                 await _context.SaveChangesAsync();
@@ -115,7 +115,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     var conductorGuia = new DOMAIN.Entities.ConductorGuid
                     {
                         ConductorId = condu.ConductorId,
-                        DatosEnvioId = datosEnvio.DatosEnvioId
+                        DatosEnvioId = datosEnvio.GuiaRemisionDatoEnvioId
                     };
                     await _context.ConductorGuids.AddAsync(conductorGuia);
                     await _context.SaveChangesAsync();
@@ -129,7 +129,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     var transporteGuia = new DOMAIN.Entities.UnidadTransporteGuid
                     {
                         TransporteId = tr.TransporteId,
-                        DatosEnvioId = datosEnvio.DatosEnvioId
+                        DatosEnvioId = datosEnvio.GuiaRemisionDatoEnvioId
                     };
                     await _context.UnidadTransporteGuids.AddAsync(transporteGuia);
                     await _context.SaveChangesAsync();

@@ -17,8 +17,8 @@ public partial class UnidadTransporteGuid
     public int? DatosEnvioId { get; set; }
 
     [ForeignKey(nameof(DatosEnvioId))]
-    [InverseProperty(nameof(Entities.DatosEnvio.TransporteGuids))]
-    public virtual DatosEnvio? DatosEnvio { get; set; }
+    [InverseProperty(nameof(Entities.GuiaRemisionDatoEnvio.TransporteGuids))]
+    public virtual GuiaRemisionDatoEnvio? DatosEnvio { get; set; }
 
     [ForeignKey(nameof(TransporteId))]
     [InverseProperty(nameof(Entities.UnidadTransporte.TransporteGuids))]

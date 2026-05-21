@@ -13,7 +13,7 @@ public partial class LogisticaContext : DbContext
 
     public virtual DbSet<Conductor> Conductor { get; set; }
     public virtual DbSet<ConductorGuid> ConductorGuids { get; set; }
-    public virtual DbSet<DatosEnvio> DatosEnvios { get; set; }
+    public virtual DbSet<GuiaRemisionDatoEnvio> DatosEnvios { get; set; }
     public virtual DbSet<GuiaRemisionDestino> GuiaRemisionDestino { get; set; }
     public virtual DbSet<DocRelacionado> DocRelacionados { get; set; }
     public virtual DbSet<EmailDestinatarioGuid> EmailDestinatarioGuids { get; set; }

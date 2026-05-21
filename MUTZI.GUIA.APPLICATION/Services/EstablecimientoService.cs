@@ -29,6 +29,12 @@ namespace MUTZI.GUIA.APPLICATION.Services
             return _mapper.Map<List<EstablecimientoListDTO>>(data);
         }
 
+        public async Task<List<EstablecimientoToSelectDTO>> GetAllByRucToSelect2Async(string ruc)
+        {
+            var data = await _repository.GetAllByRucToSelect2Async(ruc);
+            return _mapper.Map<List<EstablecimientoToSelectDTO>>(data);
+        }
+
         public async Task<List<EstablecimientoListToModalDTO>> GetListBySuggestionAsync(string ruc, string? search)
         {
             var data = await _repository.GetListBySuggestion(ruc, search);

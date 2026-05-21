@@ -21,5 +21,5 @@ public partial class ConductorGuid
     public virtual Conductor? Conductor { get; set; }
 
     [ForeignKey(nameof(DatosEnvioId))]
-    public virtual DatosEnvio? DatosEnvio { get; set; }
+    public virtual GuiaRemisionDatoEnvio? DatosEnvio { get; set; }
 }
