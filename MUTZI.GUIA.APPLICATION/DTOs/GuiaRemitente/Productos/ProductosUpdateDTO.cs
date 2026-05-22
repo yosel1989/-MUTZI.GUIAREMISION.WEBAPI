@@ -16,19 +16,19 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         [Required]
         public int GuiaDetalleID { get; set; }
 
-        [JsonPropertyName("codigo")]
+        [JsonPropertyName("Codigo")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el código del producto.", Nullable = true)]
         [MaxLength(10)]
         public string? codigo { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("Descripcion")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la descripción del producto.", Nullable = false)]
         [MaxLength(100)]
         [Required]
         public string descripcion { get; set; }
 
-        [JsonPropertyName("cantidad")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la cantidad del producto.", Nullable = false)]
+        [JsonPropertyName("Cantidad")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca la Cantidad del producto.", Nullable = false)]
         [Required]
         public string cantidad { get; set; }
 

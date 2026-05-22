@@ -15,7 +15,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Catalogos
         [SwaggerSchema("Devuelve en texto el nombre del tipo.", Nullable = false)]
         public string Tipo { get; set; }
 
-        [JsonPropertyName("codigo")]
+        [JsonPropertyName("Codigo")]
         [SwaggerSchema("Devuelve en texto el código del establecimiento", Nullable = false)]
         public string Codigo { get; set; }
     }

@@ -2,10 +2,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
+namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
 {
     [SwaggerSchema("Recibe un objeto datos_envio, aquí se detala los detalles del envío", Nullable = false)]
-    public class DatosEnvioCreateDTO
+    public class GuiaRemisionDatosEnvioCreateDTO
     {
         [JsonPropertyName("motivo_envio")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el motivo de envío. Ejm: Venta de mercadería, etc.", Nullable = false)]
@@ -25,10 +25,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
         [Required]
         public decimal PesoBruto { get; set; }
 
+        [JsonPropertyName("unidad_medida_id")]
+        [SwaggerSchema("Recibe un número, aquí se coloca el id de la unidad de medida del peso bruto.", Nullable = false)]
+        [Required]
+        public int UnidadMedidaId { get; set; }
+
         [JsonPropertyName("codigo_um")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la unidad de medida del peso bruto. Ejm: KGM ó TNE", Nullable = false)]
         [Required]
-        public string CodigoUM { get; set; } = "KGM";
+        public string CodigoUm { get; set; } = "KGM";
 
         [JsonPropertyName("ruc_empresa_currier")]
         [SwaggerSchema("Recibe un texto y es el ruc de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = false)]

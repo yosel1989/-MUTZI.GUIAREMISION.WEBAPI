@@ -9,7 +9,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve un entero, el ID del remitente en la bbdd", Nullable = false)]
         public int EstablecimientoId { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("Descripcion")]
         [SwaggerSchema("Devuelve el nombre asociada al establecimiento.", Nullable = false)]
         public string Descripcion { get; set; }
 
@@ -42,7 +42,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public string? Email { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Devuelve un texto, el codigo de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Devuelve un texto, el Codigo de PAIS referente, ejm: PE", Nullable = false)]
         public string Pais { get; set; }
 
         [JsonPropertyName("serie")]

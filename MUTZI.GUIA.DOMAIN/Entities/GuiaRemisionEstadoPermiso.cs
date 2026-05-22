@@ -20,6 +20,8 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Column("fecha_registro")]
         public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
 
+        // Relaciones
+
         [ForeignKey(nameof(GuiaRemisionEstadoId))]
         public virtual GuiaRemisionEstado EstadoOrigen { get; set; }
 

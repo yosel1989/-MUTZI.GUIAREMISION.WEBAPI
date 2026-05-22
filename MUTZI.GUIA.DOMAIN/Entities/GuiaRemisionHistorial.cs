@@ -45,6 +45,8 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Column("area_id")]
         public int AreaId { get; set; }
 
+        // Relaciones
+
         [ForeignKey(nameof(GuiaRemisionId))]
         public virtual GuiaRemision GuiaRemision { get; set; }
 

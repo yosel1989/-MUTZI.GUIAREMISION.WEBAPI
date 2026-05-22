@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
         [SwaggerSchema("Devuelve un entero, el ID del transporte en la bbdd", Nullable = false)]
         public int UnidadTransporteId { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("Descripcion")]
         [SwaggerSchema("Devuelve un texto, la descripción del transporte", Nullable = false)]
         public string Descripcion { get; set; }
 

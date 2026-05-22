@@ -32,7 +32,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino
         public string Departamento { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Devuelve en texto el codigo de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Devuelve en texto el Codigo de PAIS referente, ejm: PE", Nullable = false)]
         public string Pais { get; set; }
     }
 }

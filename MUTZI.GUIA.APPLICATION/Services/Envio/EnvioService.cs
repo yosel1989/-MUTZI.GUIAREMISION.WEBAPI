@@ -410,7 +410,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
                 estado = "RECHAZADO";
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-                //EscribirLog("GUIATRANSPORTISTA", ruc, "NumeroDocRef:" + doc.NumeroDocRef, estado, ticket, errorMsg);
+                //EscribirLog("GUIATRANSPORTISTA", ruc, "NumeroDocumentoReferencia:" + doc.NumeroDocumentoReferencia, estado, ticket, errorMsg);
                 return new InternalErrorResponseDTO
                 {
                     Error = "Error inesperado",

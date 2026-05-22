@@ -11,7 +11,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Catalogos
     [SwaggerSchema("Devuelve lista de Entidades emisoras de la autorización vehícular.", Nullable = false)]
     public class EmisorAutorizadorVehicularDTO
     {
-        [JsonPropertyName("codigo")]
+        [JsonPropertyName("Codigo")]
         [SwaggerSchema("Devuelve en texto el código de la entidad emisora.", Nullable = false)]
         public string Codigo { get; set; }
 

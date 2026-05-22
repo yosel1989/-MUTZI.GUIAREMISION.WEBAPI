@@ -8,15 +8,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Conductor
     {
         [JsonPropertyName("conductor_guia_id")]
         [SwaggerSchema("Devuelve en entero el ID del conductor asociado a los datos de envío de una guía de remisión.", Nullable = false)]
-        public int ConductorGuidId { get; set; }
+        public int GuiaRemisionConductorId { get; set; }
 
         [JsonPropertyName("conductor_id")]
         [SwaggerSchema("Devuelve en entero el ID del conductor en la base de datos", Nullable = false)]
-        public int ConductorID { get; set; }
+        public int ConductorId { get; set; }
 
         [JsonPropertyName("datos_envio_id")]
         [SwaggerSchema("Devuelve en entero el ID de los datos de envío asociados a la guía de remisión", Nullable = false)]
-        public int DatosEnvioID { get; set; }
+        public int GuiaRemisionDatoEnvioId { get; set; }
 
         [JsonPropertyName("tipo_documento")]
         [SwaggerSchema("Devuelve un texto, el tipo de documento solo pueden tener los siguientes valores: DNI, CE y PASAPORTE", Nullable = false)]

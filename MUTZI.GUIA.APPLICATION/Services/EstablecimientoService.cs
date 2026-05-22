@@ -69,7 +69,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         public async Task<EstadoActualizadoResponseDTO> CambiarEstadoAsync(int id, EstadoActualizadoRequestDTO infoRequestDto)
         {
             var currentUser = _authService.CurrentUser();
-            string _status = infoRequestDto.IdEstado switch
+            string _status = infoRequestDto.EstadoId switch
             {
                 1 => "activo",
                 0 => "inactivo",
@@ -81,7 +81,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
             }
             existing.Estado = _status;
-            existing.IdEstado = (sbyte)infoRequestDto.IdEstado;
+            existing.EstadoId = (sbyte)infoRequestDto.EstadoId;
             existing.UsuarioModifico = currentUser.UserName;
             existing.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
             existing.FechaModifico = DateTime.UtcNow;

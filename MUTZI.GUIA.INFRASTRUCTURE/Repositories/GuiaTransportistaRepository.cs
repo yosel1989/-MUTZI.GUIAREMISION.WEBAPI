@@ -47,15 +47,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             Establecimiento remitente,
             Transportista remiteTransportista,
             Establecimiento destinatario,
-            List<ConductorGuid> conductor,
+            List<GuiaRemisionConductor> conductor,
             List<UnidadTransporteGuid> transporte,
             GuiaRemision guiaRemision,
             GuiaRemisionDatoEnvio datosEnvio,
             GuiaRemisionOrigen origen,
             List<GuiaRemisionDestino> destino,
             List<GuiaRemisionDetalle> detalles,
-            List<DocRelacionado> docRelacionados,
-            List<EmailDestinatarioGuid> emailDestinatarioGuia,
+            List<GuiaRemisionDocumentoRelacionado> docRelacionados,
+            List<GuiaRemisionEmailDestinatario> emailDestinatarioGuia,
             List<EmailRemiteTransportistaGuid> emailRemiteTransportistas
             )
         {
@@ -112,10 +112,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //Registrar en lista
                 foreach (var condu in conductor)
                 {
-                    var conductorGuia = new DOMAIN.Entities.ConductorGuid
+                    var conductorGuia = new DOMAIN.Entities.GuiaRemisionConductor
                     {
                         ConductorId = condu.ConductorId,
-                        DatosEnvioId = datosEnvio.GuiaRemisionDatoEnvioId
+                        GuiaRemisionDatoEnvioId = datosEnvio.GuiaRemisionDatoEnvioId
                     };
                     await _context.ConductorGuids.AddAsync(conductorGuia);
                     await _context.SaveChangesAsync();
@@ -139,7 +139,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     foreach (var doc in docRelacionados)
                     {
-                        doc.GuiaId = guiaRemision.GuiaRemisionId;
+                        doc.GuiaRemisionId = guiaRemision.GuiaRemisionId;
                         await _context.DocRelacionados.AddAsync(doc);
                     }
                     await _context.SaveChangesAsync();
@@ -149,8 +149,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     foreach (var emailDest in emailDestinatarioGuia)
                     {
-                        emailDest.GuiaId = guiaRemision.GuiaRemisionId;
-                        emailDest.DestinatarioId = destinatario.EstablecimientoId;
+                        emailDest.GuiaRemisionId = guiaRemision.GuiaRemisionId;
+                        emailDest.EstablecimientoId = destinatario.EstablecimientoId;
                         await _context.EmailDestinatarioGuids.AddAsync(emailDest);
                     }
                     await _context.SaveChangesAsync();
@@ -169,13 +169,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
 
                 //Origen
-                origen.GuiaId = guiaRemision.GuiaRemisionId;
+                origen.GuiaRemisionId = guiaRemision.GuiaRemisionId;
                 await _context.GuiaRemisionOrigen.AddAsync(origen);
                 await _context.SaveChangesAsync();
 
                 foreach (var dest in destino)
                 {
-                    dest.GuiaId = guiaRemision.GuiaRemisionId;
+                    dest.GuiaRemisionId = guiaRemision.GuiaRemisionId;
                     await _context.GuiaRemisionDestino.AddAsync(dest);
                 }
                 await _context.SaveChangesAsync();

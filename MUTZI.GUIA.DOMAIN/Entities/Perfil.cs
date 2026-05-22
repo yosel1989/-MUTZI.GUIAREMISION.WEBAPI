@@ -21,8 +21,8 @@ public partial class Perfil
     [Column("codigo")]
     public int Codigo { get; set; }
 
-    [Column("id_estado")]
-    public int IdEstado { get; set; } = 1;
+    [Column("estado_id")]
+    public int EstadoId { get; set; } = 1;
 
     [Column("estado")]
     public string Estado { get; set; } = "activo";

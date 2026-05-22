@@ -119,7 +119,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Devuelve un entero, el ID del estado de la guía en la bbdd", Nullable = false)]
-        public int IdEstado { get; set; }
+        public int EstadoId { get; set; }
 
         [JsonPropertyName("estado_sunat")]
         [SwaggerSchema("Devuelve un texto, el estado de la guía en sunat.", Nullable = false)]
@@ -127,7 +127,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("id_estado_sunat")]
         [SwaggerSchema("Devuelve un entero, el ID del estado de la guía en sunat", Nullable = false)]
-        public sbyte IdEstadoSunat { get; set; }
+        public sbyte EstadoSunatId { get; set; }
 
         [JsonPropertyName("area")]
         [SwaggerSchema("Devuelve un texto, el área que genero la guía", Nullable = false)]

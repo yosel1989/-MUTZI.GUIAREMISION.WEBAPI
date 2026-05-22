@@ -15,6 +15,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Perfil
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Recibe un número, aquí se coloca el id del estado", Nullable = false)]
         [Required]
-        public int IdEstado { get; set; }
+        public int EstadoId { get; set; }
     }
 }

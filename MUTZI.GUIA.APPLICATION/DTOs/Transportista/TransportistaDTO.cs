@@ -77,10 +77,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Transportista
 
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Devuelve un entero, el ID del estado del transportista en la bbdd", Nullable = false)]
-        public int IdEstado { get; set; }
+        public int EstadoId { get; set; }
 
         [JsonPropertyName("registro_mtc")]
-        [SwaggerSchema("Devuelve un texto, el codigo de registro MTC del transportista", Nullable = true)]
+        [SwaggerSchema("Devuelve un texto, el Codigo de registro MTC del transportista", Nullable = true)]
         public string? RegistroMTC { get; set; }
 
         [JsonPropertyName("email_contacto")]

@@ -1,5 +1,5 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio;
+using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
@@ -79,7 +79,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public ProveedorDTO? Proveedor { get; set; }
 
         [JsonPropertyName("datos_envio")]
-        public DatosEnvioDTO DatosEnvio { get; set; }
+        public GuiaRemisionDatosEnvioDTO DatosEnvio { get; set; }
 
         [JsonPropertyName("origen")]
         public OrigenDTO Origen { get; set; }
@@ -118,7 +118,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Devuelve un entero, el ID del estado de la guía de remisión en la bbdd", Nullable = false)]
-        public int IdEstado { get; set; }
+        public int EstadoId { get; set; }
 
         public string TipoTrasladoCode20()
         {

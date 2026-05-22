@@ -11,7 +11,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Shared
 
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Ingresa en entero el nuevo estado del registro.", Nullable = false)]
-        public int IdEstado { get; set; }
+        public int EstadoId { get; set; }
     }
 
     public class EstadoActualizadoResponseDTO
@@ -22,7 +22,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Shared
 
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Devuelve en entero el nuevo estado del registro.", Nullable = false)]
-        public int IdEstado { get; set; }
+        public int EstadoId { get; set; }
 
         [JsonPropertyName("estado")]
         [SwaggerSchema("Devuelve el nuevo estado del registro.", Nullable = false)]

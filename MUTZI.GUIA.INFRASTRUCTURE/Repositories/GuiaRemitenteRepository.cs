@@ -241,7 +241,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Estado = g.Estado,
                         EstadoId = g.EstadoId,
                         EstadoSunat = g.EstadoSunat,
-                        IdEstadoSunat = g.IdEstadoSunat,
+                        EstadoSunatId = g.EstadoSunatId,
                         AreaId = g.AreaId,
                         Area = new Area {
                             Descripcion = g.Area.Descripcion
@@ -375,7 +375,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UsuarioModifico = g.RemiteTransportista.UsuarioModifico,
                         EmailRemiteTransportistaGuids = g.EmailRemiteTransportistaGuids,
                         Estado = g.RemiteTransportista.Estado,
-                        IdEstado = g.RemiteTransportista.IdEstado
+                        EstadoId = g.RemiteTransportista.EstadoId
                     },
                     Remitente = new Establecimiento
                     {
@@ -391,7 +391,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         FechaModifico = g.Remitente.FechaModifico,
                         UsuarioModifico = g.Remitente.UsuarioModifico,
                         Estado = g.Remitente.Estado,
-                        IdEstado = g.Remitente.IdEstado,
+                        EstadoId = g.Remitente.EstadoId,
                         RucNavigation = g.Remitente.RucNavigation
                     },
                     Destinatario = new Establecimiento
@@ -408,7 +408,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         FechaModifico = g.Destinatario.FechaModifico,
                         UsuarioModifico = g.Destinatario.UsuarioModifico,
                         Estado = g.Destinatario.Estado,
-                        IdEstado = g.Destinatario.IdEstado,
+                        EstadoId = g.Destinatario.EstadoId,
                         RucNavigation = g.Destinatario.RucNavigation
                     },
                     Proveedor = g.Proveedor == null ? null : new Proveedor
@@ -427,7 +427,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         FechaModifico = g.Proveedor.FechaModifico,
                         UsuarioModifico = g.Proveedor.UsuarioModifico,
                         Estado = g.Proveedor.Estado,
-                        IdEstado = g.Proveedor.IdEstado
+                        EstadoId = g.Proveedor.EstadoId
                     },
                     GuiaDetalles = g.GuiaDetalles.Select(det => new GuiaRemisionDetalle
                     {
@@ -455,10 +455,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         RazonSocialCurrier = env.RazonSocialCurrier,
                         RegistroMtcCurrier = env.RegistroMtcCurrier,
                         IndicadorVehiculoConductor = env.IndicadorVehiculoConductor,
-                        ConductorGuids = env.ConductorGuids.Select(cg => new ConductorGuid
+                        ConductorGuids = env.ConductorGuids.Select(cg => new GuiaRemisionConductor
                         {
-                            ConductorGuidId = cg.ConductorGuidId,
-                            DatosEnvioId = cg.DatosEnvioId,
+                            GuiaRemisionConductorId = cg.GuiaRemisionConductorId,
+                            GuiaRemisionDatoEnvioId = cg.GuiaRemisionDatoEnvioId,
                             ConductorId = cg.ConductorId,
                             Conductor = new Conductor
                             {
@@ -491,7 +491,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     // Puntos de Origen
                     Origens = g.Origens.Select(o => new GuiaRemisionOrigen
                     {
-                        OrigenId = o.OrigenId,
+                        GuiaRemisionOrigenId = o.GuiaRemisionOrigenId,
                         UbigeoId = o.UbigeoId,
                         Direccion = o.Direccion,
                         Ubigeo = o.Ubigeo,
@@ -501,7 +501,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     // Puntos de Destino
                     Destinos = g.Destinos.Select(d => new GuiaRemisionDestino
                     {
-                        DestinoId = d.DestinoId,
+                        GuiaRemisionDestinoId = d.GuiaRemisionDestinoId,
                         UbigeoId = d.UbigeoId,
                         Direccion = d.Direccion,
                         Ubigeo = d.Ubigeo,
@@ -565,15 +565,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             Establecimiento remitente,
             Establecimiento destinatario,
             Proveedor proveedor,
-            List<ConductorGuid> conductor,
+            List<GuiaRemisionConductor> conductor,
             List<UnidadTransporteGuid> transporte,
             GuiaRemision guiaRemision,
             GuiaRemisionDatoEnvio datosEnvio,
             GuiaRemisionOrigen origen,
             List<GuiaRemisionDestino> destino,
             List<GuiaRemisionDetalle> detalles,
-            List<DocRelacionado> docRelacionados,
-            List<EmailDestinatarioGuid> emailDestinatarioGuia
+            List<GuiaRemisionDocumentoRelacionado> docRelacionados,
+            List<GuiaRemisionEmailDestinatario> emailDestinatarioGuia
         )
         {
             //using var transaction = await _context.Database.BeginTransactionAsync();
@@ -625,10 +625,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //Registrar en lista
                 foreach (var condu in conductor)
                 {
-                    var conductorGuia = new ConductorGuid
+                    var conductorGuia = new GuiaRemisionConductor
                     {
                         ConductorId = condu.ConductorId,
-                        DatosEnvioId = datosEnvio.GuiaRemisionDatoEnvioId
+                        GuiaRemisionDatoEnvioId = datosEnvio.GuiaRemisionDatoEnvioId
                     };
                     await _context.ConductorGuids.AddAsync(conductorGuia);
                     await _context.SaveChangesAsync();
@@ -652,7 +652,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     foreach (var doc in docRelacionados)
                     {
-                        doc.GuiaId = guiaRemision.GuiaRemisionId;
+                        doc.GuiaRemisionId = guiaRemision.GuiaRemisionId;
                         await _context.DocRelacionados.AddAsync(doc);
                     }
                     await _context.SaveChangesAsync();
@@ -663,8 +663,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     foreach (var email in emailDestinatarioGuia)
                     {
-                        email.GuiaId = guiaRemision.GuiaRemisionId;
-                        email.DestinatarioId = destinatario.EstablecimientoId;
+                        email.GuiaRemisionId = guiaRemision.GuiaRemisionId;
+                        email.EstablecimientoId = destinatario.EstablecimientoId;
                         await _context.EmailDestinatarioGuids.AddAsync(email);
                     }
                     await _context.SaveChangesAsync();
@@ -680,13 +680,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
 
                 //Origen
-                origen.GuiaId = guiaRemision.GuiaRemisionId;
+                origen.GuiaRemisionId = guiaRemision.GuiaRemisionId;
                 await _context.GuiaRemisionOrigen.AddAsync(origen);
                 await _context.SaveChangesAsync();
 
                 foreach (var dest in destino)
                 {
-                    dest.GuiaId = guiaRemision.GuiaRemisionId;
+                    dest.GuiaRemisionId = guiaRemision.GuiaRemisionId;
                     await _context.GuiaRemisionDestino.AddAsync(dest);
                 }
                 await _context.SaveChangesAsync();
@@ -718,7 +718,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
             guia.RespuestaTicket = ticket;
             guia.EstadoSunat = estadoSunat;
-            guia.IdEstadoSunat = (sbyte)idEstadoSunat;
+            guia.EstadoSunatId = (sbyte)idEstadoSunat;
             //guia.Nombre = estadoSunat;
             //guia.EstadoId = (sbyte)idEstadoSunat;
             guia.FechaModifico = DateTime.UtcNow;
@@ -808,7 +808,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Estado = g.Estado,
                         EstadoId = g.EstadoId,
                         EstadoSunat = g.EstadoSunat,
-                        IdEstadoSunat = g.IdEstadoSunat,
+                        EstadoSunatId = g.EstadoSunatId,
                         Area = new Area
                         {
                             Id = g.Area.Id,

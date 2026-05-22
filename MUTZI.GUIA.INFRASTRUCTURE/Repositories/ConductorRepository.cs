@@ -29,7 +29,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.Conductor.Where(c => c.IdEstado == 1);
+                var query = _context.Conductor.Where(c => c.EstadoId == 1);
                 if (!string.IsNullOrEmpty(numeroDoc))
                 {
                     query = query.Where(c =>

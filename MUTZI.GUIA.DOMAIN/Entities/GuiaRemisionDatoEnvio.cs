@@ -23,6 +23,9 @@ public partial class GuiaRemisionDatoEnvio
     [Column("peso_bruto", TypeName = "decimal(12,3)")]
     public decimal PesoBruto { get; set; }
 
+    [Column("unidad_medida_id")]
+    public int UnidadMedidaId { get; set; }
+
     [Column("codigo_um")]
     [MaxLength(10)]
     public string CodigoUm { get; set; } = null!;
@@ -42,13 +45,15 @@ public partial class GuiaRemisionDatoEnvio
     [Column("indicador_vehiculo_conductor")]
     public sbyte? IndicadorVehiculoConductor { get; set; } = 0;
 
-    [ForeignKey(nameof(CodigoUm))]
-    public virtual UnidadMedida CodigoUmNavigation { get; set; } = null!;
+    // Relaciones
+
+    [ForeignKey(nameof(UnidadMedidaId))]
+    public virtual UnidadMedida UnidadMedida { get; set; } = null!;
 
     [ForeignKey(nameof(GuiaRemisionId))]
     public virtual GuiaRemision Guia { get; set; } = null!;
 
     public virtual ICollection<UnidadTransporteGuid> TransporteGuids { get; set; } = new List<UnidadTransporteGuid>();
 
-    public virtual ICollection<ConductorGuid> ConductorGuids { get; set; } = new List<ConductorGuid>();
+    public virtual ICollection<GuiaRemisionConductor> ConductorGuids { get; set; } = new List<GuiaRemisionConductor>();
 }

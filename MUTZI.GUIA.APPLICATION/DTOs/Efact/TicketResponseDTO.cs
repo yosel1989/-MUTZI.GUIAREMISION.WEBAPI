@@ -13,11 +13,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     [SwaggerSchema("Respuesta del facturador. Ejemplos de uso: 'cuando la guía fue enviada correctamente', 'cuando se consulta el pdf u otro documento al facturador.", Nullable = false)]
     public class EfactResponseDTO
     {
-        [JsonPropertyName("codigo")]
+        [JsonPropertyName("Codigo")]
         [SwaggerSchema("Devuelve un texto, es el código de respuesta cuando hubo una correcta interacción con el facturador. Ejm => código: 0; indica que se envió la guía correctamente. Ej.2 => código: -9998; indica que se ha generado la guía, pero que el documento pdf u otro aún está en proceso.", Nullable = false)]
         public string Code { get; set; } = string.Empty;
-        [JsonPropertyName("descripcion")]
-        [SwaggerSchema("Devuelve en texto la descripción cuando hubo una correcta interacción con el facturador, normalmente retorna el ticket creado en la plataforma del facturador. Ejm cuando se crea una guía => descripcion: 33baf32d-39f8-4151-bd48-cfadcfb9549c ó cuando se consulta un pdf => Ejm: descripcion: En proceso.", Nullable = false)]
+        [JsonPropertyName("Descripcion")]
+        [SwaggerSchema("Devuelve en texto la descripción cuando hubo una correcta interacción con el facturador, normalmente retorna el ticket creado en la plataforma del facturador. Ejm cuando se crea una guía => Descripcion: 33baf32d-39f8-4151-bd48-cfadcfb9549c ó cuando se consulta un pdf => Ejm: Descripcion: En proceso.", Nullable = false)]
         public string Description { get; set; } = string.Empty;
     }
     [SwaggerSchema("Respuesta exitosa del endpoint enviar_guia_remision")]
@@ -89,7 +89,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
 
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Devuelve en entero el nuevo estado del registro.", Nullable = false)]
-        public int IdEstado { get; set; }
+        public int EstadoId { get; set; }
 
         [JsonPropertyName("estado")]
         [SwaggerSchema("Devuelve el nuevo estado del registro.", Nullable = false)]
@@ -115,7 +115,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Recibe un entero, aquí se coloca el nuevo id del estado del objeto", Nullable = false)]
         [Required]
-        public int IdEstado { get; set; }
+        public int EstadoId { get; set; }
 
         [JsonPropertyName("edited_employee_id")]
         [SwaggerSchema("Recibe un entero, aquí se coloca el ID del empleado que ha realizado la transacción", Nullable = false)]

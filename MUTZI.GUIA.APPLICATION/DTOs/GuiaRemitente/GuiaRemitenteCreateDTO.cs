@@ -1,5 +1,4 @@
 ﻿using MUTZI.GUIA.APPLICATION.Helpers;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
@@ -10,6 +9,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
 using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
 using MUTZI.GUIA.APPLICATION.Enums;
+using MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
@@ -84,7 +84,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("datos_envio")]
         [Required]
-        public DatosEnvioCreateDTO DatosEnvio { get; set; }
+        public GuiaRemisionDatosEnvioCreateDTO DatosEnvio { get; set; }
 
         [JsonPropertyName("origen")]
         [Required]

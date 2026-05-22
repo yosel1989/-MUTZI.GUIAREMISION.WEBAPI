@@ -14,7 +14,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Perfil
         public string Nombre { get; set; }
 
 
-        [JsonPropertyName("codigo")]
+        [JsonPropertyName("Codigo")]
         [SwaggerSchema("Devuelve un número, aquí devuelve el código del perfil", Nullable = false)]
         public int Codigo { get; set; }
     }

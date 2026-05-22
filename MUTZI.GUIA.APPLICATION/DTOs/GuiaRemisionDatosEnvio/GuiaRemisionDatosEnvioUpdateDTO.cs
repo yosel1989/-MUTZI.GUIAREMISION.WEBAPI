@@ -1,17 +1,12 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Conductor;
 using MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
-namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
+namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
 {
-    public class DatosEnvioUpdateDTO
+    public class GuiaRemisionDatosEnvioUpdateDTO
     {
         [JsonPropertyName("datos_envio_id")]
         [SwaggerSchema("Recibe un entero, aquí se coloca el ID de datos_envio que se va a actualizar", Nullable = false)]
@@ -36,10 +31,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio
         [Required]
         public decimal PesoBruto { get; set; }
 
+        [JsonPropertyName("unidad_medida_id")]
+        [SwaggerSchema("Recibe un número, aquí se coloca el id de la unidad de medida del peso bruto.", Nullable = false)]
+        [Required]
+        public int UnidadMedidaId { get; set; }
+
         [JsonPropertyName("codigo_um")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la unidad de medida del peso bruto. Ejm: KGM ó TNE", Nullable = false)]
         [Required]
-        public string CodigoUM { get; set; } = "KGM";
+        public string CodigoUm { get; set; } = "KGM";
 
         [JsonPropertyName("ruc_empresa_currier")]
         [SwaggerSchema("Recibe un texto y es el ruc de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = false)]

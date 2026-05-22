@@ -22,8 +22,8 @@ public partial class Permiso
     [MaxLength(75)]
     public string Codigo { get; set; }
 
-    [Column("id_estado")]
-    public int IdEstado { get; set; } = 1;
+    [Column("estado_id")]
+    public int EstadoId { get; set; } = 1;
 
     public virtual ICollection<PerfilPermiso> PerfilPermisos { get; set; } = new List<PerfilPermiso>();
     public virtual ICollection<Perfil> Perfiles { get; set; } = new List<Perfil>();

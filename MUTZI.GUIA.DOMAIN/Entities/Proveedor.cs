@@ -63,8 +63,8 @@ public partial class Proveedor
     [Column("estado", TypeName = "enum('activo','inactivo)")]
     public string? Estado { get; set; } = "activo";
 
-    [Column("id_estado")]
-    public sbyte? IdEstado { get; set; } = 1;
+    [Column("estado_id")]
+    public sbyte? EstadoId { get; set; } = 1;
 
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 

@@ -17,6 +17,10 @@ public partial class GuiaRemisionDetalle
     [MaxLength(10)]
     public string Cantidad { get; set; } = null!;
 
+    [Column("unidad_medida_id")]
+    [MaxLength(10)]
+    public int UnidadMedidaId { get; set; }
+
     [Column("codigo_um")]
     [MaxLength(10)]
     public string CodigoUm { get; set; } = null!;
@@ -44,7 +48,9 @@ public partial class GuiaRemisionDetalle
     [Column("bien_normalizado")]
     public bool BienNormalizado { get; set; } = false;
 
-    [ForeignKey(nameof(CodigoUm))]
+    // Relaciones
+
+    [ForeignKey(nameof(UnidadMedidaId))]
     public virtual UnidadMedida UnidadMedida { get; set; } = null!;
 
     [ForeignKey(nameof(GuiaRemisionId))]

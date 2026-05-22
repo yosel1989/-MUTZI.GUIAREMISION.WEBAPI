@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("ruc")]
         public string Ruc { get; set; } = null!;
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("Descripcion")]
         public string Descripcion { get; set; } = null!;
 
         [JsonPropertyName("ubigeo_id")]
@@ -62,7 +62,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public string? Estado { get; set; }
 
         [JsonPropertyName("id_estado")]
-        public sbyte? IdEstado { get; set; }
+        public sbyte? EstadoId { get; set; }
 
         [JsonPropertyName("tipo")]
         public string Tipo { get; set; }

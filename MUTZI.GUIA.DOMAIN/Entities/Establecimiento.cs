@@ -55,11 +55,13 @@ public partial class Establecimiento
     [Column("estado")]
     public string Estado { get; set; } = "activo"; 
 
-    [Column("id_estado")]
-    public sbyte IdEstado { get; set; } = 1;
+    [Column("estado_id")]
+    public sbyte EstadoId { get; set; } = 1;
 
     [Column("tipo")]
     public string Tipo { get; set; }
+
+    // Relaciones
 
     [ForeignKey(nameof(Ruc))]
     public virtual VentaConfig RucNavigation { get; set; } = null!;
@@ -67,8 +69,5 @@ public partial class Establecimiento
     [ForeignKey(nameof(UbigeoId))]
     public virtual Ubigeo Ubigeo { get; set; } = null!;
 
-    //public virtual ICollection<GuiaRemision> GuiaRemisionsRemitente { get; set; } = new List<GuiaRemision>();
-
-    //public virtual ICollection<GuiaRemision> GuiaRemisionsDestinatario { get; set; } = new List<GuiaRemision>();
 
 }

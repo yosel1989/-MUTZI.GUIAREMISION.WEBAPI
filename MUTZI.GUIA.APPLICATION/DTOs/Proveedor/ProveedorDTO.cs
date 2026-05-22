@@ -47,7 +47,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Proveedor
         public string Email { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Devuelve en texto el codigo de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Devuelve en texto el Codigo de PAIS referente, ejm: PE", Nullable = false)]
         public string Pais { get; set; }
 
         [JsonPropertyName("codigo_sunat")]
@@ -84,6 +84,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Proveedor
 
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Devuelve un entero, el ID del estado del proveedor en la bbdd", Nullable = false)]
-        public int IdEstado { get; set; }
+        public int EstadoId { get; set; }
     }
 }

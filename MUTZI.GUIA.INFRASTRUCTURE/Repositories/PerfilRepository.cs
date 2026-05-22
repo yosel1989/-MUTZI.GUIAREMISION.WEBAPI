@@ -85,7 +85,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<List<Perfil>> GetListToSelectAsync()
         {
             return await _context.Perfil
-                .Where(m => m.IdEstado == 1)
+                .Where(m => m.EstadoId == 1)
                 .Select(m => new Perfil
                 {
                     PerfilId = m.PerfilId,

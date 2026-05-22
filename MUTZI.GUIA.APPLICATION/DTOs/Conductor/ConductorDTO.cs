@@ -65,7 +65,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Conductor
 
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Devuelve un entero, el ID del estado del conductor en la bbdd", Nullable = false)]
-        public int IdEstado { get; set; }
+        public int EstadoId { get; set; }
 
         [JsonPropertyName("tipo")]
         [SwaggerSchema("Devuelve un texto, el tipo de conducto solo puede ser: interno o externo", Nullable = false)]

@@ -9,15 +9,15 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista
             Establecimiento remitente,
             DOMAIN.Entities.Transportista remiteTransportista,
             Establecimiento destinatario,
-            List<DOMAIN.Entities.ConductorGuid> conductor,
+            List<DOMAIN.Entities.GuiaRemisionConductor> conductor,
             List<DOMAIN.Entities.UnidadTransporteGuid> transporte,
             DOMAIN.Entities.GuiaRemision guiaRemision,
             DOMAIN.Entities.GuiaRemisionDatoEnvio datosEnvio,
             DOMAIN.Entities.GuiaRemisionOrigen origen,
             List<DOMAIN.Entities.GuiaRemisionDestino> destino,
             List<DOMAIN.Entities.GuiaRemisionDetalle> detalles,
-            List<DOMAIN.Entities.DocRelacionado> docRelacionados,
-            List<DOMAIN.Entities.EmailDestinatarioGuid> emailDestinatarioGuia,
+            List<DOMAIN.Entities.GuiaRemisionDocumentoRelacionado> docRelacionados,
+            List<DOMAIN.Entities.GuiaRemisionEmailDestinatario> emailDestinatarioGuia,
             List<DOMAIN.Entities.EmailRemiteTransportistaGuid> emailRemiteTransportistas
             );
         //Remitente

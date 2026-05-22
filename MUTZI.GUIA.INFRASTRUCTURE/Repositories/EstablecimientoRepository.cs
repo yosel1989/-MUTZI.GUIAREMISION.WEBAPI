@@ -18,7 +18,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 var data = await _context.Establecimiento
-                    .Where(e => e.Ruc == ruc && e.IdEstado == 1)
+                    .Where(e => e.Ruc == ruc && e.EstadoId == 1)
                     .Include(r=>r.Ubigeo)
                     .OrderBy(e => e.Descripcion)
                     .ToListAsync();
@@ -38,7 +38,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 var data = await _context.Establecimiento
                     .Include(r => r.Ubigeo)
-                    .Where(e => e.Ruc == ruc && e.IdEstado == 1)
+                    .Where(e => e.Ruc == ruc && e.EstadoId == 1)
                     .Select(m => new Establecimiento
                     {
                         EstablecimientoId = m.EstablecimientoId,
@@ -96,7 +96,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 var data = await query
                 .Where(q => q.Ruc == ruc)
-                .Where(q => q.IdEstado == 1)
+                .Where(q => q.EstadoId == 1)
                 .Select(m => new Establecimiento
                 {
                     EstablecimientoId = m.EstablecimientoId,

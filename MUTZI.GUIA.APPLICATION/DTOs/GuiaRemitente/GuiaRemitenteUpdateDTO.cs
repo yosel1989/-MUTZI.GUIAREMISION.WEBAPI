@@ -1,4 +1,4 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DatosEnvio;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
@@ -93,7 +93,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("datos_envio")]
         [Required]
-        public DatosEnvioUpdateDTO DatosEnvio { get; set; }
+        public GuiaRemisionDatosEnvioUpdateDTO DatosEnvio { get; set; }
 
         [JsonPropertyName("origen")]
         [Required]

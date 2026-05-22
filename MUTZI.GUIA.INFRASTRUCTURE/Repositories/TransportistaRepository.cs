@@ -32,7 +32,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.Transportista.Where(c => c.IdEstado == 1);
+                var query = _context.Transportista.Where(c => c.EstadoId == 1);
                 if (!string.IsNullOrEmpty(numeroDoc))
                 {
                     query = query.Where(c =>

@@ -8,7 +8,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
     {
         public MappingConductor()
         {
-            CreateMap<ConductorGuiaUpdateDTO, ConductorGuid>();
+            CreateMap<ConductorGuiaUpdateDTO, GuiaRemisionConductor>();
             CreateMap<Conductor, ConductorDTO>();
             CreateMap<Conductor, ConductorListDTO>();
             CreateMap<ConductorCreateDTO, Conductor>()

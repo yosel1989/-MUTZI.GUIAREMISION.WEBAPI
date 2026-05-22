@@ -7,17 +7,17 @@ namespace MUTZI.GUIA.DOMAIN.Entities;
 public partial class GuiaRemisionOrigen
 {
     [Key]
-    [Column("origenID")]
-    public int OrigenId { get; set; }
+    [Column("guia_remision_origen_id")]
+    public int GuiaRemisionOrigenId { get; set; }
 
-    [Column("guiaID")]
-    public int GuiaId { get; set; }
+    [Column("guia_remision_id")]
+    public int GuiaRemisionId { get; set; }
 
     [Column("direccion")]
     [MaxLength(250)]
     public string Direccion { get; set; } = null!;
 
-    [Column("ubigeoID")]
+    [Column("ubigeo_id")]
     [MaxLength(6)]
     public string UbigeoId { get; set; } = null!;
 
@@ -25,7 +25,9 @@ public partial class GuiaRemisionOrigen
     [MaxLength(3)]
     public string Pais { get; set; } = null!;
 
-    [ForeignKey(nameof(GuiaId))]
+    // Relaciones
+
+    [ForeignKey(nameof(GuiaRemisionId))]
     public virtual GuiaRemision Guia { get; set; } = null!;
 
     [ForeignKey(nameof(UbigeoId))]

@@ -47,7 +47,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Proveedor
         public string? Email { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el codigo de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el Codigo de PAIS referente, ejm: PE", Nullable = false)]
         [MaxLength(3)]
         [Required]
         public string Pais { get; set; }

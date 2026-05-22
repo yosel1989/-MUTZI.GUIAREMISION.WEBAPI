@@ -17,7 +17,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             var data = await _context.Permiso
                 .Include(p => p.Perfiles) 
-                .Where(p => p.IdEstado == 1)
+                .Where(p => p.EstadoId == 1)
                 .Select(m => new Permiso
                 {
                     PermisoId = m.PermisoId,

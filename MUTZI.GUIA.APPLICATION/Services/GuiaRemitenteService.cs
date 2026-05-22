@@ -244,16 +244,16 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(dto.MotivoTrasladoId);
                     var remitente = await _establecimientoRepository.GetByIdAsync(dto.RemitenteId);
                     var destinatario = await _establecimientoRepository.GetByIdAsync(dto.DestinatarioId);
-                    var destinatarioEmails = dto.DestinatarioEmail.Select(p => _mapper.Map<EmailDestinatarioGuid>(p)).ToList();
+                    var destinatarioEmails = dto.DestinatarioEmail.Select(p => _mapper.Map<GuiaRemisionEmailDestinatario>(p)).ToList();
                     var proveedor = await _proveedorRepository.GetByIdAsync(dto.ProveedorId ?? 0);
-                    var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<ConductorGuid>(p)).ToList();
+                    var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<GuiaRemisionConductor>(p)).ToList();
                     var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<UnidadTransporteGuid>(p)).ToList();
                     var guiaRemision = _mapper.Map<GuiaRemision>(dto);
                     var datosEnvio = _mapper.Map<GuiaRemisionDatoEnvio>(dto.DatosEnvio);
                     var origen = _mapper.Map<GuiaRemisionOrigen>(dto.Origen);
                     var destino = dto.Destino.Select(p => _mapper.Map<GuiaRemisionDestino>(p)).ToList();
                     var detalles = dto.Productos.Select(p => _mapper.Map<GuiaRemisionDetalle>(p)).ToList();
-                    var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DocRelacionado>(p)).ToList();
+                    var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<GuiaRemisionDocumentoRelacionado>(p)).ToList();
                     var ventaConfig = await _ventaConfigRepository.GetByRucAsync(ruc);
 
                     if (motivoTraslado is null) throw new Exception("No existe el motivo de traslado.");
@@ -579,7 +579,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             string ticket = "";
             string estado = "";
-            int idEstado = 0;
+            int estadoId = 0;
 
             await _appDBContext.BeginTransactionAsync();
 
@@ -628,11 +628,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 catch (Exception ex)
                 {
                     estado = "ERROR";
-                    idEstado = -1;
+                    estadoId = -1;
 
                     string errorMsg = ex.InnerException?.Message ?? ex.Message;
                     if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-                    await UpdateRespuestaTicketAsync(id, errorMsg, estado, idEstado);
+                    await UpdateRespuestaTicketAsync(id, errorMsg, estado, estadoId);
                     return new InternalErrorResponseDTO
                     {
                         Error = "Error al enviar a EFACT",
@@ -654,14 +654,14 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                     ticket = efactParsed.Description;
                     estado = "ENVIADO";
-                    idEstado = 1;
+                    estadoId = 1;
                 }
                 catch
                 {
                     ticket = efactRawResponse.Length > 500 ? efactRawResponse[..500] : efactRawResponse;
                     estado = "ERROR";
-                    idEstado = -1;
-                    await UpdateRespuestaTicketAsync(id, ticket, estado, idEstado);
+                    estadoId = -1;
+                    await UpdateRespuestaTicketAsync(id, ticket, estado, estadoId);
                     efactParsed = new EfactResponseDTO
                     {
                         Code = "-1",
@@ -669,7 +669,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     };
                 }
 
-                await UpdateRespuestaTicketAsync(id, ticket, estado, idEstado);
+                await UpdateRespuestaTicketAsync(id, ticket, estado, estadoId);
 
                 await _appDBContext.CommitAsync();
 
@@ -684,10 +684,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 await _appDBContext.RollbackAsync();
                 estado = "ERROR";
-                idEstado = -1;
+                estadoId = -1;
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
-                await UpdateRespuestaTicketAsync(id, errorMsg, estado, idEstado);
+                await UpdateRespuestaTicketAsync(id, errorMsg, estado, estadoId);
                 return new InternalErrorResponseDTO
                 {
                     Error = "Error inesperado",

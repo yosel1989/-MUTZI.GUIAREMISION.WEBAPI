@@ -37,10 +37,6 @@ public partial class GuiaRemision
     [MaxLength(10)]
     public string TipoTransporte { get; set; } = null!;
 
-    //[Column("tipo_traslado")]
-    //[MaxLength(12)]
-    //public string TipoTraslado { get; set; } = null!;
-
     [Column("fecha")]
     public DateOnly Fecha { get; set; }
 
@@ -103,14 +99,15 @@ public partial class GuiaRemision
     public string EstadoSunat { get; set; } = "PENDIENTE";
 
     [Column("estado_sunat_id")]
-    public sbyte IdEstadoSunat { get; set; }
+    public sbyte EstadoSunatId { get; set; }
 
     [Column("motivo_traslado_id")]
     public int MotivoTrasladoId { get; set; }
 
+    // Relaciones
 
-
-    public virtual ICollection<GuiaRemisionDatoEnvio> DatosEnvios { get; set; } = new List<GuiaRemisionDatoEnvio>();
+    [ForeignKey(nameof(Ruc))]
+    public virtual VentaConfig RucNavigation { get; set; } = null!;
 
     [ForeignKey(nameof(RemitenteId))]
     public Establecimiento Remitente { get; set; } = null!;
@@ -118,30 +115,8 @@ public partial class GuiaRemision
     [ForeignKey(nameof(DestinatarioId))]
     public Establecimiento Destinatario { get; set; } = null!;
 
-
-
-
-
-    public virtual ICollection<GuiaRemisionDestino> Destinos { get; set; } = new List<GuiaRemisionDestino>();
-
-    public virtual ICollection<DocRelacionado> DocRelacionados { get; set; } = new List<DocRelacionado>();
-
-    public virtual ICollection<EmailDestinatarioGuid> EmailDestinatarioGuids { get; set; } = new List<EmailDestinatarioGuid>();
-
-    public virtual ICollection<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; } = new List<EmailRemiteTransportistaGuid>();
-
-    public virtual ICollection<GuiaRemisionDetalle> GuiaDetalles { get; set; } = new List<GuiaRemisionDetalle>();
-
-    public virtual ICollection<GuiaRemisionOrigen> Origens { get; set; } = new List<GuiaRemisionOrigen>();
-
     [ForeignKey(nameof(ProveedorId))]
     public virtual Proveedor? Proveedor { get; set; }
-
-    [ForeignKey(nameof(RemiteTransportistaId))]
-    public virtual Transportista? RemiteTransportista { get; set; }
-
-    [ForeignKey(nameof(Ruc))]
-    public virtual VentaConfig RucNavigation { get; set; } = null!;
 
     [ForeignKey(nameof(EstadoId))]
     public virtual GuiaRemisionEstado Estado { get; set; }
@@ -151,4 +126,21 @@ public partial class GuiaRemision
 
     [ForeignKey(nameof(MotivoTrasladoId))]
     public virtual MotivoTraslado MotivoTraslado { get; set; }
+
+    [ForeignKey(nameof(RemiteTransportistaId))]
+    public virtual Transportista? RemiteTransportista { get; set; }
+
+    public virtual ICollection<GuiaRemisionDatoEnvio> DatosEnvios { get; set; } = new List<GuiaRemisionDatoEnvio>();
+
+    public virtual ICollection<GuiaRemisionOrigen> Origens { get; set; } = new List<GuiaRemisionOrigen>();
+
+    public virtual ICollection<GuiaRemisionDestino> Destinos { get; set; } = new List<GuiaRemisionDestino>();
+
+    public virtual ICollection<GuiaRemisionDocumentoRelacionado> DocRelacionados { get; set; } = new List<GuiaRemisionDocumentoRelacionado>();
+
+    public virtual ICollection<GuiaRemisionEmailDestinatario> EmailDestinatarioGuids { get; set; } = new List<GuiaRemisionEmailDestinatario>();
+
+    public virtual ICollection<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; } = new List<EmailRemiteTransportistaGuid>();
+
+    public virtual ICollection<GuiaRemisionDetalle> GuiaDetalles { get; set; } = new List<GuiaRemisionDetalle>();
 }

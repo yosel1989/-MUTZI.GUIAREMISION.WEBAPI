@@ -17,15 +17,15 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
             Establecimiento remitente,
             Establecimiento destinatario,
             Proveedor proveedor,
-            List<ConductorGuid> conductor,
+            List<GuiaRemisionConductor> conductor,
             List<UnidadTransporteGuid> transporte,
             GuiaRemision guiaRemision,
             GuiaRemisionDatoEnvio datosEnvio,
             GuiaRemisionOrigen origen,
             List<GuiaRemisionDestino> destino,
             List<GuiaRemisionDetalle> detalles,
-            List<DocRelacionado> docRelacionados,
-            List<EmailDestinatarioGuid> emailDestinatarioGuia
+            List<GuiaRemisionDocumentoRelacionado> docRelacionados,
+            List<GuiaRemisionEmailDestinatario> emailDestinatarioGuia
             );
 
         //Proveedor

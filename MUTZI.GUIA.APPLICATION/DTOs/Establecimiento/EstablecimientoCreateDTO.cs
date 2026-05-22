@@ -18,7 +18,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [MinLength(11)]
         public string Ruc { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("Descripcion")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la descripción o nombre del remitente", Nullable = false)]
         [MaxLength(200)]
         [Required]
@@ -48,7 +48,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public string? Email { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el codigo de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el Codigo de PAIS referente, ejm: PE", Nullable = false)]
         [MaxLength(3)]
         [Required]
         public string Pais { get; set; }

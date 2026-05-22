@@ -63,8 +63,8 @@ public partial class Conductor
     [Column("estado")]
     public string Estado { get; set; } = "activo";
 
-    [Column("id_estado")]
-    public sbyte IdEstado { get; set; } = 1;
+    [Column("estado_id")]
+    public sbyte EstadoId { get; set; } = 1;
 
-    public virtual ICollection<ConductorGuid> ConductorGuids { get; set; } = new List<ConductorGuid>();
+    public virtual ICollection<GuiaRemisionConductor> ConductorGuids { get; set; } = new List<GuiaRemisionConductor>();
 }

@@ -23,7 +23,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<List<Proveedor>> GetListBySuggestion(string numeroDoc)
         {
-            var query = _context.Proveedor.Where(c => c.IdEstado == 1);
+            var query = _context.Proveedor.Where(c => c.EstadoId == 1);
             if (!string.IsNullOrEmpty(numeroDoc))
             {
                 query = query.Where(c =>

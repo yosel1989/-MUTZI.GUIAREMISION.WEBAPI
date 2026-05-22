@@ -17,7 +17,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve en texto el ruc del remitente. Asimismo, ese ruc está asociado a la empresa.", Nullable = false)]
         public string Ruc { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("Descripcion")]
         [SwaggerSchema("Devuelve en texto la descripción o nombre del remitente/sucursal.", Nullable = false)]
         public string Descripcion { get; set; }
 
@@ -46,7 +46,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public string Email { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Devuelve un texto, el codigo de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Devuelve un texto, el Codigo de PAIS referente, ejm: PE", Nullable = false)]
         public string Pais { get; set; }
 
         [JsonPropertyName("serie")]

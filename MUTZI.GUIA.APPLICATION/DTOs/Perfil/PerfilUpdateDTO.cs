@@ -18,12 +18,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Perfil
         [StringLength(75, ErrorMessage = "El nombre del perfil no puede exceder los 75 caracteres")]
         public string Nombre { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("Descripcion")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la descripció del perfil", Nullable = true)]
         [MaxLength(150)]
         public string? Descripcion { get; set; }
 
-        [JsonPropertyName("codigo")]
+        [JsonPropertyName("Codigo")]
         [SwaggerSchema("Recibe un número, aquí se coloca el código del perfil", Nullable = false)]
         [Required]
         public int Codigo { get; set; }

@@ -14,7 +14,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
     [SwaggerSchema("Recibe un objeto unidad_transporte.('En caso de guía de remisión remitente se completa solo si el tipo_transporte es 'PRIVADO', de lo contrario, no se completa nada.' && 'En caso de guía de remisión transportista si es obligatorio este objeto unidad_transporte')", Nullable = true)]
     public class UnidadTransporteCreateDTO
     {
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("Descripcion")]
         [SwaggerSchema("Recibe un texto, se coloca una descripción del vehículo, Ejm: CAMIONETA, CUSTER, etc.", Nullable = true)]
         [MaxLength(50)]
         public string? Descripcion { get; set; }

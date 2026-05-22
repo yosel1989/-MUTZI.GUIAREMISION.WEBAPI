@@ -3,11 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("unidadMedida")]
+[Table("unidad_medida")]
 public partial class UnidadMedida
 {
     [Key]
-    [Column("codigoUM")]
+    [Column("unidad_medida_id")]
+    public int UnidadMedidaId { get; set; }
+
+    [Column("codigo_um")]
     [MaxLength(10)]
     public string CodigoUm { get; set; } = null!;
 
@@ -16,23 +19,19 @@ public partial class UnidadMedida
     public string Descripcion { get; set; } = null!;
 
     [Column("es_unidad_peso")]
-    public int? EsUnidadPeso { get; set; }
+    public bool EsUnidadPeso { get; set; } = false;
 
     [Column("es_unidad_volumen")]
-    public int? EsUnidadVolumen { get; set; }
+    public bool EsUnidadVolumen { get; set; } = false;
 
     [Column("es_unidad_longitud")]
-    public int? EsUnidadLongitud { get; set; }
+    public bool EsUnidadLongitud { get; set; } = false;
 
     [Column("es_unidad_conteo")]
-    public int? EsUnidadConteo { get; set; }
+    public bool EsUnidadConteo { get; set; } = false;
 
-    [Column("estado")]
-    [MaxLength(20)]
-    public string? Estado { get; set; }
-
-    [Column("idEstado")]
-    public sbyte? IdEstado { get; set; }
+    [Column("activo")]
+    public bool Activo { get; set; }
 
     public virtual ICollection<GuiaRemisionDatoEnvio> DatosEnvios { get; set; } = new List<GuiaRemisionDatoEnvio>();
 

@@ -43,15 +43,15 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                     var remitente = await _establecimientoRepository.GetByIdAsync(dto.RemitenteId);
                     var remiteTransportista = await _transportistaRepository.GetByIdAsync(dto.RemiteTransportistaId ?? 0);
                     var destinatario = await _establecimientoRepository.GetByIdAsync(dto.DestinatarioId);
-                    var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<DOMAIN.Entities.ConductorGuid>(p)).ToList();
+                    var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<DOMAIN.Entities.GuiaRemisionConductor>(p)).ToList();
                     var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<DOMAIN.Entities.UnidadTransporteGuid>(p)).ToList();
                     var guiaRemision = _mapper.Map<DOMAIN.Entities.GuiaRemision>(dto);
                     var datosEnvio = _mapper.Map<DOMAIN.Entities.GuiaRemisionDatoEnvio>(dto.DatosEnvio);
                     var origen = _mapper.Map<DOMAIN.Entities.GuiaRemisionOrigen>(dto.Origen);
                     var destino = dto.Destino.Select(p => _mapper.Map<DOMAIN.Entities.GuiaRemisionDestino>(p)).ToList();
                     var detalles = dto.Productos.Select(p => _mapper.Map<DOMAIN.Entities.GuiaRemisionDetalle>(p)).ToList();
-                    var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.DocRelacionado>(p)).ToList();
-                    var emailsDestinatarioGuia = dto.DestinatarioCorreo.Select(p => _mapper.Map<DOMAIN.Entities.EmailDestinatarioGuid>(p)).ToList();
+                    var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<DOMAIN.Entities.GuiaRemisionDocumentoRelacionado>(p)).ToList();
+                    var emailsDestinatarioGuia = dto.DestinatarioCorreo.Select(p => _mapper.Map<DOMAIN.Entities.GuiaRemisionEmailDestinatario>(p)).ToList();
                     var emailsRemiteTransportistaGuia = dto.RemiteTransportistaCorreo.Select(p => _mapper.Map<DOMAIN.Entities.EmailRemiteTransportistaGuid>(p)).ToList();
                     var ventaConfig = await _ventaConfigRepository.GetByRucAsync(ruc);
 

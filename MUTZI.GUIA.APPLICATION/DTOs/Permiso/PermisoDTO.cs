@@ -10,14 +10,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Permiso
         [JsonPropertyName("nombre")]
         public string Nombre { get; set; } = null!;
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("Descripcion")]
         public string? Descripcion { get; set; } = null!;
 
-        [JsonPropertyName("codigo")]
+        [JsonPropertyName("Codigo")]
         public string Codigo { get; set; }
 
         [JsonPropertyName("id_estado")]
-        public int IdEstado { get; set; } = 1;
+        public int EstadoId { get; set; } = 1;
 
     }
 }
