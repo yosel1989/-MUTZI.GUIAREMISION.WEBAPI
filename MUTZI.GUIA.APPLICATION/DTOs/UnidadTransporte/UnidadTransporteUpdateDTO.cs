@@ -7,7 +7,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
     [SwaggerSchema("Recibe un objeto Unidad de Transporte para actualizar", Nullable = true)]
     public class UnidadTransporteUpdateDTO
     {
-        [JsonPropertyName("Descripcion")]
+        [JsonPropertyName("descripcion")]
         [SwaggerSchema("Recibe un texto, se coloca una descripción del vehículo, Ejm: CAMIONETA, CUSTER, etc.", Nullable = true)]
         [MaxLength(50)]
         public string? Descripcion { get; set; }

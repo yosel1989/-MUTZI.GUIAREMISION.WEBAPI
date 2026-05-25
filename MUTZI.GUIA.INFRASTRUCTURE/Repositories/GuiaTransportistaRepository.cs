@@ -48,7 +48,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             Transportista remiteTransportista,
             Establecimiento destinatario,
             List<GuiaRemisionConductor> conductor,
-            List<UnidadTransporteGuid> transporte,
+            List<GuiaRemisionUnidadTransporte> transporte,
             GuiaRemision guiaRemision,
             GuiaRemisionDatoEnvio datosEnvio,
             GuiaRemisionOrigen origen,
@@ -126,10 +126,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //Registrar en lista
                 foreach (var tr in transporte)
                 {
-                    var transporteGuia = new DOMAIN.Entities.UnidadTransporteGuid
+                    var transporteGuia = new DOMAIN.Entities.GuiaRemisionUnidadTransporte
                     {
-                        TransporteId = tr.TransporteId,
-                        DatosEnvioId = datosEnvio.GuiaRemisionDatoEnvioId
+                        UnidadTransporteId = tr.UnidadTransporteId,
+                        GuiaRemisionDatoEnvioId = datosEnvio.GuiaRemisionDatoEnvioId
                     };
                     await _context.UnidadTransporteGuids.AddAsync(transporteGuia);
                     await _context.SaveChangesAsync();

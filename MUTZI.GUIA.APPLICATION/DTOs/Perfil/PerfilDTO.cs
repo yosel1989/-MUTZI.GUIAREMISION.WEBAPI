@@ -10,10 +10,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Perfil
         [JsonPropertyName("nombre")]
         public string Nombre { get; set; } = null!;
 
-        [JsonPropertyName("Descripcion")]
+        [JsonPropertyName("descripcion")]
         public string? Descripcion { get; set; } = null!;
 
-        [JsonPropertyName("Codigo")]
+        [JsonPropertyName("codigo")]
         public int Codigo { get; set; }
 
         [JsonPropertyName("estado")]

@@ -1,4 +1,5 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using MUTZI.GUIA.DOMAIN.Enums;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
@@ -75,7 +76,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("direccion_destino")]
         [SwaggerSchema("Devuelve un texto, es la dirección destino de la guía de remisión", Nullable = false)]
-        public string DireccionDestino{ get; set; }
+        public string DireccionDestino { get; set; }
 
         [JsonPropertyName("distrito_origen")]
         [SwaggerSchema("Devuelve en texto el distrito de origen o del punto de partida", Nullable = false)]
@@ -145,5 +146,122 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, el motivo de traslado de la guía.", Nullable = false)]
         public string MotivoTrasladoNombre { get; set; }
 
+
+        [JsonPropertyName("acciones")]
+        public string Actions
+        {
+            get
+            {
+                var Acciones = new
+                {
+                    pdf = "PDF",
+                    aprobar = "APE",
+                    confirmar = "CON",
+                    rechazar = "REC",
+                    editar = "EDI",
+                    anular = "ANU",
+                    historial = "HIS"
+                };
+
+                switch (this.EstadoId)
+                {
+                    case (int)EnumGuiaRemisionEstado.Registrada:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.confirmar,
+                            Acciones.rechazar,
+                            Acciones.anular,
+                            Acciones.historial
+                        };
+                            return string.Join(",", actions);
+                        }
+                    case (int)EnumGuiaRemisionEstado.Editada:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.confirmar,
+                            Acciones.rechazar,
+                            Acciones.anular,
+                            Acciones.historial
+                        };
+                            return string.Join(",", actions);
+                        }
+                    case (int)EnumGuiaRemisionEstado.Confirmada:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.aprobar,
+                            Acciones.rechazar,
+                            Acciones.anular,
+                            Acciones.historial
+                        };
+                            return string.Join(",", actions);
+                        }
+                    case (int)EnumGuiaRemisionEstado.Aprobada:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.historial
+                        };
+                            if (this.EstadoSunat == "ENVIADO") actions.Add(Acciones.pdf);
+                            return string.Join(",", actions);
+                        }
+                    case (int)EnumGuiaRemisionEstado.Emitida:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.historial
+                        };
+                            if (this.EstadoSunat == "ENVIADO") actions.Add(Acciones.pdf);
+                            return string.Join(",", actions);
+                        }
+                    case (int)EnumGuiaRemisionEstado.SalidaConfirmada:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.historial
+                        };
+                            if (this.EstadoSunat == "ENVIADO") actions.Add(Acciones.pdf);
+                            return string.Join(",", actions);
+                        }
+                    case (int)EnumGuiaRemisionEstado.EnTransito:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.historial
+                        };
+                            if (this.EstadoSunat == "ENVIADO") actions.Add(Acciones.pdf);
+                            return string.Join(",", actions);
+                        }
+                    case (int)EnumGuiaRemisionEstado.RecepcionConfirmada:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.historial
+                        };
+                            if (this.EstadoSunat == "ENVIADO") actions.Add(Acciones.pdf);
+                            return string.Join(",", actions);
+                        }
+                    case (int)EnumGuiaRemisionEstado.Cerrada:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.historial
+                        };
+                            if (this.EstadoSunat == "ENVIADO") actions.Add(Acciones.pdf);
+                            return string.Join(",", actions);
+                        }
+                    case (int)EnumGuiaRemisionEstado.Anulada:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.historial
+                        };
+                            return string.Join(",", actions);
+                        }
+                    case (int)EnumGuiaRemisionEstado.Rechazada:
+                        {
+                            List<string> actions = new List<string> {
+                            Acciones.editar,
+                            Acciones.anular,
+                            Acciones.historial
+                        };
+                            return string.Join(",", actions);
+                        }
+                    default: return "";
+                }
+            }
+        }
     }
 }

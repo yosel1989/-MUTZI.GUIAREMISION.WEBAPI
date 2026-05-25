@@ -7,7 +7,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemision
         [JsonPropertyName("id")]
         public int GuiaRemisionId { get; set; }
 
-        [JsonPropertyName("Descripcion")]
+        [JsonPropertyName("descripcion")]
         public string Descripcion { get; set; }
     }
 }

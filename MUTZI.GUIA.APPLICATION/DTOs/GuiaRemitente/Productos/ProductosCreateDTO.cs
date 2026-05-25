@@ -22,12 +22,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         [Required]
         public string CodigoUm { get; set; }
 
-        [JsonPropertyName("Codigo")]
+        [JsonPropertyName("codigo")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el código del producto.", Nullable = true)]
         [MaxLength(10)]
         public string? Codigo { get; set; }
 
-        [JsonPropertyName("Descripcion")]
+        [JsonPropertyName("descripcion")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la descripción del producto.", Nullable = false)]
         [MaxLength(100)]
         [Required]

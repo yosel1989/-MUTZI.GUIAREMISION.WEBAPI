@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Column("Id")]
         public int Id { get; set; }
 
-        [Column("Descripcion")]
+        [Column("descripcion")]
         public string Descripcion { get; set; }
 
         [Column("LocalId")]

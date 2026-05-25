@@ -7,7 +7,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Area
         [JsonPropertyName("id")]
         public int Id { get; set; }
 
-        [JsonPropertyName("Descripcion")]
+        [JsonPropertyName("descripcion")]
         public string Descripcion { get; set; }
 
         [JsonPropertyName("local_id")]

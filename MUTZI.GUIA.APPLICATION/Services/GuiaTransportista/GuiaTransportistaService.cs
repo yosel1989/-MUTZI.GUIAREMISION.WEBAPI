@@ -44,7 +44,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                     var remiteTransportista = await _transportistaRepository.GetByIdAsync(dto.RemiteTransportistaId ?? 0);
                     var destinatario = await _establecimientoRepository.GetByIdAsync(dto.DestinatarioId);
                     var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<DOMAIN.Entities.GuiaRemisionConductor>(p)).ToList();
-                    var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<DOMAIN.Entities.UnidadTransporteGuid>(p)).ToList();
+                    var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<DOMAIN.Entities.GuiaRemisionUnidadTransporte>(p)).ToList();
                     var guiaRemision = _mapper.Map<DOMAIN.Entities.GuiaRemision>(dto);
                     var datosEnvio = _mapper.Map<DOMAIN.Entities.GuiaRemisionDatoEnvio>(dto.DatosEnvio);
                     var origen = _mapper.Map<DOMAIN.Entities.GuiaRemisionOrigen>(dto.Origen);

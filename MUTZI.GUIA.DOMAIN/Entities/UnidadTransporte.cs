@@ -72,5 +72,5 @@ public class UnidadTransporte
     [Column("id_estado")]
     public sbyte? IdEstado { get; set; } = 1;
 
-    public virtual ICollection<UnidadTransporteGuid> TransporteGuids { get; set; } = new List<UnidadTransporteGuid>();
+    public virtual ICollection<GuiaRemisionUnidadTransporte> TransporteGuids { get; set; } = new List<GuiaRemisionUnidadTransporte>();
 }

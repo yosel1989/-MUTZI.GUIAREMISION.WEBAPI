@@ -7,7 +7,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities;
 public partial class Ubigeo
 {
     [Key]
-    [Column("ubigeoID")]
+    [Column("ubigeo_id")]
     [MaxLength(6)]
     public string UbigeoId { get; set; } = null!;
 

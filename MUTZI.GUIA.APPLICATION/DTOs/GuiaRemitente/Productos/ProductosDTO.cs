@@ -24,11 +24,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         [SwaggerSchema("Devuelve en texto la unidad de medida del producto. Ejm: KGM, PK, NIU, etc.", Nullable = false)]
         public string CodigoUm { get; set; }
 
-        [JsonPropertyName("Codigo")]
+        [JsonPropertyName("codigo")]
         [SwaggerSchema("Devuelve en texto el código del producto.", Nullable = true)]
         public string? Codigo { get; set; }
 
-        [JsonPropertyName("Descripcion")]
+        [JsonPropertyName("descripcion")]
         [SwaggerSchema("Devuelve en texto la descripción del producto.", Nullable = false)]
         public string Descripcion { get; set; }
 

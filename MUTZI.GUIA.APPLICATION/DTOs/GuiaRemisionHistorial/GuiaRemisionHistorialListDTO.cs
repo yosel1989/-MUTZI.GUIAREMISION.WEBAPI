@@ -13,7 +13,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemisionHistorial
         [JsonPropertyName("valor_nuevo")]
         public string? ValorNuevo { get; set; }
 
-        [JsonPropertyName("Descripcion")]
+        [JsonPropertyName("descripcion")]
         public string? Descripcion { get; set; }
 
         [JsonPropertyName("fecha_registro")]

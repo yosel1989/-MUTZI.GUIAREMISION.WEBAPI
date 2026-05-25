@@ -162,7 +162,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         cellEstado.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                         if (item.Estado?.ToUpper() == "ENVIADO")
                         {
-                            cellEstado.Style.Fill.BackgroundColor = XLColor.FromHtml("#C6EFCE");
+                            cellEstado.Style.Fill.BackgroundColor = XLColor.FromHtml("#ab4141");
                             cellEstado.Style.Font.FontColor = XLColor.FromHtml("#006100");
                         }
                         else if (item.Estado?.ToUpper()=="CREADO")
@@ -178,8 +178,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     }
 
                     var headerRange = worksheet.Range(1, 1, 1, headers.Length);
-                    headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#DCB2FC"); // Color lila del ejemplo
-                    headerRange.Style.Font.FontColor = XLColor.FromHtml("#560591");
+                    headerRange.Style.Fill.BackgroundColor = XLColor.FromHtml("#fce8e8");
+                    headerRange.Style.Font.FontColor = XLColor.FromHtml("#ab4141");
                     headerRange.Style.Font.Bold = true;
                     headerRange.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
 
@@ -247,7 +247,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var destinatarioEmails = dto.DestinatarioEmail.Select(p => _mapper.Map<GuiaRemisionEmailDestinatario>(p)).ToList();
                     var proveedor = await _proveedorRepository.GetByIdAsync(dto.ProveedorId ?? 0);
                     var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<GuiaRemisionConductor>(p)).ToList();
-                    var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<UnidadTransporteGuid>(p)).ToList();
+                    var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<GuiaRemisionUnidadTransporte>(p)).ToList();
                     var guiaRemision = _mapper.Map<GuiaRemision>(dto);
                     var datosEnvio = _mapper.Map<GuiaRemisionDatoEnvio>(dto.DatosEnvio);
                     var origen = _mapper.Map<GuiaRemisionOrigen>(dto.Origen);

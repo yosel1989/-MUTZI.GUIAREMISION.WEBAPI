@@ -26,5 +26,18 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .ToListAsync();
         }
 
+        public async Task<List<UnidadMedida>> GetListPesoToSelectAsync()
+        {
+            return await _context.UnidadMedida
+                .Where(m => m.Activo && m.EsUnidadPeso)
+                .Select(m => new UnidadMedida
+                {
+                    UnidadMedidaId = m.UnidadMedidaId,
+                    CodigoUm = m.CodigoUm,
+                    Descripcion = m.Descripcion,
+                })
+                .ToListAsync();
+        }
+
     }
 }

@@ -15,7 +15,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Catalogos
         [SwaggerSchema("Devuelve en texto el nombre del país.", Nullable = false)]
         public string Pais { get; set; }
 
-        [JsonPropertyName("Codigo")]
+        [JsonPropertyName("codigo")]
         [SwaggerSchema("Devuelve en texto el código del país.", Nullable = false)]
         public string Codigo { get; set; }
     }

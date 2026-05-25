@@ -18,7 +18,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [MinLength(11)]
         public string Ruc { get; set; }
 
-        [JsonPropertyName("Descripcion")]
+        [JsonPropertyName("descripcion")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la descripción o nombre del remitente", Nullable = false)]
         [MaxLength(200)]
         [Required]

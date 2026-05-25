@@ -46,5 +46,33 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("listar-para-select/peso")]
+        [SwaggerOperation(
+            Summary = "Listar unidades de medida para peso",
+            Description = "Lista las unidades de medida activos para peso para seleccionar",
+            OperationId = "listar_unidad_medida_para_select_peso"
+        )]
+        [ProducesResponseType(typeof(List<UnidadMedidaToSelectDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<UnidadMedidaToSelectDTO>>> GetAllPesoToSelect()
+        {
+            try
+            {
+                var data = await _service.ListPesoToSelectAsync();
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar unidades de medida.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
     }
 }

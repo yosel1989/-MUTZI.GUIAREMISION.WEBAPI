@@ -471,11 +471,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 Licencia = cg.Conductor.Licencia
                             }
                         }).ToList(),
-                        TransporteGuids = env.TransporteGuids.Select(tg => new UnidadTransporteGuid
+                        TransporteGuids = env.TransporteGuids.Select(tg => new GuiaRemisionUnidadTransporte
                         {
-                            TransporteGuidId = tg.TransporteGuidId,
-                            DatosEnvioId = tg.DatosEnvioId,
-                            TransporteId = tg.TransporteId,
+                            GuiaRemisionUnidadTransporteId = tg.GuiaRemisionUnidadTransporteId,
+                            GuiaRemisionDatoEnvioId = tg.GuiaRemisionDatoEnvioId,
+                            UnidadTransporteId = tg.UnidadTransporteId,
                             Transporte = new UnidadTransporte
                             {
                                 UnidadTransporteId = tg.Transporte.UnidadTransporteId,
@@ -566,7 +566,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             Establecimiento destinatario,
             Proveedor proveedor,
             List<GuiaRemisionConductor> conductor,
-            List<UnidadTransporteGuid> transporte,
+            List<GuiaRemisionUnidadTransporte> transporte,
             GuiaRemision guiaRemision,
             GuiaRemisionDatoEnvio datosEnvio,
             GuiaRemisionOrigen origen,
@@ -638,10 +638,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //Registrar en lista
                 foreach (var tr in transporte)
                 {
-                    var transporteGuia = new UnidadTransporteGuid
+                    var transporteGuia = new GuiaRemisionUnidadTransporte
                     {
-                        TransporteId = tr.TransporteId,
-                        DatosEnvioId = datosEnvio.GuiaRemisionDatoEnvioId
+                        UnidadTransporteId = tr.UnidadTransporteId,
+                        GuiaRemisionDatoEnvioId = datosEnvio.GuiaRemisionDatoEnvioId
                     };
                     await _context.UnidadTransporteGuids.AddAsync(transporteGuia);
                     await _context.SaveChangesAsync();

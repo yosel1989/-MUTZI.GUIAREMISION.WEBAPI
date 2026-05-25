@@ -31,5 +31,19 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
         }
 
+        public async Task<List<UnidadMedidaToSelectDTO>> ListPesoToSelectAsync()
+        {
+            try
+            {
+                var data = await _repository.GetListPesoToSelectAsync();
+                return _mapper.Map<List<UnidadMedidaToSelectDTO>>(data);
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception(msg);
+            }
+        }
+
     }
 }

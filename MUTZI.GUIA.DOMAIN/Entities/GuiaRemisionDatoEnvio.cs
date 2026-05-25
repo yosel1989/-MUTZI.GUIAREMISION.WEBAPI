@@ -53,7 +53,7 @@ public partial class GuiaRemisionDatoEnvio
     [ForeignKey(nameof(GuiaRemisionId))]
     public virtual GuiaRemision Guia { get; set; } = null!;
 
-    public virtual ICollection<UnidadTransporteGuid> TransporteGuids { get; set; } = new List<UnidadTransporteGuid>();
+    public virtual ICollection<GuiaRemisionUnidadTransporte> TransporteGuids { get; set; } = new List<GuiaRemisionUnidadTransporte>();
 
     public virtual ICollection<GuiaRemisionConductor> ConductorGuids { get; set; } = new List<GuiaRemisionConductor>();
 }
