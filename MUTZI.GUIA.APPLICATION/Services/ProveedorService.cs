@@ -96,8 +96,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 existingProveedor.UsuarioModifico = currentUser.UserName;
                 existingProveedor.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
                 existingProveedor.FechaModifico = DateTime.UtcNow;
-                await _repository.UpdateAsync(existingProveedor);
-                return _mapper.Map<ProveedorDTO>(existingProveedor);
+                var proveedorActualizado = await _repository.UpdateAsync(existingProveedor);
+                return _mapper.Map<ProveedorDTO>(proveedorActualizado);
             }
             catch (Exception ex)
             {

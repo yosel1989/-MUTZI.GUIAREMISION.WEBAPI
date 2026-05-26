@@ -95,9 +95,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             _context.Proveedor.Update(proveedor);
             proveedor.FechaModifico = DateTime.UtcNow;
             await _context.SaveChangesAsync();
-            await _context.Entry(proveedor).ReloadAsync();
 
-            return proveedor;
+            var proveedorActualizado = await _context.Proveedor
+                .Include(p => p.Ubigeo)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.ProveedorId == proveedor.ProveedorId);
+
+            return proveedorActualizado!;
         }
 
         public async Task DeleteAsync(int id)

@@ -10,7 +10,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
-    [Route("[controller]")]
+    [Route("proveedores")]
     [ApiController]
     [Authorize]
     public class ProveedorController : ControllerBase
