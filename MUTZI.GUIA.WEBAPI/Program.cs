@@ -130,6 +130,7 @@ builder.Services.AddScoped<IGuiaRemisionEstadoPermisoRepository, GuiaRemisionEst
 builder.Services.AddScoped<IAreaRepository, AreaRepository>();
 builder.Services.AddScoped<IMotivoTrasladoRepository, MotivoTrasladoRepository>();
 builder.Services.AddScoped<IUnidadMedidaRepository, UnidadMedidaRepository>();
+builder.Services.AddScoped<ITipoDocumentoRepository, TipoDocumentoRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();

@@ -16,8 +16,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Apellidos, opt => opt.MapFrom(src => src.Apellidos.ToUpper()))
                 .ForMember(dest => dest.Cargo, opt => opt.MapFrom(src => src.Cargo.ToUpper()));
             CreateMap<ConductorUpdateDTO, Conductor>();
-            CreateMap<Conductor, EstadoActualizadoResponseDTO>()
-                .ForMember(dest => dest.Detalle, opt => opt.MapFrom(src => $"Conductor con ID {src.ConductorId} ha sido actualizado a estado '{src.Estado}'."));
+            CreateMap<Conductor, EstadoActualizadoResponseDTO>();
         }
     }
 }

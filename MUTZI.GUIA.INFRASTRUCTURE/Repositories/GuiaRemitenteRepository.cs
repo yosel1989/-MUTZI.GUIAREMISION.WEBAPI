@@ -1,11 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
+using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 using MUTZI.GUIA.DOMAIN.Enums;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {

@@ -1,4 +1,4 @@
-﻿using MUTZI.GUIA.DOMAIN.Entities;
+﻿using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 
 namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 {

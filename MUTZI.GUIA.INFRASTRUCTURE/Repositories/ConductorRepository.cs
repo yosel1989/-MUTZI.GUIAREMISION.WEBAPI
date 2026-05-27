@@ -55,7 +55,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 if (!string.IsNullOrEmpty(search))
                 {
                     var val = search.ToLower().Trim();
-                    query = query.Where(x => x.TipoDocumento.ToLower().Contains(val) ||
+                    query = query.Where(x => 
+                        x.TipoDocumento.Descripcion.ToLower().Contains(val) ||
+                        x.TipoDocumento.DescripcionCorta.ToLower().Contains(val) ||
                         x.NumeroDocumento.ToLower().Contains(val) ||
                         x.Nombres.ToLower().Contains(val) ||
                         x.Apellidos.ToLower().Contains(val) ||

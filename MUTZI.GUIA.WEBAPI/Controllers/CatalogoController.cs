@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.TipoDocumento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -93,6 +94,35 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al listar tipos de establecimiento.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+
+        [HttpGet]
+        [Route("tipos-documento")]
+        [SwaggerOperation(
+            Summary = "Listar tipos de documento",
+            Description = "Lista tipos de documento para seleccionar",
+            OperationId = "listar_tipo_documento"
+        )]
+        [ProducesResponseType(typeof(IEnumerable<TipoDocumentoDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<TipoDocumentoDTO>>> GetTipoDocumentoLista()
+        {
+            try
+            {
+                var result = await _service.GetTiposDocumento();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar tipos de documento del catalogo.",
                     Detalle = errorMsg
                 });
             }

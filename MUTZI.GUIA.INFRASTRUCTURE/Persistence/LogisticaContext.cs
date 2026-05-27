@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.DOMAIN.Entities;
+using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 
@@ -35,8 +36,11 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<GuiaRemisionHistorial> GuiaRemisionHistorial { get; set; }
     public virtual DbSet<GuiaRemisionEstado> GuiaRemisionEstado { get; set; }
     public virtual DbSet<GuiaRemisionEstadoPermiso> GuiaRemisionEstadoPermiso { get; set; }
-    public virtual DbSet<Area> Area { get; set; }
     public virtual DbSet<MotivoTraslado> MotivoTraslado { get; set; }
+
+    // Catalogos
+    public virtual DbSet<Area> Area { get; set; }
+    public virtual DbSet<TipoDocumento> TipoDocumento { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

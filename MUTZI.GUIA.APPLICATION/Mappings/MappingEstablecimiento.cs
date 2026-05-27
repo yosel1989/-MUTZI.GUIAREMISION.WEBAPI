@@ -32,8 +32,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))
                 .ForMember(dest => dest.RazonSocial, opt => opt.MapFrom(src => src.RucNavigation.Empresa));
 
-            CreateMap<Establecimiento, EstadoActualizadoResponseDTO>()
-                .ForMember(dest => dest.Detalle, opt => opt.MapFrom(src => $"Establecimiento con ID {src.EstablecimientoId} ha sido actualizado a estado '{src.Estado}'."));
+            CreateMap<Establecimiento, EstadoActualizadoResponseDTO>();
         }
     }
 }

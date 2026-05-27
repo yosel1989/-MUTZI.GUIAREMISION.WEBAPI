@@ -40,8 +40,5 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Shared
         [SwaggerSchema("Recibe un texto, se coloca el nombre del usuario que modifico el estado del registro.", Nullable = false)]
         public string? UsuarioModificoNombre { get; set; }
 
-        [JsonPropertyName("detalle")]
-        [SwaggerSchema("Devuelve en texto el detalle de la transacción en la bbdd.", Nullable = false)]
-        public string Detalle { get; set; } = "Nombre de registro actualizado correctamente.";
     }
 }

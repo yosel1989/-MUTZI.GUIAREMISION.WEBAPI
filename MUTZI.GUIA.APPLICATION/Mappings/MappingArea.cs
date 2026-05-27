@@ -1,5 +1,5 @@
-﻿using MUTZI.GUIA.DOMAIN.Entities;
-using MUTZI.GUIA.APPLICATION.DTOs.Area;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.Area;
+using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 
 namespace MUTZI.GUIA.APPLICATION.Mappings
 {

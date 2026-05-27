@@ -17,8 +17,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<ProveedorCreateDTO, Proveedor>();
             CreateMap<ProveedorCreateGuiaDTO, Proveedor>();
             CreateMap<ProveedorUpdateDTO, Proveedor>();
-            CreateMap<Proveedor, EstadoActualizadoResponseDTO>()
-                .ForMember(dest => dest.Detalle, opt => opt.MapFrom(src => $"Proveedor con ID {src.ProveedorId} ha sido actualizado a estado '{src.Estado}'."));
+            CreateMap<Proveedor, EstadoActualizadoResponseDTO>();
         }
     }
 }

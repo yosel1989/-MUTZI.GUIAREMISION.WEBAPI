@@ -19,8 +19,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<TransportistaCreateGuiaDTO, Transportista>();
             CreateMap<TransportistaUpdateDTO, Transportista>();
 
-            CreateMap<Transportista, EstadoActualizadoResponseDTO>()
-                .ForMember(dest => dest.Detalle, opt => opt.MapFrom(src => $"Transportista con ID {src.TransportistaId} ha sido actualizado a estado '{src.Estado}'."));
+            CreateMap<Transportista, EstadoActualizadoResponseDTO>();
         }
     }
 }

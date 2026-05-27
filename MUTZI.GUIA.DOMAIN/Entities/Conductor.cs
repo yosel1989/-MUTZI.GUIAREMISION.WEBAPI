@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
@@ -10,9 +11,8 @@ public partial class Conductor
     [Column("conductor_id")]
     public int ConductorId { get; set; }
 
-    [Column("tipo_documento")]
-    [MaxLength(20)]
-    public string TipoDocumento { get; set; }
+    [Column("tipo_documento_id")]
+    public int TipoDocumentoId { get; set; }
 
     [Column("numero_documento")]
     [MaxLength(15)]
@@ -65,6 +65,11 @@ public partial class Conductor
 
     [Column("estado_id")]
     public sbyte EstadoId { get; set; } = 1;
+
+    // Relaciones
+
+    [ForeignKey(nameof(TipoDocumentoId))]
+    public virtual TipoDocumento TipoDocumento { get; set; }
 
     public virtual ICollection<GuiaRemisionConductor> ConductorGuids { get; set; } = new List<GuiaRemisionConductor>();
 }

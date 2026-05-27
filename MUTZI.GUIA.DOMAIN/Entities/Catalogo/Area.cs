@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MUTZI.GUIA.DOMAIN.Entities
+namespace MUTZI.GUIA.DOMAIN.Entities.Catalogo
 {
     [Table("vw_rrhh_area")]
     public partial class Area

@@ -1,13 +1,22 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
+﻿using AutoMapper;
+using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
+using MUTZI.GUIA.APPLICATION.DTOs.TipoDocumento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
+using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
 namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
 {
     public class CatalogoService: ICatalogoService
     {
-        public CatalogoService()
+        private readonly IMapper _mapper;
+        private readonly ITipoDocumentoRepository _tipoDocumentoRepository;
+        public CatalogoService(
+            IMapper mapper,
+            ITipoDocumentoRepository tipoDocumentoRepository
+        )
         {
-            
+            _mapper = mapper;
+            _tipoDocumentoRepository = tipoDocumentoRepository;
         }
         public IEnumerable<EmisorAutorizadorVehicularDTO> GetEmisoresVehiculares()
         {
@@ -129,6 +138,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
             listPaises.AddRange(paises);
 
             return listPaises;
+        }
+
+
+        public async Task<IEnumerable<TipoDocumentoDTO>> GetTiposDocumento()
+        {
+            var tiposDocumento = await _tipoDocumentoRepository.GetListToSelectAsync();
+            return _mapper.Map<IEnumerable<TipoDocumentoDTO>>(tiposDocumento);
         }
     }
 }

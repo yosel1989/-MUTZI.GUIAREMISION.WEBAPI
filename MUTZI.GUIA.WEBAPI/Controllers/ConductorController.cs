@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.Conductor;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
@@ -245,7 +246,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "actualizar_estado_conductor"
         )]
         [Permission("editar_estado_conductor")]
-        [ProducesResponseType(typeof(EstadoActualizadoResponseDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseDTO<EstadoActualizadoResponseDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CambiarEstado(int id, [FromBody] EstadoActualizadoRequestDTO infoRequestDto)
@@ -253,7 +254,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             try
             {
                 var result = await _service.CambiarEstadoAsync(id, infoRequestDto);
-                return Ok(result);
+                return Ok(new ResponseDTO<EstadoActualizadoResponseDTO>
+                {
+                    Data = result,
+                    Detalle = $"Se actualizó el estado del conductor con código: COD-{id.ToString("D4")} al estado {result.Estado}."
+                });
             }
             catch (Exception ex)
             {
