@@ -7,11 +7,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Conductor
     [SwaggerSchema("Recibe un objeto conductor. ('En caso de guía de remisión remitente se completa solo si el tipo_transporte es 'PRIVADO', de lo contrario, no se completa nada.' && 'En caso de guía de remisión transportista si es obligatorio este objeto conductor')", Nullable = true)]
     public class ConductorCreateDTO
     {
-        [JsonPropertyName("tipo_documento")]
+        [JsonPropertyName("tipo_documento_id")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el tipo de documento del conductor. Solo recibe los siguientes valores: DNI, CE y PASAPORTE", Nullable = false)]
-        [MaxLength(21)]
         [Required]
-        public string TipoDocumento { get; set; }
+        public int TipoDocumentoId { get; set; }
 
         [JsonPropertyName("numero_documento")]
         [SwaggerSchema("Recibe un texto, se coloca el número de documento del conductor. En caso de DNI, solo 8 dígitos, en otros casos acepta hasta 15 digitos", Nullable = false)]

@@ -4,6 +4,6 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 {
     public interface ITipoDocumentoRepository
     {
-        Task<IEnumerable<TipoDocumento>> GetListToSelectAsync();
+        Task<IEnumerable<TipoDocumento>> GetListToSelectAsync(string? tipoRegimen);
     }
 }

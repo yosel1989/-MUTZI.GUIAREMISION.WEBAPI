@@ -37,12 +37,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             var query = _context.Proveedor
                 .Include(p => p.Ubigeo)
+                .Include(p => p.TipoDocumento)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
             {
                 var val = search.ToLower().Trim();
-                query = query.Where(x => x.TipoDocumento.ToLower().Contains(val) || 
+                query = query.Where(x => 
+                    x.TipoDocumento.Descripcion.ToLower().Contains(val) || 
+                    x.TipoDocumento.DescripcionCorta.ToLower().Contains(val) ||
                     x.NumeroDocumento.Contains(val) || 
                     x.RazonSocial.ToLower().Contains(val) || 
                     x.Ubigeo.Departamento.ToLower().Contains(val) || 
@@ -74,6 +77,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             return await _context.Proveedor
                 .Include(p => p.Ubigeo)
+                .Include(p => p.TipoDocumento)
                 .FirstOrDefaultAsync(p => p.ProveedorId == id);
         }
 
@@ -96,11 +100,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             proveedor.FechaModifico = DateTime.UtcNow;
             await _context.SaveChangesAsync();
 
-            var proveedorActualizado = await _context.Proveedor
-                .Include(p => p.Ubigeo)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.ProveedorId == proveedor.ProveedorId);
-
+            var proveedorActualizado = await GetByIdAsync(proveedor.ProveedorId);
             return proveedorActualizado!;
         }
 

@@ -11,9 +11,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Conductor
         [SwaggerSchema("Devuelve un entero, el ID del conductor en la bbdd", Nullable = false)]
         public int ConductorId { get; set; }
 
+        [JsonPropertyName("tipo_documento_id")]
+        [SwaggerSchema("Devuelve un numero, el tipo de documento solo puede ser uno registrado en la tabla catalogo", Nullable = false)]
+        public int TipoDocumentoId { get; set; }
+
         [JsonPropertyName("tipo_documento")]
-        [SwaggerSchema("Devuelve un texto, el tipo de documento solo pueden tener los siguientes valores: DNI, CE y PASAPORTE", Nullable = false)]
-        public string TipoDocumento { get; set; }
+        [SwaggerSchema("Devuelve un texto, el nombre del tipo de documento", Nullable = false)]
+        public string TipoDocumentoNombre { get; set; }
 
         [JsonPropertyName("numero_documento")]
         [SwaggerSchema("Devuelve en texto el número de documento del conductor", Nullable = false)]

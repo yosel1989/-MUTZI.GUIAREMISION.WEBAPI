@@ -7,11 +7,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Conductor
     [SwaggerSchema("Recibe un objeto conductor para actualizar")]
     public class ConductorUpdateDTO
     {
-        [JsonPropertyName("tipo_documento")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el tipo de documento del conductor. Solo recibe los siguientes valores: DNI, CE y PASAPORTE", Nullable = false)]
-        [MaxLength(15)]
+        [JsonPropertyName("tipo_documento_id")]
+        [SwaggerSchema("Recibe un número, aquí se coloca el id del tipo de documento del conductor.", Nullable = false)]
         [Required]
-        public string TipoDocumento { get; set; }
+        public int TipoDocumentoId { get; set; }
 
         [JsonPropertyName("numero_documento")]
         [SwaggerSchema("Recibe un texto, se coloca el número de documento del conductor. En caso de DNI, solo 8 dígitos, en otros casos acepta hasta 15 digitos", Nullable = false)]

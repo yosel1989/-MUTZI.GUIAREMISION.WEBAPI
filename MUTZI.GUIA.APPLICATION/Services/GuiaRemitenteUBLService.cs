@@ -139,7 +139,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     //El proveedor se crea solo si el tipo de traslado es compra
                     SellerSupplierParty = guia.MotivoTrasladoId == (int)SunatCatalogoEnum.MotivoTraslado.COMPRA ? new List<SellerSupplierParty>{ new SellerSupplierParty {
                         Party = new List<Party>{ new Party {
-                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Proveedor.NumeroDocumento,  schemeID = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento, guia.Proveedor.NumeroDocumento)  }}}},
+                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Proveedor.NumeroDocumento,  schemeID = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumentoNombre, guia.Proveedor.NumeroDocumento)  }}}},
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
                                 ID = new List<ID> { new ID { _ = guia.Proveedor.UbigeoId } },
                                 CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Proveedor.Departamento } },

@@ -1,10 +1,4 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
-using MUTZI.GUIA.APPLICATION.DTOs.TipoDocumento;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos
 {
@@ -13,6 +7,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos
         IEnumerable<EmisorAutorizadorVehicularDTO> GetEmisoresVehiculares();
         IEnumerable<PaisDTO> GetPaises();
         IEnumerable<TipoEstablecimientoDTO> GetTiposEstablecimiento();
-        Task<IEnumerable<TipoDocumentoDTO>> GetTiposDocumento();
+        Task<IEnumerable<TipoDocumentoToSelectDTO>> GetTiposDocumento(string? tipoRegimen);
     }
 }

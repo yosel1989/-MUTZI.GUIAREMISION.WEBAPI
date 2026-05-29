@@ -50,7 +50,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.Conductor.AsQueryable();
+                var query = _context.Conductor.Include(m => m.TipoDocumento).AsQueryable();
 
                 if (!string.IsNullOrEmpty(search))
                 {
@@ -89,7 +89,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var conductor = await _context.Conductor.FirstOrDefaultAsync(c => c.ConductorId == id);
+                var conductor = await _context.Conductor.Include(m => m.TipoDocumento).FirstOrDefaultAsync(c => c.ConductorId == id);
                 return conductor;
             }
             catch (Exception ex)
@@ -128,8 +128,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 _context.Conductor.Update(conductor);
                 conductor.FechaModifico = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
-                await _context.Entry(conductor).ReloadAsync();
-                return conductor;
+
+                var conductorModificado = await GetByIdAsync(conductor.ConductorId);
+                await _context.Entry(conductorModificado).ReloadAsync();
+                return conductorModificado!;
             }
             catch (Exception ex)
             {

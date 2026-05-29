@@ -41,6 +41,7 @@ public partial class LogisticaContext : DbContext
     // Catalogos
     public virtual DbSet<Area> Area { get; set; }
     public virtual DbSet<TipoDocumento> TipoDocumento { get; set; }
+    public virtual DbSet<EntidadReguladora> EntidadReguladora { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

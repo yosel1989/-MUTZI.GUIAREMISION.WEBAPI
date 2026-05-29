@@ -13,11 +13,23 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<TipoDocumento>> GetListToSelectAsync()
+        public async Task<IEnumerable<TipoDocumento>> GetListToSelectAsync(string? tipoRegimen)
         {
-            return await _context.TipoDocumento
+            var query = _context.TipoDocumento
+                .AsQueryable();
+            if (!String.IsNullOrWhiteSpace(tipoRegimen))
+            { 
+                if (tipoRegimen == "natural")
+                    query = query.Where(m => m.EsPersonaNatural);
+                else if (tipoRegimen == "juridica")
+                    query = query.Where(m => m.EsPersonaJuridica);
+            }
+           
+            var data = await query
                 .AsNoTracking()
                 .ToListAsync();
+
+            return data;
         }
 
     }

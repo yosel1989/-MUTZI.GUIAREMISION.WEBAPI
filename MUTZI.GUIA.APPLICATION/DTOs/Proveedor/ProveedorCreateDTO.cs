@@ -7,11 +7,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Proveedor
     [SwaggerSchema("Recibe un objeto proveedor, solo si el tipo_traslado es 'COMPRA', entonces se completa el proveedor, de lo contrario, no se define el objeto proveedor", Nullable = true)]
     public class ProveedorCreateDTO
     {
-        [JsonPropertyName("tipo_documento")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el tipo de documento del proveedor. Solo recibe los siguientes valores: DNI, CE, RUC y PASAPORTE", Nullable = false)]
-        [MaxLength(21)]
+        [JsonPropertyName("tipo_documento_id")]
+        [SwaggerSchema("Recibe un número, aquí se coloca el id del tipo de documento del proveedor.", Nullable = false)]
         [Required]
-        public string TipoDocumento { get; set; }
+        public int TipoDocumentoId { get; set; }
 
         [JsonPropertyName("numero_documento")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el número de documento del proveedor.", Nullable = false)]

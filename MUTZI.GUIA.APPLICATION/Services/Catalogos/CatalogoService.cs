@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
-using MUTZI.GUIA.APPLICATION.DTOs.TipoDocumento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
@@ -141,10 +140,10 @@ namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
         }
 
 
-        public async Task<IEnumerable<TipoDocumentoDTO>> GetTiposDocumento()
+        public async Task<IEnumerable<TipoDocumentoToSelectDTO>> GetTiposDocumento(string? tipoRegimen)
         {
-            var tiposDocumento = await _tipoDocumentoRepository.GetListToSelectAsync();
-            return _mapper.Map<IEnumerable<TipoDocumentoDTO>>(tiposDocumento);
+            var tiposDocumento = await _tipoDocumentoRepository.GetListToSelectAsync(tipoRegimen);
+            return _mapper.Map<IEnumerable<TipoDocumentoToSelectDTO>>(tiposDocumento);
         }
     }
 }

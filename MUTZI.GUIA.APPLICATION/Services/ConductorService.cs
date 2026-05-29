@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs.Conductor;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
-using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;

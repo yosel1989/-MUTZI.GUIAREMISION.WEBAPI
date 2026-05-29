@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
 using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
@@ -153,15 +155,19 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "editar_unidad_transporte"
         )]
         [Permission("editar_unidad_transporte")]
-        [ProducesResponseType(typeof(UnidadTransporteDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseDTO<UnidadTransporteDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UnidadTransporteDTO>> Update(int id, [FromBody] UnidadTransporteUpdateDTO transporteDto)
+        public async Task<ActionResult<ResponseDTO<UnidadTransporteDTO>>> Update(int id, [FromBody] UnidadTransporteUpdateDTO transporteDto)
         {
             try
             {
                 var updatedTransporte = await _service.UpdateAsync(id, transporteDto);
-                return Ok(updatedTransporte);
+                return Ok(new ResponseDTO<UnidadTransporteDTO>
+                {
+                    Data = updatedTransporte,
+                    Detalle = $"Datos de la unidad de transporte COD-{id.ToString("D4")} editados con éxito."
+                });
             }
             catch (Exception ex)
             {
@@ -211,15 +217,19 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "editar_estado_unidad_transporte"
         )]
         [Permission("editar_estado_unidad_transporte")]
-        [ProducesResponseType(typeof(EstadoActualizadoResponseDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseDTO<EstadoActualizadoResponseDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CambiarEstado(int id, [FromBody] EstadoActualizadoRequestDTO infoRequestDto)
+        public async Task<ActionResult<ResponseDTO<EstadoActualizadoResponseDTO>>> CambiarEstado(int id, [FromBody] EstadoActualizadoRequestDTO infoRequestDto)
         {
             try
             {
                 var result = await _service.CambiarEstadoAsync(id, infoRequestDto);
-                return Ok(result);
+                return Ok(new ResponseDTO<EstadoActualizadoResponseDTO>
+                {
+                    Data = result,
+                    Detalle = $"Se actualizó el estado de la unidad de transporte con código: COD-{id.ToString("D4")} al estado '{result.Estado}'."
+                });
             }
             catch (Exception ex)
             {

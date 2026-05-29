@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
-using MUTZI.GUIA.APPLICATION.DTOs.TipoDocumento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
-    [Route("[controller]")]
+    [Route("catalogos")]
     [ApiController]
     [Authorize]
     public class CatalogoController : ControllerBase
@@ -107,14 +106,14 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             Description = "Lista tipos de documento para seleccionar",
             OperationId = "listar_tipo_documento"
         )]
-        [ProducesResponseType(typeof(IEnumerable<TipoDocumentoDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<TipoDocumentoToSelectDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<TipoDocumentoDTO>>> GetTipoDocumentoLista()
+        public async Task<ActionResult<IEnumerable<TipoDocumentoToSelectDTO>>> GetTipoDocumentoLista([FromQuery] string? tipoRegimen)
         {
             try
             {
-                var result = await _service.GetTiposDocumento();
+                var result = await _service.GetTiposDocumento(tipoRegimen);
                 return Ok(result);
             }
             catch (Exception ex)

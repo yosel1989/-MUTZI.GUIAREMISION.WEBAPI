@@ -9,7 +9,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
         public MappingConductor()
         {
             CreateMap<ConductorGuiaUpdateDTO, GuiaRemisionConductor>();
-            CreateMap<Conductor, ConductorDTO>();
+            CreateMap<Conductor, ConductorDTO>()
+                .ForMember(dest => dest.TipoDocumentoNombre, opt => opt.MapFrom(src => src.TipoDocumento.DescripcionCorta));
             CreateMap<Conductor, ConductorListDTO>();
             CreateMap<ConductorCreateDTO, Conductor>()
                 .ForMember(dest => dest.Nombres, opt => opt.MapFrom(src => src.Nombres.ToUpper()))

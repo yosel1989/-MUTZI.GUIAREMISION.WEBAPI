@@ -1,5 +1,7 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
+using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Proveedor
@@ -7,11 +9,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Proveedor
     [SwaggerSchema("Recibe un objeto proveedor para actualizar", Nullable = true)]
     public class ProveedorUpdateDTO
     {
-        [JsonPropertyName("tipo_documento")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el tipo de documento del proveedor. Solo recibe los siguientes valores: DNI, CE, RUC y PASAPORTE", Nullable = false)]
-        [MaxLength(21)]
+        [JsonPropertyName("tipo_documento_id")]
+        [SwaggerSchema("Recibe un número, aquí se coloca el id del tipo de documento del proveedor. ", Nullable = false)]
         [Required]
-        public string TipoDocumento { get; set; }
+        public int TipoDocumentoId { get; set; }
 
         [JsonPropertyName("numero_documento")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el número de documento del proveedor.", Nullable = false)]
@@ -56,6 +57,5 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Proveedor
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]
         [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
         public string? CodigoSunat { get; set; }
-
     }
 }

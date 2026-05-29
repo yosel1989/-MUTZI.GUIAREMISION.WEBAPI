@@ -12,6 +12,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
+                .ForMember(dest => dest.TipoDocumentoNombre, opt => opt.MapFrom(src => src.TipoDocumento.DescripcionCorta))
                 ;
             CreateMap<Proveedor, ProveedorListDTO>();
             CreateMap<ProveedorCreateDTO, Proveedor>();

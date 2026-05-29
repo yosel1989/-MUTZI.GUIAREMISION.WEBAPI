@@ -7,6 +7,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.WEBAPI.Attributes;
+using MySqlX.XDevAPI.Common;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -188,15 +189,19 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "actualizar_conductor"
         )]
         [Permission("editar_conductor")]
-        [ProducesResponseType(typeof(ConductorDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseDTO<ConductorDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ConductorDTO>> Update(int id, [FromBody] ConductorUpdateDTO conductorDto)
+        public async Task<ActionResult<ResponseDTO<ConductorDTO>>> Update(int id, [FromBody] ConductorUpdateDTO conductorDto)
         {
             try
             {
                 var updatedConductor = await _service.UpdateAsync(id, conductorDto);
-                return Ok(updatedConductor);
+                return Ok(new ResponseDTO<ConductorDTO>
+                {
+                    Data = updatedConductor,
+                    Detalle = $"Datos del conductor COD-{id.ToString("D4")} editados con éxito."
+                });
             }
             catch (Exception ex)
             {

@@ -1,4 +1,4 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.TipoDocumento;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 
 namespace MUTZI.GUIA.APPLICATION.Mappings
@@ -8,6 +8,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
         public MappingTipoDocumento()
         {
             CreateMap<TipoDocumento, TipoDocumentoDTO>();
+            CreateMap<TipoDocumento, TipoDocumentoToSelectDTO>();
         }
     }
 }

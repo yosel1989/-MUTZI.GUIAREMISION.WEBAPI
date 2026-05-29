@@ -8,7 +8,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities.Catalogo
     {
         [Key]
         [Column("tipo_documento_id")]
-        public int Id { get; set; }
+        public int TipoDocumentoId { get; set; }
 
         [Column("descripcion")]
         public string Descripcion { get; set; }
@@ -18,5 +18,17 @@ namespace MUTZI.GUIA.DOMAIN.Entities.Catalogo
 
         [Column("codigo_sunat")]
         public string CodigoSunat { get; set; }
+
+        [Column("min")]
+        public int? Minimo { get; set; }
+
+        [Column("max")]
+        public int? Maximo { get; set; }
+
+        [Column("es_persona_natural")]
+        public bool EsPersonaNatural { get; set; }
+
+        [Column("es_persona_juridica")]
+        public bool EsPersonaJuridica { get; set; }
     }
 }

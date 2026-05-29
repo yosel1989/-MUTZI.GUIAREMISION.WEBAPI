@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
@@ -10,9 +11,8 @@ public partial class Proveedor
     [Column("proveedor_id")]
     public int ProveedorId { get; set; }
 
-    [Column("tipo_documento")]
-    [MaxLength(20)]
-    public string TipoDocumento { get; set; } = null!;
+    [Column("tipo_documento_id")]
+    public int TipoDocumentoId { get; set; }
 
     [Column("numero_documento")]
     [MaxLength(20)]
@@ -65,6 +65,11 @@ public partial class Proveedor
 
     [Column("estado_id")]
     public sbyte? EstadoId { get; set; } = 1;
+
+    // Relaciones
+
+    [ForeignKey(nameof(TipoDocumentoId))]
+    public virtual TipoDocumento TipoDocumento { get; set; }
 
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 

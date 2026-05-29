@@ -396,7 +396,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                 if (guia.Proveedor != null)
                 {
-                    _ = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumento, guia.Proveedor.NumeroDocumento);
+                    _ = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumentoNombre, guia.Proveedor.NumeroDocumento);
                 }
                 if (guia.DatosEnvio.ConductorGuia != null)
                 {
