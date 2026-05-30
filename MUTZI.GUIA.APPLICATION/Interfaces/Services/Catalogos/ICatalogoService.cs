@@ -8,5 +8,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos
         IEnumerable<PaisDTO> GetPaises();
         IEnumerable<TipoEstablecimientoDTO> GetTiposEstablecimiento();
         Task<IEnumerable<TipoDocumentoToSelectDTO>> GetTiposDocumento(string? tipoRegimen);
+        Task<IEnumerable<EntidadReguladoraToSelectDTO>> GetEntidadesReguladoras();
     }
 }

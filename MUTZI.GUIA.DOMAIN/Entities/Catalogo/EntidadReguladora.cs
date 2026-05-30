@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities.Catalogo
 {
+    [Table("vw_master_entity_regulatory")]
     public class EntidadReguladora
     {
         [Key]

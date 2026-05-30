@@ -126,5 +126,33 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
+        [HttpGet]
+        [Route("entidades-reguladoras")]
+        [SwaggerOperation(
+            Summary = "Listar entidades reguladoras",
+            Description = "Lista todas las entidades reguladoras",
+            OperationId = "listar_entidad_reguladora"
+        )]
+        [ProducesResponseType(typeof(IEnumerable<TipoDocumentoToSelectDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<TipoDocumentoToSelectDTO>>> GetEntidadesReguladoras()
+        {
+            try
+            {
+                var result = await _service.GetEntidadesReguladoras();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar entidades reguladoras del catalogo.",
+                    Detalle = errorMsg
+                });
+            }
+        }
     }
 }

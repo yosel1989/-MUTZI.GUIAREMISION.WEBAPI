@@ -30,9 +30,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
         [SwaggerSchema("Devuelve un texto, la tarjeta de circulación del transporte", Nullable = false)]
         public string Tarjeta { get; set; }
 
-        [JsonPropertyName("cod_emisor_vehicular")]
-        [SwaggerSchema("Devuelve un texto, el código del emisor vehicular del transporte", Nullable = true)]
-        public string? CodEmisorVehicular { get; set; }
+        [JsonPropertyName("entidad_reguladora_vehicular_id")]
+        [SwaggerSchema("Devuelve un número, el id de la entidad reguladora vehicular", Nullable = true)]
+        public int? EntidadReguladoraVehicularId { get; set; }
+
+        [JsonPropertyName("entidad_reguladora_vehicular")]
+        [SwaggerSchema("Devuelve un texto, el nombre de la entidad reguladora vehicular", Nullable = true)]
+        public string? EntidadReguladoraVehicularNombre { get; set; }
 
         [JsonPropertyName("emisor_vehicular")]
         [SwaggerSchema("Devuelve un texto, el emisor vehicular del transporte", Nullable = true)]

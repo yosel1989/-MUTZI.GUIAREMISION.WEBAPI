@@ -30,7 +30,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.UnidadTransporte.Where(c => c.IdEstado == 1);
+                var query = _context.UnidadTransporte
+                    .Where(c => c.IdEstado == 1);
                 if (!string.IsNullOrEmpty(numeroDoc))
                 {
                     query = query.Where(c =>
@@ -52,7 +53,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var query = _context.UnidadTransporte.AsQueryable();
+                var query = _context.UnidadTransporte
+                    .Include(m => m.EntidadReguladoraVehicular)
+                    .AsQueryable();
                 if (!string.IsNullOrEmpty(search))
                 {
                     var val = search.ToLower().Trim();
@@ -61,7 +64,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     x.Modelo.ToLower().Contains(val) ||
                     x.Placa.ToLower().Contains(val) ||
                     x.NroAutorizacion.ToLower().Contains(val) ||
-                    x.EmisorVehicular.ToLower().Contains(val) ||
+                    x.EntidadReguladoraVehicular.Descripcion.ToLower().Contains(val) ||
+                    x.EntidadReguladoraVehicular.DescripcionCorta.ToLower().Contains(val) ||
                     x.Tarjeta.ToLower().Contains(val) ||
                     x.UsuarioRegistroNombre.ToLower().Contains(val) ||
                     x.UsuarioModificoNombre.ToLower().Contains(val) ||
@@ -90,7 +94,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                var unidadTransporte = await _context.UnidadTransporte.FirstOrDefaultAsync(t => t.UnidadTransporteId == id);
+                var unidadTransporte = await _context.UnidadTransporte
+                    .Include(m => m.EntidadReguladoraVehicular)
+                    .FirstOrDefaultAsync(t => t.UnidadTransporteId == id);
                 return unidadTransporte;
             }
             catch (Exception ex)
@@ -117,9 +123,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 _context.UnidadTransporte.Update(transporte);
                 await _context.SaveChangesAsync();
-                await _context.Entry(transporte).ReloadAsync();
 
-                return transporte;
+                var unidadTransporteActualizado = await GetByIdAsync(transporte.UnidadTransporteId);
+
+                return unidadTransporteActualizado!;
             }
             catch (Exception ex)
             {

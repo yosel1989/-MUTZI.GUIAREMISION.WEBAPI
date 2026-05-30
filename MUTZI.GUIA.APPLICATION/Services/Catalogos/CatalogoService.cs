@@ -9,13 +9,16 @@ namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
     {
         private readonly IMapper _mapper;
         private readonly ITipoDocumentoRepository _tipoDocumentoRepository;
+        private readonly IEntidadReguladoraRepository _entidadReguladoraRepository;
         public CatalogoService(
             IMapper mapper,
-            ITipoDocumentoRepository tipoDocumentoRepository
+            ITipoDocumentoRepository tipoDocumentoRepository,
+            IEntidadReguladoraRepository entidadReguladoraRepository
         )
         {
             _mapper = mapper;
             _tipoDocumentoRepository = tipoDocumentoRepository;
+            _entidadReguladoraRepository = entidadReguladoraRepository;
         }
         public IEnumerable<EmisorAutorizadorVehicularDTO> GetEmisoresVehiculares()
         {
@@ -144,6 +147,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
         {
             var tiposDocumento = await _tipoDocumentoRepository.GetListToSelectAsync(tipoRegimen);
             return _mapper.Map<IEnumerable<TipoDocumentoToSelectDTO>>(tiposDocumento);
+        }
+
+
+        public async Task<IEnumerable<EntidadReguladoraToSelectDTO>> GetEntidadesReguladoras()
+        {
+            var entidades = await _entidadReguladoraRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<EntidadReguladoraToSelectDTO>>(entidades);
         }
     }
 }

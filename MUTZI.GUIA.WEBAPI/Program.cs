@@ -33,6 +33,7 @@ using MUTZI.GUIA.INFRASTRUCTURE;
 using MUTZI.GUIA.INFRASTRUCTURE.Interceptors;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
+using MUTZI.GUIA.INFRASTRUCTURE.Repositories.Catalogo;
 using MUTZI.GUIA.WEBAPI.Filters;
 using MUTZI.GUIA.WEBAPI.Middlewares;
 using Serilog;
@@ -107,6 +108,7 @@ builder.Services.AddAutoMapper(typeof(MappingGuiaRemisionEstado).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingArea).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingMotivoTraslado).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingUnidadMedida).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingCatalogo).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -131,6 +133,7 @@ builder.Services.AddScoped<IAreaRepository, AreaRepository>();
 builder.Services.AddScoped<IMotivoTrasladoRepository, MotivoTrasladoRepository>();
 builder.Services.AddScoped<IUnidadMedidaRepository, UnidadMedidaRepository>();
 builder.Services.AddScoped<ITipoDocumentoRepository, TipoDocumentoRepository>();
+builder.Services.AddScoped<IEntidadReguladoraRepository, EntidadReguladoraRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();

@@ -480,8 +480,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 Placa = tg.Transporte.Placa,
                                 Tarjeta = tg.Transporte.Tarjeta,
                                 NroAutorizacion = tg.Transporte.NroAutorizacion,
-                                EmisorVehicular = tg.Transporte.EmisorVehicular,
-                                CodEmisorVehicular = tg.Transporte.CodEmisorVehicular,
+                                EmisorVehicular = tg.Transporte.EntidadReguladoraVehicular.Descripcion,
+                                EntidadReguladoraVehicularId = tg.Transporte.EntidadReguladoraVehicularId,
                             }
                         }).ToList(),
                     }).ToList(),

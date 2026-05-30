@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
@@ -30,9 +31,8 @@ public class UnidadTransporte
     [MaxLength(20)]
     public string? Tarjeta { get; set; }
 
-    [Column("cod_emisor_vehicular")]
-    [MaxLength(2)]
-    public string? CodEmisorVehicular { get; set; }
+    [Column("entidad_reguladora_vehicular_id")]
+    public int? EntidadReguladoraVehicularId { get; set; }
 
     [Column("emisor_vehicular")]
     [MaxLength(100)]
@@ -72,5 +72,9 @@ public class UnidadTransporte
     [Column("id_estado")]
     public sbyte? IdEstado { get; set; } = 1;
 
+    // Relaciones
+
+    [ForeignKey(nameof(EntidadReguladoraVehicularId))]
+    public virtual EntidadReguladora? EntidadReguladoraVehicular { get; set; }
     public virtual ICollection<GuiaRemisionUnidadTransporte> TransporteGuids { get; set; } = new List<GuiaRemisionUnidadTransporte>();
 }
