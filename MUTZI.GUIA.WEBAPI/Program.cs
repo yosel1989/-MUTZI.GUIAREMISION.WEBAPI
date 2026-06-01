@@ -107,7 +107,6 @@ builder.Services.AddAutoMapper(typeof(MappingGuiaRemisionHistorial).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingGuiaRemisionEstado).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingArea).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingMotivoTraslado).Assembly);
-builder.Services.AddAutoMapper(typeof(MappingUnidadMedida).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingCatalogo).Assembly);
 
 builder.Services.AddSignalR();
@@ -160,7 +159,6 @@ builder.Services.AddScoped<IGuiaRemisionHistorialService, GuiaRemisionHistorialS
 builder.Services.AddScoped<IGuiaRemisionEstadoService, GuiaRemisionEstadoService>();
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IMotivoTrasladoService, MotivoTrasladoService>();
-builder.Services.AddScoped<IUnidadMedidaService, UnidadMedidaService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAppDBContext, AppDBContext>();

@@ -409,6 +409,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         EstadoId = g.Destinatario.EstadoId,
                         RucNavigation = g.Destinatario.RucNavigation
                     },
+
                     Proveedor = g.Proveedor == null ? null : new Proveedor
                     {
                         ProveedorId = g.Proveedor.ProveedorId,
@@ -427,6 +428,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Estado = g.Proveedor.Estado,
                         EstadoId = g.Proveedor.EstadoId
                     },
+
                     GuiaDetalles = g.GuiaDetalles.Select(det => new GuiaRemisionDetalle
                     {
                         GuiaRemisionDetalleId = det.GuiaRemisionDetalleId,
@@ -436,8 +438,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         CodigoUm = det.CodigoUm,
                         UnidadMedida = new UnidadMedida
                         {
-                            CodigoUm = det.UnidadMedida.CodigoUm,
-                            Descripcion = det.UnidadMedida.Descripcion
+                            DescripcionCorta = det.UnidadMedida.DescripcionCorta,
+                            Descripcion = det.UnidadMedida.Descripcion,
+                            CodigoSunat = det.UnidadMedida.CodigoSunat
                         }
                     }).ToList(),
 
@@ -670,7 +673,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 // Proveedor
                 if(
-                    guiaRemision.MotivoTraslado.Codigo == "02" ||  //compra
+                    guiaRemision.MotivoTraslado.CodigoSunat == "02" ||  //compra
                     guiaRemision.MotivoTraslado.Nombre == "13" // otros
                 ) 
                 {

@@ -154,5 +154,34 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
+
+        [HttpGet]
+        [Route("unidades-medida")]
+        [SwaggerOperation(
+            Summary = "Listar unidades de medida",
+            Description = "Lista todas las unidades de medida",
+            OperationId = "listar_unidad_medida"
+        )]
+        [ProducesResponseType(typeof(IEnumerable<UnidadMedidaToSelectDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<UnidadMedidaToSelectDTO>>> GetUnidadesMedida([FromQuery] string? tipo)
+        {
+            try
+            {
+                var result = await _service.GetUnidadesMedida(tipo);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar las unidades de medida del catalogo.",
+                    Detalle = errorMsg
+                });
+            }
+        }
     }
 }

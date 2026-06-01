@@ -9,6 +9,10 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
         {
             CreateMap<EntidadReguladora, EntidadReguladoraDTO>();
             CreateMap<EntidadReguladora, EntidadReguladoraToSelectDTO>();
+
+
+            CreateMap<UnidadMedida, UnidadMedidaDTO>();
+            CreateMap<UnidadMedida, UnidadMedidaToSelectDTO>();
         }
     }
 }

@@ -43,7 +43,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Transportista
         public string Direccion { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el Codigo de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el CodigoSunat de PAIS referente, ejm: PE", Nullable = false)]
         [MaxLength(3)]
         [Required]
         public string Pais { get; set; }
@@ -54,7 +54,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Transportista
         public string? CodigoSunat { get; set; }
 
         [JsonPropertyName("registro_mtc")]
-        [SwaggerSchema("Recibe un texto, el Codigo de registro MTC del transportista", Nullable = true)]
+        [SwaggerSchema("Recibe un texto, el CodigoSunat de registro MTC del transportista", Nullable = true)]
         public string? RegistroMTC { get; set; }
 
         [JsonPropertyName("email_contacto")]

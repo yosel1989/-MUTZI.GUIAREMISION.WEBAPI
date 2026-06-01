@@ -1,22 +1,23 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MUTZI.GUIA.DOMAIN.Entities;
+namespace MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 
-[Table("unidad_medida")]
+[Table("vw_master_unit_of_measurement")]
 public partial class UnidadMedida
 {
     [Key]
     [Column("unidad_medida_id")]
     public int UnidadMedidaId { get; set; }
 
-    [Column("codigo_um")]
-    [MaxLength(10)]
-    public string CodigoUm { get; set; } = null!;
-
     [Column("descripcion")]
-    [MaxLength(100)]
-    public string Descripcion { get; set; } = null!;
+    public string Descripcion { get; set; }
+
+    [Column("descripcion_corta")]
+    public string DescripcionCorta { get; set; }
+
+    [Column("codigo_sunat")]
+    public string CodigoSunat { get; set; }
 
     [Column("es_unidad_peso")]
     public bool EsUnidadPeso { get; set; } = false;
@@ -30,10 +31,4 @@ public partial class UnidadMedida
     [Column("es_unidad_conteo")]
     public bool EsUnidadConteo { get; set; } = false;
 
-    [Column("activo")]
-    public bool Activo { get; set; }
-
-    public virtual ICollection<GuiaRemisionDatoEnvio> DatosEnvios { get; set; } = new List<GuiaRemisionDatoEnvio>();
-
-    public virtual ICollection<GuiaRemisionDetalle> GuiaDetalles { get; set; } = new List<GuiaRemisionDetalle>();
 }

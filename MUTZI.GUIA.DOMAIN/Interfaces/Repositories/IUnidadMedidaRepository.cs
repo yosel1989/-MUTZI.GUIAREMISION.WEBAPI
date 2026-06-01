@@ -1,10 +1,9 @@
-﻿using MUTZI.GUIA.DOMAIN.Entities;
+﻿using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 
 namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 {
     public interface IUnidadMedidaRepository
     {
-        Task<List<UnidadMedida>> GetListToSelectAsync();
-        Task<List<UnidadMedida>> GetListPesoToSelectAsync();
+        Task<IEnumerable<UnidadMedida>> GetListPesoToSelectAsync(string? tipo);
     }
 }

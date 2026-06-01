@@ -49,7 +49,7 @@ namespace MUTZI.GUIA.WEBAPI.Filters
                 var tienePermiso = await _context.PerfilPermiso
                     .Include(pp => pp.Permiso)
                     .Include(pp => pp.Perfil)
-                    .AnyAsync(pp => codigosPerfilesFiltrados.Contains(pp.Perfil.Codigo) && // comparar contra la columna Codigo
+                    .AnyAsync(pp => codigosPerfilesFiltrados.Contains(pp.Perfil.Codigo) && // comparar contra la columna CodigoSunat
                                     pp.Permiso.Codigo == permissionAttr.Codigo);
 
                 if (!tienePermiso)

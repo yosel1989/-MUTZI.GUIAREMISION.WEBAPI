@@ -3,7 +3,7 @@ using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 
-namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
+namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories.Catalogo
 {
     public class MotivoTrasladoRepository: IMotivoTrasladoRepository
     {
@@ -18,7 +18,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 var data  = await _context.MotivoTraslado
-                    .Where(m => m.Activo)
                     .ToListAsync();
                 return data;
             }
