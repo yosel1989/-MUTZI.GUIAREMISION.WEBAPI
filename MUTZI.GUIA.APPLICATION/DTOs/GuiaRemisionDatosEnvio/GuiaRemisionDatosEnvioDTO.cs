@@ -49,9 +49,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         public bool IndicadorVehiculoConductor { get; set; }
 
         [JsonPropertyName("conductor")]
-        public List<ConductorGuiaDTO?> ConductorGuia { get; set; }
+        public List<ConductorGuiaDTO?> ConductorGuia { get; set; } = new List<ConductorGuiaDTO?>();
 
         [JsonPropertyName("unidad_transporte")]
-        public List<UnidadTransporteGuiaDTO?> TransporteGuia { get; set; }
+        public List<UnidadTransporteGuiaDTO?> TransporteGuia { get; set; } = new List<UnidadTransporteGuiaDTO?>();
     }
 }

@@ -218,6 +218,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
         {
             var guiaRemision = await _repository.GetByIdAsync(id);
 
+            if(guiaRemision is null) throw new ArgumentNullException(nameof(guiaRemision));
+
             return guiaRemision.TipoGuia switch
             {
                 "REMITENTE" => _mapper.Map<GuiaRemitenteDTO>(guiaRemision),

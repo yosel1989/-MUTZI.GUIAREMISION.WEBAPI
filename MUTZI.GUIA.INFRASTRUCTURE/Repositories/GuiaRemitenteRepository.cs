@@ -451,6 +451,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         MotivoEnvio = env.MotivoEnvio,
                         FechaEnvio = env.FechaEnvio,
                         PesoBruto = env.PesoBruto,
+                        UnidadMedida = env.UnidadMedida,
                         CodigoUm = env.CodigoUm,
                         RucEmpresaCurrier = env.RucEmpresaCurrier,
                         RazonSocialCurrier = env.RazonSocialCurrier,
@@ -483,6 +484,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 Placa = tg.Transporte.Placa,
                                 Tarjeta = tg.Transporte.Tarjeta,
                                 NroAutorizacion = tg.Transporte.NroAutorizacion,
+                                EntidadReguladoraVehicular = tg.Transporte.EntidadReguladoraVehicular,
                                 EmisorVehicular = tg.Transporte.EntidadReguladoraVehicular.Descripcion,
                                 EntidadReguladoraVehicularId = tg.Transporte.EntidadReguladoraVehicularId,
                             }

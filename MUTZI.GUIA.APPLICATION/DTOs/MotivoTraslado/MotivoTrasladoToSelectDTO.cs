@@ -10,7 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.MotivoTraslado
         [JsonPropertyName("nombre")]
         public string Nombre { get; set; }
 
-        [JsonPropertyName("codigo")]
-        public string Codigo { get; set; }
+        [JsonPropertyName("codigo_sunat")]
+        public string CodigoSunat { get; set; }
     }
 }

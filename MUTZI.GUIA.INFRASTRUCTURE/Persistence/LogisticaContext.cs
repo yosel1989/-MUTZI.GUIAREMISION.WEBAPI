@@ -37,6 +37,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<GuiaRemisionEstado> GuiaRemisionEstado { get; set; }
     public virtual DbSet<GuiaRemisionEstadoPermiso> GuiaRemisionEstadoPermiso { get; set; }
     public virtual DbSet<MotivoTraslado> MotivoTraslado { get; set; }
+    public virtual DbSet<Persona> Persona { get; set; }
 
     // Catalogos
     public virtual DbSet<Area> Area { get; set; }

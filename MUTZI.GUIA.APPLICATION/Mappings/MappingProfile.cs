@@ -220,18 +220,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Provincia))
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Distrito))
                 ;
-            //ConductorGuia
-            CreateMap<GuiaRemisionConductor, ConductorGuiaDTO>()
-                .ForMember(dest => dest.TipoDocumento, opt => opt.MapFrom(src => src.Conductor.TipoDocumento))
-                .ForMember(dest => dest.NumeroDocumento, opt => opt.MapFrom(src => src.Conductor.NumeroDocumento))
-                .ForMember(dest => dest.Nombres, opt => opt.MapFrom(src => src.Conductor.Nombres))
-                .ForMember(dest => dest.Apellidos, opt => opt.MapFrom(src => src.Conductor.Apellidos))
-                .ForMember(dest => dest.Cargo, opt => opt.MapFrom(src => src.Conductor.Cargo))
-                .ForMember(dest => dest.Licencia, opt => opt.MapFrom(src => src.Conductor.Licencia))
-                ;
-            CreateMap<ConductorCreateGuiaDTO, GuiaRemisionConductor>();
-            CreateMap<int, GuiaRemisionConductor>()
-            .ForMember(dest => dest.ConductorId, opt => opt.MapFrom(src => src));
+            
             //TransporteGuia
             CreateMap<GuiaRemisionUnidadTransporte, UnidadTransporteGuiaDTO>()
                 .ForMember(dest => dest.Placa, opt => opt.MapFrom(src => src.Transporte.Placa))
