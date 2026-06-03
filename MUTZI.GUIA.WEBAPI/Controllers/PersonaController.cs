@@ -24,10 +24,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             Description = "Lista las personas sugeridos por nombre, apellido",
             OperationId = "listar_persona_sugerida"
         )]
-        [ProducesResponseType(typeof(IEnumerable<PersonaDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<PersonaSugeridaDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<PersonaDTO>>> GetBySuggestion([FromQuery] string? text)
+        public async Task<ActionResult<IEnumerable<PersonaSugeridaDTO>>> GetBySuggestion([FromQuery] string? text)
         {
             try
             {

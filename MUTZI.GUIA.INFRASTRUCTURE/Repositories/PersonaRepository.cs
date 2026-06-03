@@ -26,6 +26,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                           c.ApellidoMaterno.Contains(text)
                     );
                 }
+                query = query.Where(x => x.Cargo != null);
                 var data = await query.AsNoTracking().ToListAsync();
                 return data;
             }

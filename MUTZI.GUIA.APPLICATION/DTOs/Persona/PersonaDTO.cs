@@ -19,4 +19,20 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Persona
         [JsonPropertyName("cargo")]
         public string? Cargo { get; set; }
     }
+
+
+    public class PersonaSugeridaDTO
+    {
+        [JsonPropertyName("id")]
+        public int PersonaId { get; set; }
+
+        [JsonPropertyName("nombre")]
+        public string Nombre { get; set; }
+
+        [JsonPropertyName("apellido")]
+        public string? Apellido { get; set; }
+
+        [JsonPropertyName("cargo")]
+        public string? Cargo { get; set; }
+    }
 }
