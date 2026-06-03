@@ -13,7 +13,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Persona>> GetListBySuggestion(string? text)
+        public async Task<IEnumerable<Persona>> GetListBySuggestion(string? text, string? cargo)
         {
             try
             {
@@ -22,10 +22,16 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     query = query.Where(c =>
                         c.Nombre.Contains(text) ||
-                         c.ApellidoPaterno.Contains(text) ||
-                          c.ApellidoMaterno.Contains(text)
+                        c.ApellidoPaterno.Contains(text) ||
+                        c.ApellidoMaterno.Contains(text)
                     );
                 }
+
+                if (!string.IsNullOrEmpty(cargo))
+                {
+                    query = query.Where(c => c.Cargo.Contains(text));
+                }
+
                 query = query.Where(x => x.Cargo != null);
                 var data = await query.AsNoTracking().ToListAsync();
                 return data;

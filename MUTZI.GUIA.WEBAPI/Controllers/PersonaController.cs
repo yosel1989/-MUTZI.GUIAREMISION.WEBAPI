@@ -27,11 +27,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<PersonaSugeridaDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<PersonaSugeridaDTO>>> GetBySuggestion([FromQuery] string? text)
+        public async Task<ActionResult<IEnumerable<PersonaSugeridaDTO>>> GetBySuggestion([FromQuery] string? text, [FromQuery] string? cargo)
         {
             try
             {
-                var Personas = await _service.GetListBySuggestion(text);
+                var Personas = await _service.GetListBySuggestion(text, cargo);
                 return Ok(Personas);
             }
             catch (Exception ex)

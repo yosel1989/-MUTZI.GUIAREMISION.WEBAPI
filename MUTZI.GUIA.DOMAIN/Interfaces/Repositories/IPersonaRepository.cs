@@ -4,7 +4,7 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 {
     public interface IPersonaRepository
     {
-        Task<IEnumerable<Persona>> GetListBySuggestion(string? text);
+        Task<IEnumerable<Persona>> GetListBySuggestion(string? text, string? cargo);
         Task<Persona?> GetByIdAsync(int id);
     }
 }

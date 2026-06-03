@@ -109,6 +109,7 @@ builder.Services.AddAutoMapper(typeof(MappingArea).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingMotivoTraslado).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingCatalogo).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingPersona).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingOperacionResponsable).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -135,6 +136,7 @@ builder.Services.AddScoped<IUnidadMedidaRepository, UnidadMedidaRepository>();
 builder.Services.AddScoped<ITipoDocumentoRepository, TipoDocumentoRepository>();
 builder.Services.AddScoped<IEntidadReguladoraRepository, EntidadReguladoraRepository>();
 builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
+builder.Services.AddScoped<IOperacionResponsableRepository, OperacionResponsableRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -162,6 +164,7 @@ builder.Services.AddScoped<IGuiaRemisionEstadoService, GuiaRemisionEstadoService
 builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IMotivoTrasladoService, MotivoTrasladoService>();
 builder.Services.AddScoped<IPersonaService, PersonaService>();
+builder.Services.AddScoped<IOperacionResponsableService, OperacionResponsableService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAppDBContext, AppDBContext>();

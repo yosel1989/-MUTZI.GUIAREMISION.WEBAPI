@@ -18,11 +18,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PersonaSugeridaDTO>> GetListBySuggestion(string? text)
+        public async Task<IEnumerable<PersonaSugeridaDTO>> GetListBySuggestion(string? text, string? cargo)
         {
             try
             {
-                var data = await _repository.GetListBySuggestion(text);
+                var data = await _repository.GetListBySuggestion(text, cargo);
                 return _mapper.Map<List<PersonaSugeridaDTO>>(data);
             }
             catch (Exception ex)
