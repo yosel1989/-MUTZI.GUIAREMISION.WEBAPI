@@ -151,6 +151,19 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             break;
                         }
 
+                        case "estado_sunat":
+                        {
+                            var ids = val.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                            .ToList();
+
+                            if (ids.Count == 1)
+                                query = query.Where(x => x.EstadoSunat == ids[0]);
+                            else if (ids.Count > 1)
+                                query = query.Where(x => ids.Contains(x.EstadoSunat));
+
+                            break;
+                        }
+
                         case "search":
                         {
                             query = query.Where(x => 
@@ -165,7 +178,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 x.Destinos.FirstOrDefault()!.Ubigeo.Distrito!.ToLower().Contains(val) ||
                                 x.UsuarioRegistro.ToLower().Contains(val) ||
                                 (x.UsuarioModifico ?? "").ToLower().Contains(val) ||
-                                x.Estado.Nombre.Contains(val)
+                                x.Estado.Nombre.Contains(val) ||
+                                x.EstadoSunat.Contains(val)
                             );
                             break;
                         }
