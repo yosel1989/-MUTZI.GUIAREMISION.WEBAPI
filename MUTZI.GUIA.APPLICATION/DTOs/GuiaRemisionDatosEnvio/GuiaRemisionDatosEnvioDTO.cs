@@ -28,6 +28,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [SwaggerSchema("Devuelve en número, el id de la unidad de medida del peso bruto", Nullable = false)]
         public int UnidadMedidaId { get; set; }
 
+        [JsonPropertyName("unidad_medida")]
+        [SwaggerSchema("Devuelve en texto, la abreviatura de la unidad de medida del peso bruto", Nullable = false)]
+        public string UnidadMedida { get; set; }
+
         [JsonPropertyName("codigo_um")]
         [SwaggerSchema("Devuelve en texto la unidad de medida del peso bruto. Ejm: KGM ó TNE", Nullable = false)]
         public string CodigoUm { get; set; } = "KGM";

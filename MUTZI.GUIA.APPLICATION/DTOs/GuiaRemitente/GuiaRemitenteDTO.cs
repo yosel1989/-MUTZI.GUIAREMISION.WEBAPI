@@ -6,6 +6,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
 using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
+using MUTZI.GUIA.APPLICATION.DTOs.VentaConfig;
 using MUTZI.GUIA.APPLICATION.Enums;
 using MUTZI.GUIA.APPLICATION.Helpers;
 using Swashbuckle.AspNetCore.Annotations;
@@ -27,6 +28,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve en texto el ruc del facturador asociado", Nullable = false)]
         public string Ruc { get; set; }
 
+        [JsonPropertyName("empresa")]
+        [SwaggerSchema("Devuelve un objeto de tipo empresa", Nullable = false)]
+        public EmpresaDTO Empresa { get; set; }
+
         [JsonPropertyName("email_facturador")]
         [SwaggerSchema("Devuelve en texto el correo electrónico del facturador asociado", Nullable = false)]
         public string EmailFacturador { get; set; }
@@ -39,11 +44,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un número y solo puede ser uno registrado en el catalogo de motivos de traslado", Nullable = false)]
         public int MotivoTrasladoId { get; set; }
 
+        [JsonPropertyName("motivo_traslado")]
+        [SwaggerSchema("Devuelve un texto, el catalogo de motivos de traslado", Nullable = false)]
+        public string MotivoTraslado { get; set; }
+
         [JsonPropertyName("serie_correlativo")]
         [SwaggerSchema("Devuelve un texto", Nullable = false)]
         public string SerieCorrelativo { get; set; }
 
-        [JsonPropertyName("fecha")]
+        [JsonPropertyName("fecha_emision")]
         [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
         public string Fecha { get; set; }
 
@@ -88,7 +97,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public List<DestinoDTO> Destino { get; set; }
 
         [JsonPropertyName("productos")]
-        public List<ProductosDTO> Productos { get; set; }
+        public List<GuiaRemisionDetalleDTO> Productos { get; set; }
 
         [JsonPropertyName("fecha_registro")]
         public DateTime FechaRegistro { get; set; }
@@ -180,7 +189,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
                 }
                 return EspacioNombreGuiaRemision._DocumentType06;
             }
-            if (tipo == "PASAPORTE")
+            if (tipo == "PASAPORTE" || tipo == "PP")
                 return EspacioNombreGuiaRemision._DocumentType07;
             throw new System.Exception("Tipo de documento de identidad no especificado, coloque entre: DNI, CE, RUC, PASAPORTE dependiendo del caso");
         }

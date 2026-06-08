@@ -1,12 +1,10 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
 {
-    [SwaggerSchema("Devuelve un objeto de productos", Nullable = false)]
-    public class ProductosDTO
+    [SwaggerSchema("Devuelve un objeto de productos de guía de remisión", Nullable = false)]
+    public class GuiaRemisionDetalleDTO
     {
         [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve en entero el ID de la guía de detalle.", Nullable = false)]
@@ -16,7 +14,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         [SwaggerSchema("Devuelve en entero el ID de la guía a la que pertenece.", Nullable = false)]
         public int GuiaRemisionId { get; set; }
 
-        [JsonPropertyName("Cantidad")]
+        [JsonPropertyName("cantidad")]
         [SwaggerSchema("Devuelve en texto la Cantidad del producto.", Nullable = false)]
         public string Cantidad { get; set; }
 
@@ -51,5 +49,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         [JsonPropertyName("descripcion_um")]
         [SwaggerSchema("Devuelve en texto la descripción de la unidad de medida del producto. Ejm: Kilogramo, Paquete, Unidad, etc.", Nullable = false)]
         public string DescripcionUM { get; set; }
+
+        [JsonPropertyName("unidad_medida_id")]
+        [SwaggerSchema("Devuelve en número, id de la unidad de medida", Nullable = false)]
+        public int UnidadMedidaId { get; set; }
+
+        [JsonPropertyName("unidad_medida")]
+        [SwaggerSchema("Devuelve en texto, abreviatura de la unidad de medida", Nullable = false)]
+        public string UnidadMedida { get; set; }
     }
 }

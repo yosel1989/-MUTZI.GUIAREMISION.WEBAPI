@@ -50,7 +50,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         public DatosEnvioGT_DTO DatosEnvio { get; set; }
         public OrigenDTO Origen { get; set; }
         public List<DestinoDTO> Destino { get; set; }
-        public List<ProductosDTO> Productos { get; set; }
+        public List<GuiaRemisionDetalleDTO> Productos { get; set; }
 
         [JsonPropertyName("fecha_creacion")]
         public DateTime FechaCreacion { get; set; }

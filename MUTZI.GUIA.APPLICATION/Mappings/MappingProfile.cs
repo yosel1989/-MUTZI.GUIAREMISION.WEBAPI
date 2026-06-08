@@ -22,9 +22,11 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
         {
             CreateMap<VentaConfig, VentaConfigAccessDTO>();
             CreateMap<VentaConfig, EmpresaListDTO>();
+            CreateMap<VentaConfig, EmpresaDTO>();
 
             //Guias de remisión
             CreateMap<GuiaRemision, GuiaRemitenteDTO>()
+                .ForMember(dest => dest.MotivoTraslado, opt => opt.MapFrom(src => src.MotivoTraslado.Nombre))
                 .ForMember(dest => dest.SerieCorrelativo, opt => opt.MapFrom(src => src.NumeroGuia))
                 .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src => src.Fecha.ToString("yyyy-MM-dd")))
                 .ForMember(dest => dest.EmailFacturador, opt => opt.MapFrom(src => src.RucNavigation.EmailPrincipal))
@@ -32,6 +34,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Destinatario, opt => opt.MapFrom(src => src.Destinatario))
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.Nombre))
                 .ForMember(dest => dest.DatosEnvio, opt => opt.MapFrom(src => src.DatosEnvios.FirstOrDefault()))
+                .ForMember(dest => dest.Empresa, opt => opt.MapFrom(src => src.RucNavigation))
                 //Mapear conductor y transporte dentro de DatosEnvio
                 //.ForMember(dest => dest.DatosEnvio.ConductorGuia, opt => opt.MapFrom(src => src.DatosEnvios.FirstOrDefault().ConductorGuids))
                 //.ForMember(dest=>dest.DatosEnvio.TransporteGuia, opt=>opt.MapFrom(src=>src.DatosEnvios.FirstOrDefault().TransporteGuids))
@@ -166,6 +169,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                         })
                         .ToList();
                 }))
+                .ForMember(dest => dest.UnidadMedida, opt => opt.MapFrom(src => src.UnidadMedida.DescripcionCorta))
                 .ForMember(dest => dest.TransporteGuia, opt => opt.MapFrom(src => src.TransporteGuids))
                 .ForMember(dest => dest.FechaEnvio, opt => opt.MapFrom(src => src.FechaEnvio.ToString("yyyy-MM-dd")))
                 ;
@@ -193,8 +197,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<DatosEnvioGTCreateDTO, GuiaRemisionDatoEnvio>()
                 .ForMember(dest => dest.FechaEnvio, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.FechaEnvio) ? (DateOnly?)null : DateOnly.Parse(src.FechaEnvio)));
             //Productos
-            CreateMap<GuiaRemisionDetalle, ProductosDTO>()
-                .ForMember(dest => dest.DescripcionUM, opt => opt.MapFrom(src => src.UnidadMedida.Descripcion));
+            CreateMap<GuiaRemisionDetalle, GuiaRemisionDetalleDTO>()
+                .ForMember(dest => dest.DescripcionUM, opt => opt.MapFrom(src => src.UnidadMedida.Descripcion))
+                .ForMember(dest => dest.UnidadMedida, opt => opt.MapFrom(src => src.UnidadMedida.DescripcionCorta));
             CreateMap<ProductosCreateDTO, GuiaRemisionDetalle>();
             
 

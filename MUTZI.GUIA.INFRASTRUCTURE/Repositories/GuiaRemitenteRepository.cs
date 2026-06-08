@@ -309,13 +309,18 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 var guiaRemision = await _context.GuiaRemision
+                .Include(g => g.MotivoTraslado)
                 .Include(g => g.Remitente)
+                    .ThenInclude(h => h.Ubigeo)
                 .Include(g => g.Destinatario)
+                    .ThenInclude(h => h.Ubigeo)
                 .Include(g => g.RemiteTransportista)
                 .Include(g => g.RucNavigation)
                 .Include(g => g.Proveedor)
                 .Include(g => g.GuiaDetalles)
+                    .ThenInclude(h => h.UnidadMedida)
                 .Include(g => g.DatosEnvios)
+                    .ThenInclude(h => h.UnidadMedida)
                 .Include(g => g.Origens)
                 .Include(g => g.Destinos)
                 .Include(g => g.Area)
