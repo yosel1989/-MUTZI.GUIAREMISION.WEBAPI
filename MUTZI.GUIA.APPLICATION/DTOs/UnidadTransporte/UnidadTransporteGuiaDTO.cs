@@ -1,10 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
 {
@@ -15,13 +10,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
         [SwaggerSchema("Devuelve en entero el ID del transporte asociado a los datos de envío de una guía de remisión.", Nullable = false)]
         public int TransporteGuidId { get; set; }
 
-        [JsonPropertyName("transporte_id")]
+        [JsonPropertyName("unidad_transporte_id")]
         [SwaggerSchema("Devuelve en entero el ID del transporte en la base de datos", Nullable = false)]
-        public int TransporteID { get; set; }
+        public int UnidadTransporteId { get; set; }
 
         [JsonPropertyName("datos_envio_id")]
         [SwaggerSchema("Devuelve en entero el ID de los datos de envío asociados a la guía de remisión", Nullable = false)]
-        public int DatosEnvioID { get; set; }
+        public int GuiaRemisionDatoEnvioId { get; set; }
 
         [JsonPropertyName("placa")]
         [SwaggerSchema("Devuelve en texto la placa de la unidad de transporte", Nullable = false)]
@@ -42,5 +37,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
         [JsonPropertyName("nro_autorizacion")]
         [SwaggerSchema("Devuelve un texto, el número de autorización del transporte", Nullable = true)]
         public string? NroAutorizacion { get; set; }
+
+        [JsonPropertyName("job_title")]
+        public string JobTitle { get; set; }
     }
 }

@@ -228,9 +228,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             //////////if (guia.TipoTransporte == "PRIVADO")
             //////////{
             //Conductor en Lista
-            if (guia.DatosEnvio.ConductorGuia != null)
+            if (guia.DatosEnvio.GuiaRemisionConductores != null)
             {
-                root.DespatchAdvice[0].Shipment[0].ShipmentStage[0].DriverPerson = guia.DatosEnvio.ConductorGuia.Select(conductor => new DriverPerson
+                root.DespatchAdvice[0].Shipment[0].ShipmentStage[0].DriverPerson = guia.DatosEnvio.GuiaRemisionConductores.Select(conductor => new DriverPerson
                 {
                     ID = new List<ID> { new ID { _ = conductor.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(conductor.TipoDocumento, conductor.NumeroDocumento) } },
                     FirstName = new List<FirstName> { new FirstName { _ = conductor.Nombres } },
@@ -243,9 +243,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
 
 
-            if (guia.DatosEnvio.TransporteGuia != null && guia.DatosEnvio.TransporteGuia.Any())
+            if (guia.DatosEnvio.GuiaRemisionUnidadesTransporte != null && guia.DatosEnvio.GuiaRemisionUnidadesTransporte.Any())
             {
-                var transportes = guia.DatosEnvio.TransporteGuia.ToList();
+                var transportes = guia.DatosEnvio.GuiaRemisionUnidadesTransporte.ToList();
                 var transportEquipments = new List<TransportEquipment>();
 
                 // Primer transporte como TransportEquipment principal

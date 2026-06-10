@@ -26,7 +26,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [HttpGet]
         [Route("listar/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
-            Summary = "Listar Unidad de Transporte",
+            Summary = "Listar Unidad de UnidadTransporte",
             Description = "Lista las unidades de transporte. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
             OperationId = "listar_unidad_transporte"
         )]

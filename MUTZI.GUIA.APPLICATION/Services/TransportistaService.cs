@@ -83,7 +83,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 var existingTransporte = await _repository.GetByIdAsync(id);
                 if (existingTransporte == null)
                 {
-                    throw new KeyNotFoundException($"Transporte con ID {id} no encontrado.");
+                    throw new KeyNotFoundException($"UnidadTransporte con ID {id} no encontrado.");
                 }
                 _mapper.Map(updateDTO, existingTransporte);
                 existingTransporte.UsuarioModifico = currentUser.UserName;
@@ -126,7 +126,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null)
             {
-                throw new KeyNotFoundException($"Unidad de Transporte con ID {id} no encontrado.");
+                throw new KeyNotFoundException($"Unidad de UnidadTransporte con ID {id} no encontrado.");
             }
             existing.Estado = _status;
             existing.EstadoId = (sbyte?)infoRequestDto.EstadoId;

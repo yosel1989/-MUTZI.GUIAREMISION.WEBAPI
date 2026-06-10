@@ -26,7 +26,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
             List<GuiaRemisionDetalle> detalles,
             List<GuiaRemisionDocumentoRelacionado> docRelacionados,
             List<GuiaRemisionEmailDestinatario> emailDestinatarioGuia
-            );
+        );
 
         //Proveedor
         Task<Proveedor> GetProveedorByRucAsync(string ruc);
@@ -34,7 +34,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         //Conductor
         Task<Conductor> GetConductorByNumeroDocumentoAsync(string numeroDocumento);
         Task<Conductor> CreateConductorAsync(Conductor conductor);
-        //Transporte
+        //UnidadTransporte
         Task<UnidadTransporte> GetTransporteByPlacaAsync(string placa);
         Task<UnidadTransporte> CreateTransporteAsync(UnidadTransporte transporte);
         //Datos envio

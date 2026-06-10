@@ -13,8 +13,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
         public int DatosEnvioId { get; set; }
 
         [JsonPropertyName("fecha_envio")]
-        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
-        public string FechaEnvio { get; set; }
+        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23, solo si es PRIVADA", Nullable = false)]
+        public string? FechaEnvio { get; set; }
+
+        [JsonPropertyName("fecha_entrega_transportista")]
+        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23, solo si es PUBLICA", Nullable = false)]
+        public string? FechaEntregaTransportista { get; set; }
 
         [JsonPropertyName("peso_bruto")]
         [SwaggerSchema("Devuelve un decimal, el peso bruto de todo el envío, Ejm: 20, 50, etc.", Nullable = false)]

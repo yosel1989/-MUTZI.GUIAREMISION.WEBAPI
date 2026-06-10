@@ -19,7 +19,10 @@ public partial class GuiaRemisionDatoEnvio
     public string? MotivoEnvio { get; set; }
 
     [Column("fecha_envio")]
-    public DateOnly FechaEnvio { get; set; }
+    public DateOnly? FechaEnvio { get; set; }
+
+    [Column("fecha_entrega_transportista")]
+    public DateOnly? FechaEntregaTransportista { get; set; }
 
     [Column("peso_bruto", TypeName = "decimal(12,3)")]
     public decimal PesoBruto { get; set; }
@@ -30,6 +33,9 @@ public partial class GuiaRemisionDatoEnvio
     [Column("codigo_um")]
     [MaxLength(10)]
     public string CodigoUm { get; set; } = null!;
+
+    [Column("traslado_vehiculo_categoria")]
+    public bool TrasladoVehiculoCategoria { get; set; } = false;
 
     [Column("ruc_empresa_currier")]
     [MaxLength(15)]
@@ -54,7 +60,7 @@ public partial class GuiaRemisionDatoEnvio
     [ForeignKey(nameof(GuiaRemisionId))]
     public virtual GuiaRemision Guia { get; set; } = null!;
 
-    public virtual ICollection<GuiaRemisionUnidadTransporte> TransporteGuids { get; set; } = new List<GuiaRemisionUnidadTransporte>();
+    public virtual ICollection<GuiaRemisionUnidadTransporte> GuiaRemisionUnidadesTransporte { get; set; } = new List<GuiaRemisionUnidadTransporte>();
 
-    public virtual ICollection<GuiaRemisionConductor> ConductorGuids { get; set; } = new List<GuiaRemisionConductor>();
+    public virtual ICollection<GuiaRemisionConductor> GuiaRemisionConductores { get; set; } = new List<GuiaRemisionConductor>();
 }

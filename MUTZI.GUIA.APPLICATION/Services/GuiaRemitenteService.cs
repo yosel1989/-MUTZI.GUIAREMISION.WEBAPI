@@ -128,7 +128,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                     string[] headers = {
                         "#", "Código", "EntidadRemitente", "RUC EntidadRemitente", "Remitente / Local",
-                        "Tipo Guía", "N° Guía", "T. Traslado", "T. Transporte",
+                        "Tipo Guía", "N° Guía", "T. Traslado", "T. UnidadTransporte",
                         "F. Emisión", "H. Emisión", "Destinatario", "N° Doc. Destinatario",
                         "Origen", "Destino", "Nombre", "F. Registro", "U. Registro"
                     };
@@ -248,8 +248,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var destinatario = await _establecimientoRepository.GetByIdAsync(dto.DestinatarioId);
                     var destinatarioEmails = dto.DestinatarioEmail.Select(p => _mapper.Map<GuiaRemisionEmailDestinatario>(p)).ToList();
                     var proveedor = await _proveedorRepository.GetByIdAsync(dto.ProveedorId ?? 0);
-                    var conductor = dto.DatosEnvio.ConductorId.Select(p => _mapper.Map<GuiaRemisionConductor>(p)).ToList();
-                    var transporte = dto.DatosEnvio.TransporteId.Select(p => _mapper.Map<GuiaRemisionUnidadTransporte>(p)).ToList();
+                    var conductor = dto.DatosEnvio.ConductorId?.Select(p => _mapper.Map<GuiaRemisionConductor>(p)).ToList() ?? [];
+                    var transporte = dto.DatosEnvio.TransporteId?.Select(p => _mapper.Map<GuiaRemisionUnidadTransporte>(p)).ToList() ?? [];
                     var guiaRemision = _mapper.Map<GuiaRemision>(dto);
                     var datosEnvio = _mapper.Map<GuiaRemisionDatoEnvio>(dto.DatosEnvio);
                     var origen = _mapper.Map<GuiaRemisionOrigen>(dto.Origen);
@@ -369,9 +369,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                 if (guia.TipoTransporte=="PUBLICO")
                 {
-                    if (guia.DatosEnvio.RucEmpresaCurrier.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
-                    if (string.IsNullOrWhiteSpace(guia.DatosEnvio.RazonSocialCurrier)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
-                    if (string.IsNullOrWhiteSpace(guia.DatosEnvio.RegistroMtcCurrier)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }
+                    if (guia.DatosEnvio.Transportista.NumeroDocumento.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
+                    if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RazonSocial)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
+                    if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RegistroMTC)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }
                 }
                 //if (guia.)
                 return (true, null);
@@ -400,9 +400,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     _ = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumentoNombre, guia.Proveedor.NumeroDocumento);
                 }
-                if (guia.DatosEnvio.ConductorGuia != null)
+                if (guia.DatosEnvio.GuiaRemisionConductores != null)
                 {
-                    foreach (var conductor in guia.DatosEnvio.ConductorGuia)
+                    foreach (var conductor in guia.DatosEnvio.GuiaRemisionConductores)
                     {
                         _ = guia.getTipoCodigoDocumento(conductor.TipoDocumento, conductor.NumeroDocumento);
                     }

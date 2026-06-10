@@ -20,11 +20,16 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
         public int DatosEnvioId { get; set; }
 
         [JsonPropertyName("fecha_envio")]
-        [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
+        [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23, solo si es PRIVADO", Nullable = false)]
         [StringLength(10)]
         [MinLength(10)]
-        [Required]
-        public string FechaEnvio { get; set; }
+        public string? FechaEnvio { get; set; }
+
+        [JsonPropertyName("fecha_entrega_transportista")]
+        [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23, solo si es PUBLICO", Nullable = false)]
+        [StringLength(10)]
+        [MinLength(10)]
+        public string? FechaEntregaTransportista { get; set; }
 
         [JsonPropertyName("peso_bruto")]
         [SwaggerSchema("Recibe un decimal, aquí debe colocarse el peso bruto de todo el envío, Ejm: 20, 50, etc.", Nullable = false)]
@@ -58,7 +63,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista.DatosEnvio
         [Required]
         public List<ConductorGuiaUpdateDTO> ConductorGuid { get; set; }
 
-        // Transporte asociado
+        // UnidadTransporte asociado
         [JsonPropertyName("transporte_guia")]
         [SwaggerSchema("Recibe una lista de transportes asociados a datos_envio dentro de la guía", Nullable = false)]
         [Required]

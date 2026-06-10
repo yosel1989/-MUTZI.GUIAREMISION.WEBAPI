@@ -159,7 +159,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
                 case "PRIVADO":
                     return "02";
                 default:
-                    throw new System.Exception("Catálogo No. 18: Códigos – Tipo de Transporte no definido. Debe elegir entre: ´PRIVADO ó PUBLICO");
+                    throw new System.Exception("Catálogo No. 18: Códigos – Tipo de UnidadTransporte no definido. Debe elegir entre: ´PRIVADO ó PUBLICO");
             }
         }
 

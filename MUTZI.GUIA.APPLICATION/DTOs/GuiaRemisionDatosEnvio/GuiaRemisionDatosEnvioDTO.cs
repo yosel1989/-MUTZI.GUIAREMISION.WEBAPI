@@ -1,5 +1,4 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Conductor;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
@@ -17,8 +16,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         public string MotivoEnvio { get; set; }
 
         [JsonPropertyName("fecha_envio")]
-        [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
-        public string FechaEnvio { get; set; }
+        [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23, solo si es PRIVADO", Nullable = true)]
+        public string? FechaEnvio { get; set; }
+
+        [JsonPropertyName("fecha_entrega_transportista")]
+        [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23, solo si es PUBLICO", Nullable = true)]
+        public string? FechaEntregaTransportista { get; set; }
 
         [JsonPropertyName("peso_bruto")]
         [SwaggerSchema("Devuelve en decimal el peso bruto de todo el envío, Ejm: 20, 50, etc.", Nullable = false)]
@@ -53,9 +56,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         public bool IndicadorVehiculoConductor { get; set; }
 
         [JsonPropertyName("conductor")]
-        public List<ConductorGuiaDTO?> ConductorGuia { get; set; } = new List<ConductorGuiaDTO?>();
+        public List<ConductorGuiaDTO?> GuiaRemisionConductores { get; set; } = new List<ConductorGuiaDTO?>();
 
         [JsonPropertyName("unidad_transporte")]
-        public List<UnidadTransporteGuiaDTO?> TransporteGuia { get; set; } = new List<UnidadTransporteGuiaDTO?>();
+        public List<UnidadTransporteGuiaDTO?> GuiaRemisionUnidadesTransporte { get; set; } = new List<UnidadTransporteGuiaDTO?>();
     }
 }

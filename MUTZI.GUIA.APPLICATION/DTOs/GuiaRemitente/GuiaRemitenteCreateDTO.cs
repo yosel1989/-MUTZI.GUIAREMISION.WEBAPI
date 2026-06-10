@@ -82,6 +82,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [JsonPropertyName("proveedor")]
         public ProveedorCreateGuiaDTO? Proveedor { get; set; }
 
+
         [JsonPropertyName("datos_envio")]
         [Required]
         public GuiaRemisionDatosEnvioCreateDTO DatosEnvio { get; set; }
@@ -128,7 +129,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
                 case "PRIVADO":
                     return "02";
                 default:
-                    throw new System.Exception("Catálogo No. 18: Códigos – Tipo de Transporte no definido. Debe elegir entre: ´PRIVADO ó PUBLICO");
+                    throw new System.Exception("Catálogo No. 18: Códigos – Tipo de UnidadTransporte no definido. Debe elegir entre: ´PRIVADO ó PUBLICO");
             }
         }
 

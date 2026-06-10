@@ -285,11 +285,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(o => o.Origens)
                     .ThenInclude(or => or.Ubigeo)
                 .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.ConductorGuids)
+                    .ThenInclude(de => de.GuiaRemisionConductores)
                         .ThenInclude(con => con.Conductor)
                 .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.TransporteGuids)
-                        .ThenInclude(tr => tr.Transporte)
+                    .ThenInclude(de => de.GuiaRemisionUnidadesTransporte)
+                        .ThenInclude(tr => tr.UnidadTransporte)
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.UnidadMedida)
                 .Include(doc => doc.DocRelacionados)
@@ -316,11 +316,26 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .ThenInclude(h => h.Ubigeo)
                 .Include(g => g.RemiteTransportista)
                 .Include(g => g.RucNavigation)
+
                 .Include(g => g.Proveedor)
+                    .ThenInclude(h => h.TipoDocumento)
+                .Include(g => g.Proveedor)
+                    .ThenInclude(h => h.Ubigeo)
+
                 .Include(g => g.GuiaDetalles)
                     .ThenInclude(h => h.UnidadMedida)
+
                 .Include(g => g.DatosEnvios)
                     .ThenInclude(h => h.UnidadMedida)
+                .Include(g => g.DatosEnvios)
+                    .ThenInclude(h => h.GuiaRemisionConductores)
+                        .ThenInclude(h => h.Conductor)
+                            .ThenInclude(h => h.TipoDocumento)
+                .Include(g => g.DatosEnvios)
+                    .ThenInclude(h => h.GuiaRemisionUnidadesTransporte)
+                        .ThenInclude(h => h.UnidadTransporte)
+                            .ThenInclude(h => h.EntidadReguladoraVehicular)
+
                 .Include(g => g.Origens)
                 .Include(g => g.Destinos)
                 .Include(g => g.Area)
@@ -476,7 +491,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         RazonSocialCurrier = env.RazonSocialCurrier,
                         RegistroMtcCurrier = env.RegistroMtcCurrier,
                         IndicadorVehiculoConductor = env.IndicadorVehiculoConductor,
-                        ConductorGuids = env.ConductorGuids.Select(cg => new GuiaRemisionConductor
+                        GuiaRemisionConductores = env.GuiaRemisionConductores.Select(cg => new GuiaRemisionConductor
                         {
                             GuiaRemisionConductorId = cg.GuiaRemisionConductorId,
                             GuiaRemisionDatoEnvioId = cg.GuiaRemisionDatoEnvioId,
@@ -492,20 +507,20 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 Licencia = cg.Conductor.Licencia
                             }
                         }).ToList(),
-                        TransporteGuids = env.TransporteGuids.Select(tg => new GuiaRemisionUnidadTransporte
+                        GuiaRemisionUnidadesTransporte = env.GuiaRemisionUnidadesTransporte.Select(tg => new GuiaRemisionUnidadTransporte
                         {
                             GuiaRemisionUnidadTransporteId = tg.GuiaRemisionUnidadTransporteId,
                             GuiaRemisionDatoEnvioId = tg.GuiaRemisionDatoEnvioId,
                             UnidadTransporteId = tg.UnidadTransporteId,
-                            Transporte = new UnidadTransporte
+                            UnidadTransporte = new UnidadTransporte
                             {
-                                UnidadTransporteId = tg.Transporte.UnidadTransporteId,
-                                Placa = tg.Transporte.Placa,
-                                Tarjeta = tg.Transporte.Tarjeta,
-                                NroAutorizacion = tg.Transporte.NroAutorizacion,
-                                EntidadReguladoraVehicular = tg.Transporte.EntidadReguladoraVehicular,
-                                EmisorVehicular = tg.Transporte.EntidadReguladoraVehicular.Descripcion,
-                                EntidadReguladoraVehicularId = tg.Transporte.EntidadReguladoraVehicularId,
+                                UnidadTransporteId = tg.UnidadTransporte.UnidadTransporteId,
+                                Placa = tg.UnidadTransporte.Placa,
+                                Tarjeta = tg.UnidadTransporte.Tarjeta,
+                                NroAutorizacion = tg.UnidadTransporte.NroAutorizacion,
+                                EntidadReguladoraVehicular = tg.UnidadTransporte.EntidadReguladoraVehicular,
+                                EmisorVehicular = tg.UnidadTransporte.EntidadReguladoraVehicular.Descripcion,
+                                EntidadReguladoraVehicularId = tg.UnidadTransporte.EntidadReguladoraVehicularId,
                             }
                         }).ToList(),
                     }).ToList(),
@@ -565,11 +580,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(o => o.Origens)
                     .ThenInclude(or => or.Ubigeo)
                 .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.ConductorGuids)
+                    .ThenInclude(de => de.GuiaRemisionConductores)
                         .ThenInclude(con => con.Conductor)
                 .Include(env => env.DatosEnvios)
-                    .ThenInclude(de => de.TransporteGuids)
-                        .ThenInclude(tr => tr.Transporte)
+                    .ThenInclude(de => de.GuiaRemisionUnidadesTransporte)
+                        .ThenInclude(tr => tr.UnidadTransporte)
                 .Include(det => det.GuiaDetalles)
                     .ThenInclude(gd => gd.UnidadMedida)
                 .Include(doc => doc.DocRelacionados)
@@ -893,7 +908,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 throw new Exception(msg);
             }
         }
-        //Transporte
+        //UnidadTransporte
         public async Task<UnidadTransporte> GetTransporteByPlacaAsync(string placa)
         {
             return await _context.UnidadTransporte.FirstOrDefaultAsync(t => t.Placa == placa);
