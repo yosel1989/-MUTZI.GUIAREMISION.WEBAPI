@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
@@ -10,9 +11,8 @@ public partial class Transportista
     [Column("transportista_id")]
     public int TransportistaId { get; set; }
 
-    [Column("tipo_documento")]
-    [MaxLength(20)]
-    public string TipoDocumento { get; set; } = null!;
+    [Column("tipo_documento_id")]
+    public int? TipoDocumentoId { get; set; } = null!;
 
     [Column("numero_documento")]
     [MaxLength(15)]
@@ -69,6 +69,8 @@ public partial class Transportista
     [Column("email_contacto")]
     public string? EmailContacto { get; set; }
 
+    // Relaciones
+
     public virtual ICollection<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; } = new List<EmailRemiteTransportistaGuid>();
 
     public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
@@ -76,4 +78,7 @@ public partial class Transportista
     [ForeignKey(nameof(UbigeoId))]
     [InverseProperty(nameof(Entities.Ubigeo.RemiteTransportista))]
     public virtual Ubigeo? Ubigeo { get; set; }
+
+    [ForeignKey(nameof(TipoDocumentoId))]
+    public virtual TipoDocumento? TipoDocumento { get; set; }
 }

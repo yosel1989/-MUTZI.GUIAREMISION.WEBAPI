@@ -60,10 +60,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "listar_transportista_sugerido"
         )]
         [Permission("listar_transportista_sugerido")]
-        [ProducesResponseType(typeof(TransportistaDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TransportistaSugeridoDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<TransportistaDTO>>> GetBySuggestion([FromQuery] string? numeroDoc)
+        [ProducesResponseType(typeof(TransportistaSugeridoDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<TransportistaSugeridoDTO>>> GetBySuggestion([FromQuery] string? numeroDoc)
         {
             try
             {

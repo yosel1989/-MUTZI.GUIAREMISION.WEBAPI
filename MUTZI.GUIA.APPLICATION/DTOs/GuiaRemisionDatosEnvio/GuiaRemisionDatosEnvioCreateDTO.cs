@@ -1,4 +1,6 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
+using MUTZI.GUIA.APPLICATION.DTOs.Transportista;
+using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -65,5 +67,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [JsonPropertyName("transporte")]
         [SwaggerSchema("Recibe la lista de enteros con los IDs de las unidades de transporte asociados a la guía de remisión.")]
         public List<int> TransporteId { get; set; }
+
+        [JsonPropertyName("transportista_id")]
+        [SwaggerSchema("Recibe un número, el id del transportista", Nullable = true)]
+        public int? TransportistaId { get; set; }
+
+        [JsonPropertyName("transportista")]
+        [SwaggerSchema("Recibe un objeto de tipo transportista", Nullable = true)]
+        public TransportistaDTO? Transportista { get; set; }
     }
 }

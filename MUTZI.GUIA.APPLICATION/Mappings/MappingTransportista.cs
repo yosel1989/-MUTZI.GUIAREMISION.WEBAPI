@@ -14,12 +14,16 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest => dest.EmailRemiteTransportista, opt => opt.MapFrom(src => src.EmailRemiteTransportistaGuids))
+                .ForMember(dest => dest.TipoDocumento, opt => opt.MapFrom(src => src.TipoDocumento.DescripcionCorta))
                 ;
             CreateMap<TransportistaCreateDTO, Transportista>();
             CreateMap<TransportistaCreateGuiaDTO, Transportista>();
             CreateMap<TransportistaUpdateDTO, Transportista>();
 
             CreateMap<Transportista, EstadoActualizadoResponseDTO>();
+            CreateMap<Transportista, TransportistaSugeridoDTO>()
+                .ForMember(dest => dest.TipoDocumento, opt => opt.MapFrom(src => src.TipoDocumento.DescripcionCorta))
+                ;
         }
     }
 }

@@ -7,11 +7,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Transportista
     [SwaggerSchema("Recibe un objeto remite_transportista, tener en cuenta que, si Carolina SAC o la empresa que esté asociada al facturador actúa como transportista este objeto pasa a ser remitente y según Efact, menciona que: 'El 'Número de documento de identidad del remitente', no debe ser igual al número de RUC del transportista.'.", Nullable=false)]
     public class   TransportistaCreateDTO
     {
-        [JsonPropertyName("tipo_documento")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el tipo de documento del REMITE_TRANSPORTISTA. Solo recibe los siguientes valores: DNI, CE, RUC y PASAPORTE", Nullable = false)]
-        [MaxLength(20)]
+        [JsonPropertyName("tipo_documento_id")]
+        [SwaggerSchema("Recibe un número, aquí se coloca id del tipo de documento del REMITE_TRANSPORTISTA. Solo recibe los siguientes valores: DNI, CE, RUC y PASAPORTE", Nullable = false)]
         [Required]
-        public string TipoDocumento { get; set; }
+        public int? TipoDocumentoId { get; set; }
 
         [JsonPropertyName("numero_documento")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el número de documento del REMITE_TRANSPORTISTA.", Nullable = false)]
