@@ -1,6 +1,7 @@
 ﻿using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
@@ -36,6 +37,9 @@ public partial class GuiaRemisionDatoEnvio
 
     [Column("traslado_vehiculo_categoria")]
     public bool TrasladoVehiculoCategoria { get; set; } = false;
+
+    [Column("traslado_vehiculo_categoria_placa_vehiculo")]
+    public string? TrasladoVehiculoCategoriaPlacaVehiculo { get; set; } = null;
 
     [Column("ruc_empresa_currier")]
     [MaxLength(15)]

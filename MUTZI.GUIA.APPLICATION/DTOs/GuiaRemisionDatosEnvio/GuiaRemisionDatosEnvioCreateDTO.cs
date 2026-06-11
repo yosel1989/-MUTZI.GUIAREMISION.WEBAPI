@@ -46,6 +46,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [Required]
         public bool TrasladoVehiculoCategoria { get; set; } = false;
 
+        [JsonPropertyName("traslado_vehiculo_categoria_placa_vehiculo")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca la placa del vehiculo pesado, solo sí se selecciono el traslado_vehiculo_categoria", Nullable = false)]
+        public string? TrasladoVehiculoCategoriaPlacaVehiculo { get; set; } = null;
 
         [JsonPropertyName("ruc_empresa_currier")]
         [SwaggerSchema("Recibe un texto y es el ruc de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = false)]
