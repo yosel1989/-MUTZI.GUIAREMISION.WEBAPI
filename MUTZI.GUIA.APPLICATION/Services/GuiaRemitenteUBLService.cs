@@ -32,57 +32,108 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             root.DespatchAdvice = new List<DespatchAdvice> {
                 new DespatchAdvice {
+
+                    // Versión del UBL
                     UBLVersionID = new List<UBLVersionID>{ new UBLVersionID { _ =EspacioNombreGuiaRemision._UBLVersionID }},
+
+                    // Versión de la estructura del documento
                     CustomizationID = new List<CustomizationID>{ new CustomizationID {  _ = EspacioNombreGuiaRemision._CustomizationID }},
-                    ID = new List<ID> { new ID { _ = guia.SerieCorrelativo }},//"T001-00000063"
+                    
+                    // Serie y correlativo
+                    ID = new List<ID> { new ID { _ = guia.SerieCorrelativo }},
+
+                    // Fecha de emisión
                     IssueDate = new List<IssueDate> { new IssueDate { _ = guia.Fecha }},
+
+                    // Hora de emisión
                     IssueTime = new List<IssueTime> { new IssueTime { _ = guia.Hora }},
-                    //catálogo N°01 del anexo 8 de la SUNAT, 09 Guía de remisión remitente
+
+                    // catálogo N°01 del anexo 8 de la SUNAT, 09 Guía de remisión remitente
+                    // Código del tipo de documento
                     DespatchAdviceTypeCode = new List<DespatchAdviceTypeCode>{ new DespatchAdviceTypeCode { _ = EspacioNombreGuiaRemision._DespatchAdviceTypeCode }},
+                    
+                    // Cantidad de items
                     LineCountNumeric = new List<LineCountNumeric> { new LineCountNumeric { _ = guia.Productos.Count.ToString() }},
                     
-                    //Agregar en lista los documentos relacionados
+                    //Agregar en lista los documentos relacionados (FACTURA Y BOLETA por el momento, Catalogo N° 61)
                     AdditionalDocumentReference = guia.DocRelacionados.Select(docRelacionado => new AdditionalDocumentReference {
+                        // Número del documento relacionado
                         ID = new List<ID>{ new ID { _ = docRelacionado.NumeroDocRef }},
+
+                        // Código del tipo de documento relacionado
                         DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode { _ = docRelacionado.DocumentoAdicinalTipo() }},
+                        
+                        // Descripción del tipo de documento relacionado
                         DocumentType=new List<DocumentType>{new DocumentType { _=docRelacionado.TipoDocRef} },
+
+                        // Número de RUC del emisor del documento relacionado
                         IssuerParty = new List<IssuerParty>{ new IssuerParty {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
-                                ID = new List<ID>{ new ID { _ = docRelacionado.RucDocRef , schemeID = EspacioNombreGuiaRemision._DocumentType06 }}
+                                ID = new List<ID>{ new ID { 
+                                    // Número de documento
+                                    _ = docRelacionado.RucDocRef , 
+                                    // Tipo de documento
+                                    schemeID = EspacioNombreGuiaRemision._DocumentType06 
+                                }}
                             }}
                         }}
                     }).ToList(),
 
-                    
+
+                    // Firma
                     Signature = new List<Signature>{ new Signature{
                         ID = new List<ID>{ new ID { _ = "IDSignature" } },
                         SignatoryParty = new List<SignatoryParty>{ new SignatoryParty {
+                            // Ruc del remitente
                             PartyIdentification= new List<PartyIdentification>{ new PartyIdentification { ID = new List<ID> { new ID {  _ = guia.Remitente.Ruc } } }},
-                            PartyName = new List<PartyName>{ new PartyName { Name = new List<Name> { new Name {  _ = guia.Remitente.Descripcion} } }},
+                            // Razón social del remitente
+                            PartyName = new List<PartyName>{ new PartyName { Name = new List<Name> { new Name {  _ = guia.Remitente.RazonSocial} } }},
                         }},
                         DigitalSignatureAttachment = new List<DigitalSignatureAttachment>{ new DigitalSignatureAttachment {
                             ExternalReference = new List<ExternalReference>{new ExternalReference { URI = new List<URI> { new URI() {_ = "IDSignature" }}}}
                         }}
                     }},
-                    //Remitente
+
+
+                    // Datos del remitente
                     DespatchSupplierParty = new List<DespatchSupplierParty>{ new DespatchSupplierParty {
                         Party = new List<Party>{ new Party {
-                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Remitente.Ruc,  schemeID = EspacioNombreGuiaRemision._DocumentType06  }}}},
+
+                            // Código SUNAT del tipo de documento de identidad y numeró de documento del remitente
+                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { 
+                                // Número de documento de identidad del remitente
+                                _ = guia.Remitente.Ruc,  
+                                // Código del tipo de documento de identidad del remitente 
+                                schemeID = EspacioNombreGuiaRemision._DocumentType06  
+                            }}}},
+
+                            // Domicilio Fiscal remitente
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
+                                // Código de Ubigeo
                                 ID = new List<ID> { new ID { _ = guia.Remitente.UbigeoId } },
+                                // Departamento
                                 CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Remitente.Departamento } },
+                                // Provincia
                                 CityName = new List<CityName>{ new CityName { _ = guia.Remitente.Provincia} },
+                                // Dirección completa y detallada
                                 StreetName = new List<StreetName>{ new StreetName { _ = guia.Remitente.Direccion } },
+                                // Urbanización
                                 CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Remitente.Departamento } },
+                                // Distrito
                                 District= new List<District>{ new District { _ = guia.Remitente.Distrito } },
+                                // Código de país
                                 Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.Pais } }}}
                             }},
+
+                            // Apellidos y nombres, denominación o razón social del remitente
                             PartyLegalEntity = new List<PartyLegalEntity>{ 
                                 new PartyLegalEntity { 
                                     RegistrationName = new List<RegistrationName> { 
                                         new RegistrationName { _  = guia.Remitente.RazonSocial }}
                                 }},
-                            Contact = guia.EmailFacturador == null ? null : new List<Contact>
+
+                            // 
+                            /*Contact = guia.EmailFacturador == null ? null : new List<Contact>
                             {
                                 new Contact
                                 {
@@ -94,32 +145,48 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                         }
                                     }
                                 }
-                            }
+                            }*/
                         }},
                     }},
 
-                    //Destinatario
+                    // Datos del Destinatario
                     DeliveryCustomerParty = new List<DeliveryCustomerParty>{ new DeliveryCustomerParty {
                         Party = new List<Party>{ new Party {
+
+                            // Código SUNAT del tipo de documento de identidad y numeró de documento del destinatario
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
-                                ID = new List<ID>{ new ID { _ = guia.Destinatario.Ruc , schemeID = guia.getTipoCodigoDocumento("RUC", guia.Destinatario.Ruc)  }}
+                                ID = new List<ID>{ new ID { 
+                                    // Número de documento de identidad del destinatario
+                                    _ = guia.Destinatario.Ruc, 
+                                    // Código del tipo de documento de identidad del destinatario
+                                    schemeID = guia.getTipoCodigoDocumento("RUC", guia.Destinatario.Ruc)  
+                                }}
                             }},
+
+                            // Domicilio Fiscal destinatario
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
+                                // Código de ubigeo
                                 ID = new List<ID> { new ID { _ = guia.Destinatario.UbigeoId}},
+                                // Dirección completa y detallada
                                 StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Direccion } },
-                                //StreetName = new List<StreetName>{ new StreetName { _ = null } },
+                                // Urbanizacion
                                 CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Departamento } },
-                                //CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = null } },
+                                // Provincia
                                 CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Provincia } },
+                                // Departamento
                                 CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Departamento } },
-                                //CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = null } },
+                                // Distrito
                                 District= new List<District>{ new District { _ = guia.Destinatario.Distrito } },
-                                //District= new List<District>{ new District { _ = null } },
+                                // Codigo de Pais
                                 Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.Pais } }}}
                             }},
+
+                            // Apellidos y nombres, denominación o razón social del destinatario
                             PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity {
                                 RegistrationName = new List<RegistrationName>{ new RegistrationName { _ = guia.Destinatario.RazonSocial } }
                             }},
+                            
+                            // Correo del destinatario
                             Contact = guia.DestinatarioCorreo.Count > 0 ? new List<Contact>
                             {
                                 new Contact
@@ -136,43 +203,114 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         }}
                     }},
 
-                    //El proveedor se crea solo si el tipo de traslado es compra
-                    SellerSupplierParty = guia.MotivoTrasladoId == (int)SunatCatalogoEnum.MotivoTraslado.COMPRA ? new List<SellerSupplierParty>{ new SellerSupplierParty {
+                    // Datos del Proveedor (Solo se registra si el motivo de traslado es COMPRA)
+                    SellerSupplierParty = (guia.MotivoTrasladoId == (int)SunatCatalogoEnum.MotivoTraslado.COMPRA) ? new List<SellerSupplierParty>{ new SellerSupplierParty {
                         Party = new List<Party>{ new Party {
-                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { _ = guia.Proveedor.NumeroDocumento,  schemeID = guia.getTipoCodigoDocumento(guia.Proveedor.TipoDocumentoNombre, guia.Proveedor.NumeroDocumento)  }}}},
+
+                            // Número y codigo del tipo de documento de identidad del proveedor
+                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { 
+                                // Número de documento de identidad del proveedor
+                                _ = guia.Proveedor.NumeroDocumento,  
+                                // Código del tipo de documento de identidad del proveedor
+                                schemeID = guia.Proveedor.TipoDocumentoCodigoSunat
+                            }}}},
+
+                            // Domicilio Fiscal proveedor
                             PostalAddress = new List<PostalAddress>{ new PostalAddress {
+                                // Código de ubigeo
                                 ID = new List<ID> { new ID { _ = guia.Proveedor.UbigeoId } },
-                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Proveedor.Departamento } },
-                                CityName = new List<CityName>{ new CityName { _ = guia.Proveedor.Provincia} },
+                                // Dirección completa y detallada
                                 StreetName = new List<StreetName>{ new StreetName { _ = guia.Proveedor.Direccion } },
+                                // Urbanizacion
                                 CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Proveedor.Departamento } },
+                                // Provincia
+                                CityName = new List<CityName>{ new CityName { _ = guia.Proveedor.Provincia} },
+                                // Departamento
+                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Proveedor.Departamento } },
+                                // Distrito
                                 District= new List<District>{ new District { _ = guia.Proveedor.Distrito } },
+                                // Codigo de Pais
                                 Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Proveedor.Pais } }}}
                             }},
+
+                            // Apellidos y nombres, denominación o razón social del proveedor
                             PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _  = guia.Proveedor.RazonSocial }}}}
                         }},
                     }} : null,
-
 
                     DespatchLine = new List<DespatchLine>{}
                 }
             };
 
+            // Datos del envío
             root.DespatchAdvice[0].Shipment = new List<Shipment> { new Shipment {
+                // Identificador del traslado
                 ID = new List<ID>{ new ID { _ = "SUNAT_Envio" }},
-                HandlingCode = new List<HandlingCode>{ new HandlingCode { _ = guia.TipoTrasladoCode20() }},
-                HandlingInstructions = new List<HandlingInstruction>{ new HandlingInstruction { _ = guia.DatosEnvio.MotivoEnvio }},
-                GrossWeightMeasure = new List<GrossWeightMeasure>{ new GrossWeightMeasure { _ =guia.DatosEnvio.PesoBruto.ToString() , unitCode = guia.DatosEnvio?.CodigoUm??"KGM" }},
-                SpecialInstructions= guia.DatosEnvio?.IndicadorVehiculoConductor==false?null: new List<SpecialInstructions>{ new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" } },
-                ShipmentStage = new List<ShipmentStage>{ new ShipmentStage {
-                    TransportModeCode = new List<TransportModeCode>{ new TransportModeCode { _ = guia.TipoTRansporteCode18() }},
-                    TransitPeriod = new List<TransitPeriod>{ new TransitPeriod {
-                        StartDate = new List<StartDate>{ new StartDate { _ = guia.DatosEnvio.FechaEnvio }}
-                    }},
 
+                // Código SUNAT del Motivo de Traslado
+                HandlingCode = new List<HandlingCode>{ new HandlingCode { _ = guia.MotivoTrasladoCodigo }},
+
+                // Descripción del motivo de traslado
+                HandlingInstructions = new List<HandlingInstruction>{ new HandlingInstruction { _ = guia.DatosEnvio.MotivoEnvio }},
+
+                // Peso bruto total de la carga y unidad de medida del peso bruto
+                GrossWeightMeasure = new List<GrossWeightMeasure>{ new GrossWeightMeasure { 
+                    // Peso bruto total de la carga
+                    _ =guia.DatosEnvio.PesoBruto.ToString() ,
+                    // Código SUNAT Unidad de Medida
+                    unitCode = guia.DatosEnvio?.CodigoUm ?? "KGM" 
+                }},
+                    
+                // Indicadores
+                // Indicador deTransbordo Programado
+                // Indicador de traslado en vehículos de categoría M1 o L
+                SpecialInstructions = new[]
+                {
+                    guia.DatosEnvio?.IndicadorTransbordoProgramado == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTransbordoProgramado" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorVehiculoConductor == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorTrasladoVehiculoCategoria == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTrasladoVehiculoM1L" }
+                        : null,
+                }
+                .Where(x => x != null)
+                .Select(y => new SpecialInstructions { _ = y._ })
+                .ToList().Count() > 0 ? new[]
+                {
+                    guia.DatosEnvio?.IndicadorTransbordoProgramado == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTransbordoProgramado" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorVehiculoConductor == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorTrasladoVehiculoCategoria == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTrasladoVehiculoM1L" }
+                        : null
+                }
+                .Where(x => x != null)
+                .Select(y => new SpecialInstructions { _ = y._ })
+                .ToList() : null,
+
+                //SpecialInstructions = (guia.DatosEnvio?.IndicadorVehiculoConductor==false) ? null: new List<SpecialInstructions>{ new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" } },
+                //SpecialInstructions = (guia.DatosEnvio?.IndicadorTrasladoVehiculoCategoria==false) ? null: new List<SpecialInstructions>{ new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTrasladoVehiculoM1L" } },
+                
+                // Modalidad de traslado
+                ShipmentStage = new List<ShipmentStage>{ new ShipmentStage {
+
+                    // Tipo de transporte (PRIVADA o PUBLICA) - Modalidad de traslado
+                    TransportModeCode = new List<TransportModeCode>{ new TransportModeCode { _ = guia.TipoTRansporteCode18() }},
+
+                    // Fecha Inicio de Traslado y Fecha de entrega de bienes al transportista
+                    TransitPeriod = new List<TransitPeriod>{ new TransitPeriod {
+                        StartDate = new List<StartDate>{ new StartDate { _ = guia.DatosEnvio?.FechaEnvio != null ? guia.DatosEnvio!.FechaEnvio! : guia.DatosEnvio!.FechaEntregaTransportista! }}
+                    }},
                 }},
                 Delivery= new List<Delivery>{ new Delivery {
-                    //Punto de llegada
+
+                    //Origen
                     DeliveryAddress = guia.Destino.Select(destino => new DeliveryAddress {
                         ID = new List<ID>{ new ID { _ = destino.UbigeoId }},
                         AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
@@ -188,6 +326,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         AddressLine = new List<AddressLine>{ new AddressLine { Line = new List<Line> { new Line { _ = destino.Direccion }}}},
                         Country = new List<Country>{ new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = destino.Pais } }}}
                     }).ToList(),
+
+                    // Destino
                     Despatch = new List<Despatch>{ new Despatch {
                         //Punto de partida
                          DespatchAddress = new List<DespatchAddress>{ new DespatchAddress {

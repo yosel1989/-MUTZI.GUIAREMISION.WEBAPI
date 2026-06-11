@@ -41,10 +41,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [Required]
         public string CodigoUm { get; set; } = "KGM";
 
-        [JsonPropertyName("traslado_vehiculo_categoria")]
+        [JsonPropertyName("indicador_traslado_vehiculo_categoria")]
         [SwaggerSchema("Recibe un boolean, aquí se coloca si es traslado se realizara en vehiculos pesados", Nullable = false)]
         [Required]
-        public bool TrasladoVehiculoCategoria { get; set; } = false;
+        public bool IndicadorTrasladoVehiculoCategoria { get; set; } = false;
 
         [JsonPropertyName("traslado_vehiculo_categoria_placa_vehiculo")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la placa del vehiculo pesado, solo sí se selecciono el traslado_vehiculo_categoria", Nullable = false)]
@@ -88,5 +88,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [JsonPropertyName("transportista")]
         [SwaggerSchema("Recibe un objeto de tipo transportista", Nullable = true)]
         public TransportistaDTO? Transportista { get; set; }
+
+        [JsonPropertyName("indicador_transbordo_programado")]
+        [SwaggerSchema("Recibe un boolean, aquí se coloca si es traslado se realizara en vehiculos pesados", Nullable = false)]
+        [Required]
+        public bool IndicadorTransbordoProgramado { get; set; } = false;
     }
 }

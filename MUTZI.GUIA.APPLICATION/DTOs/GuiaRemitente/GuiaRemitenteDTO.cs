@@ -45,8 +45,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public int MotivoTrasladoId { get; set; }
 
         [JsonPropertyName("motivo_traslado")]
-        [SwaggerSchema("Devuelve un texto, el catalogo de motivos de traslado", Nullable = false)]
-        public string MotivoTraslado { get; set; }
+        [SwaggerSchema("Devuelve un texto, la descripción del motivo de traslado", Nullable = false)]
+        public string MotivoTrasladoDescripcion { get; set; }
+
+        [JsonPropertyName("motivo_traslado_codigo")]
+        [SwaggerSchema("Devuelve un texto, el código del catalogo de sunat en relación al motivo de traslado", Nullable = false)]
+        public string MotivoTrasladoCodigo { get; set; }
 
         [JsonPropertyName("serie_correlativo")]
         [SwaggerSchema("Devuelve un texto", Nullable = false)]

@@ -26,7 +26,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
 
             //Guias de remisión
             CreateMap<GuiaRemision, GuiaRemitenteDTO>()
-                .ForMember(dest => dest.MotivoTraslado, opt => opt.MapFrom(src => src.MotivoTraslado.Nombre))
+                .ForMember(dest => dest.MotivoTrasladoDescripcion, opt => opt.MapFrom(src => src.MotivoTraslado.Nombre))
+                .ForMember(dest => dest.MotivoTrasladoCodigo, opt => opt.MapFrom(src => src.MotivoTraslado.CodigoSunat))
                 .ForMember(dest => dest.SerieCorrelativo, opt => opt.MapFrom(src => src.NumeroGuia))
                 .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src => src.Fecha.ToString("yyyy-MM-dd")))
                 .ForMember(dest => dest.EmailFacturador, opt => opt.MapFrom(src => src.RucNavigation.EmailPrincipal))
@@ -34,6 +35,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Destinatario, opt => opt.MapFrom(src => src.Destinatario))
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.Nombre))
                 .ForMember(dest => dest.DatosEnvio, opt => opt.MapFrom(src => src.DatosEnvios.FirstOrDefault()))
+                .ForMember(dest => dest.Empresa, opt => opt.MapFrom(src => src.RucNavigation))
                 .ForMember(dest => dest.Empresa, opt => opt.MapFrom(src => src.RucNavigation))
                 //Mapear conductor y transporte dentro de DatosEnvio
                 //.ForMember(dest => dest.DatosEnvio.GuiaRemisionConductores, opt => opt.MapFrom(src => src.DatosEnvios.FirstOrDefault().GuiaRemisionConductores))

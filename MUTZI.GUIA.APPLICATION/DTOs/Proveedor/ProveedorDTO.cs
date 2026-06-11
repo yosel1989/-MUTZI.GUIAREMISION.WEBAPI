@@ -18,6 +18,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Proveedor
         [SwaggerSchema("Devuelve en texto el tipo de documento del proveedor. Valores como: DNI, CE, RUC y PASAPORTE", Nullable = false)]
         public string TipoDocumentoNombre { get; set; }
 
+        [JsonPropertyName("tipo_documento_codigo_sunat")]
+        [SwaggerSchema("Devuelve en texto el tipo de documento del proveedor. Código de SUNAT", Nullable = false)]
+        public string TipoDocumentoCodigoSunat { get; set; }
+
         [JsonPropertyName("numero_documento")]
         [SwaggerSchema("Devuelve en texto el número de documento", Nullable=false)]
         public string NumeroDocumento { get; set; }

@@ -322,11 +322,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(g => g.Proveedor)
                     .ThenInclude(h => h.Ubigeo)
 
+
                 .Include(g => g.GuiaDetalles)
                     .ThenInclude(h => h.UnidadMedida)
 
+
                 .Include(g => g.DatosEnvios)
                     .ThenInclude(h => h.UnidadMedida)
+                .Include(g => g.DatosEnvios)
+                    .ThenInclude(h => h.Transportista)
                 .Include(g => g.DatosEnvios)
                     .ThenInclude(h => h.GuiaRemisionConductores)
                         .ThenInclude(h => h.Conductor)
@@ -335,6 +339,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .ThenInclude(h => h.GuiaRemisionUnidadesTransporte)
                         .ThenInclude(h => h.UnidadTransporte)
                             .ThenInclude(h => h.EntidadReguladoraVehicular)
+
 
                 .Include(g => g.Origens)
                 .Include(g => g.Destinos)
@@ -487,6 +492,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         PesoBruto = env.PesoBruto,
                         UnidadMedida = env.UnidadMedida,
                         CodigoUm = env.CodigoUm,
+
+                        IndicadorTrasladoVehiculoCategoria = env.IndicadorTrasladoVehiculoCategoria,
+                        TrasladoVehiculoCategoriaPlacaVehiculo = env.TrasladoVehiculoCategoriaPlacaVehiculo,
+
                         RucEmpresaCurrier = env.RucEmpresaCurrier,
                         RazonSocialCurrier = env.RazonSocialCurrier,
                         RegistroMtcCurrier = env.RegistroMtcCurrier,
@@ -523,6 +532,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 EntidadReguladoraVehicularId = tg.UnidadTransporte.EntidadReguladoraVehicularId,
                             }
                         }).ToList(),
+
+                        TransportistaId = env.TransportistaId,
+                        Transportista = env.Transportista
                     }).ToList(),
 
                     // Puntos de Origen

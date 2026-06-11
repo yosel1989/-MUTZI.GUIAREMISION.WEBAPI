@@ -144,7 +144,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         public List<Signature> Signature { get; set; }
         public List<DespatchSupplierParty> DespatchSupplierParty { get; set; }
         public List<DeliveryCustomerParty> DeliveryCustomerParty { get; set; }
-        public List<SellerSupplierParty> SellerSupplierParty { get; set; }
+        public List<SellerSupplierParty>? SellerSupplierParty { get; set; }
         public List<Shipment> Shipment { get; set; }
         public List<DespatchLine> DespatchLine { get; set; }
     }

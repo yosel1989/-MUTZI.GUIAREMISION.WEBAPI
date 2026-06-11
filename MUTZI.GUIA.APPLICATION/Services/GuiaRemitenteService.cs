@@ -369,7 +369,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                 if (guia.TipoTransporte=="PUBLICO")
                 {
-                    if (!guia.DatosEnvio.TrasladoVehiculoCategoria)
+                    if (!guia.DatosEnvio.IndicadorTrasladoVehiculoCategoria)
                     {
                         if (guia.DatosEnvio.Transportista.NumeroDocumento.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
                         if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RazonSocial)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
@@ -413,9 +413,13 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 //Si tipo de transporte es PUBLICO, entonces DatosEnvio.rucEmpresaCurrier debe ser obligatorio
                 if (guia.TipoTransporte == "PUBLICO")
                 {
-                    if (guia.DatosEnvio.RucEmpresaCurrier.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
-                    if (string.IsNullOrWhiteSpace(guia.DatosEnvio.RazonSocialCurrier)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
-                    if (string.IsNullOrWhiteSpace(guia.DatosEnvio.RegistroMtcCurrier)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }
+                    if (!guia.DatosEnvio.IndicadorTrasladoVehiculoCategoria)
+                    {
+                        if (guia.DatosEnvio.Transportista.NumeroDocumento.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
+                        if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RazonSocial)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
+                        if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RegistroMTC)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }
+                    }
+                    
                 }
                 //if (guia.)
                 return (true, null);

@@ -1,6 +1,9 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Conductor;
+using MUTZI.GUIA.APPLICATION.DTOs.Transportista;
 using MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
@@ -39,6 +42,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [SwaggerSchema("Devuelve en texto la unidad de medida del peso bruto. Ejm: KGM ó TNE", Nullable = false)]
         public string CodigoUm { get; set; } = "KGM";
 
+        [JsonPropertyName("traslado_vehiculo_categoria_placa_vehiculo")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca la placa del vehiculo pesado, solo sí se selecciono el traslado_vehiculo_categoria", Nullable = false)]
+        public string? TrasladoVehiculoCategoriaPlacaVehiculo { get; set; } = null;
+
         [JsonPropertyName("ruc_empresa_currier")]
         [SwaggerSchema("Devuelve en texto el ruc de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = true)]
         public string? RucEmpresaCurrier { get; set; }
@@ -54,6 +61,19 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [JsonPropertyName("indicador_vehiculo_conductor")]
         [SwaggerSchema("Devuelve en booleano el indicador de vehículo y conductor: true o false", Nullable = true)]
         public bool IndicadorVehiculoConductor { get; set; }
+
+        [JsonPropertyName("transportista_id")]
+        public int? TransportistaId { get; set; }
+
+        [JsonPropertyName("indicador_traslado_vehiculo_categoria")]
+        [SwaggerSchema("Recibe un boolean, aquí se coloca si el traslado se realizara en vehiculos pesados", Nullable = false)]
+        public bool IndicadorTrasladoVehiculoCategoria { get; set; } = false;
+
+        [JsonPropertyName("indicador_transbordo_programado")]
+        public bool IndicadorTransbordoProgramado { get; set; } = false;
+
+        [JsonPropertyName("transportista")]
+        public TransportistaDTO? Transportista { get; set; }
 
         [JsonPropertyName("conductor")]
         public List<ConductorGuiaDTO?> GuiaRemisionConductores { get; set; } = new List<ConductorGuiaDTO?>();
