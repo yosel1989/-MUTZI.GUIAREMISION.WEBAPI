@@ -1,4 +1,5 @@
-﻿using Swashbuckle.AspNetCore.Annotations;
+﻿using Mysqlx.Expr;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
@@ -42,9 +43,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         [SwaggerSchema("Devuelve en texto, el código subnacional del producto solo sí se registró.", Nullable = true)]
         public string? CodigoSubnacional { get; set; }
 
-        [JsonPropertyName("bien_normalizado")]
+        [JsonPropertyName("indicador_bien_normalizado")]
         [SwaggerSchema("Devuelve un boolean, true si se registro como un bien normalizado, false sino.", Nullable = false)]
-        public bool BienNormalizado { get; set; } = false;
+        public bool IndicadorBienNormalizado { get; set; } = false;
 
         [JsonPropertyName("descripcion_um")]
         [SwaggerSchema("Devuelve en texto la descripción de la unidad de medida del producto. Ejm: Kilogramo, Paquete, Unidad, etc.", Nullable = false)]
@@ -57,5 +58,20 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         [JsonPropertyName("unidad_medida")]
         [SwaggerSchema("Devuelve en texto, abreviatura de la unidad de medida", Nullable = false)]
         public string UnidadMedida { get; set; }
+
+
+
+
+        public string TipoGtin()
+        {
+            switch (this.Gtin?.Length)
+            {
+                case 8: return "GTIN-8";
+                case 12: return "GTIN-12";
+                case 13: return "GTIN-13";
+                case 14: return "GTIN-14";
+                default: throw new System.Exception("Código GTIN' el formato que debe cumplir es el siguiente: alfanumérico DE 8,12,13 o 14 caracteres");
+            }
+        }
     }
 }

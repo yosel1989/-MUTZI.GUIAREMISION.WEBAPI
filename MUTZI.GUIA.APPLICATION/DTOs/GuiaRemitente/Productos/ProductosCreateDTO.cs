@@ -46,9 +46,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         public string? CodigoSubnacional { get; set; }
 
         [JsonPropertyName("bien_normalizado")]
-        [SwaggerSchema("Recibe un boolean, indica si el producto es un bien normalizado o no", Nullable = true)]
+        [SwaggerSchema("Recibe un boolean, indica si el producto es un bien normalizado o no", Nullable = false)]
         [Required]
-        public bool BienNormalizado { get; set; }
+        public bool IndicadorBienNormalizado { get; set; }
 
     }
 }

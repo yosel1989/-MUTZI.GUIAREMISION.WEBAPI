@@ -35,7 +35,7 @@ public partial class GuiaRemisionDatoEnvio
     [MaxLength(10)]
     public string CodigoUm { get; set; } = null!;
 
-    [Column("traslado_vehiculo_categoria")]
+    [Column("indicador_traslado_vehiculo_categoria")]
     public bool IndicadorTrasladoVehiculoCategoria { get; set; } = false;
 
     [Column("traslado_vehiculo_categoria_placa_vehiculo")]
@@ -56,11 +56,20 @@ public partial class GuiaRemisionDatoEnvio
     [MaxLength(20)]
     public string? RegistroMtcCurrier { get; set; }
 
-    [Column("indicador_vehiculo_conductor")]
-    public sbyte? IndicadorVehiculoConductor { get; set; } = 0;
+    [Column("indicador_registro_vehiculo_conductor")]
+    public bool IndicadorRegistroVehiculoConductor { get; set; } = false;
 
     [Column("indicador_transbordo_programado")]
     public bool IndicadorTransbordoProgramado { get; set; } = false;
+
+    [Column("indicador_retorno_vehiculo_envases_vacios")]
+    public bool IndicadorRetornoVehiculoEnvasesVacios { get; set; } = false;
+
+    [Column("indicador_retorno_vehiculo_vacio")]
+    public bool IndicadorRetornoVechiuloVacio { get; set; } = false;
+
+    [Column("indicador_traslado_total_dam")]
+    public bool IndicadorTrasladoTotalDam { get; set; } = false;
 
     // Relaciones
 

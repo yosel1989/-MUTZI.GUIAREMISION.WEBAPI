@@ -23,6 +23,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             //GuiaRemisionConductores
             CreateMap<GuiaRemisionConductor, ConductorGuiaDTO>()
                 .ForMember(dest => dest.TipoDocumento, opt => opt.MapFrom(src => src.Conductor.TipoDocumento.DescripcionCorta))
+                .ForMember(dest => dest.TipoDocumentoCodigoSunat, opt => opt.MapFrom(src => src.Conductor.TipoDocumento.CodigoSunat))
                 .ForMember(dest => dest.NumeroDocumento, opt => opt.MapFrom(src => src.Conductor.NumeroDocumento))
                 .ForMember(dest => dest.Nombres, opt => opt.MapFrom(src => src.Conductor.Nombres))
                 .ForMember(dest => dest.Apellidos, opt => opt.MapFrom(src => src.Conductor.Apellidos))

@@ -499,7 +499,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         RucEmpresaCurrier = env.RucEmpresaCurrier,
                         RazonSocialCurrier = env.RazonSocialCurrier,
                         RegistroMtcCurrier = env.RegistroMtcCurrier,
-                        IndicadorVehiculoConductor = env.IndicadorVehiculoConductor,
+                        IndicadorRegistroVehiculoConductor = env.IndicadorRegistroVehiculoConductor,
                         GuiaRemisionConductores = env.GuiaRemisionConductores.Select(cg => new GuiaRemisionConductor
                         {
                             GuiaRemisionConductorId = cg.GuiaRemisionConductorId,

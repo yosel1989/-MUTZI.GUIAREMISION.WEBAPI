@@ -46,8 +46,8 @@ public partial class GuiaRemisionDetalle
     [MaxLength(45)]
     public string? CodigoSubnacional { get; set; }
 
-    [Column("bien_normalizado")]
-    public bool BienNormalizado { get; set; } = false;
+    [Column("indicador_bien_normalizado")]
+    public bool IndicadorBienNormalizado { get; set; } = false;
 
     // Relaciones
 

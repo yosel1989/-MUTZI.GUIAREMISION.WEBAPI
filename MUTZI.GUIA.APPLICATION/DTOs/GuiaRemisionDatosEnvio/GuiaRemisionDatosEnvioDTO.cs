@@ -58,9 +58,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [SwaggerSchema("Devuelve en texto el registro MTC de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = true)]
         public string? RegistroMtcCurrier { get; set; }
 
-        [JsonPropertyName("indicador_vehiculo_conductor")]
+        [JsonPropertyName("indicador_registro_vehiculo_conductor")]
         [SwaggerSchema("Devuelve en booleano el indicador de vehículo y conductor: true o false", Nullable = true)]
-        public bool IndicadorVehiculoConductor { get; set; }
+        public bool IndicadorRegistroVehiculoConductor { get; set; }
 
         [JsonPropertyName("transportista_id")]
         public int? TransportistaId { get; set; }
@@ -71,6 +71,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
 
         [JsonPropertyName("indicador_transbordo_programado")]
         public bool IndicadorTransbordoProgramado { get; set; } = false;
+
+        [JsonPropertyName("indicador_retorno_vehiculo_envases_vacios")]
+        public bool IndicadorRetornoVehiculoEnvasesVacios { get; set; } = false;
+
+        [JsonPropertyName("indicador_retorno_vehiculo_vacio")]
+        public bool IndicadorRetornoVehiculoVacio { get; set; } = false;
+
+        [JsonPropertyName("indicador_traslado_total_dam")]
+        public bool IndicadorTrasladoTotalDam { get; set; } = false;
 
         [JsonPropertyName("transportista")]
         public TransportistaDTO? Transportista { get; set; }

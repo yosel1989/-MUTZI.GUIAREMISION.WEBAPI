@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Amazon.Auth.AccessControlPolicy;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
@@ -264,16 +265,29 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 // Indicadores
                 // Indicador deTransbordo Programado
                 // Indicador de traslado en vehículos de categoría M1 o L
+                // Indicador de retorno de vehículo con envases o embalajes vacíos
+                // Indicador de retorno de vehículo vacío
+                // Indicador de traslado total de la DAM o la DS
+                // Indicador de registro de vehículos y conductores del transportista (de acuerdo con el último párrafo del numeral 3.1. del artículo 3) de la RS N° 255-2015-SUNAT)
                 SpecialInstructions = new[]
                 {
                     guia.DatosEnvio?.IndicadorTransbordoProgramado == true
                         ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTransbordoProgramado" }
                         : null,
-                    guia.DatosEnvio?.IndicadorVehiculoConductor == true
-                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" }
-                        : null,
                     guia.DatosEnvio?.IndicadorTrasladoVehiculoCategoria == true
                         ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTrasladoVehiculoM1L" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorRetornoVehiculoEnvasesVacios == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorRetornoVehiculoEnvaseVacio" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorRetornoVehiculoVacio == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorRetornoVehiculoVacio" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorTrasladoTotalDam == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTrasladoTotalDAMoDS" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorRegistroVehiculoConductor == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" }
                         : null,
                 }
                 .Where(x => x != null)
@@ -283,20 +297,26 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     guia.DatosEnvio?.IndicadorTransbordoProgramado == true
                         ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTransbordoProgramado" }
                         : null,
-                    guia.DatosEnvio?.IndicadorVehiculoConductor == true
-                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" }
-                        : null,
                     guia.DatosEnvio?.IndicadorTrasladoVehiculoCategoria == true
                         ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTrasladoVehiculoM1L" }
-                        : null
+                        : null,
+                    guia.DatosEnvio?.IndicadorRetornoVehiculoEnvasesVacios == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorRetornoVehiculoEnvaseVacio" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorRetornoVehiculoVacio == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorRetornoVehiculoVacio" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorTrasladoTotalDam == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTrasladoTotalDAMoDS" }
+                        : null,
+                    guia.DatosEnvio?.IndicadorRegistroVehiculoConductor == true
+                        ? new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" }
+                        : null,
                 }
                 .Where(x => x != null)
                 .Select(y => new SpecialInstructions { _ = y._ })
                 .ToList() : null,
 
-                //SpecialInstructions = (guia.DatosEnvio?.IndicadorVehiculoConductor==false) ? null: new List<SpecialInstructions>{ new SpecialInstructions { _ = "SUNAT_Envio_IndicadorVehiculoConductoresTransp" } },
-                //SpecialInstructions = (guia.DatosEnvio?.IndicadorTrasladoVehiculoCategoria==false) ? null: new List<SpecialInstructions>{ new SpecialInstructions { _ = "SUNAT_Envio_IndicadorTrasladoVehiculoM1L" } },
-                
                 // Modalidad de traslado
                 ShipmentStage = new List<ShipmentStage>{ new ShipmentStage {
 
@@ -308,45 +328,41 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         StartDate = new List<StartDate>{ new StartDate { _ = guia.DatosEnvio?.FechaEnvio != null ? guia.DatosEnvio!.FechaEnvio! : guia.DatosEnvio!.FechaEntregaTransportista! }}
                     }},
                 }},
-                Delivery= new List<Delivery>{ new Delivery {
 
-                    //Origen
-                    DeliveryAddress = guia.Destino.Select(destino => new DeliveryAddress {
-                        ID = new List<ID>{ new ID { _ = destino.UbigeoId }},
-                        AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
-                            _ = guia.Destinatario.CodigoSunat,
-                            //Si es traslado, se coloca el ruc del remitente, ya que es traslado entre sucursales nomas; si es venta o compra, el numeroDoc del destinatario
-                            //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.NumeroDocumentoRemitente : guia.Destinatario.NumeroDocumento
-                            listID=guia.Destinatario.Ruc
-                        }},
-                        CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},
-                        CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = destino.Departamento }},
-                        CityName = new List<CityName>{ new CityName { _ = destino.Provincia }},
-                        District = new List<District>{ new District { _ = destino.Distrito }},
-                        AddressLine = new List<AddressLine>{ new AddressLine { Line = new List<Line> { new Line { _ = destino.Direccion }}}},
-                        Country = new List<Country>{ new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = destino.Pais } }}}
-                    }).ToList(),
+                // Dirección del punto de partida y dirección del punto de llegada, así como los datos del transportista (si el traslado se realiza en vehículos de terceros) y del conductor (si el traslado se realiza en vehículos de terceros o propios)
+                Delivery = new List<Delivery>{ new Delivery {
 
-                    // Destino
+                    // Dirección del punto de partida
                     Despatch = new List<Despatch>{ new Despatch {
-                        //Punto de partida
                          DespatchAddress = new List<DespatchAddress>{ new DespatchAddress {
+                            // Código ubigeo del punto de partida
                             ID = new List<ID>{ new ID { _ = guia.Origen.UbigeoId }},
-                             //Se valida si tipoTrasLado es compra o no. Asimismo, se valida que no sea nulo el codSunat.
-                             AddressTypeCode=guia.MotivoTrasladoId==(int)SunatCatalogoEnum.MotivoTraslado.COMPRA ? string.IsNullOrWhiteSpace(guia.Proveedor.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
-                                _ = guia.Proveedor.CodigoSunat,
-                                listID = guia.Proveedor.NumeroDocumento
-                             } } : //En caso que no sea compra, se valida el codSunat del remitente 
-                             string.IsNullOrWhiteSpace(guia.Remitente.CodigoSunat)?null: new List<AddressTypeCode>{new AddressTypeCode {
-                                _ =guia.Remitente.CodigoSunat,
-                                listID = guia.Remitente.Ruc
-                             }}
-                             ,
-                            CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Origen.Departamento } },
-                            CityName = new List<CityName>{ new CityName { _ = guia.Origen.Provincia }},
-                            District = new List<District>{ new District { _ = guia.Origen.Distrito}},
-                            CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _= guia.Origen.Departamento }},
+                            // Dirección completa y detallada de partida
                             AddressLine = new List<AddressLine>{ new AddressLine { Line = new List<Line> { new Line { _  = guia.Origen.Direccion }}}},
+                            // Se valida si tipoTrasLado es compra o no.
+                            // Asimismo, se valida que no sea nulo el codSunat.
+                            AddressTypeCode = ( guia.MotivoTrasladoCodigo == SunatCatalogoEnum.MotivoTraslado.COMPRA.GetDescription() ) ? string.IsNullOrWhiteSpace(guia.Proveedor.CodigoSunat) ? null : new List<AddressTypeCode>{ new AddressTypeCode {
+                                // El código sunat del proveedor , se coloca aquí porque en el caso de compra, el traslado se realiza desde el proveedor hacia la empresa, por lo tanto el codSunat del proveedor va en el punto de partida, y el codSunat del destinatario (cliente) va en el punto de llegada.
+                                _ = guia.Proveedor.CodigoSunat,
+                                // El número de documento del proveedor, se coloca aquí porque en el caso de compra, el traslado se realiza desde el proveedor hacia la empresa, por lo tanto el número de documento del proveedor va en el punto de partida, y el número de documento del destinatario (cliente) va en el punto de llegada.
+                                listID = guia.Proveedor.NumeroDocumento
+                            }} : 
+                            //En caso que no sea compra, se valida el codSunat del remitente 
+                            string.IsNullOrWhiteSpace(guia.Remitente.CodigoSunat) ? null: new List<AddressTypeCode>{new AddressTypeCode {
+                                // El código sunat del remitente , se coloca aquí porque en el caso que no sea compra, el traslado se realiza desde la empresa hacia otro punto, por lo tanto el codSunat del remitente va en el punto de partida, y el codSunat del destinatario (cliente) va en el punto de llegada.
+                                _ = guia.Remitente.CodigoSunat,
+                                // El número de documento del remitente, se coloca aquí porque en el caso que no sea compra, el traslado se realiza desde la empresa hacia otro punto, por lo tanto el número de documento del remitente va en el punto de partida, y el número de documento del destinatario (cliente) va en el punto de llegada.
+                                listID = guia.Remitente.Ruc
+                            }},
+                            // Urbanizacion
+                            CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Origen.Departamento } },
+                            // Provincia
+                            CityName = new List<CityName>{ new CityName { _ = guia.Origen.Provincia }},
+                            // Departamento
+                            CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _= guia.Origen.Departamento }},
+                            // Distrito
+                            District = new List<District>{ new District { _ = guia.Origen.Distrito}},
+                            // Codigo de Pais
                             Country = new List<Country>{ new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Origen.Pais } }}}
                          }},
                          //Edit: Aquí se va a colocar la autorización y el código que corresponde en caso la empresa haya sido autorizada, ya sea por DIGESA, DIGEMID,etc, para poder trasladar productos específicos.
@@ -360,39 +376,88 @@ namespace MUTZI.GUIA.APPLICATION.Services
                          //       }}
                          //   }}
                          //}}
-                    }}
+                    }},
+
+                    // Dirección del punto de llegada
+                    DeliveryAddress = guia.Destino.Select(destino => new DeliveryAddress {
+                        // Código ubigeo del punto de llegada
+                        ID = new List<ID>{ new ID { _ = destino.UbigeoId }},
+                        // Dirección completa y detallada de llegada
+                        AddressLine = new List<AddressLine>{ new AddressLine { Line = new List<Line> { new Line { _ = destino.Direccion }}}},
+
+                        AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodigoSunat) ? null : new List<AddressTypeCode>{ new AddressTypeCode {
+                            // Código de establecimiento de punto de llegada
+                            _ = guia.Destinatario.CodigoSunat,
+                            // Número de RUC asociado al punto de llegada
+                            //Si es traslado, se coloca el ruc del remitente, ya que es traslado entre sucursales nomas; si es venta o compra, el numeroDoc del destinatario
+                            //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.NumeroDocumentoRemitente : guia.Destinatario.NumeroDocumento
+                            listID = guia.Destinatario.Ruc
+                        }},
+                        // Urbanización
+                        CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},
+                        // Departamento
+                        CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = destino.Departamento }},
+                        // Provincia
+                        CityName = new List<CityName>{ new CityName { _ = destino.Provincia }},
+                        // Distrito
+                        District = new List<District>{ new District { _ = destino.Distrito }},
+                        // Código de país
+                        Country = new List<Country>{ new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = destino.Pais } }}}
+                    }).ToList(),
+
                 }},
             }};
 
 
             //////////if (guia.TipoTransporte == "PRIVADO")
             //////////{
-            //Conductor en Lista
+            // Conductor en Lista
+            // Datos del conductor (si el traslado se realiza en vehículos de terceros o propios)
             if (guia.DatosEnvio.GuiaRemisionConductores != null)
             {
-                root.DespatchAdvice[0].Shipment[0].ShipmentStage[0].DriverPerson = guia.DatosEnvio.GuiaRemisionConductores.Select(conductor => new DriverPerson
+                root.DespatchAdvice[0].Shipment[0].ShipmentStage[0].DriverPerson = guia.DatosEnvio.GuiaRemisionConductores.Select((conductor, i) => new DriverPerson
                 {
-                    ID = new List<ID> { new ID { _ = conductor.NumeroDocumento, schemeID = guia.getTipoCodigoDocumento(conductor.TipoDocumento, conductor.NumeroDocumento) } },
+                    // Tipo de Conductor (Principal o Secundario)
+                    JobTitle = new List<JobTitle> { new JobTitle { _ = i == 0 ? "Principal" : "Secundario" }},
+                    // Número y código SUNAT del tipo de documento de identidad del conductor
+                    ID = new List<ID> { new ID { 
+                        // Número de documento de identidad del conductor
+                        _ = conductor.NumeroDocumento, 
+                        // Código SUNAT del tipo de documento de identidad del conductor
+                        schemeID = conductor.TipoDocumentoCodigoSunat
+                    }},
+                    // Nombres del conductor
                     FirstName = new List<FirstName> { new FirstName { _ = conductor.Nombres } },
+                    // Apellidos del conductor
                     FamilyName = new List<FamilyName> { new FamilyName { _ = conductor.Apellidos } },
-                    JobTitle = new List<JobTitle> { new JobTitle { _ = conductor.JobTitle } },
+                    // Número de licencia de conducir del conductor
                     IdentityDocumentReference = new List<IdentityDocumentReference>{ new IdentityDocumentReference {
-                            ID = new List<ID> { new ID { _ = conductor.Licencia  }}
-                        }}
+                        ID = new List<ID> { new ID { _ = conductor.Licencia  }}
+                    }}
                 }).ToList();
             }
 
-
-            if (guia.DatosEnvio.GuiaRemisionUnidadesTransporte != null && guia.DatosEnvio.GuiaRemisionUnidadesTransporte.Any())
+            // Unidades de transporte en Lista
+            // Datos de las unidades de transporte (si el traslado se realiza en vehículos de terceros o propios)
+            if (guia.DatosEnvio.GuiaRemisionUnidadesTransporte != null && guia.DatosEnvio.GuiaRemisionUnidadesTransporte.Count() > 0)
             {
                 var transportes = guia.DatosEnvio.GuiaRemisionUnidadesTransporte.ToList();
                 var transportEquipments = new List<TransportEquipment>();
 
+                // Vehículo Principal
                 // Primer transporte como TransportEquipment principal
                 transportEquipments.Add(new TransportEquipment
                 {
-                    ID = new List<ID> { new ID { _ = transportes[0].Placa } },
-                    ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0].NroAutorizacion) ? null : new List<ShipmentDocumentReference>
+                    // Número de placa del vehículo
+                    ID = new List<ID> { new ID { _ = transportes[0]!.Placa } },
+                    // Tarjeta Única de Circulación Electrónica o Certificado de Habilitación vehicular
+                    ApplicableTransportMeans = guia.TipoTransporte != "PUBLICO" ? null : new List<ApplicableTransportMean>{ new ApplicableTransportMean {
+                        //Tarjeta  IS ES PRIVADO NO VA??
+                        RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = transportes[0]!.Tarjeta }}
+                    }},
+                    // Entidad emisora de la autorización especial -vehículo principal
+                    // Número de autorización especial del vehículo emitido por la entidad -vehículo principal
+                    ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0]!.NroAutorizacion) ? null : new List<ShipmentDocumentReference>
                         {
                             new ShipmentDocumentReference
                             {
@@ -400,15 +465,14 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 {
                                     new ID
                                     {
-                                        _ = transportes[0].NroAutorizacion,
-                                        schemeID = transportes[0].CodEmisorVehicular
+                                        // Número de autorización
+                                        _ = transportes[0]!.NroAutorizacion,
+                                        // Código de entidad emisora
+                                        schemeID = transportes[0]!.CodEmisorVehicular
                                     }
                                 }
                             }
                         },
-                    ApplicableTransportMeans = guia.TipoTransporte != "PUBLICO" ? null : new List<ApplicableTransportMean>{ new ApplicableTransportMean {//Tarjeta  IS ES PRIVADO NO VA??
-                        RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = transportes[0].Tarjeta }}
-                            }}
                 });
 
                 // Los siguientes como TransportEquipment con AttachedTransportEquipment
@@ -422,8 +486,16 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 {
                                     new AttachedTransportEquipment
                                     {
+                                        // Número de placa del vehículo
                                         ID = new List<ID> { new ID { _ = t.Placa } },
-                                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(t.NroAutorizacion)?null: new List<ShipmentDocumentReference>
+                                        // Tarjeta Única de Circulación Electrónica o Certificado de Habilitación vehicular
+                                        // Si el tipo de transporte no es público, no se registra la tarjeta, ya que la tarjeta es un requisito solo para transporte público.
+                                        ApplicableTransportMeans = guia.TipoTransporte != "PUBLICO" ? null : new List<ApplicableTransportMean>{ new ApplicableTransportMean {//Tarjeta  IS ES PRIVADO NO VA??
+                                            RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = t.Tarjeta }}
+                                        }},
+                                        // Entidad emisora de la autorización especial - vehículo secundario
+                                        // Número de autorización especial del vehículo emitido por la entidad - vehículo secundario
+                                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(t.NroAutorizacion) ? null : new List<ShipmentDocumentReference>
                                         {
                                             new ShipmentDocumentReference
                                             {
@@ -431,40 +503,96 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                                 {
                                                     new ID
                                                     {
+                                                        // Número de autorización
                                                         _ = t.NroAutorizacion,
+                                                        // Código de entidad emisora
                                                         schemeID = t.CodEmisorVehicular
                                                     }
                                                 }
                                             }
                                         },
-                                        ApplicableTransportMeans = guia.TipoTransporte!="PUBLICO"?null: new List<ApplicableTransportMean>{ new ApplicableTransportMean {//Tarjeta  IS ES PRIVADO NO VA??
-                                            RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = t.Tarjeta }}
-                                                }}
                                     }
                                 }
                         });
                     }
                 }
+
+                // Añadimos los TransportEquipment al root
                 root.DespatchAdvice[0].Shipment[0].TransportHandlingUnit = new List<TransportHandlingUnit>
+                {
+                    new TransportHandlingUnit
                     {
-                        new TransportHandlingUnit
-                        {
-                            TransportEquipment = transportEquipments
-                        }
-                    };
+                        TransportEquipment = transportEquipments
+                    }
+                };
             }
 
-            if (guia.TipoTransporte == "PUBLICO")
+            // Transportista
+            // Solo sí es PUBLICO y no se seleccionó el traslado en vehículos de categoría M1 o L, se registra la información del transportista; en caso contrario, no se registra la información del transportista.
+            if (guia.TipoTransporte == "PUBLICO" && !guia.DatosEnvio.IndicadorTrasladoVehiculoCategoria)
             {
                 root.DespatchAdvice[0].Shipment[0].ShipmentStage[0].CarrierParty = new List<CarrierParty>{ new CarrierParty {
-                        PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID = new List<ID> { new ID { _ = guia.DatosEnvio.RucEmpresaCurrier, schemeID=EspacioNombreGuiaRemision._DocumentType06 }}}},
-                        PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity {
-                            RegistrationName = new List<RegistrationName>{ new RegistrationName { _ = guia.DatosEnvio.RazonSocialCurrier }},
-                            //Condicional: Corresponde al número de registro del MTC del transportista.
-                            CompanyID = new List<CompanyID>{ new CompanyID { _ = guia.DatosEnvio.RegistroMtcCurrier ?? "NUMREGISTRANS" }}
-                        }},
-                   }};
+                    // Número y código SUNAT del tipo de documento de identidad del transportista
+                    PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID = new List<ID> { new ID { 
+                        // Número de documento de identidad del transportista
+                        _ = guia.DatosEnvio.Transportista!.NumeroDocumento, 
+                        // Código del tipo de documento de identidad del transportista, por defecto es RUC
+                        schemeID=EspacioNombreGuiaRemision._DocumentType06 
+                    }}}},
+                    // Número de Registro MTC
+                    PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity {
+                        // Apellidos y Nombres o denominación o razón social del transportista
+                        RegistrationName = new List<RegistrationName>{ new RegistrationName { _ = guia.DatosEnvio.Transportista.RazonSocial }},
+                        //Condicional: Corresponde al número de registro del MTC del transportista.
+                        CompanyID = new List<CompanyID>{ new CompanyID { _ = guia.DatosEnvio.Transportista.RegistroMTC ?? "NUMREGISTRANS" }}
+                    }},
+                }};
             }
+
+            // Bienes a trasladar
+            foreach (var (item, index) in guia.Productos.Select((value, i) => (value, i)))
+            {
+                root.DespatchAdvice[0].DespatchLine.Add(new DespatchLine
+                {
+                    // Número de orden del ítem
+                    ID = new List<ID_Int> { new ID_Int { _ = index + 1 } },
+                    // Descripción unidad medida
+                    Note = new List<Note> { new Note { _ = string.IsNullOrWhiteSpace(item.DescripcionUM) ? "UNIDAD" : item.DescripcionUM } },
+                    // Cantidad del bien y código de unidad de medida SUNAT
+                    DeliveredQuantity = new List<DeliveredQuantity>
+                    {
+                        new DeliveredQuantity { 
+                            // Cantidad del bien a trasladar
+                            _ = item.Cantidad, 
+                            // Código de unidad de medida SUNAT, si no se proporciona se asigna "ZZ" que significa "Unidad de medida sin especificar"
+                            unitCode = string.IsNullOrWhiteSpace(item.CodigoUm) ? "ZZ" : item.CodigoUm
+                        }
+                    },
+                    Item = new List<Item> { new Item {
+                        // Descripción detallada del bien
+                        Description = new List<Description>{ new Description { _ = item.Descripcion }},
+                        SellersItemIdentification = new List<SellersItemIdentification>{new SellersItemIdentification {
+                            // Código del bien
+                            ID = new List<ID>{new ID { _ = item.Codigo }}
+                        }},
+                        // Código de clasificación del bien según el catálogo de la SUNAT (Se registra solo si el código de clasificación del bien según el catálogo de la SUNAT fue proporcionado, de lo contrario no se registra este bloque)
+                        CommodityClassification = string.IsNullOrWhiteSpace(item.CodigoSunat) ? null : new List<CommodityClassification>{ new CommodityClassification {
+                            // Código de clasificación del bien según el catálogo de la SUNAT
+                            ItemClassificationCode = new List<ItemClassificationCode>{ new ItemClassificationCode {
+                                _ = item.CodigoSunat
+                            }}
+                        }},
+                        // Código GTIN del bien (Se registra solo si el código GTIN del bien fue proporcionado, de lo contrario no se registra este bloque)
+                        StandardItemIdentification = string.IsNullOrWhiteSpace(item.Gtin) ? null : new List<StandardItemIdentification>{ new StandardItemIdentification {
+                            // Código GTIN del bien
+                            ID = new List<ID>{ new ID { _ = item.Gtin } }
+                        }}
+                    }},
+
+                    OrderLineReference = new List<OrderLineReference> { new OrderLineReference { LineID = new List<LineID> { new LineID { _ = index + 1 } } } },
+                });
+            }
+
 
             for (var i = 0; i < guia.Productos.Count; i++)
             {

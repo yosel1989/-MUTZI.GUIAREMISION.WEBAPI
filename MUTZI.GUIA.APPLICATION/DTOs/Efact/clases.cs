@@ -85,7 +85,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     {
         public List<ID> ID { get; set; }
 
-        public List<AddressTypeCode> AddressTypeCode { get; set; }
+        public List<AddressTypeCode>? AddressTypeCode { get; set; }
 
         public List<CitySubdivisionName> CitySubdivisionName { get; set; }
         public List<CityName> CityName { get; set; }
@@ -121,7 +121,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     public class DespatchAddress
     {
         public List<ID> ID { get; set; }
-        public List<AddressTypeCode> AddressTypeCode { get; set; }
+        public List<AddressTypeCode>? AddressTypeCode { get; set; }
         public List<CitySubdivisionName> CitySubdivisionName { get; set; }
         public List<CityName> CityName { get; set; }
         public List<CountrySubentity> CountrySubentity { get; set; }
@@ -231,7 +231,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
 
     public class ID
     {
-        public string _ { get; set; }
+        public string? _ { get; set; }
         public string? schemeID { get; set; }
     }
     public class ItemClassificationCode
@@ -269,8 +269,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     {
         public List<Description> Description { get; set; }
         public List<SellersItemIdentification> SellersItemIdentification { get; set; }
-        public List<CommodityClassification> CommodityClassification { get; set; }
-        public List<StandardItemIdentification> StandardItemIdentification { get; set; }
+        public List<CommodityClassification>? CommodityClassification { get; set; }
+        public List<StandardItemIdentification>? StandardItemIdentification { get; set; }
+        public List<StandardItemIdentification>? StandardItemIdentification { get; set; }
     }
 
     public class Line
@@ -362,6 +363,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         public List<ItemClassificationCode> ItemClassificationCode { get; set; }
     }
     public class StandardItemIdentification
+    {
+        public List<ID> ID { get; set; }
+    }
+
+    public class AdditionalItemProperty
     {
         public List<ID> ID { get; set; }
     }
@@ -474,15 +480,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     public class TransportEquipment
     {
         public List<ID> ID { get; set; }
-        public List<ShipmentDocumentReference> ShipmentDocumentReference { get; set; }
-        public List<ApplicableTransportMean> ApplicableTransportMeans { get; set; }
+        public List<ShipmentDocumentReference>? ShipmentDocumentReference { get; set; }
+        public List<ApplicableTransportMean>? ApplicableTransportMeans { get; set; }
         public List<AttachedTransportEquipment> AttachedTransportEquipment { get; set; }
     }
     public class AttachedTransportEquipment
     {
         public List<ID> ID { get; set; }
-        public List<ShipmentDocumentReference> ShipmentDocumentReference { get; set; }
-        public List<ApplicableTransportMean> ApplicableTransportMeans { get; set; }
+        public List<ShipmentDocumentReference>? ShipmentDocumentReference { get; set; }
+        public List<ApplicableTransportMean>? ApplicableTransportMeans { get; set; }
     }
 
     public class TransportHandlingUnit
