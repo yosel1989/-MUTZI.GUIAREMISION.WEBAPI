@@ -7,10 +7,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Transportista
     [SwaggerSchema("Recibe un objeto remite_transportista para actualizar", Nullable = false)]
     public class TransportistaUpdateDTO
     {
-        [JsonPropertyName("tipo_documento_id")]
+        /*[JsonPropertyName("tipo_documento_id")]
         [SwaggerSchema("Recibe un número, aquí se coloca el id del tipo de documento del REMITE_TRANSPORTISTA. Solo recibe los siguientes valores: DNI, CE, RUC y PASAPORTE", Nullable = false)]
         [Required]
-        public int? TipoDocumentoId { get; set; }
+        public int? TipoDocumentoId { get; set; }*/
 
         [JsonPropertyName("numero_documento")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el número de documento del REMITE_TRANSPORTISTA.", Nullable = false)]

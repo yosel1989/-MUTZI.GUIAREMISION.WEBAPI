@@ -1,5 +1,4 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace MUTZI.GUIA.APPLICATION.Helpers
@@ -75,7 +74,7 @@ namespace MUTZI.GUIA.APPLICATION.Helpers
                 return new ValidationResult("Objeto de validación inválido.");
 
             // Obtener propiedad 'TipoDocRef' por reflexión para ser compatible con varios DTOs
-            var tipoProp = instance.GetType().GetProperty("TipoDocRef");
+            var tipoProp = instance.GetType().GetProperty("TipoDocumentoReferencia");
             var tipoDocRef = tipoProp?.GetValue(instance) as string;
             var numeroDocRef = value as string;
 

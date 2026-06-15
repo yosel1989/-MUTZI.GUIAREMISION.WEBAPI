@@ -44,18 +44,6 @@ public partial class GuiaRemisionDatoEnvio
     [Column("transportista_id")]
     public int? TransportistaId { get; set; } = null;
 
-    [Column("ruc_empresa_currier")]
-    [MaxLength(15)]
-    public string? RucEmpresaCurrier { get; set; }
-
-    [Column("razon_social_currier")]
-    [MaxLength(100)]
-    public string? RazonSocialCurrier { get; set; }
-
-    [Column("registro_mtc_currier")]
-    [MaxLength(20)]
-    public string? RegistroMtcCurrier { get; set; }
-
     [Column("indicador_registro_vehiculo_conductor")]
     public bool IndicadorRegistroVehiculoConductor { get; set; } = false;
 
@@ -80,7 +68,7 @@ public partial class GuiaRemisionDatoEnvio
     public virtual GuiaRemision Guia { get; set; } = null!;
 
     [ForeignKey(nameof(TransportistaId))]
-    public virtual Transportista Transportista { get; set; } = null!;
+    public virtual Transportista? Transportista { get; set; } = null!;
 
     public virtual ICollection<GuiaRemisionUnidadTransporte> GuiaRemisionUnidadesTransporte { get; set; } = new List<GuiaRemisionUnidadTransporte>();
 

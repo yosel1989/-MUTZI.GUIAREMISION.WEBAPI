@@ -6,6 +6,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.DTOs.Transportista;
 using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
@@ -26,6 +27,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         private readonly IGuiaRemisionHistorialRepository _guiaRemisionHistorialRepository;
         private readonly IEstablecimientoRepository _establecimientoRepository;
         private readonly IMotivoTrasladoRepository _motivoTrasladoRepository;
+        private readonly ITransportistaRepository _transportistaRepository;
         private readonly IProveedorRepository _proveedorRepository;
         private readonly IVentaConfigRepository _ventaConfigRepository;
         private readonly IGuiaRemitenteUBLService _guiaRemitenteUBLService;
@@ -40,6 +42,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             IEnvioService envioService,
             IVentaConfigRepository ventaConfigRepository,
             IMotivoTrasladoRepository motivoTrasladoRepository,
+            ITransportistaRepository transportistaRepository,
             IEstablecimientoRepository establecimientoRepository,
             IProveedorRepository proveedorRepository,
             IMapper mapper,
@@ -53,6 +56,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _envioService = envioService;
             _establecimientoRepository = establecimientoRepository;
             _motivoTrasladoRepository = motivoTrasladoRepository;
+            _transportistaRepository = transportistaRepository;
             _proveedorRepository = proveedorRepository;
             _ventaConfigRepository = ventaConfigRepository;
             _mapper = mapper;
@@ -244,6 +248,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var currentUser = _authService.CurrentUser();
                     // Mapear todos los objetos
                     var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(dto.MotivoTrasladoId);
+                    var transportista = await _transportistaRepository.GetByIdAsync(dto.DatosEnvio.TransportistaId ?? 0);
                     var remitente = await _establecimientoRepository.GetByIdAsync(dto.RemitenteId);
                     var destinatario = await _establecimientoRepository.GetByIdAsync(dto.DestinatarioId);
                     var destinatarioEmails = dto.DestinatarioEmail.Select(p => _mapper.Map<GuiaRemisionEmailDestinatario>(p)).ToList();
@@ -252,6 +257,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var transporte = dto.DatosEnvio.TransporteId?.Select(p => _mapper.Map<GuiaRemisionUnidadTransporte>(p)).ToList() ?? [];
                     var guiaRemision = _mapper.Map<GuiaRemision>(dto);
                     var datosEnvio = _mapper.Map<GuiaRemisionDatoEnvio>(dto.DatosEnvio);
+                    dto.DatosEnvio.Transportista = transportista != null ? _mapper.Map<TransportistaDTO>(transportista) : null;
                     var origen = _mapper.Map<GuiaRemisionOrigen>(dto.Origen);
                     var destino = dto.Destino.Select(p => _mapper.Map<GuiaRemisionDestino>(p)).ToList();
                     var detalles = dto.Productos.Select(p => _mapper.Map<GuiaRemisionDetalle>(p)).ToList();
@@ -262,6 +268,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     if (remitente is null) throw new Exception("No existe este remitente.");
                     if (destinatario is null) throw new Exception("No existe este destinatario.");
                     if (ventaConfig is null) throw new Exception($"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");
+
+                    dto.ValidarBienesNormalizados();
 
                     var (esValido, error) = ValidarDatosGuiaRemitente(dto, ruc, remitente, destinatario, ventaConfig);
                     if (!esValido)
@@ -371,9 +379,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     if (!guia.DatosEnvio.IndicadorTrasladoVehiculoCategoria)
                     {
+                        if (guia.DatosEnvio.Transportista == null) { return (false, "Si tipoTransporte es PUBLICO, entonces debes seleccionar una empresa transportista."); }
                         if (guia.DatosEnvio.Transportista.NumeroDocumento.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
-                        if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RazonSocial)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
-                        if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RegistroMTC)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }
+                        //if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RazonSocial)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
+                        //if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RegistroMTC)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }
                     }
                 }
                 //if (guia.)

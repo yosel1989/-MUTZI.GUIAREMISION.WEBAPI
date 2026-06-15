@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
 {
@@ -156,10 +157,19 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
 
     public class DespatchLine
     {
+        [XmlElement(Order = 1)]
         public List<ID_Int> ID { get; set; }
+
+        [XmlElement(Order = 2)]
         public List<Note> Note { get; set; }
+
+        [XmlElement(Order = 3)]
         public List<DeliveredQuantity> DeliveredQuantity { get; set; }
+
+        [XmlElement(Order = 4)]
         public List<OrderLineReference> OrderLineReference { get; set; }
+
+        [XmlElement(Order = 5)]
         public List<Item> Item { get; set; }
     }
 
@@ -268,10 +278,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     public class Item
     {
         public List<Description> Description { get; set; }
-        public List<SellersItemIdentification> SellersItemIdentification { get; set; }
+        public List<SellersItemIdentification>? SellersItemIdentification { get; set; }
+        public List<StandardItemIdentification>? StandardItemIdentification { get; set; }
         public List<CommodityClassification>? CommodityClassification { get; set; }
-        public List<StandardItemIdentification>? StandardItemIdentification { get; set; }
-        public List<StandardItemIdentification>? StandardItemIdentification { get; set; }
+        public List<AdditionalItemProperty>? AdditionalItemProperty { get; set; }
     }
 
     public class Line
@@ -290,6 +300,16 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
     }
 
     public class Name
+    {
+        public string _ { get; set; }
+    }
+
+    public class NameCode
+    {
+        public string _ { get; set; }
+    }
+
+    public class Value
     {
         public string _ { get; set; }
     }
@@ -369,7 +389,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
 
     public class AdditionalItemProperty
     {
-        public List<ID> ID { get; set; }
+        public List<Name> Name { get; set; }
+        public List<NameCode> NameCode { get; set; }
+        public List<Value> Value { get; set; }
     }
 
     public class Shipment

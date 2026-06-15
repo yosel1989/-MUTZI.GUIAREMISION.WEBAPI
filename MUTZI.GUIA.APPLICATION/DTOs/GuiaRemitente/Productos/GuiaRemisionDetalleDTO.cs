@@ -1,5 +1,4 @@
-﻿using Mysqlx.Expr;
-using Swashbuckle.AspNetCore.Annotations;
+﻿using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
@@ -18,6 +17,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         [JsonPropertyName("cantidad")]
         [SwaggerSchema("Devuelve en texto la Cantidad del producto.", Nullable = false)]
         public string Cantidad { get; set; }
+
+        [JsonPropertyName("unidad_medida_id")]
+        [SwaggerSchema("Devuelve en número, id de la unidad de medida", Nullable = false)]
+        public int UnidadMedidaId { get; set; }
+
+        [JsonPropertyName("unidad_medida")]
+        [SwaggerSchema("Devuelve en texto, abreviatura de la unidad de medida", Nullable = false)]
+        public string UnidadMedida { get; set; }
 
         [JsonPropertyName("codigo_um")]
         [SwaggerSchema("Devuelve en texto la unidad de medida del producto. Ejm: KGM, PK, NIU, etc.", Nullable = false)]
@@ -40,7 +47,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         public string? Gtin { get; set; }
 
         [JsonPropertyName("codigo_subnacional")]
-        [SwaggerSchema("Devuelve en texto, el código subnacional del producto solo sí se registró.", Nullable = true)]
+        [SwaggerSchema("Devuelve en texto, el código subnacional arancelario del producto solo sí se registró.", Nullable = true)]
         public string? CodigoSubnacional { get; set; }
 
         [JsonPropertyName("indicador_bien_normalizado")]
@@ -51,17 +58,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         [SwaggerSchema("Devuelve en texto la descripción de la unidad de medida del producto. Ejm: Kilogramo, Paquete, Unidad, etc.", Nullable = false)]
         public string DescripcionUM { get; set; }
 
-        [JsonPropertyName("unidad_medida_id")]
-        [SwaggerSchema("Devuelve en número, id de la unidad de medida", Nullable = false)]
-        public int UnidadMedidaId { get; set; }
-
-        [JsonPropertyName("unidad_medida")]
-        [SwaggerSchema("Devuelve en texto, abreviatura de la unidad de medida", Nullable = false)]
-        public string UnidadMedida { get; set; }
-
-
-
-
+        
         public string TipoGtin()
         {
             switch (this.Gtin?.Length)

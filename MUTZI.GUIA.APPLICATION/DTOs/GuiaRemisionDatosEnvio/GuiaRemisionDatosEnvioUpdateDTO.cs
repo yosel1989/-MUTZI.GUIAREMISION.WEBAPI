@@ -46,21 +46,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [Required]
         public string CodigoUm { get; set; } = "KGM";
 
-        [JsonPropertyName("ruc_empresa_currier")]
-        [SwaggerSchema("Recibe un texto y es el ruc de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = false)]
-        [MaxLength(11)]
-        public string? RucEmpresaCurrier { get; set; }
-
-        [JsonPropertyName("razon_social_currier")]
-        [SwaggerSchema("Recibe un texto y es la razón social de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = false)]
-        [MaxLength(200)]
-        public string? RazonSocialCurrier { get; set; }
-
-        [JsonPropertyName("registro_mtc_currier")]
-        [SwaggerSchema("Recibe un texto y es el registro MTC de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = false)]
-        [MaxLength(30)]
-        public string? RegistroMtcCurrier { get; set; }
-
         [JsonPropertyName("indicador_vehiculo_conductor")]
         [SwaggerSchema("Recibe un booleano, este campo se marca como 'true' si 'tipo_transporte' es 'PUBLICO' y existen registros de vehículos y conductores.", Nullable = false)]
         public bool IndicadorVehiculoConductor { get; set; }

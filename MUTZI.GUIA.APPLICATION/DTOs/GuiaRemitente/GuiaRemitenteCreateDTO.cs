@@ -163,5 +163,22 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
                 return EspacioNombreGuiaRemision._DocumentType07;
             throw new System.Exception("Tipo de documento de identidad no especificado, coloque entre: DNI, CE, RUC, PASAPORTE");
         }
+
+
+        public void ValidarBienesNormalizados()
+        {
+            var tieneBienesNormalizados = this.Productos.Any(x => x.IndicadorBienNormalizado == true);
+            if(tieneBienesNormalizados && (this.DocRelacionado is null || this.DocRelacionado?.Count == 0) )
+            {
+                throw new System.Exception("Debe añadir el documento relacionado para el bien normalizado.");
+            }
+            else
+            {
+                if( !this.DocRelacionado!.Any(x => x.TipoDocumentoReferencia == "FACTURA") )
+                {
+                    throw new System.Exception("Debe añadir una factura o documento de sustento para el bien normalizado.");
+                }
+            }
+        }
     }
 }

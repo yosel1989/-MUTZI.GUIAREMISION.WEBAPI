@@ -43,12 +43,12 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                     // Doc. de referencia (Factura/Boleta)
                     //Agregar en lista los documentos relacionados
                     AdditionalDocumentReference = guia.DocRelacionados.Select(docRelacionado => new AdditionalDocumentReference {
-                        ID = new List<ID>{ new ID { _ = docRelacionado.NumeroDocRef }},
+                        ID = new List<ID>{ new ID { _ = docRelacionado.NumeroDocumentoReferencia }},
                         DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode { _ = docRelacionado.DocumentoAdicinalTipo() }},
-                        DocumentType=new List<DocumentType>{new DocumentType { _=docRelacionado.TipoDocRef} },
+                        DocumentType=new List<DocumentType>{new DocumentType { _=docRelacionado.TipoDocumentoReferencia} },
                         IssuerParty = new List<IssuerParty>{ new IssuerParty {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
-                                ID = new List<ID>{ new ID { _ = docRelacionado.RucDocRef , schemeID = EspacioNombreGuiaRemision._DocumentType06 }}
+                                ID = new List<ID>{ new ID { _ = docRelacionado.RucDocumentoReferencia , schemeID = EspacioNombreGuiaRemision._DocumentType06 }}
                             }}
                         }}
                     }).ToList(),

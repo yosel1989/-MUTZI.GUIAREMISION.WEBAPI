@@ -17,21 +17,21 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado
 
         [JsonPropertyName("tipo_doc_ref")]
         [SwaggerSchema("Devuelve un texto, es el tipo de documento vinculado como referencia en la guía de remisión, los tipos definidos son: FACTURA y BOLETA", Nullable = false)]
-        public string TipoDocRef { get; set; }
+        public string TipoDocumentoReferencia { get; set; }
 
         [JsonPropertyName("numero_doc_ref")]
         [SwaggerSchema("Devuelve un texto, aquí se hace referencia al numero del documento vinculado en la guía de remisión. Ejm: F025-00000003", Nullable = false)]
-        public string NumeroDocRef { get; set; }
+        public string NumeroDocumentoReferencia { get; set; }
 
         [JsonPropertyName("ruc_doc_ref")]
         [SwaggerSchema("Devuelve un texto, aquí se coloca el ruc del documento vinculado como referencia en la guía de remisión.", Nullable = false)]
-        public string RucDocRef { get; set; }
+        public string RucDocumentoReferencia { get; set; }
         public string DocumentoAdicinalTipo()
         {
-            if (string.IsNullOrEmpty(this.TipoDocRef))
+            if (string.IsNullOrEmpty(this.TipoDocumentoReferencia))
                 throw new System.Exception("tipo_doc_ref no puede estar vacío al generar el tipo de documento adicional.");
 
-            switch (this.TipoDocRef.ToUpper())
+            switch (this.TipoDocumentoReferencia.ToUpper())
             {
                 case "FACTURA":
                     return "01"; // Factura

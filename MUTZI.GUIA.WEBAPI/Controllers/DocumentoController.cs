@@ -11,7 +11,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class DocumentoController : ControllerBase
     {
         private readonly IVentaConfigService _ventaConfigService;

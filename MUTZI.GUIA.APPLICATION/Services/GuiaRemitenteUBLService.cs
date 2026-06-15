@@ -59,20 +59,20 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     //Agregar en lista los documentos relacionados (FACTURA Y BOLETA por el momento, Catalogo N° 61)
                     AdditionalDocumentReference = guia.DocRelacionados.Select(docRelacionado => new AdditionalDocumentReference {
                         // Número del documento relacionado
-                        ID = new List<ID>{ new ID { _ = docRelacionado.NumeroDocRef }},
+                        ID = new List<ID>{ new ID { _ = docRelacionado.NumeroDocumentoReferencia }},
 
                         // Código del tipo de documento relacionado
                         DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode { _ = docRelacionado.DocumentoAdicinalTipo() }},
                         
                         // Descripción del tipo de documento relacionado
-                        DocumentType=new List<DocumentType>{new DocumentType { _=docRelacionado.TipoDocRef} },
+                        DocumentType=new List<DocumentType>{new DocumentType { _=docRelacionado.TipoDocumentoReferencia} },
 
                         // Número de RUC del emisor del documento relacionado
                         IssuerParty = new List<IssuerParty>{ new IssuerParty {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
                                 ID = new List<ID>{ new ID { 
                                     // Número de documento
-                                    _ = docRelacionado.RucDocRef , 
+                                    _ = docRelacionado.RucDocumentoReferencia , 
                                     // Tipo de documento
                                     schemeID = EspacioNombreGuiaRemision._DocumentType06 
                                 }}
@@ -568,10 +568,27 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             unitCode = string.IsNullOrWhiteSpace(item.CodigoUm) ? "ZZ" : item.CodigoUm
                         }
                     },
+                    OrderLineReference = new List<OrderLineReference> { new OrderLineReference { LineID = new List<LineID> { new LineID { _ = index + 1 } } } },
+                    // Producto
                     Item = new List<Item> { new Item {
+
+                     
                         // Descripción detallada del bien
                         Description = new List<Description>{ new Description { _ = item.Descripcion }},
-                        SellersItemIdentification = new List<SellersItemIdentification>{new SellersItemIdentification {
+                        // Código GTIN del bien (Se registra solo si el código GTIN del bien fue proporcionado, de lo contrario no se registra este bloque)
+                        // Código GTIN solo puede tener longitud de 8, 12, 13 o 14 caracteres, si el código GTIN proporcionado no cumple con esta validación, no se registra el bloque de StandardItemIdentification
+                        StandardItemIdentification = string.IsNullOrWhiteSpace(item.Gtin) ? null : new List<StandardItemIdentification>{ new StandardItemIdentification {
+                            // Código GTIN del bien
+                            ID = new List<ID>{ new ID { 
+                                // Código de producto GTIN
+                                _ = item.Gtin,
+                                // Tipo de estructura GTIN
+                                // Varia según la longitud del código GTIN: GTIN-8 para códigos de 8 caracteres, GTIN-12 para códigos de 12 caracteres, GTIN-13 para códigos de 13 caracteres y GTIN-14 para códigos de 14 caracteres
+                                schemeID = item.TipoGtin()
+                            }}
+                        }},
+                        // Código del bien asignado por el vendedor (Se registra solo si el código del bien asignado por el vendedor fue proporcionado, de lo contrario no se registra este bloque)
+                        SellersItemIdentification = string.IsNullOrWhiteSpace(item.Codigo) ? null : new List<SellersItemIdentification>{new SellersItemIdentification {
                             // Código del bien
                             ID = new List<ID>{new ID { _ = item.Codigo }}
                         }},
@@ -582,36 +599,67 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 _ = item.CodigoSunat
                             }}
                         }},
-                        // Código GTIN del bien (Se registra solo si el código GTIN del bien fue proporcionado, de lo contrario no se registra este bloque)
-                        StandardItemIdentification = string.IsNullOrWhiteSpace(item.Gtin) ? null : new List<StandardItemIdentification>{ new StandardItemIdentification {
-                            // Código GTIN del bien
-                            ID = new List<ID>{ new ID { _ = item.Gtin } }
-                        }}
+                        // Atributos adicionales del bien, bien normalizado, aranca, etc. (Se registra solo si el bien es un bien normalizado, de lo contrario no se registra este bloque)
+                        AdditionalItemProperty = new[]
+                        {
+                            !string.IsNullOrWhiteSpace(item.CodigoSubnacional)
+                                ? new AdditionalItemProperty
+                                {
+                                    // Nombre del atributo adicional del bien, en este caso se registra "INDICADOR_BIEN_NORMALIZADO" para indicar que el bien es un bien normalizado.
+                                    Name = new List<Name> { new Name { _ = "Partida arancelaria" } },
+                                    // Código del concepto del atributo adicional del bien, en este caso se registra "7022" para indicar que el atributo adicional corresponde al indicador de bien normalizado según el catálogo de la SUNAT.
+                                    NameCode = new List<NameCode> { new NameCode { _ = "7020" } },
+                                    // Valor del atributo adicional del bien, en este caso se registra "1" para indicar que el bien es un bien normalizado.
+                                    Value = new List<Value> { new Value { _ = item.CodigoSubnacional } }
+                                }
+                                : null,
+
+                            item.IndicadorBienNormalizado == true
+                                ? new AdditionalItemProperty
+                                {
+                                    // Nombre del atributo adicional del bien, en este caso se registra "INDICADOR_BIEN_NORMALIZADO" para indicar que el bien es un bien normalizado.
+                                    Name = new List<Name> { new Name { _ = "Indicador de bien normalizado" } },
+                                    // Código del concepto del atributo adicional del bien, en este caso se registra "7022" para indicar que el atributo adicional corresponde al indicador de bien normalizado según el catálogo de la SUNAT.
+                                    NameCode = new List<NameCode> { new NameCode { _ = "7022" }},
+                                    // Valor del atributo adicional del bien, en este caso se registra "1" para indicar que el bien es un bien normalizado.
+                                    Value = new List<Value> { new Value { _ = "1" } }
+                                }
+                                : null,
+
+                        }
+                        .Where(x => x != null)
+                        .Select(y => new AdditionalItemProperty { Name = y.Name, NameCode = y.NameCode, Value = y.Value })
+                        .ToList().Count() > 0 ? new[]
+                        {
+                            !string.IsNullOrWhiteSpace(item.CodigoSubnacional)
+                                ? new AdditionalItemProperty
+                                {
+                                    // Nombre del atributo adicional del bien, en este caso se registra "INDICADOR_BIEN_NORMALIZADO" para indicar que el bien es un bien normalizado.
+                                    Name = new List<Name> { new Name { _ = "Partida arancelaria" } },
+                                    // Código del concepto del atributo adicional del bien, en este caso se registra "7022" para indicar que el atributo adicional corresponde al indicador de bien normalizado según el catálogo de la SUNAT.
+                                    NameCode = new List<NameCode> { new NameCode { _ = "7020" } },
+                                    // Valor del atributo adicional del bien, en este caso se registra "1" para indicar que el bien es un bien normalizado.
+                                    Value = new List<Value> { new Value { _ = item.CodigoSubnacional } }
+                                }
+                                : null,
+
+                            item.IndicadorBienNormalizado == true
+                                ? new AdditionalItemProperty
+                                {
+                                    // Nombre del atributo adicional del bien, en este caso se registra "INDICADOR_BIEN_NORMALIZADO" para indicar que el bien es un bien normalizado.
+                                    Name = new List<Name> { new Name { _ = "Indicador de bien normalizado" } },
+                                    // Código del concepto del atributo adicional del bien, en este caso se registra "7022" para indicar que el atributo adicional corresponde al indicador de bien normalizado según el catálogo de la SUNAT.
+                                    NameCode = new List<NameCode> { new NameCode { _ = "7022" }},
+                                    // Valor del atributo adicional del bien, en este caso se registra "1" para indicar que el bien es un bien normalizado.
+                                    Value = new List<Value> { new Value { _ = "1" } }
+                                }
+                                : null,
+                        }
+                        .Where(x => x != null)
+                        .Select(y => new AdditionalItemProperty { Name = y.Name, NameCode = y.NameCode, Value = y.Value })
+                        .ToList() : null,
                     }},
 
-                    OrderLineReference = new List<OrderLineReference> { new OrderLineReference { LineID = new List<LineID> { new LineID { _ = index + 1 } } } },
-                });
-            }
-
-
-            for (var i = 0; i < guia.Productos.Count; i++)
-            {
-                var item = guia.Productos[i];
-                root.DespatchAdvice[0].DespatchLine.Add(new DespatchLine
-                {
-                    ID = new List<ID_Int> { new ID_Int { _ = i + 1 } },
-                    Note = new List<Note> { new Note { _ = string.IsNullOrWhiteSpace(item.DescripcionUM) ? "UNIDAD" : item.DescripcionUM } },
-                    DeliveredQuantity = new List<DeliveredQuantity>
-                    {
-                        new DeliveredQuantity { _ = item.Cantidad, unitCode = string.IsNullOrWhiteSpace(item.CodigoUm) ? "ZZ" : item.CodigoUm}
-                    },
-                    OrderLineReference = new List<OrderLineReference> { new OrderLineReference { LineID = new List<LineID> { new LineID { _ = i + 1 } } } },
-                    Item = new List<Item> { new Item {
-                        Description = new List<Description>{ new Description { _ = item.Descripcion }},
-                        SellersItemIdentification = new List<SellersItemIdentification>{new SellersItemIdentification {
-                            ID = new List<ID>{new ID { _ = item.Codigo }}
-                        }}
-                    }}
                 });
             }
 

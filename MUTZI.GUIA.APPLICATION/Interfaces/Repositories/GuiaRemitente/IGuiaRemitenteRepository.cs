@@ -16,7 +16,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task <(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(
             Establecimiento remitente,
             Establecimiento destinatario,
-            Proveedor proveedor,
+            Proveedor? proveedor,
             List<GuiaRemisionConductor> conductor,
             List<GuiaRemisionUnidadTransporte> transporte,
             GuiaRemision guiaRemision,

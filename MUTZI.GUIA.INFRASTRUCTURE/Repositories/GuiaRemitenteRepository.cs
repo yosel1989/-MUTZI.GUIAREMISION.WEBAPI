@@ -4,6 +4,8 @@ using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 using MUTZI.GUIA.DOMAIN.Enums;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -310,6 +312,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 var guiaRemision = await _context.GuiaRemision
                 .Include(g => g.MotivoTraslado)
+
                 .Include(g => g.Remitente)
                     .ThenInclude(h => h.Ubigeo)
                 .Include(g => g.Destinatario)
@@ -368,7 +371,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //.Include(g => g.GuiaDetalles)
                 //.Include(g => g.DatosEnvios)
                 //.Include(g => g.Origens)
-                //.Include(g => g.Destinos)
+                .Include(g => g.DocRelacionados)
                 .Where(g => g.GuiaRemisionId == id)
                 .Select(g => new GuiaRemision
                 {
@@ -471,16 +474,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     GuiaDetalles = g.GuiaDetalles.Select(det => new GuiaRemisionDetalle
                     {
                         GuiaRemisionDetalleId = det.GuiaRemisionDetalleId,
+                        GuiaRemisionId = det.GuiaRemisionId,
+                        Cantidad = det.Cantidad,
+                        UnidadMedidaId = det.UnidadMedidaId,
+                        CodigoUm = det.CodigoUm,
                         Codigo = det.Codigo,
                         Descripcion = det.Descripcion,
-                        Cantidad = det.Cantidad,
-                        CodigoUm = det.CodigoUm,
-                        UnidadMedida = new UnidadMedida
-                        {
-                            DescripcionCorta = det.UnidadMedida.DescripcionCorta,
-                            Descripcion = det.UnidadMedida.Descripcion,
-                            CodigoSunat = det.UnidadMedida.CodigoSunat
-                        }
+                        CodigoSunat = det.CodigoSunat,
+                        Gtin = det.Gtin,
+                        CodigoSubnacional = det.CodigoSubnacional,
+                        IndicadorBienNormalizado = det.IndicadorBienNormalizado,
+                        UnidadMedida = det.UnidadMedida
                     }).ToList(),
 
                     // Datos de Envío y Conductores
@@ -489,6 +493,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         GuiaRemisionDatoEnvioId = env.GuiaRemisionDatoEnvioId,
                         MotivoEnvio = env.MotivoEnvio,
                         FechaEnvio = env.FechaEnvio,
+                        FechaEntregaTransportista = env.FechaEntregaTransportista,
                         PesoBruto = env.PesoBruto,
                         UnidadMedida = env.UnidadMedida,
                         CodigoUm = env.CodigoUm,
@@ -496,9 +501,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         IndicadorTrasladoVehiculoCategoria = env.IndicadorTrasladoVehiculoCategoria,
                         TrasladoVehiculoCategoriaPlacaVehiculo = env.TrasladoVehiculoCategoriaPlacaVehiculo,
 
-                        RucEmpresaCurrier = env.RucEmpresaCurrier,
-                        RazonSocialCurrier = env.RazonSocialCurrier,
-                        RegistroMtcCurrier = env.RegistroMtcCurrier,
                         IndicadorRegistroVehiculoConductor = env.IndicadorRegistroVehiculoConductor,
                         GuiaRemisionConductores = env.GuiaRemisionConductores.Select(cg => new GuiaRemisionConductor
                         {
@@ -565,7 +567,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     {
                         Id = g.Area.Id,
                         Descripcion = g.Area.Descripcion
-                    }
+                    },
+
+                    
                 })
                 .FirstOrDefaultAsync();
 

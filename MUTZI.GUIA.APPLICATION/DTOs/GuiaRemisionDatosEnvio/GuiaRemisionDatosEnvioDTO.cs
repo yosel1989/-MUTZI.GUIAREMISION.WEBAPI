@@ -46,18 +46,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [SwaggerSchema("Recibe un texto, aquí se coloca la placa del vehiculo pesado, solo sí se selecciono el traslado_vehiculo_categoria", Nullable = false)]
         public string? TrasladoVehiculoCategoriaPlacaVehiculo { get; set; } = null;
 
-        [JsonPropertyName("ruc_empresa_currier")]
-        [SwaggerSchema("Devuelve en texto el ruc de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = true)]
-        public string? RucEmpresaCurrier { get; set; }
-
-        [JsonPropertyName("razon_social_currier")]
-        [SwaggerSchema("Devuelve en texto la razón social de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = true)]
-        public string? RazonSocialCurrier { get; set; }
-
-        [JsonPropertyName("registro_mtc_currier")]
-        [SwaggerSchema("Devuelve en texto el registro MTC de la empresa de Currier, este campo solo se llena si el tipo_transporte es 'PUBLICO'", Nullable = true)]
-        public string? RegistroMtcCurrier { get; set; }
-
         [JsonPropertyName("indicador_registro_vehiculo_conductor")]
         [SwaggerSchema("Devuelve en booleano el indicador de vehículo y conductor: true o false", Nullable = true)]
         public bool IndicadorRegistroVehiculoConductor { get; set; }
