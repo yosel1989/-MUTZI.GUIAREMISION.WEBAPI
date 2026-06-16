@@ -168,15 +168,18 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public void ValidarBienesNormalizados()
         {
             var tieneBienesNormalizados = this.Productos.Any(x => x.IndicadorBienNormalizado == true);
-            if(tieneBienesNormalizados && (this.DocRelacionado is null || this.DocRelacionado?.Count == 0) )
+            if (tieneBienesNormalizados)
             {
-                throw new System.Exception("Debe añadir el documento relacionado para el bien normalizado.");
-            }
-            else
-            {
-                if( !this.DocRelacionado!.Any(x => x.TipoDocumentoReferencia == "FACTURA") )
+                if(this.DocRelacionado is null)
                 {
-                    throw new System.Exception("Debe añadir una factura o documento de sustento para el bien normalizado.");
+                    throw new System.Exception("Debe añadir el documento relacionado para el bien normalizado.");
+                }
+                else
+                {
+                    if (!this.DocRelacionado.Any(x => x.TipoDocumentoReferencia == "FACTURA"))
+                    {
+                        throw new System.Exception("Debe añadir una factura o documento de sustento para el bien normalizado.");
+                    }
                 }
             }
         }

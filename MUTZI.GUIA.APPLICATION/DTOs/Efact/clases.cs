@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Xml.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
 {
@@ -157,19 +156,19 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
 
     public class DespatchLine
     {
-        [XmlElement(Order = 1)]
+
         public List<ID_Int> ID { get; set; }
 
-        [XmlElement(Order = 2)]
+
         public List<Note> Note { get; set; }
 
-        [XmlElement(Order = 3)]
+
         public List<DeliveredQuantity> DeliveredQuantity { get; set; }
 
-        [XmlElement(Order = 4)]
+
         public List<OrderLineReference> OrderLineReference { get; set; }
 
-        [XmlElement(Order = 5)]
+
         public List<Item> Item { get; set; }
     }
 
@@ -501,15 +500,22 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
 
     public class TransportEquipment
     {
+
         public List<ID> ID { get; set; }
+
         public List<ShipmentDocumentReference>? ShipmentDocumentReference { get; set; }
+
+
         public List<ApplicableTransportMean>? ApplicableTransportMeans { get; set; }
+
         public List<AttachedTransportEquipment> AttachedTransportEquipment { get; set; }
     }
     public class AttachedTransportEquipment
     {
         public List<ID> ID { get; set; }
+
         public List<ShipmentDocumentReference>? ShipmentDocumentReference { get; set; }
+
         public List<ApplicableTransportMean>? ApplicableTransportMeans { get; set; }
     }
 

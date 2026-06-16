@@ -424,6 +424,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     if (!guia.DatosEnvio.IndicadorTrasladoVehiculoCategoria)
                     {
+                        if (guia.DatosEnvio.Transportista == null) { return (false, "Si tipoTransporte es PUBLICO, entonces debes seleccionar una empresa transportista."); }
                         if (guia.DatosEnvio.Transportista.NumeroDocumento.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
                         if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RazonSocial)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
                         if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RegistroMTC)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }

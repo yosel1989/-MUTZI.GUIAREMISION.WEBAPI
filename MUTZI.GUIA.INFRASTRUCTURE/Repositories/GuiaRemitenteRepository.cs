@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Google.Protobuf.WellKnownTypes;
+using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
@@ -458,6 +459,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         TipoDocumento = g.Proveedor.TipoDocumento,
                         NumeroDocumento = g.Proveedor.NumeroDocumento,
                         RazonSocial = g.Proveedor.RazonSocial,
+                        UbigeoId = g.Proveedor.UbigeoId,
                         Ubigeo = g.Proveedor.Ubigeo,
                         Direccion = g.Proveedor.Direccion,
                         Email = g.Proveedor.Email,
@@ -501,7 +503,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         IndicadorTrasladoVehiculoCategoria = env.IndicadorTrasladoVehiculoCategoria,
                         TrasladoVehiculoCategoriaPlacaVehiculo = env.TrasladoVehiculoCategoriaPlacaVehiculo,
 
+                        IndicadorRetornoVehiculoEnvasesVacios = env.IndicadorRetornoVehiculoEnvasesVacios,
+                        IndicadorRetornoVehiculoVacio = env.IndicadorRetornoVehiculoVacio,
+                        IndicadorTransbordoProgramado = env.IndicadorTransbordoProgramado,
+                        IndicadorTrasladoTotalDam = env.IndicadorTrasladoTotalDam,
                         IndicadorRegistroVehiculoConductor = env.IndicadorRegistroVehiculoConductor,
+
                         GuiaRemisionConductores = env.GuiaRemisionConductores.Select(cg => new GuiaRemisionConductor
                         {
                             GuiaRemisionConductorId = cg.GuiaRemisionConductorId,
@@ -569,7 +576,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Descripcion = g.Area.Descripcion
                     },
 
-                    
                 })
                 .FirstOrDefaultAsync();
 

@@ -42,7 +42,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [SwaggerSchema("Devuelve en texto la unidad de medida del peso bruto. Ejm: KGM ó TNE", Nullable = false)]
         public string CodigoUm { get; set; } = "KGM";
 
-        [JsonPropertyName("traslado_vehiculo_categoria_placa_vehiculo")]
+        [JsonPropertyName("traslado_vehiculo_categoria")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la placa del vehiculo pesado, solo sí se selecciono el traslado_vehiculo_categoria", Nullable = false)]
         public string? TrasladoVehiculoCategoriaPlacaVehiculo { get; set; } = null;
 

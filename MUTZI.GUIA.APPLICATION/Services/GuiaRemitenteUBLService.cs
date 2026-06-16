@@ -418,7 +418,13 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 root.DespatchAdvice[0].Shipment[0].ShipmentStage[0].DriverPerson = guia.DatosEnvio.GuiaRemisionConductores.Select((conductor, i) => new DriverPerson
                 {
                     // Tipo de Conductor (Principal o Secundario)
-                    JobTitle = new List<JobTitle> { new JobTitle { _ = i == 0 ? "Principal" : "Secundario" }},
+                    JobTitle = 
+                        (guia.TipoTransporte == "PUBLICO" && guia.DatosEnvio.IndicadorRegistroVehiculoConductor) ? 
+                        new List<JobTitle> { new JobTitle { _ = i == 0 ? "Principal" : "Secundario" } } :
+                        new List<JobTitle> { new JobTitle { _ = i == 0 ? "Principal" : "Secundario" } }
+                    ,
+
+
                     // Número y código SUNAT del tipo de documento de identidad del conductor
                     ID = new List<ID> { new ID { 
                         // Número de documento de identidad del conductor
@@ -444,20 +450,24 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 var transportes = guia.DatosEnvio.GuiaRemisionUnidadesTransporte.ToList();
                 var transportEquipments = new List<TransportEquipment>();
 
-                // Vehículo Principal
-                // Primer transporte como TransportEquipment principal
-                transportEquipments.Add(new TransportEquipment
+                // Si es modo PRIVADO
+                if (guia.TipoTransporte == "PRIVADO")
                 {
-                    // Número de placa del vehículo
-                    ID = new List<ID> { new ID { _ = transportes[0]!.Placa } },
-                    // Tarjeta Única de Circulación Electrónica o Certificado de Habilitación vehicular
-                    ApplicableTransportMeans = guia.TipoTransporte != "PUBLICO" ? null : new List<ApplicableTransportMean>{ new ApplicableTransportMean {
-                        //Tarjeta  IS ES PRIVADO NO VA??
-                        RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = transportes[0]!.Tarjeta }}
-                    }},
-                    // Entidad emisora de la autorización especial -vehículo principal
-                    // Número de autorización especial del vehículo emitido por la entidad -vehículo principal
-                    ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0]!.NroAutorizacion) ? null : new List<ShipmentDocumentReference>
+
+                    // Vehículo Principal
+                    // Primer transporte como TransportEquipment principal
+                    transportEquipments.Add(new TransportEquipment
+                    {
+                        // Número de placa del vehículo
+                        ID = new List<ID> { new ID { _ = transportes[0]!.Placa } },
+                        // Tarjeta Única de Circulación Electrónica o Certificado de Habilitación vehicular
+                        ApplicableTransportMeans = guia.TipoTransporte != "PUBLICO" ? null : new List<ApplicableTransportMean>{ new ApplicableTransportMean {
+                            //Tarjeta  IS ES PRIVADO NO VA??
+                            RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = transportes[0]!.Tarjeta }}
+                        }},
+                        // Entidad emisora de la autorización especial -vehículo principal
+                        // Número de autorización especial del vehículo emitido por la entidad -vehículo principal
+                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0]!.NroAutorizacion) ? null : new List<ShipmentDocumentReference>
                         {
                             new ShipmentDocumentReference
                             {
@@ -473,16 +483,16 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 }
                             }
                         },
-                });
+                    });
 
-                // Los siguientes como TransportEquipment con AttachedTransportEquipment
-                if (transportes.Count > 1)
-                {
-                    foreach (var t in transportes.Skip(1))
+                    // Los siguientes como TransportEquipment con AttachedTransportEquipment
+                    if (transportes.Count > 1)
                     {
-                        transportEquipments.Add(new TransportEquipment
+                        foreach (var t in transportes.Skip(1))
                         {
-                            AttachedTransportEquipment = new List<AttachedTransportEquipment>
+                            transportEquipments.Add(new TransportEquipment
+                            {
+                                AttachedTransportEquipment = new List<AttachedTransportEquipment>
                                 {
                                     new AttachedTransportEquipment
                                     {
@@ -513,12 +523,94 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                         },
                                     }
                                 }
+                            });
+                        }
+                    }
+
+                }
+                else
+                {
+                    if (guia.DatosEnvio.IndicadorRegistroVehiculoConductor)
+                    {
+                        // Vehículo Principal
+                        // Primer transporte como TransportEquipment principal
+                        transportEquipments.Add(new TransportEquipment
+                        {
+                            // Número de placa del vehículo
+                            ID = new List<ID> { new ID { _ = transportes[0]!.Placa } },
+                            // Tarjeta Única de Circulación Electrónica o Certificado de Habilitación vehicular
+                            //ApplicableTransportMeans = guia.TipoTransporte != "PUBLICO" ? null : new List<ApplicableTransportMean>{ new ApplicableTransportMean {
+                                //Tarjeta  IS ES PRIVADO NO VA??
+                            //    RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = transportes[0]!.Tarjeta }}
+                            //}},
+                            // Entidad emisora de la autorización especial -vehículo principal
+                            // Número de autorización especial del vehículo emitido por la entidad -vehículo principal
+                            ShipmentDocumentReference = string.IsNullOrWhiteSpace(transportes[0]!.NroAutorizacion) ? null : new List<ShipmentDocumentReference>
+                        {
+                            new ShipmentDocumentReference
+                            {
+                                ID = new List<ID>
+                                {
+                                    new ID
+                                    {
+                                        // Número de autorización
+                                        _ = transportes[0]!.NroAutorizacion,
+                                        // Código de entidad emisora
+                                        schemeID = transportes[0]!.CodEmisorVehicular
+                                    }
+                                }
+                            }
+                        },
                         });
+
+                        // Los siguientes como TransportEquipment con AttachedTransportEquipment
+                        if (transportes.Count > 1)
+                        {
+                            foreach (var t in transportes.Skip(1))
+                            {
+                                transportEquipments.Add(new TransportEquipment
+                                {
+                                    AttachedTransportEquipment = new List<AttachedTransportEquipment>
+                                {
+                                    new AttachedTransportEquipment
+                                    {
+                                        // Número de placa del vehículo
+                                        ID = new List<ID> { new ID { _ = t.Placa } },
+                                        // Tarjeta Única de Circulación Electrónica o Certificado de Habilitación vehicular
+                                        // Si el tipo de transporte no es público, no se registra la tarjeta, ya que la tarjeta es un requisito solo para transporte público.
+                                        //ApplicableTransportMeans = guia.TipoTransporte != "PUBLICO" ? null : new List<ApplicableTransportMean>{ new ApplicableTransportMean {//Tarjeta  IS ES PRIVADO NO VA??
+                                        //    RegistrationNationalityID = new List<RegistrationNationalityID>{ new RegistrationNationalityID { _ = t.Tarjeta }}
+                                        //}},
+                                        // Entidad emisora de la autorización especial - vehículo secundario
+                                        // Número de autorización especial del vehículo emitido por la entidad - vehículo secundario
+                                        ShipmentDocumentReference = string.IsNullOrWhiteSpace(t.NroAutorizacion) ? null : new List<ShipmentDocumentReference>
+                                        {
+                                            new ShipmentDocumentReference
+                                            {
+                                                ID = new List<ID>
+                                                {
+                                                    new ID
+                                                    {
+                                                        // Número de autorización
+                                                        _ = t.NroAutorizacion,
+                                                        // Código de entidad emisora
+                                                        schemeID = t.CodEmisorVehicular
+                                                    }
+                                                }
+                                            }
+                                        },
+                                    }
+                                }
+                                });
+                            }
+                        }
                     }
                 }
 
-                // Añadimos los TransportEquipment al root
-                root.DespatchAdvice[0].Shipment[0].TransportHandlingUnit = new List<TransportHandlingUnit>
+
+
+                    // Añadimos los TransportEquipment al root
+                    root.DespatchAdvice[0].Shipment[0].TransportHandlingUnit = new List<TransportHandlingUnit>
                 {
                     new TransportHandlingUnit
                     {

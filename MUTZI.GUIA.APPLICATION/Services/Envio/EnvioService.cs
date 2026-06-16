@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Exceptions;
 using MUTZI.GUIA.APPLICATION.Hubs;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
@@ -128,7 +129,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             var result = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
-                throw new Exception($"Error al enviar a EFACT: {response.StatusCode} - {result}");
+                throw new EfactException($"Error al enviar a EFACT: {response.StatusCode} - {result}");
+                //throw new EfactException(JsonSerializer.Serialize(result));
 
             return result;
         }

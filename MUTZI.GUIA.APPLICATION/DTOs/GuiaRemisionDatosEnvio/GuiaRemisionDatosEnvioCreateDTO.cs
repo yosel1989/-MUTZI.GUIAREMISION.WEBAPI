@@ -50,9 +50,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [SwaggerSchema("Recibe un texto, aquí se coloca la placa del vehiculo pesado, solo sí se selecciono el traslado_vehiculo_categoria", Nullable = false)]
         public string? TrasladoVehiculoCategoriaPlacaVehiculo { get; set; } = null;
 
-        [JsonPropertyName("indicador_vehiculo_conductor")]
+        [JsonPropertyName("indicador_registro_vehiculo_conductor")]
         [SwaggerSchema("Recibe un booleano, este campo se marca como 'true' si 'tipo_transporte' es 'PUBLICO' y existen registros de vehículos y conductores.", Nullable = false)]
-        public bool IndicadorVehiculoConductor { get; set; } = false;
+        public bool IndicadorRegistroVehiculoConductor { get; set; } = false;
 
         //[JsonPropertyName("conductor")]
         //public List<ConductorCreateDTO?> Conductor { get; set; }
@@ -78,5 +78,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         [SwaggerSchema("Recibe un boolean, aquí se coloca si es traslado se realizara en vehiculos pesados", Nullable = false)]
         [Required]
         public bool IndicadorTransbordoProgramado { get; set; } = false;
+
+        [JsonPropertyName("indicador_retorno_vehiculo_vacio")]
+        [SwaggerSchema("Recibe un boolean, aquí se coloca si es vehiculo retorna vacio", Nullable = false)]
+        [Required]
+        public bool IndicadorRetornoVehiculoVacio { get; set; } = false;
+
+        [JsonPropertyName("indicador_retorno_vehiculo_envases_vacios")]
+        [SwaggerSchema("Recibe un boolean, aquí se coloca si es vehiculo retorna con envases vacio", Nullable = false)]
+        [Required]
+        public bool IndicadorRetornoVehiculoEnvasesVacios { get; set; } = false;
     }
 }

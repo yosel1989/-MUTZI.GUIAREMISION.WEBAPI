@@ -54,7 +54,7 @@ public partial class GuiaRemisionDatoEnvio
     public bool IndicadorRetornoVehiculoEnvasesVacios { get; set; } = false;
 
     [Column("indicador_retorno_vehiculo_vacio")]
-    public bool IndicadorRetornoVechiuloVacio { get; set; } = false;
+    public bool IndicadorRetornoVehiculoVacio { get; set; } = false;
 
     [Column("indicador_traslado_total_dam")]
     public bool IndicadorTrasladoTotalDam { get; set; } = false;
