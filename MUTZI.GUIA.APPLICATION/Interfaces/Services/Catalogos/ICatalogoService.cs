@@ -15,5 +15,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos
         Task<IEnumerable<EntidadReguladoraToSelectDTO>> GetEntidadesReguladoras();
 
         Task<IEnumerable<UnidadMedidaToSelectDTO>> GetUnidadesMedida(string? tipo);
+
+        Task<IEnumerable<BienNormalizadoToSelectDTO>> GetBienesNormalizados();
     }
 }

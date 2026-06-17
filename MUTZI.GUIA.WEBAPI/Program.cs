@@ -137,6 +137,7 @@ builder.Services.AddScoped<ITipoDocumentoRepository, TipoDocumentoRepository>();
 builder.Services.AddScoped<IEntidadReguladoraRepository, EntidadReguladoraRepository>();
 builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 builder.Services.AddScoped<IOperacionResponsableRepository, OperacionResponsableRepository>();
+builder.Services.AddScoped<IBienNormalizadoRepository, BienNormalizadoRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();

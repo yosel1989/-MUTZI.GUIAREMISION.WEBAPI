@@ -761,10 +761,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
 
             string guiaJson = JsonConvert.SerializeObject(
-            root,
-            Formatting.None,
-            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
-        );
+                root,
+                Formatting.None,
+                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
+            );
 
             //Se está guardando en la carpeta ahora mismo. Actualización, se pasó a producción y ahora se guarda en AWS
             var nombreArchivo = getNombreDocumentoFile(guia, guia.Remitente.Ruc);

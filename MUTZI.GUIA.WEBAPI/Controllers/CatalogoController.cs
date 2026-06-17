@@ -183,5 +183,35 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
+
+
+        [HttpGet]
+        [Route("bienes-normalizados")]
+        [SwaggerOperation(
+            Summary = "Listar bienes normalizados",
+            Description = "Lista todas los bienes normalizados para seleccionar",
+            OperationId = "listar_bien_normalizado"
+        )]
+        [ProducesResponseType(typeof(IEnumerable<BienNormalizadoToSelectDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<BienNormalizadoToSelectDTO>>> GetBienesNormalizados()
+        {
+            try
+            {
+                var result = await _service.GetBienesNormalizados();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar los bienes normalizados del catalogo.",
+                    Detalle = errorMsg
+                });
+            }
+        }
     }
 }

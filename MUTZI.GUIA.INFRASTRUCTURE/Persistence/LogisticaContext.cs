@@ -44,6 +44,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<Area> Area { get; set; }
     public virtual DbSet<TipoDocumento> TipoDocumento { get; set; }
     public virtual DbSet<EntidadReguladora> EntidadReguladora { get; set; }
+    public virtual DbSet<BienNormalizado> BienNormalizado { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

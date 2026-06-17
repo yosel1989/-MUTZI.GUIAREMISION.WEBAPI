@@ -7,12 +7,18 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
     {
         public MappingCatalogo()
         {
+            // Entidad Reguladora
             CreateMap<EntidadReguladora, EntidadReguladoraDTO>();
             CreateMap<EntidadReguladora, EntidadReguladoraToSelectDTO>();
 
-
+            // Unidad de Medida
             CreateMap<UnidadMedida, UnidadMedidaDTO>();
             CreateMap<UnidadMedida, UnidadMedidaToSelectDTO>();
+
+
+            // Bien Normalizado
+            CreateMap<BienNormalizado, BienNormalizadoDTO>();
+            CreateMap<BienNormalizado, BienNormalizadoToSelectDTO>();
         }
     }
 }
