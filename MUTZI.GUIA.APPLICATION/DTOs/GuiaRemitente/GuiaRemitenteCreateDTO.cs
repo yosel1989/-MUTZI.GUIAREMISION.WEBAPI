@@ -176,9 +176,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
                 }
                 else
                 {
-                    if (!this.DocRelacionado.Any(x => x.TipoDocumentoReferencia == "FACTURA"))
+                    if (!this.DocRelacionado.Any(x => x.TipoDocumentoReferenciaCodigo == "49" || x.TipoDocumentoReferenciaCodigo == "80"))
                     {
-                        throw new System.Exception("Debe añadir una factura o documento de sustento para el bien normalizado.");
+                        throw new System.Exception("Debe añadir un documento de sustento para el bien normalizado.");
                     }
                 }
             }

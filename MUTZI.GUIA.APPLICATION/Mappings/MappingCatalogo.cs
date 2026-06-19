@@ -19,6 +19,11 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             // Bien Normalizado
             CreateMap<BienNormalizado, BienNormalizadoDTO>();
             CreateMap<BienNormalizado, BienNormalizadoToSelectDTO>();
+
+
+            // Documento Relacionado
+            CreateMap<DocumentoRelacionado, DocumentoRelacionadoDTO>();
+            CreateMap<DocumentoRelacionado, DocumentoRelacionadoToSelectDTO>();
         }
     }
 }

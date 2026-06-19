@@ -373,6 +373,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //.Include(g => g.DatosEnvios)
                 //.Include(g => g.Origens)
                 .Include(g => g.DocRelacionados)
+                    .ThenInclude(h => h.TipoDocumentoReferencia)
                 .Where(g => g.GuiaRemisionId == id)
                 .Select(g => new GuiaRemision
                 {

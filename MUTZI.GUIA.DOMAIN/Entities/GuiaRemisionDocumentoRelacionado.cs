@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
@@ -13,9 +14,8 @@ public partial class GuiaRemisionDocumentoRelacionado
     [Column("guia_remision_id")]
     public int GuiaRemisionId { get; set; }
 
-    [Column("tipo_documento_referencia")]
-    [MaxLength(50)]
-    public string TipoDocumentoReferencia { get; set; }
+    [Column("tipo_documento_referencia_id")]
+    public int? TipoDocumentoReferenciaId { get; set; }
 
     [Column("numero_documento_referencia")]
     [MaxLength(30)]
@@ -29,4 +29,9 @@ public partial class GuiaRemisionDocumentoRelacionado
 
     [ForeignKey(nameof(GuiaRemisionId))]
     public virtual GuiaRemision Guia { get; set; } = null!;
+
+    // Relaciones
+
+    [ForeignKey(nameof(TipoDocumentoReferenciaId))]
+    public virtual DocumentoRelacionado? TipoDocumentoReferencia { get; set; }
 }

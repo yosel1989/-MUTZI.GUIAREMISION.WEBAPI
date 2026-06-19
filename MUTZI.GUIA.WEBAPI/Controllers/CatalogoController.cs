@@ -213,5 +213,34 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
+
+        [HttpGet]
+        [Route("documentos-relacionados")]
+        [SwaggerOperation(
+            Summary = "Listar documentos relacionados",
+            Description = "Lista todos los documentos relacionados para GRE",
+            OperationId = "listar_documento_relacionado"
+        )]
+        [ProducesResponseType(typeof(IEnumerable<DocumentoRelacionadoToSelectDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<DocumentoRelacionadoToSelectDTO>>> GetDocumentoRelacionados([FromQuery] string? tipo)
+        {
+            try
+            {
+                var result = await _service.GetDocumentosRelacionados(tipo);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar los documentos relacionados del catalogo.",
+                    Detalle = errorMsg
+                });
+            }
+        }
     }
 }

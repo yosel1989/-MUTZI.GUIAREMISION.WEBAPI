@@ -1,10 +1,6 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado
 {
@@ -15,9 +11,17 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado
         [SwaggerSchema("Devuelve en entero el ID del doc_relacionado asociado a la guía.", Nullable = false)]
         public int DocRelacionadoId { get; set; }
 
+        [JsonPropertyName("tipo_doc_ref_id")]
+        [SwaggerSchema("Devuelve un número, es el tipo de documento vinculado como referencia en la guía de remisión, los tipos definidos son del catalogo N° 61 registrados en base de datos", Nullable = false)]
+        public int? TipoDocumentoReferenciaId { get; set; }
+
         [JsonPropertyName("tipo_doc_ref")]
         [SwaggerSchema("Devuelve un texto, es el tipo de documento vinculado como referencia en la guía de remisión, los tipos definidos son: FACTURA y BOLETA", Nullable = false)]
-        public string TipoDocumentoReferencia { get; set; }
+        public string? TipoDocumentoReferencia { get; set; }
+
+        [JsonPropertyName("tipo_doc_ref_codigo")]
+        [SwaggerSchema("Recibe un texto, es el código de sunat del catalogo N° 61", Nullable = false)]
+        public string TipoDocumentoReferenciaCodigo { get; set; }
 
         [JsonPropertyName("numero_doc_ref")]
         [SwaggerSchema("Devuelve un texto, aquí se hace referencia al numero del documento vinculado en la guía de remisión. Ejm: F025-00000003", Nullable = false)]
@@ -26,12 +30,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado
         [JsonPropertyName("ruc_doc_ref")]
         [SwaggerSchema("Devuelve un texto, aquí se coloca el ruc del documento vinculado como referencia en la guía de remisión.", Nullable = false)]
         public string RucDocumentoReferencia { get; set; }
-        public string DocumentoAdicinalTipo()
+        public string DocumentoAdicionalTipo()
         {
-            if (string.IsNullOrEmpty(this.TipoDocumentoReferencia))
+            if (this.TipoDocumentoReferenciaId is null)
                 throw new System.Exception("tipo_doc_ref no puede estar vacío al generar el tipo de documento adicional.");
 
-            switch (this.TipoDocumentoReferencia.ToUpper())
+            return this.TipoDocumentoReferenciaCodigo;
+
+            /*switch (this.TipoDocumentoReferencia.ToUpper())
             {
                 case "FACTURA":
                     return "01"; // Factura
@@ -43,7 +49,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado
                     return "08"; // Nota de débito
                 default:
                     throw new System.Exception("Catálogo No. 01: (tipo_doc_ref)Tipo de documento vinculado como referencia no definido.");
-            }
+            }*/
         }
     }
 }

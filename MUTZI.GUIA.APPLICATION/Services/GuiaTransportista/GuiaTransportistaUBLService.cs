@@ -44,7 +44,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                     //Agregar en lista los documentos relacionados
                     AdditionalDocumentReference = guia.DocRelacionados.Select(docRelacionado => new AdditionalDocumentReference {
                         ID = new List<ID>{ new ID { _ = docRelacionado.NumeroDocumentoReferencia }},
-                        DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode { _ = docRelacionado.DocumentoAdicinalTipo() }},
+                        DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode { _ = docRelacionado.DocumentoAdicionalTipo() }},
                         DocumentType=new List<DocumentType>{new DocumentType { _=docRelacionado.TipoDocumentoReferencia} },
                         IssuerParty = new List<IssuerParty>{ new IssuerParty {
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {

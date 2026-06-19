@@ -143,8 +143,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
 
             //Documentos de referencia relacionados a la guía de remisión
-            CreateMap<GuiaRemisionDocumentoRelacionado, DocRelacionadoDTO>();
-            CreateMap<GuiaRemisionDocumentoRelacionado, DocRelacionadoDTO>();
+            CreateMap<GuiaRemisionDocumentoRelacionado, DocRelacionadoDTO>()
+                    .ForMember(dest => dest.TipoDocumentoReferencia, opt => opt.MapFrom(src => src.TipoDocumentoReferencia.DescripcionCorta))
+                    .ForMember(dest => dest.TipoDocumentoReferenciaCodigo, opt => opt.MapFrom(src => src.TipoDocumentoReferencia.CodigoSunat));
             CreateMap<DocRelacionadoCreateDTO, GuiaRemisionDocumentoRelacionado>();
 
             //Email de destinatarios dentro de Guía de Remisión

@@ -62,10 +62,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         ID = new List<ID>{ new ID { _ = docRelacionado.NumeroDocumentoReferencia }},
 
                         // Código del tipo de documento relacionado
-                        DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode { _ = docRelacionado.DocumentoAdicinalTipo() }},
+                        DocumentTypeCode = new List<DocumentTypeCode>{ new DocumentTypeCode { _ = docRelacionado.DocumentoAdicionalTipo() }},
                         
                         // Descripción del tipo de documento relacionado
-                        DocumentType=new List<DocumentType>{new DocumentType { _=docRelacionado.TipoDocumentoReferencia} },
+                        DocumentType=new List<DocumentType>{new DocumentType { _= docRelacionado.TipoDocumentoReferencia } },
 
                         // Número de RUC del emisor del documento relacionado
                         IssuerParty = new List<IssuerParty>{ new IssuerParty {

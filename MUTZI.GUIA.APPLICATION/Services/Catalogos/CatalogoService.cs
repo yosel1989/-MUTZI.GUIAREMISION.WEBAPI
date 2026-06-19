@@ -12,12 +12,14 @@ namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
         private readonly IEntidadReguladoraRepository _entidadReguladoraRepository;
         private readonly IUnidadMedidaRepository _unidadMedidaRepository;
         private readonly IBienNormalizadoRepository _bienNormalizadoRepository;
+        private readonly IDocumentoRelacionadoRepository _documentoRelacionadoRepository;
         public CatalogoService(
             IMapper mapper,
             ITipoDocumentoRepository tipoDocumentoRepository,
             IEntidadReguladoraRepository entidadReguladoraRepository,
             IUnidadMedidaRepository unidadMedidaRepository,
-            IBienNormalizadoRepository bienNormalizadoRepository
+            IBienNormalizadoRepository bienNormalizadoRepository,
+            IDocumentoRelacionadoRepository documentoRelacionadoRepository
         )
         {
             _mapper = mapper;
@@ -25,6 +27,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
             _entidadReguladoraRepository = entidadReguladoraRepository;
             _unidadMedidaRepository = unidadMedidaRepository;
             _bienNormalizadoRepository = bienNormalizadoRepository;
+            _documentoRelacionadoRepository = documentoRelacionadoRepository;
         }
         public IEnumerable<EmisorAutorizadorVehicularDTO> GetEmisoresVehiculares()
         {
@@ -172,6 +175,12 @@ namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
         {
             var bienesNormalizados = await _bienNormalizadoRepository.GetAllToSelectAsync();
             return _mapper.Map<IEnumerable<BienNormalizadoToSelectDTO>>(bienesNormalizados);
+        }
+
+        public async Task<IEnumerable<DocumentoRelacionadoToSelectDTO>> GetDocumentosRelacionados(string? tipo)
+        {
+            var documentosRelacionados = await _documentoRelacionadoRepository.GetAllToSelectAsync(tipo);
+            return _mapper.Map<IEnumerable<DocumentoRelacionadoToSelectDTO>>(documentosRelacionados);
         }
     }
 }
