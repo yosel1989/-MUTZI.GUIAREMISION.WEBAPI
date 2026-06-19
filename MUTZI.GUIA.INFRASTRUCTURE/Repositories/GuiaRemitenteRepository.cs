@@ -344,6 +344,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         .ThenInclude(h => h.UnidadTransporte)
                             .ThenInclude(h => h.EntidadReguladoraVehicular)
 
+    
+                .Include(g => g.DocRelacionados)
+                    .ThenInclude(h => h.TipoDocumentoReferencia)
+
 
                 .Include(g => g.Origens)
                 .Include(g => g.Destinos)

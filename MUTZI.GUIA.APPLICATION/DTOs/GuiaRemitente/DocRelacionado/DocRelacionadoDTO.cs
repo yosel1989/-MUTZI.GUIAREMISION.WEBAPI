@@ -9,7 +9,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado
     {
         [JsonPropertyName("doc_relacionado_id")]
         [SwaggerSchema("Devuelve en entero el ID del doc_relacionado asociado a la guía.", Nullable = false)]
-        public int DocRelacionadoId { get; set; }
+        public int GuiaRemisionDocumentoRelacionadoId { get; set; }
 
         [JsonPropertyName("tipo_doc_ref_id")]
         [SwaggerSchema("Devuelve un número, es el tipo de documento vinculado como referencia en la guía de remisión, los tipos definidos son del catalogo N° 61 registrados en base de datos", Nullable = false)]

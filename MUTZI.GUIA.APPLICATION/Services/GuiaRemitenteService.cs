@@ -215,7 +215,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 throw new Exception("No se encontró la guía de remisión.");
             }
 
-            return _mapper.Map<GuiaRemitenteDTO>(guiaRemision);
+            var guiaRemisionMapeado = _mapper.Map<GuiaRemitenteDTO>(guiaRemision);
+
+            return guiaRemisionMapeado;
         }
 
         public async Task<object> GetByIdAsync(int id)
@@ -370,10 +372,17 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     return (false, "Solo se permite hasta 3 documentos relacionados como referencia en la guía de remisión transportista.");
                 }
 
-                if (remitente.Ruc != ventaConfig.Ruc)
-                    return (false, $"El RUC del remitente ({remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
+                if(guia.MotivoTrasladoId != 7)
+                {
+                    if (remitente.Ruc != ventaConfig.Ruc)
+                        return (false, $"El RUC del remitente ({remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
+                }
+
+                
+
+
                 _ = guia.TipoTRansporteCode18();
-                _ = guia.TipoTrasladoCode20();
+                //_ = guia.TipoTrasladoCode20();
 
                 if (guia.TipoTransporte=="PUBLICO")
                 {
@@ -401,10 +410,18 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     return (false, "Solo se permite hasta 3 documentos relacionados como referencia en la guía de remisión transportista.");
                 }
-                if (guia.Remitente.Ruc != ruc)
-                    return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ruc}).");
+
+                if(guia.MotivoTrasladoCodigo != "07")
+                {
+                    if (guia.Remitente.Ruc != ruc)
+                        return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ruc}).");
+                }
+
+                
+
+
                 _ = guia.TipoTRansporteCode18();
-                _ = guia.TipoTrasladoCode20();
+                //_ = guia.TipoTrasladoCode20();
                 _ = guia.getTipoCodigoDocumento("RUC", guia.Remitente.Ruc);
                 //_ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento);
 

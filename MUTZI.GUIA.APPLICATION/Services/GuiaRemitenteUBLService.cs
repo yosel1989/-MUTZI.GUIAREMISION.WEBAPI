@@ -82,7 +82,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
 
                     // Firma
-                    Signature = new List<Signature>{ new Signature{
+
+                    Signature = guia.MotivoTrasladoCodigo != "07" ? new List<Signature>{ new Signature{
                         ID = new List<ID>{ new ID { _ = "IDSignature" } },
                         SignatoryParty = new List<SignatoryParty>{ new SignatoryParty {
                             // Ruc del remitente
@@ -93,11 +94,23 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         DigitalSignatureAttachment = new List<DigitalSignatureAttachment>{ new DigitalSignatureAttachment {
                             ExternalReference = new List<ExternalReference>{new ExternalReference { URI = new List<URI> { new URI() {_ = "IDSignature" }}}}
                         }}
+                    }} :
+                    new List<Signature>{ new Signature{
+                        ID = new List<ID>{ new ID { _ = "IDSignature" } },
+                        SignatoryParty = new List<SignatoryParty>{ new SignatoryParty {
+                            // Ruc del remitente
+                            PartyIdentification= new List<PartyIdentification>{ new PartyIdentification { ID = new List<ID> { new ID {  _ = guia.Destinatario.Ruc } } }},
+                            // Razón social del remitente
+                            PartyName = new List<PartyName>{ new PartyName { Name = new List<Name> { new Name {  _ = guia.Destinatario.RazonSocial} } }},
+                        }},
+                        DigitalSignatureAttachment = new List<DigitalSignatureAttachment>{ new DigitalSignatureAttachment {
+                            ExternalReference = new List<ExternalReference>{new ExternalReference { URI = new List<URI> { new URI() {_ = "IDSignature" }}}}
+                        }}
                     }},
 
 
                     // Datos del remitente
-                    DespatchSupplierParty = new List<DespatchSupplierParty>{ new DespatchSupplierParty {
+                    DespatchSupplierParty = guia.MotivoTrasladoCodigo != "07" ? new List<DespatchSupplierParty>{ new DespatchSupplierParty {
                         Party = new List<Party>{ new Party {
 
                             // Código SUNAT del tipo de documento de identidad y numeró de documento del remitente
@@ -131,6 +144,58 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 new PartyLegalEntity { 
                                     RegistrationName = new List<RegistrationName> { 
                                         new RegistrationName { _  = guia.Remitente.RazonSocial }}
+                                }},
+
+                            // 
+                            /*Contact = guia.EmailFacturador == null ? null : new List<Contact>
+                            {
+                                new Contact
+                                {
+                                    ElectronicMail=new List<ElectronicMail>
+                                    {
+                                        new ElectronicMail
+                                        {
+                                            _ = guia.EmailFacturador
+                                        }
+                                    }
+                                }
+                            }*/
+                        }},
+                    }} :
+                    new List<DespatchSupplierParty>{ new DespatchSupplierParty {
+                        Party = new List<Party>{ new Party {
+
+                            // Código SUNAT del tipo de documento de identidad y numeró de documento del remitente
+                            PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { 
+                                // Número de documento de identidad del remitente
+                                _ = guia.Destinatario.Ruc,  
+                                // Código del tipo de documento de identidad del remitente 
+                                schemeID = EspacioNombreGuiaRemision._DocumentType06
+                            }}}},
+
+                            // Domicilio Fiscal remitente
+                            PostalAddress = new List<PostalAddress>{ new PostalAddress {
+                                // Código de Ubigeo
+                                ID = new List<ID> { new ID { _ = guia.Destinatario.UbigeoId } },
+                                // Departamento
+                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Departamento } },
+                                // Provincia
+                                CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Provincia} },
+                                // Dirección completa y detallada
+                                StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Direccion } },
+                                // Urbanización
+                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Departamento } },
+                                // Distrito
+                                District= new List<District>{ new District { _ = guia.Destinatario.Distrito } },
+                                // Código de país
+                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.Pais } }}}
+                            }},
+
+                            // Apellidos y nombres, denominación o razón social del remitente
+                            PartyLegalEntity = new List<PartyLegalEntity>{
+                                new PartyLegalEntity {
+                                    RegistrationName = new List<RegistrationName> {
+                                        new RegistrationName { _  = guia.Destinatario.RazonSocial }}
                                 }},
 
                             // 
@@ -332,8 +397,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 // Dirección del punto de partida y dirección del punto de llegada, así como los datos del transportista (si el traslado se realiza en vehículos de terceros) y del conductor (si el traslado se realiza en vehículos de terceros o propios)
                 Delivery = new List<Delivery>{ new Delivery {
 
+
                     // Dirección del punto de partida
-                    Despatch = new List<Despatch>{ new Despatch {
+                    Despatch = guia.MotivoTrasladoCodigo != "07" ? new List<Despatch>{ new Despatch {
                          DespatchAddress = new List<DespatchAddress>{ new DespatchAddress {
                             // Código ubigeo del punto de partida
                             ID = new List<ID>{ new ID { _ = guia.Origen.UbigeoId }},
@@ -365,17 +431,32 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             // Codigo de Pais
                             Country = new List<Country>{ new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Origen.Pais } }}}
                          }},
-                         //Edit: Aquí se va a colocar la autorización y el código que corresponde en caso la empresa haya sido autorizada, ya sea por DIGESA, DIGEMID,etc, para poder trasladar productos específicos.
-                         //DespatchParty = new List<DespatchParty>{new DespatchParty { AgentParty = new List<AgentParty> {
-                         //    new AgentParty {
-                         //       PartyLegalEntity = new List<PartyLegalEntity>{new PartyLegalEntity {
-                         //               CompanyID = new List<CompanyID>{new CompanyID {
-                         //                   _ = "NUMAUTORIREMIT123",
-                         //                   schemeID = "06",
-                         //               }}
-                         //       }}
-                         //   }}
-                         //}}
+                    }} :
+                    new List<Despatch>{ new Despatch {
+                         DespatchAddress = new List<DespatchAddress>{ new DespatchAddress {
+                            // Código ubigeo del punto de partida
+                            ID = new List<ID>{ new ID { _ = guia.Proveedor.UbigeoId }},
+                            // Dirección completa y detallada de partida
+                            AddressLine = new List<AddressLine>{ new AddressLine { Line = new List<Line> { new Line { _  = guia.Proveedor.Direccion }}}},
+                            // Se valida si tipoTrasLado es compra o no.
+                            // Asimismo, se valida que no sea nulo el codSunat.
+                            AddressTypeCode = new List<AddressTypeCode>{ new AddressTypeCode {
+                                // El código sunat del proveedor , se coloca aquí porque en el caso de compra, el traslado se realiza desde el proveedor hacia la empresa, por lo tanto el codSunat del proveedor va en el punto de partida, y el codSunat del destinatario (cliente) va en el punto de llegada.
+                                _ = guia.Proveedor.CodigoSunat,
+                                // El número de documento del proveedor, se coloca aquí porque en el caso de compra, el traslado se realiza desde el proveedor hacia la empresa, por lo tanto el número de documento del proveedor va en el punto de partida, y el número de documento del destinatario (cliente) va en el punto de llegada.
+                                listID = guia.Proveedor.NumeroDocumento
+                            }},
+                            // Urbanizacion
+                            CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Proveedor.Departamento } },
+                            // Provincia
+                            CityName = new List<CityName>{ new CityName { _ = guia.Proveedor.Provincia }},
+                            // Departamento
+                            CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _= guia.Proveedor.Departamento }},
+                            // Distrito
+                            District = new List<District>{ new District { _ = guia.Proveedor.Distrito}},
+                            // Codigo de Pais
+                            Country = new List<Country>{ new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Proveedor.Pais } }}}
+                         }},
                     }},
 
                     // Dirección del punto de llegada
@@ -767,7 +848,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             );
 
             //Se está guardando en la carpeta ahora mismo. Actualización, se pasó a producción y ahora se guarda en AWS
-            var nombreArchivo = getNombreDocumentoFile(guia, guia.Remitente.Ruc);
+            var nombreArchivo = guia.MotivoTrasladoCodigo != "07" ? getNombreDocumentoFile(guia, guia.Remitente.Ruc) : getNombreDocumentoFile(guia, guia.Destinatario.Ruc);
             //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.NumeroDocumentoRemitente));//Ya no se usa
 
             // Convertir el string JSON a un stream de memoria
