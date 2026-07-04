@@ -14,5 +14,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
         Task<TransportistaDTO> UpdateAsync(int id, TransportistaUpdateDTO updateDTO);
         Task DeleteAsync(int id);
         Task<EstadoActualizadoResponseDTO> CambiarEstadoAsync(int id, EstadoActualizadoRequestDTO infoRequestDto);
+
+       
     }
 }

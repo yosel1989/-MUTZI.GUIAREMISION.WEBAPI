@@ -317,7 +317,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(g => g.Remitente)
                     .ThenInclude(h => h.Ubigeo)
                 .Include(g => g.Destinatario)
+
                     .ThenInclude(h => h.Ubigeo)
+                .Include(g => g.Destinatario)
+                    .ThenInclude(h => h.RucNavigation)
+
                 .Include(g => g.RemiteTransportista)
                 .Include(g => g.RucNavigation)
 
