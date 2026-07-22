@@ -7,28 +7,28 @@ namespace MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 public partial class UnidadMedida
 {
     [Key]
-    [Column("unidad_medida_id")]
+    [Column("unit_measurement_id")]
     public int UnidadMedidaId { get; set; }
 
-    [Column("descripcion")]
+    [Column("name")]
     public string Descripcion { get; set; }
 
-    [Column("descripcion_corta")]
+    [Column("short_name")]
     public string DescripcionCorta { get; set; }
 
-    [Column("codigo_sunat")]
+    [Column("sunat_code")]
     public string CodigoSunat { get; set; }
 
-    [Column("es_unidad_peso")]
+    [Column("is_unit_weight")]
     public bool EsUnidadPeso { get; set; } = false;
 
-    [Column("es_unidad_volumen")]
+    [Column("is_unit_volume")]
     public bool EsUnidadVolumen { get; set; } = false;
 
-    [Column("es_unidad_longitud")]
+    [Column("is_unit_length")]
     public bool EsUnidadLongitud { get; set; } = false;
 
-    [Column("es_unidad_conteo")]
+    [Column("is_unit_counting")]
     public bool EsUnidadConteo { get; set; } = false;
 
 }
