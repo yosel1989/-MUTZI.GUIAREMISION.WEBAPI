@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
@@ -23,8 +24,18 @@ namespace MUTZI.GUIA.WEBAPI.Filters
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            
+            // Si la acción permite acceso anónimo, no validar permisos
+            var allowAnonymous = context.ActionDescriptor.EndpointMetadata
+                .OfType<AllowAnonymousAttribute>()
+                .Any();
 
+            if (allowAnonymous)
+            {
+                await next();
+                return;
+            }
+
+            // Buscar el atributo Permission
             var permissionAttr = context.ActionDescriptor.EndpointMetadata
                 .OfType<PermissionAttribute>()
                 .FirstOrDefault();
@@ -43,30 +54,28 @@ namespace MUTZI.GUIA.WEBAPI.Filters
                 .Select(p => p.Id)
                 .ToList();
 
-            if (permissionAttr != null)
+            // Validar en BD si alguno de los perfiles filtrados tiene el permiso
+            var tienePermiso = await _context.PerfilPermiso
+                .Include(pp => pp.Permiso)
+                .Include(pp => pp.Perfil)
+                .AnyAsync(pp => codigosPerfilesFiltrados.Contains(pp.Perfil.Codigo) &&
+                                pp.Permiso.Codigo == permissionAttr.Codigo);
+
+            if (!tienePermiso)
             {
-                // 3. Validar en BD si alguno de los perfiles filtrados tiene el permiso con ese código
-                var tienePermiso = await _context.PerfilPermiso
-                    .Include(pp => pp.Permiso)
-                    .Include(pp => pp.Perfil)
-                    .AnyAsync(pp => codigosPerfilesFiltrados.Contains(pp.Perfil.Codigo) && // comparar contra la columna CodigoSunat
-                                    pp.Permiso.Codigo == permissionAttr.Codigo);
-
-                if (!tienePermiso)
+                var errorResponse = new BadRequestResponseDTO
                 {
-                    var errorResponse = new BadRequestResponseDTO
-                    {
-                        Error = "Error de autorización.",
-                        Detalle = $"No tiene permiso para la acción: {permissionAttr.Codigo}"
-                    };
+                    Error = "Error de autorización.",
+                    Detalle = $"No tiene permiso para la acción: {permissionAttr.Codigo}"
+                };
 
-                    context.Result = new BadRequestObjectResult(errorResponse);
-                    return;
-                }
+                context.Result = new BadRequestObjectResult(errorResponse);
+                return;
             }
 
             await next();
         }
+
 
 
     }

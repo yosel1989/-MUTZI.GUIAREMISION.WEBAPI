@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2010.PowerPoint;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
@@ -6,6 +8,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemision;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
@@ -20,12 +23,19 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
     public class GuiaRemisionController : ControllerBase
     {
         private readonly IGuiaRemitenteService _guiasRemisionBDService;
+        private readonly ICatalogoService _catalogoService;
         private readonly IGuiaTransportistaService _guiasTransportistaBDService;
         private readonly IEnvioService _envioService;
-        public GuiaRemisionController(IGuiaRemitenteService guiaRemisionBDService, IGuiaTransportistaService guiaTransportistaService, IEnvioService envioService)
+        public GuiaRemisionController(
+            IGuiaRemitenteService guiaRemisionBDService, 
+            IGuiaTransportistaService guiaTransportistaService,
+            ICatalogoService catalogoService,
+            IEnvioService envioService
+        )
         {
             _guiasRemisionBDService = guiaRemisionBDService;
             _guiasTransportistaBDService = guiaTransportistaService;
+            _catalogoService = catalogoService;
             _envioService = envioService;
         }
 
@@ -442,5 +452,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return BadRequest(errorResponse);
             }
         }
+
+
+      
+        
+
     }
 }
