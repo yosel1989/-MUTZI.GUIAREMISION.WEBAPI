@@ -50,6 +50,7 @@ builder.Services.AddControllers(
     options =>
     {
         options.Filters.Add<PermissionFilter>();
+        options.Filters.Add(new ProducesAttribute("application/json"));
     }
 )
     .AddJsonOptions(options =>
@@ -186,6 +187,8 @@ builder.Services.AddSwaggerGen(c =>
         //    Email = "heliohubert10@gmail.com"
         //}
     });
+    c.SupportNonNullableReferenceTypes();
+    //c.OperationFilter<FileUploadOperationFilter>();
     c.EnableAnnotations();
 });
 
@@ -256,11 +259,8 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
+app.UseDeveloperExceptionPage();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -275,8 +275,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-app.MapControllers();
 
 app.UseEndpoints(endpoints =>
 {

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
 using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -14,23 +15,22 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
     public class GuiaRemisionDetalleController : ControllerBase
     {
 
-        public GuiaRemisionDetalleController(
+        private readonly ICatalogoService _catalogoService;
 
+        public GuiaRemisionDetalleController(
+            ICatalogoService catalogoService
         )
         {
-
+            _catalogoService = catalogoService;
         }
 
-
-        /*[AllowAnonymous]
         [HttpGet]
-        [Route("download-template")]
+        [Route("download-template-import")]
         [SwaggerOperation(
             Summary = "Descargar la plantilla EXCEL",
             Description = "Descargar la plantilla EXCEL para subir los productos al detalle de una guía",
             OperationId = "download_template"
         )]
-        [Permission("download_template")]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DownloadTemplateDetail()
@@ -77,7 +77,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 // Devolver como archivo descargable
                 return File(stream.ToArray(),
                             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                            "Plantilla.xlsx");
+                            "plantilla-items.xlsx");
             }
             catch (InvalidOperationException ex)
             {
@@ -88,10 +88,8 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 };
                 return BadRequest(errorResponse);
             }
-        }*/
+        }
 
-
-        [AllowAnonymous]
         [HttpPost]
         [Route("import-data")]
         [SwaggerOperation(
@@ -127,7 +125,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 foreach (var row in ws.RowsUsed().Skip(1))
                 {
                     var codigo = row.Cell(1).GetString();
-                    var nombre = row.Cell(2).GetString();
+                    var nombre = row.Cell(2).GetString().ToUpper();
                     var tipoMedida = row.Cell(3).GetString();
                     var cantidad = row.Cell(4).GetDouble();
 
