@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("ubigeo")]
+[Table("vw_ubigeo")]
 public partial class Ubigeo
 {
     [Key]
@@ -11,15 +11,15 @@ public partial class Ubigeo
     [MaxLength(6)]
     public string UbigeoId { get; set; } = null!;
 
-    [Column("departamento")]
+    [Column("department")]
     [MaxLength(100)]
     public string? Departamento { get; set; }
 
-    [Column("provincia")]
+    [Column("province")]
     [MaxLength(100)]
     public string? Provincia { get; set; }
 
-    [Column("distrito")]
+    [Column("district")]
     [MaxLength(100)]
     public string? Distrito { get; set; }
 
