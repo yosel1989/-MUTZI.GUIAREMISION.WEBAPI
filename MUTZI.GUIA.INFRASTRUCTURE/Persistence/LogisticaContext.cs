@@ -46,6 +46,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<EntidadReguladora> EntidadReguladora { get; set; }
     public virtual DbSet<BienNormalizado> BienNormalizado { get; set; }
     public virtual DbSet<DocumentoRelacionado> DocumentoRelacionado { get; set; }
+    public virtual DbSet<GuiaRemisionIndicadorTraslado> GuiaRemisionIndicadorTraslado { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

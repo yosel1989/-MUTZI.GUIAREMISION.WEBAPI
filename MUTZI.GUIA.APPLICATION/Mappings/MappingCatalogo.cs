@@ -24,6 +24,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             // Documento Relacionado
             CreateMap<DocumentoRelacionado, DocumentoRelacionadoDTO>();
             CreateMap<DocumentoRelacionado, DocumentoRelacionadoToSelectDTO>();
+
+            // Indicador de Traslado
+            CreateMap<GuiaRemisionIndicadorTraslado, GuiaRemisionIndicadorTrasladoToSelectDTO>();
         }
     }
 }

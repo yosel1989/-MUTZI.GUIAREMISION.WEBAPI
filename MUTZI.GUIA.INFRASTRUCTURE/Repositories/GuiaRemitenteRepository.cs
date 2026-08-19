@@ -1,12 +1,9 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 using MUTZI.GUIA.DOMAIN.Enums;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
