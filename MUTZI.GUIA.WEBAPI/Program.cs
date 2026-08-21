@@ -140,6 +140,7 @@ builder.Services.AddScoped<IPersonaRepository, PersonaRepository>();
 builder.Services.AddScoped<IOperacionResponsableRepository, OperacionResponsableRepository>();
 builder.Services.AddScoped<IBienNormalizadoRepository, BienNormalizadoRepository>();
 builder.Services.AddScoped<IDocumentoRelacionadoRepository, DocumentoRelacionadoRepository>();
+builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoRepository, GuiaRemisionIndicadorTrasladoRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -168,6 +169,7 @@ builder.Services.AddScoped<IAreaService, AreaService>();
 builder.Services.AddScoped<IMotivoTrasladoService, MotivoTrasladoService>();
 builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<IOperacionResponsableService, OperacionResponsableService>();
+builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoService, GuiaRemisionIndicadorTrasladoService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAppDBContext, AppDBContext>();

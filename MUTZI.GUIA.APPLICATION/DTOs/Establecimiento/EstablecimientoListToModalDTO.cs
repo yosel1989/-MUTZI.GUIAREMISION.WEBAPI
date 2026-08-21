@@ -20,5 +20,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("entidad")]
         [SwaggerSchema("Devuelve el nombre de la entidad a la que pertenece.", Nullable = false)]
         public string Entidad { get; set; }
+
+        [JsonPropertyName("area")]
+        [SwaggerSchema("Devuelve un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
+        public string? Area { get; set; }
     }
 }

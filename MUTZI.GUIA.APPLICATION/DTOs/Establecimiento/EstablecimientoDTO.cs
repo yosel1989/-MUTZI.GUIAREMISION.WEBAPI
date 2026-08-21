@@ -69,5 +69,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 
         [JsonPropertyName("razon_social")]
         public string RazonSocial { get; set; }
+
+        [JsonPropertyName("area")]
+        public string? Area { get; set; }
     }
 }

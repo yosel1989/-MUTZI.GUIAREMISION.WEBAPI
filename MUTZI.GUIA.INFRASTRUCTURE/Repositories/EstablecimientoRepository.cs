@@ -42,7 +42,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .Select(m => new Establecimiento
                     {
                         EstablecimientoId = m.EstablecimientoId,
-                        Descripcion = m.Descripcion
+                        Descripcion = m.Descripcion,
+                        Area = m.Area
                     })
                     .OrderBy(e => e.Descripcion)
                     .ToListAsync();
@@ -65,7 +66,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     EstablecimientoId = r.EstablecimientoId,
                     Descripcion = r.Descripcion,
-                    CodigoSunat = r.CodigoSunat
+                    CodigoSunat = r.CodigoSunat,
+                    Area = r.Area
                 })
                 .ToListAsync();
 
@@ -90,7 +92,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     query = query.Where(c =>
                         (string.IsNullOrEmpty(search) ||
                          c.CodigoSunat.Contains(search) ||
-                         c.Descripcion.Contains(search))
+                         c.Descripcion.Contains(search) ||
+                         c.Area.Contains(search)
+                        )
                     );
                 }
 
@@ -102,6 +106,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     EstablecimientoId = m.EstablecimientoId,
                     Descripcion = m.Descripcion,
                     CodigoSunat = m.CodigoSunat,
+                    Area = m.Area,
                     RucNavigation = new VentaConfig
                     {
                         Empresa = m.RucNavigation.Empresa
@@ -162,6 +167,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         x.CodigoSunat.ToLower().Contains(val) ||
                         x.UsuarioRegistroNombre.ToLower().Contains(val) ||
                         x.Estado.ToLower().Contains(val) ||
+                        x.Area.ToLower().Contains(val) ||
                         x.UsuarioModificoNombre.ToLower().Contains(val)
                     );
                 }

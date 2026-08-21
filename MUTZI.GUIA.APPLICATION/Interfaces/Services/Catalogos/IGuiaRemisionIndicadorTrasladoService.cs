@@ -1,9 +1,9 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
 
-namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos
+namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
 {
     public interface IGuiaRemisionIndicadorTrasladoService
     {
-        IEnumerable<EmisorAutorizadorVehicularDTO> GetEmisoresVehiculares();
+        Task<List<GuiaRemisionIndicadorTrasladoToSelectDTO>> GetToSelectAsync();
     }
 }

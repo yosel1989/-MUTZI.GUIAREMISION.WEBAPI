@@ -76,5 +76,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Recibe un texto, se coloca el tipo de establecimiento segpun sunat : 'domicilio_fiscal', 'casa_matriz', 'sucursal', 'agencia', 'local_comercial', 'sede_productiva', 'almacen', 'oficina_administrativa'", Nullable = true)]
         [MaxLength(100)]
         public string Tipo { get; set; }
+
+        [JsonPropertyName("area")]
+        [SwaggerSchema("Recibe un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
+        [MaxLength(45)]
+        public string? Area { get; set; }
     }
 }

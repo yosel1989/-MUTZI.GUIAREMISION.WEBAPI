@@ -5,7 +5,7 @@ using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
 namespace MUTZI.GUIA.APPLICATION.Services
 {
-    public class GuiaRemisionIndicadorTrasladoService
+    public class GuiaRemisionIndicadorTrasladoService: IGuiaRemisionIndicadorTrasladoService
     {
         private readonly IGuiaRemisionIndicadorTrasladoRepository _repository;
         private readonly IAuthService _authService;
@@ -21,10 +21,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _mapper = mapper;
         }
 
-        public async Task<List<GuiaRemisionIndicadorTrasladoDTO>> GetToSelectAsync()
+        public async Task<List<GuiaRemisionIndicadorTrasladoToSelectDTO>> GetToSelectAsync()
         {
             var indicadores = await _repository.GetListToSelectAsync();
-            return _mapper.Map<List<GuiaRemisionIndicadorTrasladoDTO>>(indicadores);
+            return _mapper.Map<List<GuiaRemisionIndicadorTrasladoToSelectDTO>>(indicadores);
         }
 
     }

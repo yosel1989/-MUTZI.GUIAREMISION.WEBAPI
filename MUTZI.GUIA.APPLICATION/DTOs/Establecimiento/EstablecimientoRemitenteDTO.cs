@@ -1,4 +1,5 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
@@ -64,5 +65,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("nuevo_numero_guia")]
         [SwaggerSchema("Devuelve un texto, el nuevo número de guía que se usará en las guías de remisión, ejm: T001-00000001", Nullable = true)]
         public string NuevoNumeroGuia { get; set; }
+
+        [JsonPropertyName("area")]
+        [SwaggerSchema("Devuelve un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
+        public string? Area { get; set; }
     }
 }

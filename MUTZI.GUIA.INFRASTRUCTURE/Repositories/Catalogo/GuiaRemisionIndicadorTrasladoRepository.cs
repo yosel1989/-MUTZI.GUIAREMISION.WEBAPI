@@ -15,11 +15,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories.Catalogo
 
         public async Task<IEnumerable<GuiaRemisionIndicadorTraslado>> GetListToSelectAsync()
         {
-            var data = _context.GuiaRemisionIndicadorTraslado
+            var data = await _context.GuiaRemisionIndicadorTraslado
                 .AsNoTracking()
                 .ToListAsync();
 
-            return await data;
+            return data;
         }
 
     }

@@ -61,6 +61,9 @@ public partial class Establecimiento
     [Column("tipo")]
     public string Tipo { get; set; }
 
+    [Column("area")]
+    public string? Area { get; set; }
+
     // Relaciones
 
     [ForeignKey(nameof(Ruc))]

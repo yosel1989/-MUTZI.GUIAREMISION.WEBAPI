@@ -63,5 +63,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]
         [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
         public string? CodigoSunat { get; set; }
+
+        [JsonPropertyName("area")]
+        [SwaggerSchema("Devuelve un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
+        [MaxLength(45)]
+        public string? Area { get; set; }
     }
 }
