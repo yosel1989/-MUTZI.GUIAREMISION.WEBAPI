@@ -18,6 +18,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories.Catalogo
             try
             {
                 var data  = await _context.MotivoTraslado
+                    .Where(x => x.Active)
                     .ToListAsync();
                 return data;
             }

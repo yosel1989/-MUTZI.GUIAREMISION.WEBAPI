@@ -16,5 +16,8 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Column("code")]
         public string CodigoSunat { get; set; }
 
+        [Column("active")]
+        public bool Active { get; set; }
+
     }
 }
