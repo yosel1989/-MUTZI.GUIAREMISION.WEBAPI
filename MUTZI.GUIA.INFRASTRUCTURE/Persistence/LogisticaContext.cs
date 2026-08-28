@@ -47,6 +47,8 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<BienNormalizado> BienNormalizado { get; set; }
     public virtual DbSet<DocumentoRelacionado> DocumentoRelacionado { get; set; }
     public virtual DbSet<GuiaRemisionIndicadorTraslado> GuiaRemisionIndicadorTraslado { get; set; }
+    public virtual DbSet<Entity> Entities { get; set; }
+    public virtual DbSet<EntityRole> EntityRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -75,6 +77,8 @@ public partial class LogisticaContext : DbContext
             }
         );
 
+        modelBuilder.Entity<EntityRole>()
+        .HasKey(pp => new { pp.EntityId, pp.Role });
 
         modelBuilder.Entity<GuiaRemisionEstadoPermiso>()
         .HasKey(pp => new { pp.GuiaRemisionEstadoId, pp.GuiaRemisionEstadoIdPermitido });

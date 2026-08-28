@@ -123,7 +123,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task<Establecimiento?> GetByIdAsync(int id)
+        public async Task<Establecimiento?> GetByIdAsync(int id, bool strict, string? tipo)
         {
             try
             {
@@ -132,6 +132,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .Include(r => r.RucNavigation)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(r => r.EstablecimientoId == id);
+
+                if(strict && data is null)
+                {
+                    throw new Exception($"No existe el establecimiento ${ (tipo is null ? "" : "del " + tipo) } en los registros.");
+                }
 
                 return data;
             }

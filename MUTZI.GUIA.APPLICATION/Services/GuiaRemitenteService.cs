@@ -134,7 +134,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         "#", "Código", "EntidadRemitente", "RUC EntidadRemitente", "Remitente / Local",
                         "Tipo Guía", "N° Guía", "T. Traslado", "T. UnidadTransporte",
                         "F. Emisión", "H. Emisión", "Destinatario", "N° Doc. Destinatario",
-                        "Origen", "Destino", "Nombre", "F. Registro", "U. Registro"
+                        "Origen", "Destino", "Estado", "F. Registro", "U. Registro"
                     };
 
                     for (int col = 0; col < headers.Length; col++)
@@ -162,14 +162,14 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         worksheet.Cell(row, 15).Value = item.DistritoDestino;
 
                         var cellEstado = worksheet.Cell(row, 16);
-                        cellEstado.Value = item.Estado;
+                        cellEstado.Value = item.Estado?.ToUpper();
                         cellEstado.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                        if (item.Estado?.ToUpper() == "ENVIADO")
+                        if (item.Estado == "Emitida")
                         {
                             cellEstado.Style.Fill.BackgroundColor = XLColor.FromHtml("#ab4141");
                             cellEstado.Style.Font.FontColor = XLColor.FromHtml("#006100");
                         }
-                        else if (item.Estado?.ToUpper()=="CREADO")
+                        else if (item.Estado == "Registrada")
                         {
                             cellEstado.Style.Fill.BackgroundColor = XLColor.FromHtml("#e5e7eb");
                         }
@@ -249,10 +249,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     var currentUser = _authService.CurrentUser();
                     // Mapear todos los objetos
-                    var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(dto.MotivoTrasladoId);
+                    var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(dto.MotivoTrasladoId, true);
                     var transportista = await _transportistaRepository.GetByIdAsync(dto.DatosEnvio.TransportistaId ?? 0);
-                    var remitente = await _establecimientoRepository.GetByIdAsync(dto.RemitenteId);
-                    var destinatario = await _establecimientoRepository.GetByIdAsync(dto.DestinatarioId);
+                    var remitente = await _establecimientoRepository.GetByIdAsync(dto.RemitenteId, true, "Remitente");
+                    var destinatario = await _establecimientoRepository.GetByIdAsync(dto.DestinatarioId, true, "Destinatario");
                     var destinatarioEmails = dto.DestinatarioEmail.Select(p => _mapper.Map<GuiaRemisionEmailDestinatario>(p)).ToList();
                     var proveedor = await _proveedorRepository.GetByIdAsync(dto.ProveedorId ?? 0);
                     var conductor = dto.DatosEnvio.ConductorId?.Select(p => _mapper.Map<GuiaRemisionConductor>(p)).ToList() ?? [];
@@ -266,9 +266,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<GuiaRemisionDocumentoRelacionado>(p)).ToList();
                     var ventaConfig = await _ventaConfigRepository.GetByRucAsync(ruc);
 
-                    if (motivoTraslado is null) throw new Exception("No existe el motivo de traslado.");
-                    if (remitente is null) throw new Exception("No existe este remitente.");
-                    if (destinatario is null) throw new Exception("No existe este destinatario.");
+                    //if (motivoTraslado is null) throw new Exception("No existe el motivo de traslado.");
+                    //if (remitente is null) throw new Exception("No existe este remitente.");
+                    //if (destinatario is null) throw new Exception("No existe este destinatario.");
                     if (ventaConfig is null) throw new Exception($"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");
 
                     dto.ValidarBienesNormalizados();
@@ -497,6 +497,42 @@ namespace MUTZI.GUIA.APPLICATION.Services
             return _mapper.Map<GuiaRemisionListDTO>(guiaRemisionActualizada);
         }
 
+        public async Task<GuiaRemisionListDTO> EmitirAsync(int id)
+        {
+            var currentUser = _authService.CurrentUser();
+            var guiaRemision = await _repository.GetByIdAsync2(id);
+            if (guiaRemision == null)
+            {
+                throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
+            }
+            /*if (guiaRemision.EstadoId == (int)EnumGuiaRemisionEstado.Aprobada)
+            {
+                throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Aprobada.GetDescription()}'");
+            }*/
+            guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Emitida;
+            guiaRemision.UsuarioModifico = currentUser.UserName;
+            guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision.FechaModifico = DateTime.UtcNow;
+
+            await _repository.UpdateAsync(guiaRemision);
+
+            // Registrar el historial
+            await _guiaRemisionHistorialRepository.RegistrarAsync(new GuiaRemisionHistorial
+            {
+                GuiaRemisionId = guiaRemision.GuiaRemisionId,
+                Motivo = "Guía emitida",
+                ValorNuevo = EnumGuiaRemisionEstado.Emitida.GetDescription(),
+                UsuarioRegistro = currentUser.UserName,
+                UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
+                AreaId = currentUser.AreaId,
+                FechaRegistro = DateTime.UtcNow
+            });
+
+            var guiaRemisionActualizada = await _repository.FindWithDetail(id);
+            return _mapper.Map<GuiaRemisionListDTO>(guiaRemisionActualizada);
+        }
+
+
         public async Task<GuiaRemisionListDTO> ConfirmarAsync(int id)
         {
             var currentUser = _authService.CurrentUser();
@@ -706,6 +742,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 }
 
                 await UpdateRespuestaTicketAsync(id, ticket, estado, estadoId);
+
+                await EmitirAsync(id);
 
                 await _appDBContext.CommitAsync();
 

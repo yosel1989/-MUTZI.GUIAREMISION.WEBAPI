@@ -111,6 +111,7 @@ builder.Services.AddAutoMapper(typeof(MappingMotivoTraslado).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingCatalogo).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingPersona).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingOperacionResponsable).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingEntity).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -141,6 +142,8 @@ builder.Services.AddScoped<IOperacionResponsableRepository, OperacionResponsable
 builder.Services.AddScoped<IBienNormalizadoRepository, BienNormalizadoRepository>();
 builder.Services.AddScoped<IDocumentoRelacionadoRepository, DocumentoRelacionadoRepository>();
 builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoRepository, GuiaRemisionIndicadorTrasladoRepository>();
+builder.Services.AddScoped<IEntityRepository, EntityRepository>();
+builder.Services.AddScoped<IEntityRoleRepository, EntityRoleRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -170,6 +173,7 @@ builder.Services.AddScoped<IMotivoTrasladoService, MotivoTrasladoService>();
 builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<IOperacionResponsableService, OperacionResponsableService>();
 builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoService, GuiaRemisionIndicadorTrasladoService>();
+builder.Services.AddScoped<IEntityService, EntityService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAppDBContext, AppDBContext>();

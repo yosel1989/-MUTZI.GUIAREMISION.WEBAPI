@@ -5,6 +5,6 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
     public interface IMotivoTrasladoRepository
     {
         Task<List<MotivoTraslado>> GetListToSelectAsync();
-        Task<MotivoTraslado?> GetByIdAsync(int motivoTrasladoId);
+        Task<MotivoTraslado?> GetByIdAsync(int motivoTrasladoId, bool strict = false);
     }
 }

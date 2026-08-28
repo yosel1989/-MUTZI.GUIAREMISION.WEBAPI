@@ -29,13 +29,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories.Catalogo
             
         }
 
-        public async Task<MotivoTraslado?> GetByIdAsync(int motivoTrasladoId)
+        public async Task<MotivoTraslado?> GetByIdAsync(int motivoTrasladoId, bool strict)
         {
             try
             {
                 var data = await _context.MotivoTraslado
                     .Where(m => m.MotivoTrasladoId == motivoTrasladoId)
                     .FirstOrDefaultAsync();
+
+                if (strict && data is null) {
+                    throw new Exception("No existe el motivo de traslado en los registros.");
+                }
 
                 return data;
             }

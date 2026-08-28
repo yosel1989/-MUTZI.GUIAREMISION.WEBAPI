@@ -110,6 +110,23 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
 
+            var validContentTypes = new[]
+            {
+                "application/vnd.ms-excel", // XLS
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // XLSX
+            };
+
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!validContentTypes.Contains(file.ContentType) || !(extension == ".xls" || extension == ".xlsx"))
+            {
+                return BadRequest(new BadRequestResponseDTO
+                {
+                    Error = "Formato inválido",
+                    Detalle = "Solo se permiten archivos Excel (.xls, .xlsx)"
+                });
+            }
+
             try
             {
                 using var stream = new MemoryStream();
@@ -121,7 +138,6 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 
                 var resultados = new List<GuiaRemisionDetalleDTO>();
 
-                // Leer filas desde la 2 (porque la 1 son encabezados)
                 foreach (var row in ws.RowsUsed().Skip(1))
                 {
                     var codigo = row.Cell(1).GetString();
@@ -129,7 +145,6 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                     var tipoMedida = row.Cell(3).GetString();
                     var cantidad = row.Cell(4).GetDouble();
 
-                    // Mapear descripción a Id usando la hoja Catalogos
                     var wsCatalogo = wb.Worksheet("Catalogos");
                     var match = wsCatalogo.RowsUsed()
                         .Select(r => new { Id = r.Cell(1).GetString(), Desc = r.Cell(2).GetString() })

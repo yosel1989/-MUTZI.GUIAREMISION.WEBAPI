@@ -1,5 +1,4 @@
 ﻿
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
