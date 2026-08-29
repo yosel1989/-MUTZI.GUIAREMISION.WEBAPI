@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MUTZI.GUIA.APPLICATION.DTOs.Persona;
+using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
+using MUTZI.GUIA.APPLICATION.DTOs.Entity;
+using MUTZI.GUIA.APPLICATION.DTOs.Persona;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using Swashbuckle.AspNetCore.Annotations;
-using MUTZI.GUIA.APPLICATION.DTOs.Entity;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
@@ -69,6 +70,36 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al buscar al personal",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+
+        [HttpGet]
+        [Route("collection/{role}/{pageNumber}/{pageSize}")]
+        [SwaggerOperation(
+            Summary = "Listar entidades",
+            Description = "Listar entidades por rol. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize' y el rol con el cual tengan relación.",
+            OperationId = "entity_collection"
+        )]
+        [ProducesResponseType(typeof(PagedResult<EntityDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<PagedResult<EntityDTO>>> GetAll(string role, int pageNumber, int pageSize, [FromQuery] string? search)
+        {
+            try
+            {
+                var q = Request.Query;
+                var result = await _service.GetDataTableAsync(pageNumber, pageSize, search, role);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar proveedores.",
                     Detalle = errorMsg
                 });
             }

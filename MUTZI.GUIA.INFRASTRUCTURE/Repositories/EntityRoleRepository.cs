@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MUTZI.GUIA.APPLICATION.DTOs.EntityRole;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
@@ -58,7 +57,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return roles;
         }
 
-        public async Task<bool> AddAsync(EntityRoleCreateDTO entityRole)
+        public async Task<bool> AddAsync(EntityRole entityRole)
         {
             var existingRole = await _context.EntityRoles
                 .FirstOrDefaultAsync(r => r.EntityId == entityRole.EntityId && r.Role == entityRole.Role);

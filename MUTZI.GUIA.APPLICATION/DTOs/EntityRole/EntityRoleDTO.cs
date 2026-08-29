@@ -6,7 +6,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.EntityRole
     public class EntityRoleDTO
     {
         
-        [JsonPropertyName("entity_id")]
+        [JsonPropertyName("id")]
         [Description("Identificador único de la entidad")]
         public int EntityId { get; set; }
 

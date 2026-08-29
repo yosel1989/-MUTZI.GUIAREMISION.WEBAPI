@@ -7,6 +7,6 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
         Task<bool> SyncAsync(int entityId, List<EntityRole> roles);
         Task<EntityRole?> GetByIdAsync(int id);
         Task<IEnumerable<EntityRole>> GetByEntityAsync(int entityId);
-        Task<bool> AddAsync(int entityId, string role);
+        Task<bool> AddAsync(EntityRole entityRole);
     }
 }

@@ -1,16 +1,15 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Catalogos
 {
     [SwaggerSchema("Devuelve lista de código de países", Nullable = false)]
     public class PaisDTO
     {
+        [JsonPropertyName("id")]
+        [SwaggerSchema("Devuelve el id del país.", Nullable = false)]
+        public string Id { get; set; }
+
         [JsonPropertyName("pais")]
         [SwaggerSchema("Devuelve en texto el nombre del país.", Nullable = false)]
         public string Pais { get; set; }
