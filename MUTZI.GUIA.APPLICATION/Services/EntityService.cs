@@ -69,7 +69,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     entity.CreatedAt = DateTime.UtcNow;
                     entity.CreatedAtUser = user.UserName;
                     entity.CreatedAtUserName = $"{user.FirstName} {user.LastName}";
-                    var role = await _repository.CreateAsync(existingEntity);
+                    var role = await _repository.CreateAsync(entity);
                     outputEntity = _mapper.Map<EntityDTO>(role);
                 }
 

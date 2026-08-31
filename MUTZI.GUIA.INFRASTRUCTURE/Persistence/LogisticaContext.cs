@@ -27,7 +27,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<UnidadTransporte> UnidadTransporte { get; set; }
     public virtual DbSet<GuiaRemisionUnidadTransporte> UnidadTransporteGuids { get; set; }
     public virtual DbSet<Ubigeo> Ubigeo { get; set; }
-    public virtual DbSet<UnidadMedida> UnidadMedida { get; set; }
+    public virtual DbSet<UnitMeasurement> UnidadMedida { get; set; }
     public virtual DbSet<VentaConfig> VentaConfig { get; set; }
     public virtual DbSet<Establecimiento> Establecimiento { get; set; }
     public virtual DbSet<Perfil> Perfil { get; set; }
@@ -49,6 +49,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<GuiaRemisionIndicadorTraslado> GuiaRemisionIndicadorTraslado { get; set; }
     public virtual DbSet<Entity> Entities { get; set; }
     public virtual DbSet<EntityRole> EntityRoles { get; set; }
+    public virtual DbSet<Country> Countries { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

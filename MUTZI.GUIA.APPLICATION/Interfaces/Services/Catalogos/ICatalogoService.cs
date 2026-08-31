@@ -5,9 +5,9 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos
     public interface ICatalogoService
     {
         IEnumerable<EmisorAutorizadorVehicularDTO> GetEmisoresVehiculares();
-        
-        IEnumerable<PaisDTO> GetPaises();
-        
+
+        Task<IEnumerable<CountryDTO>> GetCountryCollection();
+
         IEnumerable<TipoEstablecimientoDTO> GetTiposEstablecimiento();
         
         Task<IEnumerable<TipoDocumentoToSelectDTO>> GetTiposDocumento(string? tipoRegimen);

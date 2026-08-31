@@ -13,7 +13,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories.Catalogo
             _context = context;
         }
 
-        public async Task<IEnumerable<UnidadMedida>> GetListPesoToSelectAsync(string? tipo)
+        public async Task<IEnumerable<UnitMeasurement>> GetListPesoToSelectAsync(string? tipo)
         {
             var query = _context.UnidadMedida.AsQueryable();
 
@@ -30,6 +30,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories.Catalogo
                     break;
                 case "conteo":
                     query = query.Where(u => u.EsUnidadConteo);
+                    break;
+                case "guia-remision":
+                    query = query.Where(u => u.EsGuiaRemision);
                     break;
                 case null:
                 case "":

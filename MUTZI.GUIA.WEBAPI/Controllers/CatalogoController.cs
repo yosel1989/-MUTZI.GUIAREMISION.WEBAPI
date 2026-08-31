@@ -23,14 +23,14 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         Summary = "Listar países definidos",
         Description = "Lista países definidos para mostrarlos dentro de un select.",
         OperationId = "listar_pais")]
-        [ProducesResponseType(typeof(PaisDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<CountryDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public ActionResult<IEnumerable<PaisDTO>> GetPaises()
+        public async Task<ActionResult<IEnumerable<CountryDTO>>> GetPaises()
         {
             try
             {
-                var result = _service.GetPaises();
+                var result = await _service.GetCountryCollection();
                 return Ok(result);
             }
             catch (Exception ex)

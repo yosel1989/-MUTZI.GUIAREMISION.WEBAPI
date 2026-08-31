@@ -8,6 +8,7 @@ using MUTZI.GUIA.APPLICATION.Configuration;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Hubs;
+using MUTZI.GUIA.APPLICATION.Interfaces.Ports;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.Ubigeo;
@@ -30,6 +31,7 @@ using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
 using MUTZI.GUIA.DOMAIN.Interfaces;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE;
+using MUTZI.GUIA.INFRASTRUCTURE.Adapters;
 using MUTZI.GUIA.INFRASTRUCTURE.Interceptors;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
@@ -144,6 +146,7 @@ builder.Services.AddScoped<IDocumentoRelacionadoRepository, DocumentoRelacionado
 builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoRepository, GuiaRemisionIndicadorTrasladoRepository>();
 builder.Services.AddScoped<IEntityRepository, EntityRepository>();
 builder.Services.AddScoped<IEntityRoleRepository, EntityRoleRepository>();
+builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -157,6 +160,8 @@ builder.Services.AddScoped<IEnvioService, EnvioService>();
 builder.Services.AddScoped<ICatalogoService, CatalogoService>();
 builder.Services.AddScoped<IPerfilService, PerfilService>();
 builder.Services.AddScoped<IPermisoService, PermisoService>();
+
+builder.Services.AddScoped<IEntityInfoPort, EntityInfoAdapter>();
 
 builder.Services.AddScoped<IConductorService, ConductorService>();
 builder.Services.AddScoped<IUnidadTransporteService, UnidadTransporteService>();
@@ -174,6 +179,7 @@ builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<IOperacionResponsableService, OperacionResponsableService>();
 builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoService, GuiaRemisionIndicadorTrasladoService>();
 builder.Services.AddScoped<IEntityService, EntityService>();
+builder.Services.AddScoped<IEntityInfoService, EntityInfoService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddScoped<IAppDBContext, AppDBContext>();

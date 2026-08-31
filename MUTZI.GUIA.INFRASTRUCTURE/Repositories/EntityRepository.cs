@@ -45,7 +45,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<(int total, List<Entity>)> GetDataTableAsync(int pageNumber, int pageSize, string? search, string role)
         {
-            var query = _context.Entities.AsQueryable();
+            var query = _context.Entities
+                .Include(x => x.DocumentType)
+                .AsQueryable();
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(e => 

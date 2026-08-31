@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 
 [Table("vw_master_unit_of_measurement")]
-public partial class UnidadMedida
+public partial class UnitMeasurement
 {
     [Key]
     [Column("unit_measurement_id")]
@@ -30,5 +30,8 @@ public partial class UnidadMedida
 
     [Column("is_unit_counting")]
     public bool EsUnidadConteo { get; set; } = false;
+
+    [Column("is_waybill")]
+    public bool EsGuiaRemision { get; set; } = false;
 
 }

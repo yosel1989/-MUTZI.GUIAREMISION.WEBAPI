@@ -62,7 +62,7 @@ public partial class GuiaRemisionDatoEnvio
     // Relaciones
 
     [ForeignKey(nameof(UnidadMedidaId))]
-    public virtual UnidadMedida UnidadMedida { get; set; } = null!;
+    public virtual UnitMeasurement UnidadMedida { get; set; } = null!;
 
     [ForeignKey(nameof(GuiaRemisionId))]
     public virtual GuiaRemision Guia { get; set; } = null!;

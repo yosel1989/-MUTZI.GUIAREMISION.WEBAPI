@@ -12,8 +12,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<EntidadReguladora, EntidadReguladoraToSelectDTO>();
 
             // Unidad de Medida
-            CreateMap<UnidadMedida, UnidadMedidaDTO>();
-            CreateMap<UnidadMedida, UnidadMedidaToSelectDTO>();
+            CreateMap<UnitMeasurement, UnidadMedidaDTO>();
+            CreateMap<UnitMeasurement, UnidadMedidaToSelectDTO>();
 
 
             // Bien Normalizado
@@ -27,6 +27,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
 
             // Indicador de Traslado
             CreateMap<GuiaRemisionIndicadorTraslado, GuiaRemisionIndicadorTrasladoToSelectDTO>();
+
+            // Paises
+            CreateMap<Country, CountryDTO>();
         }
     }
 }

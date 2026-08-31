@@ -29,6 +29,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
         [Description("Id del tipo de documento (DNI, RUC, etc.) de la tabla master_data.document_type")]
         public int DocumentTypeId { get; set; }
 
+        [JsonPropertyName("document_type")]
+        [Description("Nombre del tipo de documento (DNI, RUC, etc.) de la tabla master_data.document_type")]
+        public string DocumentType { get; set; }
+
         [JsonPropertyName("document_number")]
         [Description("Número de documento de identidad o RUC")]
         public string DocumentNumber { get; set; }

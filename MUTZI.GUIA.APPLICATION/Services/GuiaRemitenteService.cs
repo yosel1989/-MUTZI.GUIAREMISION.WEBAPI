@@ -322,7 +322,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     if (errorMsg.Length > 500) errorMsg = errorMsg[..500];
 
                     string errorBox = errorMsg.Contains("FOREIGN KEY") ? "Error de clave foránea."
-                                    : errorMsg.Contains("UnidadMedida") ? "Unidad de medida no válida."
+                                    : errorMsg.Contains("UnitMeasurement") ? "Unidad de medida no válida."
                                     : errorMsg.Contains("String") ? "Error de longitud de campo."
                                     : "";
 

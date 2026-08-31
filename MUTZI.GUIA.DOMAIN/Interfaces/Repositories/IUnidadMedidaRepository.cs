@@ -4,6 +4,6 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 {
     public interface IUnidadMedidaRepository
     {
-        Task<IEnumerable<UnidadMedida>> GetListPesoToSelectAsync(string? tipo);
+        Task<IEnumerable<UnitMeasurement>> GetListPesoToSelectAsync(string? tipo);
     }
 }
