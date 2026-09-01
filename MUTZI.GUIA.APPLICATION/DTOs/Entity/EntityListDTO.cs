@@ -25,5 +25,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
         [Description("Número de documento de identidad o RUC")]
         public string DocumentNumber { get; set; }
 
+
     }
 }
