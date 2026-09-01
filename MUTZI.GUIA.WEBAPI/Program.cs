@@ -1,3 +1,4 @@
+using FluentValidation;
 using Genexs.AWS.Library;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,7 @@ using MUTZI.GUIA.APPLICATION.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
+using MUTZI.GUIA.APPLICATION.Validators;
 using MUTZI.GUIA.DOMAIN.Interfaces;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE;
@@ -40,6 +42,7 @@ using MUTZI.GUIA.WEBAPI.Filters;
 using MUTZI.GUIA.WEBAPI.Middlewares;
 using Serilog;
 using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -182,6 +185,9 @@ builder.Services.AddScoped<IEntityService, EntityService>();
 builder.Services.AddScoped<IEntityInfoService, EntityInfoService>();
 builder.Services.AddMemoryCache();
 
+builder.Services.AddValidatorsFromAssemblyContaining<EntityCreateValidator>();
+
+
 builder.Services.AddScoped<IAppDBContext, AppDBContext>();
 
 //aGREGAR SWAGGER
@@ -287,6 +293,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<FluentValidationMiddleware>();
 
 app.UseEndpoints(endpoints =>
 {

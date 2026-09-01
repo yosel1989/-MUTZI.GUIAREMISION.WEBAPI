@@ -79,7 +79,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [HttpGet]
         [Route("collection/{role}/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
-            Summary = "Listar entidades",
+            Summary = "Obtener entidades",
             Description = "Listar entidades por rol. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize' y el rol con el cual tengan relación.",
             OperationId = "entity_collection"
         )]
@@ -92,6 +92,36 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             {
                 var q = Request.Query;
                 var result = await _service.GetDataTableAsync(pageNumber, pageSize, search, role);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar proveedores.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+
+        [HttpGet]
+        [Route("list/{pageNumber}/{pageSize}")]
+        [SwaggerOperation(
+            Summary = "Listar entidades",
+            Description = "Listar entidades. Para ello se debe ingresar como parámetro: el número de página 'pageNumber'.",
+            OperationId = "entity_list"
+        )]
+        [ProducesResponseType(typeof(PagedResult<EntityListDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<PagedResult<EntityListDTO>>> GetList( int pageNumber, int pageSize, [FromQuery] string? search )
+        {
+            try
+            {
+                var q = Request.Query;
+                var result = await _service.GetListAsync(pageNumber, pageSize, search);
                 return Ok(result);
             }
             catch (Exception ex)

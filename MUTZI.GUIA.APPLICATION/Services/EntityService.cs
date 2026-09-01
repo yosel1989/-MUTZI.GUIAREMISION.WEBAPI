@@ -145,5 +145,19 @@ namespace MUTZI.GUIA.APPLICATION.Services
             };
         }
 
+        public async Task<PagedResult<EntityListDTO>> GetListAsync(int pageNumber, int pageSize, string? search)
+        {
+            var (totalRecords, data) = await _repository.GetListAsync(pageNumber, pageSize, search);
+            var dataDTO = _mapper.Map<List<EntityListDTO>>(data);
+            return new PagedResult<EntityListDTO>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+                Data = dataDTO
+            };
+        }
+
     }
 }

@@ -49,6 +49,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
         [Description("Identificador del país")]
         public int? CountryId { get; set; }
 
+        [JsonPropertyName("country")]
+        [Description("Nombre del país")]
+        public string? Country { get; set; }
+
         [JsonPropertyName("is_internal")]
         [Description("Indica si la entidad pertenece al consorcio o no es empresa tercera.")]
         public bool IsInternal { get; set; } = true;

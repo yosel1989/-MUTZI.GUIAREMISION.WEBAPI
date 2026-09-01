@@ -11,8 +11,10 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
         {
             CreateMap<Entity, EntityDTO>()
                 .ForMember(dest => dest.DocumentType, opt => opt.MapFrom(src => src.DocumentType.DescripcionCorta))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country.Code))
                 ;
             CreateMap<EntityCreateDTO, Entity>();
+            CreateMap<Entity, EntityListDTO>();
 
             CreateMap<PersonInfo, PersonInfoDTO>();
             CreateMap<CompanyInfo, CompanyInfoDTO>();

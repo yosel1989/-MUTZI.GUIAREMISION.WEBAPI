@@ -47,6 +47,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             var query = _context.Entities
                 .Include(x => x.DocumentType)
+                .Include(x => x.Country)
                 .AsQueryable();
             if (!string.IsNullOrEmpty(search))
             {
@@ -76,5 +77,62 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
             return (totalRecords, data);
         }
+
+
+
+        public async Task<(int total, List<Entity>)> GetListAsync(int pageNumber, int pageSize, string? search)
+        {
+            var query = _context.Entities
+                .Where(x => x.Active)
+                .AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(e =>
+                    e.Name.Contains(search) ||
+                    e.FirstName.Contains(search) ||
+                    e.LastName.Contains(search) ||
+                    e.DocumentNumber.Contains(search)
+                );
+            }
+
+            var totalRecords = await query.CountAsync();
+
+            var data = await query
+                .OrderByDescending(p => p.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .Select(x => new Entity
+                {
+                    EntityId = x.EntityId,
+                    Name = x.Name,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    DocumentNumber = x.DocumentNumber
+                })
+                .ToListAsync();
+
+            return (totalRecords, data);
+        }
+
+
+
+
+        /// Validations
+
+        public async Task<bool> HasManyRole(string documentNumber, string role)
+        {
+            return await _context.Entities
+                .Include(x => x.Roles)
+                .Where(x => x.DocumentNumber == documentNumber)
+                .AnyAsync(x => x.Roles.Any(r => r.Role == role));
+        }
+
+        public async Task<bool> HasManyDocumentNumber(string documentNumber)
+        {
+            return await _context.Entities
+                .AnyAsync(x => x.DocumentNumber == documentNumber.Trim());
+        }
+
     }
 }

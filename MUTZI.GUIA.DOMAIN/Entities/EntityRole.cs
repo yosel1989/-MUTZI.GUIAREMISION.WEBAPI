@@ -15,8 +15,13 @@ namespace MUTZI.GUIA.DOMAIN.Entities
 
         [Column("role")]
         [Required]
-        [Description("Rol de entidad: client,supplier,transporter,issuer")]
-        public string Role { get; set; } = "issuer";
+        [Description("Rol de entidad: cliente,proveedor,transportista,emisor")]
+        public string Role { get; set; } = "emisor";
+
+        [Column("active")]
+        [Required]
+        [Description("Estado boolean, representa si esta activo el rol")]
+        public bool Active { get; set; } = true;
 
         [Column("created_at")]
         [Description("Fecha de creación del registro")]
