@@ -167,9 +167,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         case "search":
                         {
                             query = query.Where(x => 
-                                x.Remitente.Descripcion.ToLower().Contains(val) ||
+                                x.Remitente.Description.ToLower().Contains(val) ||
                                 x.Remitente.Ruc.ToLower().Contains(val) ||
-                                x.Destinatario.Descripcion.ToLower().Contains(val) ||
+                                x.Destinatario.Description.ToLower().Contains(val) ||
                                 x.Destinatario.Ruc.ToLower().Contains(val) ||
                                 x.NumeroGuia.Contains(val) ||
                                 x.MotivoTraslado.Nombre.ToLower().Contains(val) ||
@@ -217,19 +217,19 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Fecha = g.Fecha,
                         Hora = g.Hora,
                         RespuestaTicket = g.RespuestaTicket,
-                        Remitente = new Establecimiento {
+                        Remitente = new EntityBranch {
                             Ruc = g.Remitente.Ruc,
-                            Descripcion = g.Remitente.Descripcion,
+                            Description = g.Remitente.Description,
                             Direccion = g.Remitente.Direccion,
                             RucNavigation = new VentaConfig
                             {
                                 Empresa = g.Remitente.RucNavigation.Empresa
                             }
                         },
-                        Destinatario = new Establecimiento
+                        Destinatario = new EntityBranch
                         {
                             Ruc = g.Destinatario.Ruc,
-                            Descripcion = g.Destinatario.Descripcion,
+                            Description = g.Destinatario.Description,
                             Direccion = g.Destinatario.Direccion,
                             RucNavigation = new VentaConfig
                             {
@@ -424,9 +424,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Estado = g.RemiteTransportista.Estado,
                         EstadoId = g.RemiteTransportista.EstadoId
                     },
-                    Remitente = new Establecimiento
+                    Remitente = new EntityBranch
                     {
-                        EstablecimientoId = g.Remitente.EstablecimientoId,
+                        EntityBranchId = g.Remitente.EntityBranchId,
                         Ruc = g.Remitente.Ruc,
                         UbigeoId = g.Remitente.UbigeoId,
                         Ubigeo = g.Remitente.Ubigeo,
@@ -441,9 +441,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         EstadoId = g.Remitente.EstadoId,
                         RucNavigation = g.Remitente.RucNavigation
                     },
-                    Destinatario = new Establecimiento
+                    Destinatario = new EntityBranch
                     {
-                        EstablecimientoId = g.Destinatario.EstablecimientoId,
+                        EntityBranchId = g.Destinatario.EntityBranchId,
                         Ruc = g.Destinatario.Ruc,
                         UbigeoId = g.Destinatario.UbigeoId,
                         Ubigeo = g.Destinatario.Ubigeo,
@@ -627,8 +627,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
 
         public async Task<(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(
-            Establecimiento remitente,
-            Establecimiento destinatario,
+            EntityBranch remitente,
+            EntityBranch destinatario,
             Proveedor proveedor,
             List<GuiaRemisionConductor> conductor,
             List<GuiaRemisionUnidadTransporte> transporte,
@@ -645,9 +645,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 // Guía
-                guiaRemision.RemitenteId = remitente.EstablecimientoId;
+                guiaRemision.RemitenteId = remitente.EntityBranchId;
                 guiaRemision.Ruc = remitente.Ruc;
-                guiaRemision.DestinatarioId = destinatario.EstablecimientoId;
+                guiaRemision.DestinatarioId = destinatario.EntityBranchId;
                 //guiaRemision.Nombre = EnumGuiaRemisionEstado.Registrada.GetDescription();
                 guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Registrada;
                 //if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
@@ -729,7 +729,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     foreach (var email in emailDestinatarioGuia)
                     {
                         email.GuiaRemisionId = guiaRemision.GuiaRemisionId;
-                        email.EstablecimientoId = destinatario.EstablecimientoId;
+                        email.EstablecimientoId = destinatario.EntityBranchId;
                         await _context.EmailDestinatarioGuids.AddAsync(email);
                     }
                     await _context.SaveChangesAsync();
@@ -836,20 +836,20 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Fecha = g.Fecha,
                         Hora = g.Hora,
                         RespuestaTicket = g.RespuestaTicket,
-                        Remitente = new Establecimiento
+                        Remitente = new EntityBranch
                         {
                             Ruc = g.Remitente.Ruc,
-                            Descripcion = g.Remitente.Descripcion,
+                            Description = g.Remitente.Description,
                             Direccion = g.Remitente.Direccion,
                             RucNavigation = new VentaConfig
                             {
                                 Empresa = g.Remitente.RucNavigation.Empresa
                             }
                         },
-                        Destinatario = new Establecimiento
+                        Destinatario = new EntityBranch
                         {
                             Ruc = g.Destinatario.Ruc,
-                            Descripcion = g.Destinatario.Descripcion,
+                            Description = g.Destinatario.Description,
                             Direccion = g.Destinatario.Direccion,
                             RucNavigation = new VentaConfig
                             {

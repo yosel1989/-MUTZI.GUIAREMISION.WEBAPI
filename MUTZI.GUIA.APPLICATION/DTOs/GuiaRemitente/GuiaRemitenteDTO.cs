@@ -80,10 +80,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public List<DocRelacionadoDTO>? DocRelacionados { get; set; }
 
         [JsonPropertyName("remitente")]
-        public EstablecimientoDTO Remitente { get; set; }
+        public EntityBranchDTO Remitente { get; set; }
 
         [JsonPropertyName("destinatario")]
-        public EstablecimientoDTO Destinatario { get; set; }
+        public EntityBranchDTO Destinatario { get; set; }
 
         [JsonPropertyName("destinatario_correo")]
         public List<EmailDestinatarioGuiaDTO> DestinatarioCorreo { get; set; } = new List<EmailDestinatarioGuiaDTO>();

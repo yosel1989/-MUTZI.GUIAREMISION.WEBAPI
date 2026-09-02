@@ -130,7 +130,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
             return _mapper.Map<GuiaTransportistaDTO>(existingGuiaRemision);
         }
 
-        public (bool EsValido, string Error) ValidarDatosGuiaTransportista(GuiaTransportistaCreateDTO guia, string ruc, Establecimiento remitente, Establecimiento destinatario, Transportista remiteTransportista, VentaConfig ventaConfig)
+        public (bool EsValido, string Error) ValidarDatosGuiaTransportista(GuiaTransportistaCreateDTO guia, string ruc, EntityBranch remitente, EntityBranch destinatario, Transportista remiteTransportista, VentaConfig ventaConfig)
         {
             try
             {
@@ -149,7 +149,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                 return (false, ex.Message);
             }
         }
-        public (bool EsValido, string Error) ValidarDatosGuiaTransportista(GuiaTransportistaDTO guia, string ruc, Establecimiento remitente, Establecimiento destinatario, Transportista remiteTransportista, VentaConfig ventaConfig)
+        public (bool EsValido, string Error) ValidarDatosGuiaTransportista(GuiaTransportistaDTO guia, string ruc, EntityBranch remitente, EntityBranch destinatario, Transportista remiteTransportista, VentaConfig ventaConfig)
         {
             try
             {

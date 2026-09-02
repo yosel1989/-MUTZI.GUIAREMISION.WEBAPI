@@ -29,7 +29,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<Ubigeo> Ubigeo { get; set; }
     public virtual DbSet<UnitMeasurement> UnidadMedida { get; set; }
     public virtual DbSet<VentaConfig> VentaConfig { get; set; }
-    public virtual DbSet<Establecimiento> Establecimiento { get; set; }
+    public virtual DbSet<EntityBranch> Establecimiento { get; set; }
     public virtual DbSet<Perfil> Perfil { get; set; }
     public virtual DbSet<Permiso> Permiso { get; set; }
     public virtual DbSet<PerfilPermiso> PerfilPermiso { get; set; }

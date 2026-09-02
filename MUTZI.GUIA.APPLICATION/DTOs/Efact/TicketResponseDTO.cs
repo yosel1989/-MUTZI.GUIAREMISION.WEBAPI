@@ -17,7 +17,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Efact
         [SwaggerSchema("Devuelve un texto, es el código de respuesta cuando hubo una correcta interacción con el facturador. Ejm => código: 0; indica que se envió la guía correctamente. Ej.2 => código: -9998; indica que se ha generado la guía, pero que el documento pdf u otro aún está en proceso.", Nullable = false)]
         public string Code { get; set; } = string.Empty;
         [JsonPropertyName("descripcion")]
-        [SwaggerSchema("Devuelve en texto la descripción cuando hubo una correcta interacción con el facturador, normalmente retorna el ticket creado en la plataforma del facturador. Ejm cuando se crea una guía => Descripcion: 33baf32d-39f8-4151-bd48-cfadcfb9549c ó cuando se consulta un pdf => Ejm: Descripcion: En proceso.", Nullable = false)]
+        [SwaggerSchema("Devuelve en texto la descripción cuando hubo una correcta interacción con el facturador, normalmente retorna el ticket creado en la plataforma del facturador. Ejm cuando se crea una guía => Description: 33baf32d-39f8-4151-bd48-cfadcfb9549c ó cuando se consulta un pdf => Ejm: Description: En proceso.", Nullable = false)]
         public string Description { get; set; } = string.Empty;
     }
     [SwaggerSchema("Respuesta exitosa del endpoint enviar_guia_remision")]

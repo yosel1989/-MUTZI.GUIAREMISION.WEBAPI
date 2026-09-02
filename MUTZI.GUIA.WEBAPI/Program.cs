@@ -102,7 +102,7 @@ builder.Services.AddDbContext<LogisticaContext>((sp,options) =>
 
 //Registrar AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
-builder.Services.AddAutoMapper(typeof(MappingEstablecimiento).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingEntityBranch).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingPerfil).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingPerfilPermiso).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingPermiso).Assembly);

@@ -3,15 +3,15 @@ using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 {
-    public class EstablecimientoListDTO
+    public class EntityBranchListDTO
     {
         [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, el ID del remitente en la bbdd", Nullable = false)]
         public int EstablecimientoId { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("description")]
         [SwaggerSchema("Devuelve el nombre asociada al establecimiento.", Nullable = false)]
-        public string Descripcion { get; set; }
+        public string Description { get; set; }
 
         [JsonPropertyName("ruc")]
         [SwaggerSchema("Devuelve en texto el ruc asociado a la empresa.", Nullable = false)]
@@ -33,9 +33,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve un texto, el distrito de la dirección fiscal del remitente", Nullable = false)]
         public string Distrito { get; set; }
 
-        [JsonPropertyName("direccion")]
+        [JsonPropertyName("address")]
         [SwaggerSchema("Devuelve un texto, la direccion fiscal del remitente", Nullable = false)]
-        public string Direccion { get; set; }
+        public string Address { get; set; }
 
         [JsonPropertyName("email")]
         [SwaggerSchema("Devuelve un texto, el correo electrónico del remitente", Nullable = true)]

@@ -37,12 +37,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         public List<DocRelacionadoDTO>? DocRelacionados { get; set; }
 
         // Remitente
-        public EstablecimientoDTO Remitente { get; set; }
+        public EntityBranchDTO Remitente { get; set; }
 
         [JsonPropertyName("remite_transportista")]
         public TransportistaDTO RemiteTransportista { get; set; }
 
-        public EstablecimientoDTO Destinatario { get; set; }
+        public EntityBranchDTO Destinatario { get; set; }
 
         public List<EmailDestinatarioGuiaDTO> DestinatarioEmail { get; set; } = new List<EmailDestinatarioGuiaDTO>();
 

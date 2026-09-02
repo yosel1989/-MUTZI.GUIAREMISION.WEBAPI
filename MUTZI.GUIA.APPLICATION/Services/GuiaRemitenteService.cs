@@ -363,7 +363,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         {
             await _repository.UpdateRespuestaTicketAsync(guiaId, ticket, estado, idEstado);
         }
-        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO guia, string ruc, Establecimiento remitente, Establecimiento destinatario, VentaConfig ventaConfig)
+        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO guia, string ruc, EntityBranch remitente, EntityBranch destinatario, VentaConfig ventaConfig)
         {
             try
             {
@@ -402,7 +402,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 return (false, ex.Message);
             }
         }
-        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO guia, string ruc, Establecimiento remitente, Establecimiento destinatario, VentaConfig ventaConfig)
+        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO guia, string ruc, EntityBranch remitente, EntityBranch destinatario, VentaConfig ventaConfig)
         {
             try
             {

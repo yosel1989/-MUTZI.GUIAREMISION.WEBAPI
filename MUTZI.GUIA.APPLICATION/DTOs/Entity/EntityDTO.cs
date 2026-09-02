@@ -11,7 +11,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
 
         [JsonPropertyName("type")]
         [Description("Tipo de entidad: company o person")]
-        public string Type { get; set; } = "company";
+        public string Type { get; set; }
 
         [JsonPropertyName("name")]
         [Description("Razón social si es empresa")]

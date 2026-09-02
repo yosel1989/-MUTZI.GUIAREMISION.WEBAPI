@@ -56,7 +56,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities
 
         public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
 
-        public virtual ICollection<Establecimiento> Establecimientos { get; set; } = new List<Establecimiento>();
+        public virtual ICollection<EntityBranch> Establecimientos { get; set; } = new List<EntityBranch>();
     }
 
 }

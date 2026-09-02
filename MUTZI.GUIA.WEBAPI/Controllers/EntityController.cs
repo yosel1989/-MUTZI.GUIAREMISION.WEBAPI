@@ -116,12 +116,12 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(PagedResult<EntityListDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<EntityListDTO>>> GetList( int pageNumber, int pageSize, [FromQuery] string? search )
+        public async Task<ActionResult<PagedResult<EntityListDTO>>> GetList( int pageNumber, int pageSize, [FromQuery] string? search, [FromQuery] string? type)
         {
             try
             {
                 var q = Request.Query;
-                var result = await _service.GetListAsync(pageNumber, pageSize, search);
+                var result = await _service.GetListAsync(pageNumber, pageSize, search, type);
                 return Ok(result);
             }
             catch (Exception ex)

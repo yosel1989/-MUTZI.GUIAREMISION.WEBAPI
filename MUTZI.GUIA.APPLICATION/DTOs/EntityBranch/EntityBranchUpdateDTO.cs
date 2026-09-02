@@ -5,12 +5,17 @@ using System.Text.Json.Serialization;
 namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 {
     [SwaggerSchema("Recibe un objeto establecimiento para actualizar", Nullable = false)]
-    public class EstablecimientoUpdateDTO
+    public class EntityBranchUpdateDTO
     {
-        [JsonPropertyName("establecimiento_id")]
+        [JsonPropertyName("entity_branch_id")]
         [SwaggerSchema("Recibe un número, es el id del establecimiento", Nullable = false)]
         [Required(ErrorMessage = "El id del establecimiento es requerido")]
-        public int EstablecimientoId { get; set; }
+        public int EntityBranchId { get; set; }
+
+        [JsonPropertyName("entity_id")]
+        [SwaggerSchema("Recibe un número, aquí se coloca el id de la entidad.", Nullable = false)]
+        [Required(ErrorMessage = "El id del establecimiento es requerido")]
+        public int? EntityId { get; set; }
 
         [JsonPropertyName("ruc")]
         [SwaggerSchema("Recibe un texto, es el ruc del establecimiento", Nullable = false)]
@@ -19,11 +24,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [MinLength(11)]
         public string Ruc { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("description")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la descripción o nombre del establecimiento", Nullable = false)]
         [MaxLength(200)]
         [Required]
-        public string Descripcion { get; set; }
+        public string Description { get; set; }
 
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del establecimiento, ejm: 150131", Nullable = false)]
@@ -35,11 +40,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [RegularExpression(@"^(?!000000)\d{6}$", ErrorMessage = "El ubigeo debe tener 6 caracteres y no puede ser 000000")]
         public string UbigeoID { get; set; }
 
-        [JsonPropertyName("direccion")]
+        [JsonPropertyName("address")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la direccion fiscal del establecimiento", Nullable = false)]
         [MaxLength(250)]
         [Required]
-        public string Direccion { get; set; }
+        public string Address { get; set; }
 
         [JsonPropertyName("email")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del establecimiento", Nullable = true)]
@@ -59,14 +64,18 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [MaxLength(4)]
         public string Serie { get; set; }
 
-        [JsonPropertyName("codigo_sunat")]
+        [JsonPropertyName("code_sunat")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]
         [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
-        public string? CodigoSunat { get; set; }
+        public string CodeSunat { get; set; }
 
         [JsonPropertyName("area")]
         [SwaggerSchema("Devuelve un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
         [MaxLength(45)]
         public string? Area { get; set; }
+
+        [JsonPropertyName("is_main")]
+        [SwaggerSchema("Recibe un boolean, aquí recibe un indicador si es anexo principal", Nullable = false)]
+        public bool IsMain { get; set; }
     }
 }

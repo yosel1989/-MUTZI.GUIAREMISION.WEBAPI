@@ -44,9 +44,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             //?? throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
         }
         public async Task<(int GuiaId, string NumeroGuia)> CreateGuiaTransportistaTransactionalAsync(
-            Establecimiento remitente,
+            EntityBranch remitente,
             Transportista remiteTransportista,
-            Establecimiento destinatario,
+            EntityBranch destinatario,
             List<GuiaRemisionConductor> conductor,
             List<GuiaRemisionUnidadTransporte> transporte,
             GuiaRemision guiaRemision,
@@ -64,9 +64,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
 
                 // Guía
-                guiaRemision.RemitenteId = remitente.EstablecimientoId;
+                guiaRemision.RemitenteId = remitente.EntityBranchId;
                 guiaRemision.Ruc = remitente.Ruc;
-                guiaRemision.DestinatarioId = destinatario.EstablecimientoId;
+                guiaRemision.DestinatarioId = destinatario.EntityBranchId;
                 guiaRemision.RemiteTransportistaId = remiteTransportista.TransportistaId;
                 //guiaRemision.Nombre = "REGISTRADO";
                 guiaRemision.EstadoId = 0;
@@ -150,7 +150,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     foreach (var emailDest in emailDestinatarioGuia)
                     {
                         emailDest.GuiaRemisionId = guiaRemision.GuiaRemisionId;
-                        emailDest.EstablecimientoId = destinatario.EstablecimientoId;
+                        emailDest.EstablecimientoId = destinatario.EntityBranchId;
                         await _context.EmailDestinatarioGuids.AddAsync(emailDest);
                     }
                     await _context.SaveChangesAsync();

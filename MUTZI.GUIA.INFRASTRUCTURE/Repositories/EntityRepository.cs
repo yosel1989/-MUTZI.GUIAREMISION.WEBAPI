@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.DOMAIN.Entities;
+using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 
@@ -80,11 +81,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
 
 
-        public async Task<(int total, List<Entity>)> GetListAsync(int pageNumber, int pageSize, string? search)
+        public async Task<(int total, List<Entity>)> GetListAsync(int pageNumber, int pageSize, string? search, string? type)
         {
             var query = _context.Entities
                 .Where(x => x.Active)
                 .AsQueryable();
+
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(e =>
@@ -93,6 +95,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     e.LastName.Contains(search) ||
                     e.DocumentNumber.Contains(search)
                 );
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                query = query.Where(e => e.Type == type);
             }
 
             var totalRecords = await query.CountAsync();
@@ -105,10 +112,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Select(x => new Entity
                 {
                     EntityId = x.EntityId,
+                    Type = x.Type,
                     Name = x.Name,
                     FirstName = x.FirstName,
                     LastName = x.LastName,
-                    DocumentNumber = x.DocumentNumber
+                    DocumentNumber = x.DocumentNumber,
+                    DocumentType = new TipoDocumento
+                    {
+                        DescripcionCorta = x.DocumentType.DescripcionCorta
+                    }
                 })
                 .ToListAsync();
 

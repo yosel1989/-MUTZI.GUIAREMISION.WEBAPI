@@ -5,6 +5,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
 {
     public class EntityCreateDTO
     {
+        [JsonPropertyName("id")]
+        [Description("identificador de la entidad, solo sí se esta seleccionando una entidad existente.")]
+        public int EntityId { get; set; } = 0;
 
         [JsonPropertyName("type")]
         [Description("Tipo de entidad: company o person")]

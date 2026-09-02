@@ -23,41 +23,41 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _mapper = mapper;
             _authService = authService;
         }
-        public async Task<List<EstablecimientoListDTO>> GetAllByRucToSelectAsync(string ruc)
+        public async Task<List<EntityBranchListDTO>> GetAllByRucToSelectAsync(string ruc)
         {
             var data = await _repository.GetAllByRucToSelectAsync(ruc);
-            return _mapper.Map<List<EstablecimientoListDTO>>(data);
+            return _mapper.Map<List<EntityBranchListDTO>>(data);
         }
 
-        public async Task<List<EstablecimientoToSelectDTO>> GetAllByRucToSelect2Async(string ruc)
+        public async Task<List<EntityBranchToSelectDTO>> GetAllByRucToSelect2Async(string ruc)
         {
             var data = await _repository.GetAllByRucToSelect2Async(ruc);
-            return _mapper.Map<List<EstablecimientoToSelectDTO>>(data);
+            return _mapper.Map<List<EntityBranchToSelectDTO>>(data);
         }
 
-        public async Task<List<EstablecimientoListToModalDTO>> GetListBySuggestionAsync(string ruc, string? search)
+        public async Task<List<EntityBranchListToModalDTO>> GetListBySuggestionAsync(string ruc, string? search)
         {
             var data = await _repository.GetListBySuggestion(ruc, search);
-            return _mapper.Map<List<EstablecimientoListToModalDTO>>(data);
+            return _mapper.Map<List<EntityBranchListToModalDTO>>(data);
         }
 
-        public async Task<EstablecimientoDTO?> GetByIdAsync(int id)
+        public async Task<EntityBranchDTO?> GetByIdAsync(int id)
         {
             var data = await _repository.GetByIdAsync(id);
-            return _mapper.Map<EstablecimientoDTO>(data);
+            return _mapper.Map<EntityBranchDTO>(data);
         }
 
-        public async Task<PagedResult<EstablecimientoDTO>> GetListAsync(int pageNumber, int pageSize, string? search)
+        public async Task<PagedResult<EntityBranchDTO>> GetListAsync(int pageNumber, int pageSize, string? search)
         {
             var (data, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize, search);
 
-            return new PagedResult<EstablecimientoDTO>
+            return new PagedResult<EntityBranchDTO>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 TotalRecords = totalRecords,
                 TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
-                Data = _mapper.Map<List<EstablecimientoDTO>>(data)
+                Data = _mapper.Map<List<EntityBranchDTO>>(data)
             };
         }
 
@@ -90,19 +90,19 @@ namespace MUTZI.GUIA.APPLICATION.Services
             return _mapper.Map<EstadoActualizadoResponseDTO>(establecimientoActualizado);
         }
 
-        public async Task<int> CreateAsync(EstablecimientoCreateDTO createDTO)
+        public async Task<int> CreateAsync(EntityBranchCreateDTO createDTO)
         {
             var currentUser = _authService.CurrentUser();
             var existe = await _repository.GetBySerieAsync(createDTO.Ruc, createDTO.Serie);
             if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
             try
             {
-                var establecimiento = _mapper.Map<Establecimiento>(createDTO);
+                var establecimiento = _mapper.Map<EntityBranch>(createDTO);
                 establecimiento.UsuarioRegistro = currentUser.UserName;
                 establecimiento.UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
                 establecimiento.FechaRegistro = DateTime.UtcNow;
                 await _repository.CreateAsync(establecimiento);
-                return establecimiento.EstablecimientoId;
+                return establecimiento.EntityBranchId;
             }
             catch (Exception ex)
             {
@@ -112,7 +112,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
         }
 
-        public async Task<EstablecimientoDTO> UpdateAsync(int id, EstablecimientoUpdateDTO updateDTO)
+        public async Task<EntityBranchDTO> UpdateAsync(int id, EntityBranchUpdateDTO updateDTO)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 var existingEstablecimiento = await _repository.GetByIdAsync(id);
                 if (existingEstablecimiento == null)
                 {
-                    throw new KeyNotFoundException($"Establecimiento con ID {id} no encontrado.");
+                    throw new KeyNotFoundException($"EntityBranch con ID {id} no encontrado.");
                 }
                 if (updateDTO.Serie != existingEstablecimiento.Serie)
                 {
@@ -132,7 +132,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 establecimientoDomain.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
                 establecimientoDomain.FechaModifico = DateTime.UtcNow;
                 var establecimientoActualizado = await _repository.UpdateAsync(establecimientoDomain);
-                return _mapper.Map<EstablecimientoDTO>(establecimientoActualizado);
+                return _mapper.Map<EntityBranchDTO>(establecimientoActualizado);
             }
             catch (Exception ex)
             {

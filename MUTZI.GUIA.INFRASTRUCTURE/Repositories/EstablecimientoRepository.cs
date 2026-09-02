@@ -13,14 +13,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             _context = context;
         }
 
-        public async Task<List<Establecimiento>> GetAllByRucToSelectAsync(string ruc)
+        public async Task<List<EntityBranch>> GetAllByRucToSelectAsync(string ruc)
         {
             try
             {
                 var data = await _context.Establecimiento
                     .Where(e => e.Ruc == ruc && e.EstadoId == 1)
                     .Include(r=>r.Ubigeo)
-                    .OrderBy(e => e.Descripcion)
+                    .OrderBy(e => e.Description)
                     .ToListAsync();
 
                 return data;
@@ -32,20 +32,20 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
            
         }
 
-        public async Task<List<Establecimiento>> GetAllByRucToSelect2Async(string ruc)
+        public async Task<List<EntityBranch>> GetAllByRucToSelect2Async(string ruc)
         {
             try
             {
                 var data = await _context.Establecimiento
                     .Include(r => r.Ubigeo)
                     .Where(e => e.Ruc == ruc && e.EstadoId == 1)
-                    .Select(m => new Establecimiento
+                    .Select(m => new EntityBranch
                     {
-                        EstablecimientoId = m.EstablecimientoId,
-                        Descripcion = m.Descripcion,
+                        EntityBranchId = m.EntityBranchId,
+                        Description = m.Description,
                         Area = m.Area
                     })
-                    .OrderBy(e => e.Descripcion)
+                    .OrderBy(e => e.Description)
                     .ToListAsync();
 
                 return data;
@@ -57,15 +57,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         }
 
-        public async Task<List<Establecimiento>> GetAllByRucToSelectModal(string ruc)
+        public async Task<List<EntityBranch>> GetAllByRucToSelectModal(string ruc)
         {
             try
             {
                 var data = await _context.Establecimiento
-                .Select(r => new Establecimiento
+                .Select(r => new EntityBranch
                 {
-                    EstablecimientoId = r.EstablecimientoId,
-                    Descripcion = r.Descripcion,
+                    EntityBranchId = r.EntityBranchId,
+                    Description = r.Description,
                     CodigoSunat = r.CodigoSunat,
                     Area = r.Area
                 })
@@ -79,7 +79,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task<List<Establecimiento>> GetListBySuggestion(string ruc, string? search)
+        public async Task<List<EntityBranch>> GetListBySuggestion(string ruc, string? search)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     query = query.Where(c =>
                         (string.IsNullOrEmpty(search) ||
                          c.CodigoSunat.Contains(search) ||
-                         c.Descripcion.Contains(search) ||
+                         c.Description.Contains(search) ||
                          c.Area.Contains(search)
                         )
                     );
@@ -101,10 +101,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var data = await query
                 .Where(q => q.Ruc == ruc)
                 .Where(q => q.EstadoId == 1)
-                .Select(m => new Establecimiento
+                .Select(m => new EntityBranch
                 {
-                    EstablecimientoId = m.EstablecimientoId,
-                    Descripcion = m.Descripcion,
+                    EntityBranchId = m.EntityBranchId,
+                    Description = m.Description,
                     CodigoSunat = m.CodigoSunat,
                     Area = m.Area,
                     RucNavigation = new VentaConfig
@@ -123,7 +123,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task<Establecimiento?> GetByIdAsync(int id, bool strict, string? tipo)
+        public async Task<EntityBranch?> GetByIdAsync(int id, bool strict, string? tipo)
         {
             try
             {
@@ -131,7 +131,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .Include(r => r.Ubigeo)
                     .Include(r => r.RucNavigation)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(r => r.EstablecimientoId == id);
+                    .FirstOrDefaultAsync(r => r.EntityBranchId == id);
 
                 if(strict && data is null)
                 {
@@ -147,7 +147,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             
         }
 
-        public async Task<(List<Establecimiento>, int)> GetListAsync(int pageNumber, int pageSize, string? search)
+        public async Task<(List<EntityBranch>, int)> GetListAsync(int pageNumber, int pageSize, string? search)
         {
             try
             {
@@ -161,7 +161,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     query = query.Where(x =>
                         x.RucNavigation.Empresa.ToLower().Contains(val) ||
                         x.Ruc.Contains(val) ||
-                        x.Descripcion.ToLower().Contains(val) ||
+                        x.Description.ToLower().Contains(val) ||
                         x.Ubigeo.Departamento.ToLower().Contains(val) ||
                         x.Ubigeo.Provincia.ToLower().Contains(val) ||
                         x.Ubigeo.Distrito.ToLower().Contains(val) ||
@@ -179,7 +179,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var totalRecords = await query.CountAsync();
 
                 var data = await query
-                    .OrderByDescending(r => r.EstablecimientoId)
+                    .OrderByDescending(r => r.EntityBranchId)
                     .Skip((pageNumber - 1) * pageSize)
                     .AsNoTracking()
                     .Take(pageSize)
@@ -211,7 +211,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             
         }
 
-        public async Task<Establecimiento> UpdateAsync(Establecimiento actualizarEstablecimiento)
+        public async Task<EntityBranch> UpdateAsync(EntityBranch actualizarEstablecimiento)
         {
             try
             {
@@ -227,7 +227,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task CreateAsync(Establecimiento nuevoEstablecimiento)
+        public async Task CreateAsync(EntityBranch nuevoEstablecimiento)
         {
             try
             {

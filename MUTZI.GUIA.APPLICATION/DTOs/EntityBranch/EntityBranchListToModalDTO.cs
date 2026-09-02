@@ -3,15 +3,15 @@ using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 {
-    public class EstablecimientoListToModalDTO
+    public class EntityBranchListToModalDTO
     {
         [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, el ID del remitente en la bbdd", Nullable = false)]
         public int EstablecimientoId { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("description")]
         [SwaggerSchema("Devuelve el nombre asociada al establecimiento.", Nullable = false)]
-        public string Descripcion { get; set; }
+        public string Description { get; set; }
 
         [JsonPropertyName("codigo_sunat")]
         [SwaggerSchema("Devuelve el código de establecimiento registrado en SUNAT. Ejem: 0001, 0012", Nullable = false)]

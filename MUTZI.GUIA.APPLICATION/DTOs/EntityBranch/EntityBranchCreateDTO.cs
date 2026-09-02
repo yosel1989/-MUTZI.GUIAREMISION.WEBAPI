@@ -1,15 +1,10 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 {
-    public class EstablecimientoCreateDTO
+    public class EntityBranchCreateDTO
     {
         [JsonPropertyName("ruc")]
         [SwaggerSchema("Recibe un texto, es el ruc del remitente", Nullable = false)]
@@ -18,11 +13,16 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [MinLength(11)]
         public string Ruc { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("entity_id")]
+        [SwaggerSchema("Recibe un número, aquí se coloca el identificador de la entidad", Nullable = false)]
+        [Required]
+        public int? EntityId { get; set; }
+
+        [JsonPropertyName("description")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la descripción o nombre del remitente", Nullable = false)]
         [MaxLength(200)]
         [Required]
-        public string Descripcion { get; set; }
+        public string Description { get; set; }
 
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del remitente, ejm: 150131", Nullable = false)]
@@ -34,11 +34,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [RegularExpression(@"^(?!000000)\d{6}$", ErrorMessage = "El ubigeo debe tener 6 caracteres y no puede ser 000000")]
         public string UbigeoID { get; set; }
 
-        [JsonPropertyName("direccion")]
+        [JsonPropertyName("address")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la direccion fiscal del remitente", Nullable = false)]
         [MaxLength(250)]
         [Required]
-        public string Direccion { get; set; }
+        public string Address { get; set; }
 
         [JsonPropertyName("email")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el correo electrónico del remitente", Nullable = true)]
@@ -58,10 +58,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [StringLength(3, ErrorMessage = "La serie requiere 3 caracteres")]
         public string Serie { get; set; }
 
-        [JsonPropertyName("codigo_sunat")]
+        [JsonPropertyName("code_sunat")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]
         [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
-        public string? CodigoSunat { get; set; }
+        public string CodeSunat { get; set; }
 
         [JsonPropertyName("empleado_id_creacion")]
         [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = true)]
@@ -81,5 +81,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Recibe un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
         [MaxLength(45)]
         public string? Area { get; set; }
+
+        [JsonPropertyName("is_main")]
+        [SwaggerSchema("Recibe un boolean, aquí recibe un indicador si es anexo principal", Nullable = false)]
+        public bool IsMain { get; set; }
     }
 }

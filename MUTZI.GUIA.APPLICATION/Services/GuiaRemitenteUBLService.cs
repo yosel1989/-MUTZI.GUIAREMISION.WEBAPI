@@ -130,7 +130,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 // Provincia
                                 CityName = new List<CityName>{ new CityName { _ = guia.Remitente.Provincia} },
                                 // Dirección completa y detallada
-                                StreetName = new List<StreetName>{ new StreetName { _ = guia.Remitente.Direccion } },
+                                StreetName = new List<StreetName>{ new StreetName { _ = guia.Remitente.Address } },
                                 // Urbanización
                                 CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Remitente.Departamento } },
                                 // Distrito
@@ -182,7 +182,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 // Provincia
                                 CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Provincia} },
                                 // Dirección completa y detallada
-                                StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Direccion } },
+                                StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Address } },
                                 // Urbanización
                                 CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Departamento } },
                                 // Distrito
@@ -234,7 +234,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 // Código de ubigeo
                                 ID = new List<ID> { new ID { _ = guia.Destinatario.UbigeoId}},
                                 // Dirección completa y detallada
-                                StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Direccion } },
+                                StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Address } },
                                 // Urbanizacion
                                 CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Departamento } },
                                 // Provincia
@@ -414,9 +414,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 listID = guia.Proveedor.NumeroDocumento
                             }} : 
                             //En caso que no sea compra, se valida el codSunat del remitente 
-                            string.IsNullOrWhiteSpace(guia.Remitente.CodigoSunat) ? null: new List<AddressTypeCode>{new AddressTypeCode {
+                            string.IsNullOrWhiteSpace(guia.Remitente.CodeSunat) ? null: new List<AddressTypeCode>{new AddressTypeCode {
                                 // El código sunat del remitente , se coloca aquí porque en el caso que no sea compra, el traslado se realiza desde la empresa hacia otro punto, por lo tanto el codSunat del remitente va en el punto de partida, y el codSunat del destinatario (cliente) va en el punto de llegada.
-                                _ = guia.Remitente.CodigoSunat,
+                                _ = guia.Remitente.CodeSunat,
                                 // El número de documento del remitente, se coloca aquí porque en el caso que no sea compra, el traslado se realiza desde la empresa hacia otro punto, por lo tanto el número de documento del remitente va en el punto de partida, y el número de documento del destinatario (cliente) va en el punto de llegada.
                                 listID = guia.Remitente.Ruc
                             }},
@@ -466,9 +466,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         // Dirección completa y detallada de llegada
                         AddressLine = new List<AddressLine>{ new AddressLine { Line = new List<Line> { new Line { _ = destino.Direccion }}}},
 
-                        AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodigoSunat) ? null : new List<AddressTypeCode>{ new AddressTypeCode {
+                        AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodeSunat) ? null : new List<AddressTypeCode>{ new AddressTypeCode {
                             // Código de establecimiento de punto de llegada
-                            _ = guia.Destinatario.CodigoSunat,
+                            _ = guia.Destinatario.CodeSunat,
                             // Número de RUC asociado al punto de llegada
                             //Si es traslado, se coloca el ruc del remitente, ya que es traslado entre sucursales nomas; si es venta o compra, el numeroDoc del destinatario
                             //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.NumeroDocumentoRemitente : guia.Destinatario.NumeroDocumento

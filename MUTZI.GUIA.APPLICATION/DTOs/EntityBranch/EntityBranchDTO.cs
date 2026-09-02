@@ -2,16 +2,19 @@
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 {
-    public class EstablecimientoDTO
+    public class EntityBranchDTO
     {
         [JsonPropertyName("id")]
-        public int EstablecimientoId { get; set; }
+        public int EntityBranchId { get; set; }
+
+        [JsonPropertyName("entity_id")]
+        public int? EntityId { get; set; }
 
         [JsonPropertyName("ruc")]
         public string Ruc { get; set; } = null!;
 
-        [JsonPropertyName("descripcion")]
-        public string Descripcion { get; set; } = null!;
+        [JsonPropertyName("description")]
+        public string Description { get; set; } = null!;
 
         [JsonPropertyName("ubigeo_id")]
         public string UbigeoId { get; set; } = null!;
@@ -25,8 +28,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("distrito")]
         public string Distrito { get; set; } = null!;
 
-        [JsonPropertyName("direccion")]
-        public string Direccion { get; set; } = null!;
+        [JsonPropertyName("address")]
+        public string Address { get; set; } = null!;
 
         [JsonPropertyName("pais")]
         public string Pais { get; set; } = null!;
@@ -37,8 +40,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("serie")]
         public string Serie { get; set; } = null!;
 
-        [JsonPropertyName("codigo_sunat")]
-        public string? CodigoSunat { get; set; }
+        [JsonPropertyName("code_sunat")]
+        public string CodeSunat { get; set; }
 
         [JsonPropertyName("fecha_registro")]
         public DateTime? FechaRegistro { get; set; }
@@ -72,5 +75,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 
         [JsonPropertyName("area")]
         public string? Area { get; set; }
+
+        [JsonPropertyName("is_main")]
+        public bool IsMain { get; set; } = false;
     }
 }

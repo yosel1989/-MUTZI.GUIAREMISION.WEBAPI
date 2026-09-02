@@ -111,10 +111,10 @@ public partial class GuiaRemision
     public virtual VentaConfig RucNavigation { get; set; } = null!;
 
     [ForeignKey(nameof(RemitenteId))]
-    public Establecimiento Remitente { get; set; } = null!;
+    public EntityBranch Remitente { get; set; } = null!;
 
     [ForeignKey(nameof(DestinatarioId))]
-    public Establecimiento Destinatario { get; set; } = null!;
+    public EntityBranch Destinatario { get; set; } = null!;
 
     [ForeignKey(nameof(ProveedorId))]
     public virtual Proveedor? Proveedor { get; set; }

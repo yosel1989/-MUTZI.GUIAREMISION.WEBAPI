@@ -4,35 +4,35 @@ using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Mappings
 {
-    public class MappingEstablecimiento : AutoMapper.Profile
+    public class MappingEntityBranch : AutoMapper.Profile
     {
-        public MappingEstablecimiento()
+        public MappingEntityBranch()
         {
-            CreateMap<Establecimiento, EstablecimientoToSelectDTO>();
-            CreateMap<Establecimiento, EstablecimientoDTO>()
+            CreateMap<EntityBranch, EntityBranchToSelectDTO>();
+            CreateMap<EntityBranch, EntityBranchDTO>()
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))
                 .ForMember(dest => dest.RazonSocial, opt => opt.MapFrom(src => src.RucNavigation.Empresa));
 
-            CreateMap<Establecimiento, EstablecimientoListToModalDTO>()
+            CreateMap<EntityBranch, EntityBranchListToModalDTO>()
                 .ForMember(dest => dest.Entidad, opt => opt.MapFrom(src => src.RucNavigation.Empresa));
 
-            CreateMap<Establecimiento, EstablecimientoListDTO>()
+            CreateMap<EntityBranch, EntityBranchListDTO>()
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito));
 
-            CreateMap<EstablecimientoCreateDTO, Establecimiento>();
-            CreateMap<EstablecimientoUpdateDTO, Establecimiento>();
+            CreateMap<EntityBranchCreateDTO, EntityBranch>();
+            CreateMap<EntityBranchUpdateDTO, EntityBranch>();
 
-            CreateMap<Establecimiento, EstablecimientoRemitenteDTO>()
+            CreateMap<EntityBranch, EstablecimientoRemitenteDTO>()
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))
                 .ForMember(dest => dest.RazonSocial, opt => opt.MapFrom(src => src.RucNavigation.Empresa));
 
-            CreateMap<Establecimiento, EstadoActualizadoResponseDTO>();
+            CreateMap<EntityBranch, EstadoActualizadoResponseDTO>();
         }
     }
 }

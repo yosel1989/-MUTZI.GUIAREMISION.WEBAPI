@@ -23,7 +23,7 @@ public partial class GuiaRemisionEmailDestinatario
     // Relaciones
 
     [ForeignKey(nameof(EstablecimientoId))]
-    public virtual Establecimiento EstablecimientoDestinatario { get; set; } = null!;
+    public virtual EntityBranch EstablecimientoDestinatario { get; set; } = null!;
 
     [ForeignKey(nameof(GuiaRemisionId))]
     public virtual GuiaRemision Guia { get; set; } = null!;

@@ -13,6 +13,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
 
         Task<PagedResult<EntityDTO>> GetDataTableAsync(int pageNumber, int pageSize, string? search, string role);
 
-        Task<PagedResult<EntityListDTO>> GetListAsync(int pageNumber, int pageSize, string? search);
+        Task<PagedResult<EntityListDTO>> GetListAsync(int pageNumber, int pageSize, string? search, string? type);
     }
 }

@@ -52,7 +52,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [Route("listar-sugerida")]
         [SwaggerOperation(
             Summary = "Listar areas sugeridas",
-            Description = "Lista las areas sugeridos por número de Descripcion",
+            Description = "Lista las areas sugeridos por número de Description",
             OperationId = "listar_area_sugerida"
         )]
         //[Permission("listar_area_sugerida")]

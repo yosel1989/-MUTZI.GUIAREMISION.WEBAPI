@@ -61,7 +61,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("remitente")]
         [Required]
-        public EstablecimientoDTO Remitente { get; set; }
+        public EntityBranchDTO Remitente { get; set; }
 
         [JsonPropertyName("destinatario_id")]
         [Required]
@@ -69,7 +69,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("destinatario")]
         [Required]
-        public EstablecimientoDTO Destinatario { get; set; }
+        public EntityBranchDTO Destinatario { get; set; }
 
         [JsonPropertyName("destinatario_email")]
         [Required]

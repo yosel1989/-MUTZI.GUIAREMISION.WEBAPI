@@ -26,7 +26,7 @@ namespace MUTZI.GUIA.APPLICATION.Validators
                     });
 
             RuleFor(x => x.DocumentNumber)
-                .MustAsync(async (value, _) => !await _entityRepository.HasManyDocumentNumber(value))
+                .MustAsync(async (request, value, _) => !(request.EntityId == 0 && await _entityRepository.HasManyDocumentNumber(value) ) )
                     .WithMessage(request => $"La entidad con el número de documento {request.DocumentNumber} ya se encuentra registrada.");
         }
     }

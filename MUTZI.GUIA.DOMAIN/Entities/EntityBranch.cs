@@ -3,18 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("establecimiento")]
-public partial class Establecimiento
+[Table("branch")]
+public partial class EntityBranch
 {
     [Key]
-    [Column("establecimiento_id")]
-    public int EstablecimientoId { get; set; }
+    [Column("entity_branch_id")]
+    public int EntityBranchId { get; set; }
+
+    [Column("entity_id")]
+    public int? EntityId { get; set; }
 
     [Column("ruc")]
     public string Ruc { get; set; } = null!;
 
-    [Column("descripcion")]
-    public string Descripcion { get; set; } = null!;
+    [Column("description")]
+    public string Description { get; set; } = null!;
 
     [Column("ubigeo_id")]
     public string UbigeoId { get; set; } = null!;
@@ -64,6 +67,9 @@ public partial class Establecimiento
     [Column("area")]
     public string? Area { get; set; }
 
+    [Column("is_main")]
+    public bool IsMain { get; set; } = false;
+
     // Relaciones
 
     [ForeignKey(nameof(Ruc))]
@@ -71,6 +77,9 @@ public partial class Establecimiento
 
     [ForeignKey(nameof(UbigeoId))]
     public virtual Ubigeo Ubigeo { get; set; } = null!;
+
+    [ForeignKey(nameof(EntityId))]
+    public virtual Entity? Entity { get; set; }
 
 
 }

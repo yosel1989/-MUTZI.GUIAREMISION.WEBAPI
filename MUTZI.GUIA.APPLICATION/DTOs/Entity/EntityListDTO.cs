@@ -9,6 +9,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
         [Description("Identificador único de la entidad")]
         public int EntityId { get; set; }
 
+        [JsonPropertyName("type")]
+        [Description("Tipo de entidad: company o person")]
+        public string Type { get; set; }
+
         [JsonPropertyName("name")]
         [Description("Razón social si es empresa")]
         public string? Name { get; set; }
@@ -25,6 +29,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
         [Description("Número de documento de identidad o RUC")]
         public string DocumentNumber { get; set; }
 
-
+        [JsonPropertyName("document_type")]
+        [Description("Tipo de Documento")]
+        public string DocumentType { get; set; }
     }
 }

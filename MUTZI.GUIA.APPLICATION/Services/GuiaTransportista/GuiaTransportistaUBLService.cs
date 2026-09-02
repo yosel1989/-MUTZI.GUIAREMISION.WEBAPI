@@ -65,7 +65,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                         new PartyIdentification { ID = new List<ID> { new ID { _ = guia.Remitente.Ruc } } }
                                     },
                                     PartyName = new List<PartyName> {
-                                        new PartyName { Name = new List<Name> { new Name { _ = guia.Remitente.Descripcion } } }
+                                        new PartyName { Name = new List<Name> { new Name { _ = guia.Remitente.Description } } }
                                     }
                                 }
                             },
@@ -92,7 +92,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                     PostalAddress = guia.Origen == null ? null : new List<PostalAddress> {
                                         new PostalAddress {
                                             ID                 = new List<ID>                { new ID                { _ = guia.Remitente.UbigeoId }},
-                                            StreetName         = new List<StreetName>        { new StreetName        { _ = guia.Remitente.Direccion }},
+                                            StreetName         = new List<StreetName>        { new StreetName        { _ = guia.Remitente.Address }},
                                             CitySubdivisionName= new List<CitySubdivisionName>{ new CitySubdivisionName{ _ = guia.Remitente.Departamento }},
                                             CityName           = new List<CityName>          { new CityName          { _ = guia.Remitente.Provincia }},
                                             CountrySubentity   = new List<CountrySubentity>  { new CountrySubentity  { _ = guia.Remitente.Departamento }},
@@ -101,7 +101,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                         }
                                     },
                                     PartyLegalEntity = new List<PartyLegalEntity> {
-                                        new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.Remitente.Descripcion } } }
+                                        new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.Remitente.Description } } }
                                     }
                                 }
                             }
@@ -121,7 +121,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                     PostalAddress = guia.Destino == null ? null : new List<PostalAddress> {
                                         new PostalAddress {
                                             ID                 = new List<ID>                { new ID                { _ = guia.Destinatario.UbigeoId }},
-                                            StreetName         = new List<StreetName>        { new StreetName        { _ = guia.Destinatario.Direccion }},
+                                            StreetName         = new List<StreetName>        { new StreetName        { _ = guia.Destinatario.Address }},
                                             CitySubdivisionName= new List<CitySubdivisionName>{ new CitySubdivisionName{ _ = guia.Destinatario.Departamento}},
                                             CityName           = new List<CityName>          { new CityName          { _ = guia.Destinatario.Provincia }},
                                             CountrySubentity   = new List<CountrySubentity>  { new CountrySubentity  { _ = guia.Destinatario.Departamento }},
@@ -205,8 +205,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                             //Punto de llegada
                             DeliveryAddress = guia.Destino.Select(destino => new DeliveryAddress {
                         ID = new List<ID>{ new ID { _ = destino.UbigeoId }},
-                        AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodigoSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
-                            _ = guia.Destinatario.CodigoSunat,
+                        AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodeSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
+                            _ = guia.Destinatario.CodeSunat,
                             listID = guia.Destinatario.Ruc
                         }},
                             CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},

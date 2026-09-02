@@ -13,8 +13,8 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<GuiaRemision> GetByIdAsync2(int id);
         Task<GuiaRemision> GetByTicketAsync(string ticket);
         Task <(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(
-            Establecimiento remitente,
-            Establecimiento destinatario,
+            EntityBranch remitente,
+            EntityBranch destinatario,
             Proveedor? proveedor,
             List<GuiaRemisionConductor> conductor,
             List<GuiaRemisionUnidadTransporte> transporte,

@@ -1,14 +1,13 @@
 ﻿using Swashbuckle.AspNetCore.Annotations;
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 {
     public class EstablecimientoRemitenteDTO
     {
-        [JsonPropertyName("establecimiento_id")]
+        [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, el ID del establecimiento que emitira la guía o comprobante en la bbdd", Nullable = false)]
-        public int EstablecimientoId { get; set; }
+        public int EntityBranchId { get; set; }
 
         [JsonPropertyName("razon_social")]
         [SwaggerSchema("Devuelve un texto, el nombre de la empresa asociada al remitente/sucursal.", Nullable = false)]
@@ -18,9 +17,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve en texto el ruc del remitente. Asimismo, ese ruc está asociado a la empresa.", Nullable = false)]
         public string Ruc { get; set; }
 
-        [JsonPropertyName("descripcion")]
+        [JsonPropertyName("description")]
         [SwaggerSchema("Devuelve en texto la descripción o nombre del remitente/sucursal.", Nullable = false)]
-        public string Descripcion { get; set; }
+        public string Description { get; set; }
 
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Devuelve un texto, aquí devuelve el ubigeo de la dirección fiscal del remitente, ejm: 150131", Nullable = false)]
@@ -38,9 +37,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve un texto, el distrito de la dirección fiscal del remitente", Nullable = false)]
         public string Distrito { get; set; }
 
-        [JsonPropertyName("direccion")]
+        [JsonPropertyName("address")]
         [SwaggerSchema("Devuelve un texto, la direccion fiscal del remitente", Nullable = false)]
-        public string Direccion { get; set; }
+        public string Address { get; set; }
 
         [JsonPropertyName("email")]
         [SwaggerSchema("Devuelve un texto, el correo electrónico del remitente", Nullable = false)]

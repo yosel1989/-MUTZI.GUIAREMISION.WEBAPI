@@ -30,10 +30,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "listar_establecimiento"
         )]
         [Permission("listar_establecimiento")]
-        [ProducesResponseType(typeof(PagedResult<EstablecimientoDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<EntityBranchDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<EstablecimientoDTO>>> GetAll(int pageNumber, int pageSize, [FromQuery] string? search)
+        public async Task<ActionResult<PagedResult<EntityBranchDTO>>> GetAll(int pageNumber, int pageSize, [FromQuery] string? search)
         {
             try
             {
@@ -59,10 +59,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "listar_establecimiento_select")
         ]
         [Permission("listar_establecimiento_select")]
-        [ProducesResponseType(typeof(List<EstablecimientoToSelectDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<EntityBranchToSelectDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<EstablecimientoToSelectDTO>>> GetToSelect(string ruc)
+        public async Task<ActionResult<List<EntityBranchToSelectDTO>>> GetToSelect(string ruc)
         {
             try
             {
@@ -89,10 +89,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "listar_establecimento_sugerido"
         )]
         [Permission("listar_establecimiento_sugerido")]
-        [ProducesResponseType(typeof(EstablecimientoListToModalDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EntityBranchListToModalDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<EstablecimientoListToModalDTO>>> GetBySuggestion(string ruc, [FromQuery] string? search)
+        public async Task<ActionResult<List<EntityBranchListToModalDTO>>> GetBySuggestion(string ruc, [FromQuery] string? search)
         {
             try
             {
@@ -119,10 +119,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "buscar_establecimiento_por_id"
         )]
         [Permission("buscar_establecimiento_por_id")]
-        [ProducesResponseType(typeof(EstablecimientoDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EntityBranchDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<EstablecimientoDTO>> GetById(int id)
+        public async Task<ActionResult<EntityBranchDTO>> GetById(int id)
         {
             try
             {
@@ -220,7 +220,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(CreatedDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> Create([FromBody] EstablecimientoCreateDTO createDTO)
+        public async Task<ActionResult<int>> Create([FromBody] EntityBranchCreateDTO createDTO)
         {
             try
             {
@@ -246,10 +246,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "editar_establecimiento"
         )]
         [Permission("editar_establecimiento")]
-        [ProducesResponseType(typeof(EstablecimientoDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(EntityBranchDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<EstablecimientoDTO>> Update(int id, [FromBody] EstablecimientoUpdateDTO updateDTO)
+        public async Task<ActionResult<EntityBranchDTO>> Update(int id, [FromBody] EntityBranchUpdateDTO updateDTO)
         {
             try
             {
