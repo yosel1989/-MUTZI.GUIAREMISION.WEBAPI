@@ -84,7 +84,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Transportista
         public int EstadoId { get; set; }
 
         [JsonPropertyName("registro_mtc")]
-        [SwaggerSchema("Devuelve un texto, el CodigoSunat de registro MTC del transportista", Nullable = true)]
+        [SwaggerSchema("Devuelve un texto, el CodeSunat de registro MTC del transportista", Nullable = true)]
         public string? RegistroMTC { get; set; }
 
         [JsonPropertyName("email_contacto")]

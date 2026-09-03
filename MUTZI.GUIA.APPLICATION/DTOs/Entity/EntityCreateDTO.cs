@@ -50,7 +50,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
         public bool IsInternal { get; set; } = true;
 
         [JsonPropertyName("role")]
-        [Description("Indica el rol con el que será registrado la entidad")]
+        [Description("Indica el rol con el que será registrado la entidad: 'cliente', 'proveedor', 'transportista', 'emisor' o ningun rol dejarlo solo 'entidad'")]
         public string Role { get; set; }
 
     }

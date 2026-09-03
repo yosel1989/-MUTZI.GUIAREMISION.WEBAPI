@@ -64,7 +64,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
             if (!string.IsNullOrEmpty(role))
             {
-                query = query.Where(e => e.Roles.Any(x => x.Role == role));
+                if(role != "entidad")
+                {
+                    query = query.Where(e => e.Roles.Any(x => x.Role == role));
+                }
             }
 
             var totalRecords = await query.CountAsync();
@@ -143,7 +146,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<bool> HasManyDocumentNumber(string documentNumber)
         {
             return await _context.Entities
-                .AnyAsync(x => x.DocumentNumber == documentNumber.Trim());
+                .AnyAsync(x => x.DocumentNumber == documentNumber);
         }
 
     }

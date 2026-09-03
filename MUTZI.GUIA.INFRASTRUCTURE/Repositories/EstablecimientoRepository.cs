@@ -66,7 +66,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     EntityBranchId = r.EntityBranchId,
                     Description = r.Description,
-                    CodigoSunat = r.CodigoSunat,
+                    CodeSunat = r.CodeSunat,
                     Area = r.Area
                 })
                 .ToListAsync();
@@ -91,7 +91,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     query = query.Where(c =>
                         (string.IsNullOrEmpty(search) ||
-                         c.CodigoSunat.Contains(search) ||
+                         c.CodeSunat.Contains(search) ||
                          c.Description.Contains(search) ||
                          c.Area.Contains(search)
                         )
@@ -105,7 +105,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     EntityBranchId = m.EntityBranchId,
                     Description = m.Description,
-                    CodigoSunat = m.CodigoSunat,
+                    CodeSunat = m.CodeSunat,
                     Area = m.Area,
                     RucNavigation = new VentaConfig
                     {
@@ -154,22 +154,25 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var query = _context.Establecimiento
                 .Include(r => r.Ubigeo)
                 .Include(e => e.RucNavigation)
+                .Include(e => e.Entity)
                 .AsQueryable();
                 if (!string.IsNullOrEmpty(search))
                 {
                     var val = search.ToLower();
                     query = query.Where(x =>
-                        x.RucNavigation.Empresa.ToLower().Contains(val) ||
-                        x.Ruc.Contains(val) ||
+                        x.Entity.DocumentNumber.Contains(val) ||
+                        x.Entity.Name.ToLower().Contains(val) ||
+                        x.Entity.FirstName.ToLower().Contains(val) ||
+                        x.Entity.LastName.ToLower().Contains(val) ||
                         x.Description.ToLower().Contains(val) ||
                         x.Ubigeo.Departamento.ToLower().Contains(val) ||
                         x.Ubigeo.Provincia.ToLower().Contains(val) ||
                         x.Ubigeo.Distrito.ToLower().Contains(val) ||
-                        x.Direccion.ToLower().Contains(val) ||
+                        x.Address.ToLower().Contains(val) ||
                         x.Email.ToLower().Contains(val) ||
                         x.Pais.ToLower().Contains(val) ||
                         x.Serie.Contains(val) ||
-                        x.CodigoSunat.ToLower().Contains(val) ||
+                        x.CodeSunat.ToLower().Contains(val) ||
                         x.UsuarioRegistroNombre.ToLower().Contains(val) ||
                         x.Estado.ToLower().Contains(val) ||
                         x.Area.ToLower().Contains(val) ||

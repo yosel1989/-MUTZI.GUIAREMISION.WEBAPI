@@ -220,7 +220,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Remitente = new EntityBranch {
                             Ruc = g.Remitente.Ruc,
                             Description = g.Remitente.Description,
-                            Direccion = g.Remitente.Direccion,
+                            Address = g.Remitente.Address,
                             RucNavigation = new VentaConfig
                             {
                                 Empresa = g.Remitente.RucNavigation.Empresa
@@ -230,7 +230,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         {
                             Ruc = g.Destinatario.Ruc,
                             Description = g.Destinatario.Description,
-                            Direccion = g.Destinatario.Direccion,
+                            Address = g.Destinatario.Address,
                             RucNavigation = new VentaConfig
                             {
                                 Empresa = g.Destinatario.RucNavigation.Empresa
@@ -430,9 +430,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Ruc = g.Remitente.Ruc,
                         UbigeoId = g.Remitente.UbigeoId,
                         Ubigeo = g.Remitente.Ubigeo,
-                        Direccion = g.Remitente.Direccion,
+                        Address = g.Remitente.Address,
                         Pais = g.Remitente.Pais,
-                        CodigoSunat = g.Remitente.CodigoSunat,
+                        CodeSunat = g.Remitente.CodeSunat,
                         FechaRegistro = g.Remitente.FechaRegistro,
                         UsuarioRegistro = g.Remitente.UsuarioRegistro,
                         FechaModifico = g.Remitente.FechaModifico,
@@ -447,9 +447,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Ruc = g.Destinatario.Ruc,
                         UbigeoId = g.Destinatario.UbigeoId,
                         Ubigeo = g.Destinatario.Ubigeo,
-                        Direccion = g.Destinatario.Direccion,
+                        Address = g.Destinatario.Address,
                         Pais = g.Destinatario.Pais,
-                        CodigoSunat = g.Destinatario.CodigoSunat,
+                        CodeSunat = g.Destinatario.CodeSunat,
                         FechaRegistro = g.Destinatario.FechaRegistro,
                         UsuarioRegistro = g.Destinatario.UsuarioRegistro,
                         FechaModifico = g.Destinatario.FechaModifico,
@@ -840,7 +840,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         {
                             Ruc = g.Remitente.Ruc,
                             Description = g.Remitente.Description,
-                            Direccion = g.Remitente.Direccion,
+                            Address = g.Remitente.Address,
                             RucNavigation = new VentaConfig
                             {
                                 Empresa = g.Remitente.RucNavigation.Empresa
@@ -850,7 +850,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         {
                             Ruc = g.Destinatario.Ruc,
                             Description = g.Destinatario.Description,
-                            Direccion = g.Destinatario.Direccion,
+                            Address = g.Destinatario.Address,
                             RucNavigation = new VentaConfig
                             {
                                 Empresa = g.Destinatario.RucNavigation.Empresa

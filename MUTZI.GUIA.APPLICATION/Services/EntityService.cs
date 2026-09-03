@@ -46,32 +46,18 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 if (newEntity.EntityId == 0)
                 {
                     var existingEntity = await _repository.GetByDocumentNumber(newEntity.DocumentNumber);
-                    if (existingEntity is not null && existingEntity.Roles.Any(x => x.Role == newEntity.Role))
-                    {
-                        existingEntity.Type = newEntity.Type;
-                        existingEntity.Name = newEntity.Name;
-                        existingEntity.FirstName = newEntity.FirstName;
-                        existingEntity.LastName = newEntity.LastName;
-                        existingEntity.DocumentTypeId = newEntity.DocumentTypeId;
-                        existingEntity.DocumentNumber = newEntity.DocumentNumber;
-                        existingEntity.UbigeoId = newEntity.UbigeoId;
-                        existingEntity.Address = newEntity.Address;
-                        existingEntity.CountryId = newEntity.CountryId;
-                        existingEntity.IsInternal = newEntity.IsInternal;
-                        existingEntity.UpdatedAt = DateTime.UtcNow;
-                        existingEntity.UpdatedAtUser = user.UserName;
-                        existingEntity.UpdatedAtUserName = $"{user.FirstName} {user.LastName}";
-                        var role = await _repository.UpdateAsync(existingEntity);
-                        outputEntity = _mapper.Map<EntityDTO>(role);
-                    }
-                    else
+                    if(existingEntity is null)
                     {
                         var entity = _mapper.Map<Entity>(newEntity);
                         entity.CreatedAt = DateTime.UtcNow;
                         entity.CreatedAtUser = user.UserName;
                         entity.CreatedAtUserName = $"{user.FirstName} {user.LastName}";
-                        var role = await _repository.CreateAsync(entity);
-                        outputEntity = _mapper.Map<EntityDTO>(role);
+                        var entityCreated = await _repository.CreateAsync(entity);
+                        outputEntity = _mapper.Map<EntityDTO>(entityCreated);
+                    }
+                    else
+                    {
+                        outputEntity = _mapper.Map<EntityDTO>(existingEntity);
                     }
                 }
                 else
@@ -80,15 +66,19 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     outputEntity = _mapper.Map<EntityDTO>(existEntity);
                 }
 
-                await _entityRoleRepository.SyncAsync(outputEntity.EntityId, new List<EntityRole> { 
-                    new EntityRole { 
-                        EntityId = outputEntity.EntityId, 
-                        Role = newEntity.Role,
-                        CreatedAt = DateTime.UtcNow,
-                        CreatedAtUser = user.UserName,
-                        CreatedAtUserName = $"{user.FirstName} {user.LastName}"
-                    } 
-                });
+                if(newEntity.Role != "entidad")
+                {
+                    await _entityRoleRepository.SyncAsync(outputEntity.EntityId, new List<EntityRole> { 
+                        new EntityRole { 
+                            EntityId = outputEntity.EntityId, 
+                            Role = newEntity.Role,
+                            CreatedAt = DateTime.UtcNow,
+                            CreatedAtUser = user.UserName,
+                            CreatedAtUserName = $"{user.FirstName} {user.LastName}"
+                        } 
+                    });
+                }
+                
 
                 await _appDBContext.CommitAsync();
 

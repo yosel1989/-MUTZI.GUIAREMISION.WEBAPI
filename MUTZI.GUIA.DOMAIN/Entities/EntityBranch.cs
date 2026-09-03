@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("branch")]
+[Table("entity_branch")]
 public partial class EntityBranch
 {
     [Key]
@@ -14,7 +14,7 @@ public partial class EntityBranch
     public int? EntityId { get; set; }
 
     [Column("ruc")]
-    public string Ruc { get; set; } = null!;
+    public string? Ruc { get; set; } = null!;
 
     [Column("description")]
     public string Description { get; set; } = null!;
@@ -22,8 +22,8 @@ public partial class EntityBranch
     [Column("ubigeo_id")]
     public string UbigeoId { get; set; } = null!;
 
-    [Column("direccion")]
-    public string Direccion { get; set; } = null!;
+    [Column("address")]
+    public string Address { get; set; } = null!;
 
     [Column("pais")]
     public string Pais { get; set; } = null!;
@@ -34,8 +34,8 @@ public partial class EntityBranch
     [Column("serie")]
     public string Serie { get; set; } = null!;
 
-    [Column("codigo_sunat")]
-    public string CodigoSunat { get; set; }
+    [Column("code_sunat")]
+    public string CodeSunat { get; set; }
 
     [Column("fecha_registro")]
     public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;

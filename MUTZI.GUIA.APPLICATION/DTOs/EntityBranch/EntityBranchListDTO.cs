@@ -42,7 +42,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public string? Email { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Devuelve un texto, el CodigoSunat de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Devuelve un texto, el CodeSunat de PAIS referente, ejm: PE", Nullable = false)]
         public string Pais { get; set; }
 
         [JsonPropertyName("serie")]

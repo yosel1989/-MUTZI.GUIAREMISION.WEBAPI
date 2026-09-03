@@ -42,11 +42,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos
         public string? CodigoSunat { get; set; }
 
         [JsonPropertyName("gtin")]
-        [SwaggerSchema("Recibe un texto, CodigoSunat de barras del producto", Nullable = true)]
+        [SwaggerSchema("Recibe un texto, CodeSunat de barras del producto", Nullable = true)]
         public string? Gtin { get; set; }
 
         [JsonPropertyName("codigo_subnacional")]
-        [SwaggerSchema("Recibe un texto, CodigoSunat de la clasificación arancelaria de mercancias asignado al producto", Nullable = true)]
+        [SwaggerSchema("Recibe un texto, CodeSunat de la clasificación arancelaria de mercancias asignado al producto", Nullable = true)]
         public string? CodigoSubnacional { get; set; }
 
         [JsonPropertyName("bien_normalizado")]

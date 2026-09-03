@@ -10,6 +10,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("entity_id")]
         public int? EntityId { get; set; }
 
+        [JsonPropertyName("document_number")]
+        public string? DocumentNumber { get; set; }
+
         [JsonPropertyName("ruc")]
         public string Ruc { get; set; } = null!;
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 
@@ -50,6 +51,14 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<Entity> Entities { get; set; }
     public virtual DbSet<EntityRole> EntityRoles { get; set; }
     public virtual DbSet<Country> Countries { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder
+            .EnableSensitiveDataLogging()
+            .LogTo(Console.WriteLine, LogLevel.Information);
+    }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -7,11 +7,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
     public class EntityBranchCreateDTO
     {
         [JsonPropertyName("ruc")]
-        [SwaggerSchema("Recibe un texto, es el ruc del remitente", Nullable = false)]
-        [Required(ErrorMessage = "El Nro documento del remitente es obligatoria")]
-        [StringLength(11, ErrorMessage = "El número de documento del remitente no puede exceder los 11 caracteres")]
-        [MinLength(11)]
-        public string Ruc { get; set; }
+        [SwaggerSchema("Recibe un texto, es el ruc del remitente", Nullable = true)]
+        //[Required(ErrorMessage = "El Nro documento del remitente es obligatoria")]
+        //[StringLength(11, ErrorMessage = "El número de documento del remitente no puede exceder los 11 caracteres")]
+        //[MinLength(11)]
+        public string? Ruc { get; set; }
 
         [JsonPropertyName("entity_id")]
         [SwaggerSchema("Recibe un número, aquí se coloca el identificador de la entidad", Nullable = false)]
@@ -48,7 +48,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public string? Email { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el CodigoSunat de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Recibe un texto, aquí se coloca el CodeSunat de PAIS referente, ejm: PE", Nullable = false)]
         [MaxLength(3)]
         [Required]
         public string Pais { get; set; }

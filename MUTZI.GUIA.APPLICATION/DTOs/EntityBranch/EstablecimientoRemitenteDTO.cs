@@ -9,9 +9,17 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve un entero, el ID del establecimiento que emitira la guía o comprobante en la bbdd", Nullable = false)]
         public int EntityBranchId { get; set; }
 
+        [JsonPropertyName("entity_id")]
+        [SwaggerSchema("Devuelve un entero, el ID de la entidad.", Nullable = false)]
+        public int EntityId { get; set; }
+
         [JsonPropertyName("razon_social")]
         [SwaggerSchema("Devuelve un texto, el nombre de la empresa asociada al remitente/sucursal.", Nullable = false)]
         public string RazonSocial { get; set; }
+
+        [JsonPropertyName("document_number")]
+        [SwaggerSchema("Devuelve un texto, el número de documento de la entidad.", Nullable = false)]
+        public string? DocumentNumber { get; set; }
 
         [JsonPropertyName("ruc")]
         [SwaggerSchema("Devuelve en texto el ruc del remitente. Asimismo, ese ruc está asociado a la empresa.", Nullable = false)]
@@ -46,7 +54,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public string Email { get; set; }
 
         [JsonPropertyName("pais")]
-        [SwaggerSchema("Devuelve un texto, el CodigoSunat de PAIS referente, ejm: PE", Nullable = false)]
+        [SwaggerSchema("Devuelve un texto, el CodeSunat de PAIS referente, ejm: PE", Nullable = false)]
         public string Pais { get; set; }
 
         [JsonPropertyName("serie")]
