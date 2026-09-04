@@ -119,19 +119,17 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 var currentUser = _authService.CurrentUser();
 
-                string _status = infoRequestDto.EstadoId switch
+                string _status = infoRequestDto.Active switch
                 {
-                    1 => "activo",
-                    0 => "inactivo",
-                    _ => throw new KeyNotFoundException("El nuevo estado solo acepta valores de '0' ó '1'"),
+                    true => "activo",
+                    false => "inactivo"
                 };
                 var existing = await _repository.GetByIdAsync(id);
                 if (existing == null)
                 {
                     throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
                 }
-                existing.Estado = _status;
-                existing.EstadoId = (sbyte)infoRequestDto.EstadoId;
+                existing.Active = infoRequestDto.Active;
                 existing.UsuarioModifico = currentUser.UserName;
                 existing.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
                 existing.FechaModifico = DateTime.UtcNow;

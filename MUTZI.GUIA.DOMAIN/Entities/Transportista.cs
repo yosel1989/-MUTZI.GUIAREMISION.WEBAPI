@@ -57,11 +57,8 @@ public partial class Transportista
     [MaxLength(150)]
     public string? UsuarioModificoNombre { get; set; }
 
-    [Column("estado", TypeName = "enum('activo','inactivo')")]
-    public string? Estado { get; set; } = "activo";
-
-    [Column("estado_id")]
-    public sbyte? EstadoId { get; set; } = 1;
+    [Column("active")]
+    public bool Active { get; set; } = true;
 
     [Column("registro_mtc")]
     public string? RegistroMTC { get; set; }

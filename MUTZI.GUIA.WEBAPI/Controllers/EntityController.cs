@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Entity;
 using MUTZI.GUIA.APPLICATION.DTOs.Persona;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -10,7 +12,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [Route("entities")]
     [ApiController]
- 
+
     public class EntityController : ControllerBase
     {
         private readonly IEntityService _service;
@@ -22,7 +24,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [HttpPost]
         [SwaggerOperation(
             Summary = "Registrar una entidad",
-            Description = "Registrar una entidad con su tipo y roles",
+            Description = "Registrar una entidad con su tipo y rol",
             OperationId = "entity_create"
         )]
         [ProducesResponseType(typeof(IEnumerable<EntityDTO>), StatusCodes.Status200OK)]
@@ -41,6 +43,34 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al registrar entidad.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+
+        [HttpPut("{id}")]
+        [SwaggerOperation(
+            Summary = "Actualizar una entidad",
+            Description = "Actualizar una entidad con su tipo y rol",
+            OperationId = "entity_update"
+        )]
+        [ProducesResponseType(typeof(IEnumerable<EntityDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<EntityDTO>>> Update(int id, [FromBody] EntityUpdateDTO request)
+        {
+            try
+            {
+                var newEntity = await _service.UpdateAsync(id, request);
+                return Ok(newEntity);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al modificar entidad.",
                     Detalle = errorMsg
                 });
             }
@@ -130,6 +160,39 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al listar proveedores.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+
+        [HttpPut]
+        [Route("{id}/toggle-active")]
+        [SwaggerOperation(
+            Summary = "Cambiar el estado activo",
+            Description = "Activar o desactivar el estado de una entidad",
+            OperationId = "entity_toggle_active"
+        )]
+        [ProducesResponseType(typeof(ResponseDTO<EstadoActualizadoResponseDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CambiarEstado(int id, [FromBody] EstadoActualizadoRequestDTO infoRequestDto)
+        {
+            try
+            {
+                var result = await _service.ToggleActiveAsync(id, infoRequestDto);
+                return Ok(new ResponseDTO<EstadoActualizadoResponseDTO>
+                {
+                    Data = result,
+                    Detalle = $"Se actualizó el estado del conductor con código: COD-{id.ToString("D4")} al estado {result.Estado}."
+                });
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al actualizar el estado de un conductor.",
                     Detalle = errorMsg
                 });
             }

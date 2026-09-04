@@ -421,8 +421,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         FechaModifico = g.RemiteTransportista.FechaModifico,
                         UsuarioModifico = g.RemiteTransportista.UsuarioModifico,
                         EmailRemiteTransportistaGuids = g.EmailRemiteTransportistaGuids,
-                        Estado = g.RemiteTransportista.Estado,
-                        EstadoId = g.RemiteTransportista.EstadoId
                     },
                     Remitente = new EntityBranch
                     {
@@ -437,8 +435,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UsuarioRegistro = g.Remitente.UsuarioRegistro,
                         FechaModifico = g.Remitente.FechaModifico,
                         UsuarioModifico = g.Remitente.UsuarioModifico,
-                        Estado = g.Remitente.Estado,
-                        EstadoId = g.Remitente.EstadoId,
                         RucNavigation = g.Remitente.RucNavigation
                     },
                     Destinatario = new EntityBranch
@@ -454,8 +450,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UsuarioRegistro = g.Destinatario.UsuarioRegistro,
                         FechaModifico = g.Destinatario.FechaModifico,
                         UsuarioModifico = g.Destinatario.UsuarioModifico,
-                        Estado = g.Destinatario.Estado,
-                        EstadoId = g.Destinatario.EstadoId,
                         RucNavigation = g.Destinatario.RucNavigation
                     },
 
@@ -475,8 +469,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UsuarioRegistro = g.Proveedor.UsuarioRegistro,
                         FechaModifico = g.Proveedor.FechaModifico,
                         UsuarioModifico = g.Proveedor.UsuarioModifico,
-                        Estado = g.Proveedor.Estado,
-                        EstadoId = g.Proveedor.EstadoId
                     },
 
                     GuiaDetalles = g.GuiaDetalles.Select(det => new GuiaRemisionDetalle

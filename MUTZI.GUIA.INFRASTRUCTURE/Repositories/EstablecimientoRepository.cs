@@ -18,7 +18,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 var data = await _context.Establecimiento
-                    .Where(e => e.Ruc == ruc && e.EstadoId == 1)
+                    .Where(e => e.Ruc == ruc && e.Active)
                     .Include(r=>r.Ubigeo)
                     .OrderBy(e => e.Description)
                     .ToListAsync();
@@ -38,7 +38,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 var data = await _context.Establecimiento
                     .Include(r => r.Ubigeo)
-                    .Where(e => e.Ruc == ruc && e.EstadoId == 1)
+                    .Where(e => e.Ruc == ruc && e.Active)
                     .Select(m => new EntityBranch
                     {
                         EntityBranchId = m.EntityBranchId,
@@ -100,7 +100,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 var data = await query
                 .Where(q => q.Ruc == ruc)
-                .Where(q => q.EstadoId == 1)
+                .Where(q => q.Active)
                 .Select(m => new EntityBranch
                 {
                     EntityBranchId = m.EntityBranchId,
@@ -174,7 +174,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         x.Serie.Contains(val) ||
                         x.CodeSunat.ToLower().Contains(val) ||
                         x.UsuarioRegistroNombre.ToLower().Contains(val) ||
-                        x.Estado.ToLower().Contains(val) ||
                         x.Area.ToLower().Contains(val) ||
                         x.UsuarioModificoNombre.ToLower().Contains(val)
                     );
@@ -211,7 +210,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 throw;
             }
-            
         }
 
         public async Task<EntityBranch> UpdateAsync(EntityBranch actualizarEstablecimiento)

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Entity;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces;
@@ -93,10 +94,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
         }
 
-        public async Task<EntityDTO> UpdateAsync(EntityUpdateDTO updateEntity)
+        public async Task<EntityDTO> UpdateAsync(int id, EntityUpdateDTO updateEntity)
         {
             var user = _authService.CurrentUser();
-            var entity = await _repository.GetByIdAsync(updateEntity.EntityId);
+            var entity = await _repository.GetByIdAsync(id);
             if(entity is null) { throw new Exception("Entidad no se encontro"); }
 
             entity.Type = updateEntity.Type;
@@ -154,6 +155,32 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
                 Data = dataDTO
             };
+        }
+
+
+        public async Task<EstadoActualizadoResponseDTO> ToggleActiveAsync(int id, EstadoActualizadoRequestDTO infoRequestDto)
+        {
+            try
+            {
+                var currentUser = _authService.CurrentUser();
+
+                var existing = await _repository.GetByIdAsync(id);
+                if (existing == null)
+                {
+                    throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
+                }
+                existing.Active = infoRequestDto.Active;
+                existing.UpdatedAtUser = currentUser.UserName;
+                existing.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
+                existing.UpdatedAt = DateTime.UtcNow;
+                var conductorActualizado = await _repository.UpdateAsync(existing);
+
+                return _mapper.Map<EstadoActualizadoResponseDTO>(conductorActualizado);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
     }

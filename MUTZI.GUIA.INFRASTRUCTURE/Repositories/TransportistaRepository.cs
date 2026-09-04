@@ -34,7 +34,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 var query = _context.Transportista
-                    .Where(c => c.EstadoId == 1)
+                    .Where(c => c.Active)
                     .Select(x => new Transportista
                     {
                         TransportistaId = x.TransportistaId,

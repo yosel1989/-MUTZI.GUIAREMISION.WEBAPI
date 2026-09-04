@@ -9,9 +9,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Shared
         [SwaggerSchema("Ingresa un entero, el Id del registro afectado.", Nullable = false)]
         public int Id { get; set; }
 
-        [JsonPropertyName("id_estado")]
-        [SwaggerSchema("Ingresa en entero el nuevo estado del registro.", Nullable = false)]
-        public int EstadoId { get; set; }
+        [JsonPropertyName("active")]
+        [SwaggerSchema("Ingresa en boolean, activo = true e inactivo = false", Nullable = false)]
+        public bool Active { get; set; }
     }
 
     public class EstadoActualizadoResponseDTO

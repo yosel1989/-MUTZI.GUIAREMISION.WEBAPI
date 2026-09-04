@@ -60,11 +60,8 @@ public partial class Conductor
     [MaxLength(150)]
     public string? UsuarioModificoNombre { get; set; }
 
-    [Column("estado")]
-    public string Estado { get; set; } = "activo";
-
-    [Column("estado_id")]
-    public sbyte EstadoId { get; set; } = 1;
+    [Column("active")]
+    public bool Active{ get; set; } = true;
 
     // Relaciones
 

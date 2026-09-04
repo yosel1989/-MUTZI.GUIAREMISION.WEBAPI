@@ -60,11 +60,8 @@ public partial class Proveedor
     [Column("usuario_modifico_nombre")]
     public string? UsuarioModificoNombre { get; set; }
 
-    [Column("estado", TypeName = "enum('activo','inactivo)")]
-    public string? Estado { get; set; } = "activo";
-
-    [Column("estado_id")]
-    public sbyte? EstadoId { get; set; } = 1;
+    [Column("active")]
+    public bool Active { get; set; } = true;
 
     // Relaciones
 

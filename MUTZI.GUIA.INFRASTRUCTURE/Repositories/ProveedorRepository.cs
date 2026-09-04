@@ -23,7 +23,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<List<Proveedor>> GetListBySuggestion(string numeroDoc)
         {
-            var query = _context.Proveedor.Where(c => c.EstadoId == 1);
+            var query = _context.Proveedor.Where(c => c.Active);
             if (!string.IsNullOrEmpty(numeroDoc))
             {
                 query = query.Where(c =>
@@ -55,8 +55,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     x.Email.ToLower().Contains(val) || 
                     x.Pais.ToLower().Contains(val) || 
                     x.CodigoSunat.ToLower().Contains(val) || 
-                    x.UsuarioRegistroNombre.ToLower().Contains(val) || 
-                    x.Estado.ToLower().Contains(val) || 
+                    x.UsuarioRegistroNombre.ToLower().Contains(val) ||  
                     x.UsuarioModificoNombre.ToLower().Contains(val)
                 );
             }

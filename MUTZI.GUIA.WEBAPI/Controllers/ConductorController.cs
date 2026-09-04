@@ -7,7 +7,6 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente.Conductor;
 using MUTZI.GUIA.WEBAPI.Attributes;
-using MySqlX.XDevAPI.Common;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
