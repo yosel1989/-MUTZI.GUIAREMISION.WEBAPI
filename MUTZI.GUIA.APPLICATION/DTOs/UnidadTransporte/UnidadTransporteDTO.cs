@@ -70,13 +70,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
         [SwaggerSchema("Devuelve en texto, el nombre del usuario que ha realizado un cambio en el registro", Nullable = true)]
         public string? UsuarioModificoNombre { get; set; }
 
-        [JsonPropertyName("estado")]
-        [SwaggerSchema("Devuelve un texto, el estado del transporte solo puede ser: activo o inactivo", Nullable = false)]
-        public string Estado { get; set; }
-
-        [JsonPropertyName("id_estado")]
-        [SwaggerSchema("Devuelve un entero, el ID del estado del transporte en la bbdd", Nullable = false)]
-        public int IdEstado { get; set; }
+        [JsonPropertyName("active")]
+        [SwaggerSchema("Devuelve un bool, el estado del registro activo = true, inactivo = false", Nullable = false)]
+        public bool Active { get; set; }
 
         [JsonPropertyName("tipo")]
         [SwaggerSchema("Devuelve un texto, el tipo del transporte solo puede ser: interno, externo", Nullable = false)]

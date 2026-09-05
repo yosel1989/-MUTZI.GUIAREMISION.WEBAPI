@@ -4,12 +4,12 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 {
     public interface IUnidadTransporteRepository
     {
-        Task<List<UnidadTransporte>> GetAllAsync();
-        Task<List<UnidadTransporte>> GetListBySuggestion(string numeroDoc);
-        Task<(List<UnidadTransporte>, int)> GetListAsync(int pageNumber, int pageSize, string? request);
-        Task<UnidadTransporte?> GetByIdAsync(int id);
-        Task CreateAsync(UnidadTransporte transporte);
-        Task<UnidadTransporte> UpdateAsync(UnidadTransporte transporte);
+        Task<List<TransportUnit>> GetAllAsync();
+        Task<List<TransportUnit>> GetListBySuggestion(string numeroDoc);
+        Task<(List<TransportUnit>, int)> GetListAsync(int pageNumber, int pageSize, string? request);
+        Task<TransportUnit?> GetByIdAsync(int id);
+        Task CreateAsync(TransportUnit transporte);
+        Task<TransportUnit> UpdateAsync(TransportUnit transporte);
         Task DeleteAsync(int id);
     }
 }

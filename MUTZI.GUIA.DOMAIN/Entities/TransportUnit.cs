@@ -4,22 +4,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities;
 
-[Table("unidad_transporte")]
-public class UnidadTransporte
+[Table("transport_unit")]
+public class TransportUnit
 {
     [Key]
-    [Column("unidad_transporte_id")]
+    [Column("transport_unit_id")]
     public int UnidadTransporteId { get; set; }
 
-    [Column("descripcion")]
+    [Column("description")]
     [MaxLength(50)]
     public string? Descripcion { get; set; }
 
-    [Column("modelo")]
+    [Column("model")]
     [MaxLength(20)]
     public string? Modelo { get; set; }
 
-    [Column("marca")]
+    [Column("brand")]
     [MaxLength(20)]
     public string? Marca { get; set; }
 
@@ -46,23 +46,23 @@ public class UnidadTransporte
     [MaxLength(20)]
     public string Tipo { get; set; } = "interno";
 
-    [Column("fecha_registro")]
+    [Column("created_at")]
     public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
 
-    [Column("fecha_modifico")]
+    [Column("updated_at")]
     public DateTime? FechaModifico { get; set; }
 
-    [Column("usuario_registro")]
+    [Column("created_at_user")]
     public string UsuarioRegistro { get; set; }
 
-    [Column("usuario_registro_nombre")]
+    [Column("created_at_user_name")]
     [MaxLength(150)]
     public string UsuarioRegistroNombre { get; set; }
 
-    [Column("usuario_modifico")]
+    [Column("updated_at_user")]
     public string? UsuarioModifico { get; set; }
 
-    [Column("usuario_modifico_nombre")]
+    [Column("updated_at_user_name")]
     [MaxLength(150)]
     public string? UsuarioModificoNombre { get; set; }
 

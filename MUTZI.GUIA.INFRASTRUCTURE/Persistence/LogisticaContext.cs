@@ -25,7 +25,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<GuiaRemisionOrigen> GuiaRemisionOrigen { get; set; }
     public virtual DbSet<Proveedor> Proveedor { get; set; }
     public virtual DbSet<Transportista> Transportista { get; set; }
-    public virtual DbSet<UnidadTransporte> UnidadTransporte { get; set; }
+    public virtual DbSet<TransportUnit> UnidadTransporte { get; set; }
     public virtual DbSet<GuiaRemisionUnidadTransporte> UnidadTransporteGuids { get; set; }
     public virtual DbSet<Ubigeo> Ubigeo { get; set; }
     public virtual DbSet<UnitMeasurement> UnidadMedida { get; set; }

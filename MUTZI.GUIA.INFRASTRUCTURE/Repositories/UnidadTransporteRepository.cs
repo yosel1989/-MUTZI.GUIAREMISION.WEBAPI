@@ -13,7 +13,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             _context = context;
         }
 
-        public async Task<List<UnidadTransporte>> GetAllAsync()
+        public async Task<List<TransportUnit>> GetAllAsync()
         {
             try
             {
@@ -26,7 +26,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task<List<UnidadTransporte>> GetListBySuggestion(string numeroDoc)
+        public async Task<List<TransportUnit>> GetListBySuggestion(string numeroDoc)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             
         }
 
-        public async Task<(List<UnidadTransporte>, int)> GetListAsync(int pageNumber, int pageSize, string? search)
+        public async Task<(List<TransportUnit>, int)> GetListAsync(int pageNumber, int pageSize, string? search)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task<UnidadTransporte?> GetByIdAsync(int id)
+        public async Task<TransportUnit?> GetByIdAsync(int id)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task CreateAsync(UnidadTransporte transporte)
+        public async Task CreateAsync(TransportUnit transporte)
         {
             try
             {
@@ -116,7 +116,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 throw;
             }
         }
-        public async Task<UnidadTransporte> UpdateAsync(UnidadTransporte transporte)
+        public async Task<TransportUnit> UpdateAsync(TransportUnit transporte)
         {
             try
             {

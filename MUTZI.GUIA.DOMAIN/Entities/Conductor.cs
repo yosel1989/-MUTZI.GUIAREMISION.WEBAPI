@@ -11,10 +11,10 @@ public partial class Conductor
     [Column("conductor_id")]
     public int ConductorId { get; set; }
 
-    [Column("tipo_documento_id")]
+    [Column("document_type_id")]
     public int TipoDocumentoId { get; set; }
 
-    [Column("numero_documento")]
+    [Column("document_number")]
     [MaxLength(15)]
     public string NumeroDocumento { get; set; } = null!;
 
@@ -38,25 +38,25 @@ public partial class Conductor
     [MaxLength(20)]
     public string Licencia { get; set; } = null!;
 
-    [Column("fecha_registro")]
+    [Column("created_at")]
     public DateTime FechaRegistro { get; set; }
 
-    [Column("fecha_modifico")]
+    [Column("updated_at")]
     public DateTime? FechaModifico { get; set; }
 
-    [Column("usuario_registro")]
+    [Column("created_at_user")]
     [MaxLength(75)]
     public string UsuarioRegistro { get; set; }
 
-    [Column("usuario_registro_nombre")]
+    [Column("created_at_user_name")]
     [MaxLength(150)]
     public string UsuarioRegistroNombre { get; set; }
 
-    [Column("usuario_modifico")]
+    [Column("updated_at_user")]
     [MaxLength(75)]
     public string? UsuarioModifico { get; set; }
 
-    [Column("usuario_modifico_nombre")]
+    [Column("updated_at_user_name")]
     [MaxLength(150)]
     public string? UsuarioModificoNombre { get; set; }
 

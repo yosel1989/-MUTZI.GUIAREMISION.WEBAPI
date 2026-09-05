@@ -528,7 +528,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                             GuiaRemisionUnidadTransporteId = tg.GuiaRemisionUnidadTransporteId,
                             GuiaRemisionDatoEnvioId = tg.GuiaRemisionDatoEnvioId,
                             UnidadTransporteId = tg.UnidadTransporteId,
-                            UnidadTransporte = new UnidadTransporte
+                            UnidadTransporte = new TransportUnit
                             {
                                 UnidadTransporteId = tg.UnidadTransporte.UnidadTransporteId,
                                 Placa = tg.UnidadTransporte.Placa,
@@ -929,11 +929,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
         //UnidadTransporte
-        public async Task<UnidadTransporte> GetTransporteByPlacaAsync(string placa)
+        public async Task<TransportUnit> GetTransporteByPlacaAsync(string placa)
         {
             return await _context.UnidadTransporte.FirstOrDefaultAsync(t => t.Placa == placa);
         }
-        public async Task<UnidadTransporte> CreateTransporteAsync(UnidadTransporte transporte)
+        public async Task<TransportUnit> CreateTransporteAsync(TransportUnit transporte)
         {
             try
             {

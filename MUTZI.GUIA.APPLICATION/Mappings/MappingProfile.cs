@@ -271,7 +271,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.CodEmisorVehicular, opt => opt.MapFrom(src => src.UnidadTransporte.EntidadReguladoraVehicular.CodigoSunat))
                 .ForMember(dest => dest.EmisorVehicular, opt => opt.MapFrom(src => src.UnidadTransporte.EntidadReguladoraVehicular.DescripcionCorta))
                 ;
-            CreateMap<UnidadTransporteCreateDTO, UnidadTransporte>();
+            CreateMap<UnidadTransporteCreateDTO, TransportUnit>();
             CreateMap<int, GuiaRemisionUnidadTransporte>()
             .ForMember(dest => dest.UnidadTransporteId, opt => opt.MapFrom(src => src));
         }

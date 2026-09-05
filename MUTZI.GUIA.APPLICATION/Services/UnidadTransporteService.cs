@@ -62,7 +62,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             try
             {
                 var currentUser = _authService.CurrentUser();
-                var transporte = _mapper.Map<UnidadTransporte>(createDTO);
+                var transporte = _mapper.Map<TransportUnit>(createDTO);
                 transporte.UsuarioRegistro = currentUser.UserName;
                 transporte.UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}";
                 transporte.FechaRegistro = DateTime.UtcNow;

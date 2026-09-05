@@ -34,8 +34,8 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<Conductor> GetConductorByNumeroDocumentoAsync(string numeroDocumento);
         Task<Conductor> CreateConductorAsync(Conductor conductor);
         //UnidadTransporte
-        Task<UnidadTransporte> GetTransporteByPlacaAsync(string placa);
-        Task<UnidadTransporte> CreateTransporteAsync(UnidadTransporte transporte);
+        Task<TransportUnit> GetTransporteByPlacaAsync(string placa);
+        Task<TransportUnit> CreateTransporteAsync(TransportUnit transporte);
         //Datos envio
         Task<GuiaRemisionDatoEnvio> CreateDatosEnvioAsync(GuiaRemisionDatoEnvio datosEnvio);
         //Ubicación origen
