@@ -69,7 +69,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                 if(newEntity.Role != "entidad")
                 {
-                    await _entityRoleRepository.SyncAsync(outputEntity.EntityId, new List<EntityRole> { 
+                    await _entityRoleRepository.SyncToEntityAsync(outputEntity.EntityId, new List<EntityRole> { 
                         new EntityRole { 
                             EntityId = outputEntity.EntityId, 
                             Role = newEntity.Role,
@@ -77,10 +77,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             CreatedAtUser = user.UserName,
                             CreatedAtUserName = $"{user.FirstName} {user.LastName}"
                         } 
-                    });
+                    }, user.UserName, $"{user.FirstName} {user.LastName}");
                 }
                 
-
                 await _appDBContext.CommitAsync();
 
                 return outputEntity;

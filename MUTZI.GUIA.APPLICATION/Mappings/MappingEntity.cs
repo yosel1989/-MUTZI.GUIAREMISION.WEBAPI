@@ -1,4 +1,5 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.Entity;
+using MUTZI.GUIA.APPLICATION.DTOs.EntityRole;
 using MUTZI.GUIA.APPLICATION.DTOs.PersonaEmpresaInfo;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Models;
@@ -18,9 +19,10 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.DocumentType, opt => opt.MapFrom(src => src.DocumentType.DescripcionCorta))
                 ;
 
+            CreateMap<EntityRole, EntityRoleDTO>();
+
             CreateMap<PersonInfo, PersonInfoDTO>();
             CreateMap<CompanyInfo, CompanyInfoDTO>();
-
         }
     }
 }

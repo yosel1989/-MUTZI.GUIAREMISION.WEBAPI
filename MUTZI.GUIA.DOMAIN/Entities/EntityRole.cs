@@ -35,6 +35,18 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Description("Nombre del usuario que creó el registro")]
         public string CreatedAtUserName { get; set; }
 
+        [Column("updated_at")]
+        [Description("Fecha de actualización del registro")]
+        public DateTime? UpdatedAt { get; set; }
+
+        [Column("updated_at_user")]
+        [Description("Usuario que modificó el registro")]
+        public string? UpdatedAtUser { get; set; }
+
+        [Column("updated_at_user_name")]
+        [Description("Nombre del usuario que modificó el registro")]
+        public string? UpdatedAtUserName { get; set; }
+
         // Relaciones
 
         [ForeignKey(nameof(EntityId))]

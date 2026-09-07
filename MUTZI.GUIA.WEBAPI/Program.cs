@@ -117,6 +117,7 @@ builder.Services.AddAutoMapper(typeof(MappingCatalogo).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingPersona).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingOperacionResponsable).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingEntity).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingIntegrationCredential).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -150,6 +151,7 @@ builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoRepository, GuiaRemisio
 builder.Services.AddScoped<IEntityRepository, EntityRepository>();
 builder.Services.AddScoped<IEntityRoleRepository, EntityRoleRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+builder.Services.AddScoped<IIntegrationCredentialRepository, IntegrationCredentialRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -183,6 +185,8 @@ builder.Services.AddScoped<IOperacionResponsableService, OperacionResponsableSer
 builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoService, GuiaRemisionIndicadorTrasladoService>();
 builder.Services.AddScoped<IEntityService, EntityService>();
 builder.Services.AddScoped<IEntityInfoService, EntityInfoService>();
+builder.Services.AddScoped<IEntityRoleService, EntityRoleService>();
+builder.Services.AddScoped<IIntegrationCredentialService, IntegrationCredentialService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddValidatorsFromAssemblyContaining<EntityCreateValidator>();

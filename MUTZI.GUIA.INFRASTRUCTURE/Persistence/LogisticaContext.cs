@@ -40,6 +40,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<MotivoTraslado> MotivoTraslado { get; set; }
     public virtual DbSet<Persona> Persona { get; set; }
     public virtual DbSet<OperacionResponsable> OperacionResponsable { get; set; }
+    public virtual DbSet<IntegrationCredential> IntegrationCredentials { get; set; }
 
     // Catalogos
     public virtual DbSet<Area> Area { get; set; }

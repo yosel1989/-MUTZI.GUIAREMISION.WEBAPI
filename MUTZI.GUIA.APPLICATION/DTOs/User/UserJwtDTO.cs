@@ -54,6 +54,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.User
 
         [JsonPropertyName("roles")]
         public List<string> Roles { get; set; }
+
+        [JsonPropertyName("rucempresa")]
+        public string RucEmpresa { get; set; }
     }
 
     public class PerfilJWTDto

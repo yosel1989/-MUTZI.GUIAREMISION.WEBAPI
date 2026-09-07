@@ -40,6 +40,7 @@ public class AuthService: IAuthService
         var UserLocalComercialId = user.FindFirst("UserLocalComercialId")?.Value;
         var IdUsuarioSN = user.FindFirst("IdUsuarioSN")?.Value;
         var ProfileAppId = user.FindAll("ProfileAppId");
+        var RucEmpresa = user.FindFirst("rucempresa")?.Value;
 
         var perfiles = ProfileAppId?
             .Select(p =>
@@ -71,7 +72,8 @@ public class AuthService: IAuthService
             UserLocalComercialId = UserLocalComercialId != null ? Convert.ToInt32(UserLocalComercialId) : 0,
             IdUsuarioSN = IdUsuarioSN != null ? Convert.ToInt32(IdUsuarioSN) : 0,
             Profiles = perfiles ?? new List<PerfilJWTDto>(),
-            Roles = Roles.ToList()
+            Roles = Roles.ToList(),
+            RucEmpresa = RucEmpresa
         };
     }
 
