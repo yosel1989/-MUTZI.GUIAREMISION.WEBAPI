@@ -26,10 +26,12 @@ namespace MUTZI.GUIA.APPLICATION.Services
         private readonly IGuiaRemitenteRepository _repository;
         private readonly IGuiaRemisionHistorialRepository _guiaRemisionHistorialRepository;
         private readonly IEstablecimientoRepository _establecimientoRepository;
+        private readonly IEntityRepository _entityRepository;
         private readonly IMotivoTrasladoRepository _motivoTrasladoRepository;
         private readonly ITransportistaRepository _transportistaRepository;
         private readonly IProveedorRepository _proveedorRepository;
         private readonly IVentaConfigRepository _ventaConfigRepository;
+        private readonly IIntegrationCredentialRepository _integrationCredentialRepository;
         private readonly IGuiaRemitenteUBLService _guiaRemitenteUBLService;
         private readonly IEnvioService _envioService;
         private readonly IMapper _mapper;
@@ -44,7 +46,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             IMotivoTrasladoRepository motivoTrasladoRepository,
             ITransportistaRepository transportistaRepository,
             IEstablecimientoRepository establecimientoRepository,
+            IIntegrationCredentialRepository integrationCredentialRepository,
             IProveedorRepository proveedorRepository,
+            IEntityRepository entityRepository,
             IMapper mapper,
             IAuthService authService,
             IAppDBContext appDBContext
@@ -58,7 +62,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _motivoTrasladoRepository = motivoTrasladoRepository;
             _transportistaRepository = transportistaRepository;
             _proveedorRepository = proveedorRepository;
+            _entityRepository = entityRepository;
             _ventaConfigRepository = ventaConfigRepository;
+            _integrationCredentialRepository = integrationCredentialRepository;
             _mapper = mapper;
             _authService = authService;
             _appDBContext = appDBContext;
@@ -238,7 +244,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             var guiaRemision = await _repository.GetByTicketAsync(ticket);
             return _mapper.Map<GuiaPorTicketDTO>(guiaRemision);
         }
-        public async Task<object> CreateAsync(string ruc, GuiaRemitenteCreateDTO dto)
+        public async Task<object> CreateAsync(string ruc, GuiaRemitenteCreateDTO request)
         {
             await _appDBContext.BeginTransactionAsync();
 
@@ -249,31 +255,27 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     var currentUser = _authService.CurrentUser();
                     // Mapear todos los objetos
-                    var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(dto.MotivoTrasladoId, true);
-                    var transportista = await _transportistaRepository.GetByIdAsync(dto.DatosEnvio.TransportistaId ?? 0);
-                    var remitente = await _establecimientoRepository.GetByIdAsync(dto.RemitenteId, true, "Remitente");
-                    var destinatario = await _establecimientoRepository.GetByIdAsync(dto.DestinatarioId, true, "Destinatario");
-                    var destinatarioEmails = dto.DestinatarioEmail.Select(p => _mapper.Map<GuiaRemisionEmailDestinatario>(p)).ToList();
-                    var proveedor = await _proveedorRepository.GetByIdAsync(dto.ProveedorId ?? 0);
-                    var conductor = dto.DatosEnvio.ConductorId?.Select(p => _mapper.Map<GuiaRemisionConductor>(p)).ToList() ?? [];
-                    var transporte = dto.DatosEnvio.TransporteId?.Select(p => _mapper.Map<GuiaRemisionUnidadTransporte>(p)).ToList() ?? [];
-                    var guiaRemision = _mapper.Map<GuiaRemision>(dto);
-                    var datosEnvio = _mapper.Map<GuiaRemisionDatoEnvio>(dto.DatosEnvio);
-                    dto.DatosEnvio.Transportista = transportista != null ? _mapper.Map<TransportistaDTO>(transportista) : null;
-                    var origen = _mapper.Map<GuiaRemisionOrigen>(dto.Origen);
-                    var destino = dto.Destino.Select(p => _mapper.Map<GuiaRemisionDestino>(p)).ToList();
-                    var detalles = dto.Productos.Select(p => _mapper.Map<GuiaRemisionDetalle>(p)).ToList();
-                    var docRelacionados = dto.DocRelacionado?.Select(p => _mapper.Map<GuiaRemisionDocumentoRelacionado>(p)).ToList();
+                    var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(request.MotivoTrasladoId, true);
+                    var transportista = await _entity.GetByIdAsync(request.DatosEnvio.TransportistaId ?? 0);
+                    var remitente = await _establecimientoRepository.GetByIdAsync(request.RemitenteId, true, "Remitente");
+                    var destinatario = await _establecimientoRepository.GetByIdAsync(request.DestinatarioId, true, "Destinatario");
+                    var destinatarioEmails = request.DestinatarioEmail.Select(p => _mapper.Map<GuiaRemisionEmailDestinatario>(p)).ToList();
+                    var proveedor = await _proveedorRepository.GetByIdAsync(request.ProveedorId ?? 0);
+                    var conductor = request.DatosEnvio.ConductorId?.Select(p => _mapper.Map<GuiaRemisionConductor>(p)).ToList() ?? [];
+                    var transporte = request.DatosEnvio.TransporteId?.Select(p => _mapper.Map<GuiaRemisionUnidadTransporte>(p)).ToList() ?? [];
+                    var guiaRemision = _mapper.Map<GuiaRemision>(request);
+                    var datosEnvio = _mapper.Map<GuiaRemisionDatoEnvio>(request.DatosEnvio);
+                    request.DatosEnvio.Transportista = transportista != null ? _mapper.Map<TransportistaDTO>(transportista) : null;
+                    var origen = _mapper.Map<GuiaRemisionOrigen>(request.Origen);
+                    var destino = request.Destino.Select(p => _mapper.Map<GuiaRemisionDestino>(p)).ToList();
+                    var detalles = request.Productos.Select(p => _mapper.Map<GuiaRemisionDetalle>(p)).ToList();
+                    var docRelacionados = request.DocRelacionado?.Select(p => _mapper.Map<GuiaRemisionDocumentoRelacionado>(p)).ToList();
                     var ventaConfig = await _ventaConfigRepository.GetByRucAsync(ruc);
+                    var integrationCredential = await _integrationCredentialRepository.GetByEntityId(request.EntityId, "efact", strict: true);
 
-                    //if (motivoTraslado is null) throw new Exception("No existe el motivo de traslado.");
-                    //if (remitente is null) throw new Exception("No existe este remitente.");
-                    //if (destinatario is null) throw new Exception("No existe este destinatario.");
-                    if (ventaConfig is null) throw new Exception($"El RUC principal ingresado {ruc} no tiene acceso al facturador. Pruebe con el Número de RUC del emisor del documento que se está relacionando al comprobante Guía de remisión remitente.");
+                    request.ValidarBienesNormalizados();
 
-                    dto.ValidarBienesNormalizados();
-
-                    var (esValido, error) = ValidarDatosGuiaRemitente(dto, ruc, remitente, destinatario, ventaConfig);
+                    var (esValido, error) = ValidarDatosGuiaRemitente(request, ruc, remitente, destinatario, integrationCredential);
                     if (!esValido)
                     {
                         return new BadRequestResponseDTO
@@ -363,7 +365,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         {
             await _repository.UpdateRespuestaTicketAsync(guiaId, ticket, estado, idEstado);
         }
-        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO guia, string ruc, EntityBranch remitente, EntityBranch destinatario, VentaConfig ventaConfig)
+        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteCreateDTO guia, string ruc, EntityBranch remitente, EntityBranch destinatario, IntegrationCredential integrationCredential)
         {
             try
             {
@@ -374,12 +376,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                 if(guia.MotivoTrasladoId != 7)
                 {
-                    if (remitente.Ruc != ventaConfig.Ruc)
-                        return (false, $"El RUC del remitente ({remitente.Ruc}) no coincide con el RUC de la empresa ({ventaConfig.Ruc}).");
+                    if (remitente.EntityId != integrationCredential.EntityId)
+                        return (false, $"El remitente no pertenece a la entidad emisora.");
                 }
-
-                
-
 
                 _ = guia.TipoTRansporteCode18();
                 //_ = guia.TipoTrasladoCode20();
@@ -402,7 +401,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 return (false, ex.Message);
             }
         }
-        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO guia, string ruc, EntityBranch remitente, EntityBranch destinatario, VentaConfig ventaConfig)
+        public (bool EsValido, string Error) ValidarDatosGuiaRemitente(GuiaRemitenteDTO guia, string ruc, EntityBranch remitente, EntityBranch destinatario, IntegrationCredential ventaConfig)
         {
             try
             {

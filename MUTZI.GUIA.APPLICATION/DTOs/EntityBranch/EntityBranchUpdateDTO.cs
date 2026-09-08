@@ -15,14 +15,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("entity_id")]
         [SwaggerSchema("Recibe un número, aquí se coloca el id de la entidad.", Nullable = false)]
         [Required(ErrorMessage = "El id del establecimiento es requerido")]
-        public int? EntityId { get; set; }
+        public int EntityId { get; set; }
 
-        [JsonPropertyName("ruc")]
-        [SwaggerSchema("Recibe un texto, es el ruc del establecimiento", Nullable = false)]
-        [Required(ErrorMessage = "El Nro documento del establecimiento es obligatoria")]
-        [StringLength(11, ErrorMessage = "El número de documento del establecimiento no puede exceder los 11 caracteres")]
-        [MinLength(11)]
-        public string Ruc { get; set; }
 
         [JsonPropertyName("description")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la descripción o nombre del establecimiento", Nullable = false)]

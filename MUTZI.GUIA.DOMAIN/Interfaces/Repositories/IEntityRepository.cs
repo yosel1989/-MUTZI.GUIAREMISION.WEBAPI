@@ -9,7 +9,8 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
         Task<Entity?> GetByIdAsync(int id);
         Task<Entity?> GetByDocumentNumber(string documentNumber);
         Task<(int total, List<Entity>)> GetDataTableAsync(int pageNumber, int pageSize, string? search, string role);
-        Task<(int total, List<Entity>)> GetListAsync(int pageNumber, int pageSize, string? search, string? type);
+        Task<(int total, List<Entity>)> GetDataTableByRoleAsync(int pageNumber, int pageSize, string? search, string role);
+        Task<(int total, List<Entity>)> GetListAsync(int pageNumber, int pageSize, string? search, string? type, string? roles, bool? isInternal);
 
 
         /// Validations 

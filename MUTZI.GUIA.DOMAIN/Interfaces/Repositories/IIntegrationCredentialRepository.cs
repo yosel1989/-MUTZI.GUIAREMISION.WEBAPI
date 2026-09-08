@@ -7,7 +7,7 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
         Task<IntegrationCredential> CreateAsync(IntegrationCredential newIntegrationCredential);
         Task<IntegrationCredential> UpdateAsync(IntegrationCredential updateIntegrationCredential);
         Task<IntegrationCredential?> GetByIdAsync(int id);
-        Task<IntegrationCredential?> GetByEntityId(int entityId, string provider);
+        Task<IntegrationCredential?> GetByEntityId(int entityId, string provider, bool strict = false);
         Task<(int total, List<IntegrationCredential>)> GetDataTableAsync(int pageNumber, int pageSize, string? search);
 
         // Validations

@@ -11,7 +11,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.IntegrationCredential
 
         [JsonPropertyName("entity_id")]
         [Description("Identificador único de la entidad")]
-        public int EntityId { get; set; }
+        public int? EntityId { get; set; }
+
+        [JsonPropertyName("entity_name")]
+        [Description("Nombre de la entidad")]
+        public string? EntityName { get; set; }
+
+        [JsonPropertyName("entity_document_number")]
+        [Description("Número del documento de la entidad")]
+        public string? EntityDocumentNumber { get; set; }
 
         [JsonPropertyName("provider")]
         [Description("Proveedor del servicio a integrar")]
@@ -20,6 +28,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.IntegrationCredential
         [JsonPropertyName("key")]
         [Description("Llave para servicio a integrar")]
         public string Key { get; set; }
+
+        [JsonPropertyName("key_test")]
+        [Description("Llave de prueba para servicio a integrar")]
+        public string? KeyTest { get; set; }
 
         [JsonPropertyName("active")]
         [Description("Estado de la entidad: activa o inactiva")]

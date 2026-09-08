@@ -135,6 +135,35 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("collection-by-role/{role}/{pageNumber}/{pageSize}")]
+        [SwaggerOperation(
+            Summary = "Obtener entidades",
+            Description = "Listar entidades por rol. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize' y el rol con el cual tengan relación.",
+            OperationId = "entity_collection"
+        )]
+        [ProducesResponseType(typeof(PagedResult<EntityByRoleDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<PagedResult<EntityByRoleDTO>>> GetAllByRole(string role, int pageNumber, int pageSize, [FromQuery] string? search)
+        {
+            try
+            {
+                var q = Request.Query;
+                var result = await _service.GetDataTableByRoleAsync(pageNumber, pageSize, search, role);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar proveedores.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
 
         [HttpGet]
         [Route("list/{pageNumber}/{pageSize}")]
@@ -146,12 +175,12 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(PagedResult<EntityListDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<EntityListDTO>>> GetList( int pageNumber, int pageSize, [FromQuery] string? search, [FromQuery] string? type)
+        public async Task<ActionResult<PagedResult<EntityListDTO>>> GetList( int pageNumber, int pageSize, [FromQuery] string? search, [FromQuery] string? type, [FromQuery] string? roles, [FromQuery] bool? isInternal)
         {
             try
             {
                 var q = Request.Query;
-                var result = await _service.GetListAsync(pageNumber, pageSize, search, type);
+                var result = await _service.GetListAsync(pageNumber, pageSize, search, type, roles, isInternal);
                 return Ok(result);
             }
             catch (Exception ex)

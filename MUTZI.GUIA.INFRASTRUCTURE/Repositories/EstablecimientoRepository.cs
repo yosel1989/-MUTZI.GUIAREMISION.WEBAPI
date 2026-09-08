@@ -13,12 +13,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             _context = context;
         }
 
-        public async Task<List<EntityBranch>> GetAllByRucToSelectAsync(string ruc)
+        public async Task<List<EntityBranch>> GetAllByEntityToSelectAsync(int entityId)
         {
             try
             {
                 var data = await _context.Establecimiento
-                    .Where(e => e.Ruc == ruc && e.Active)
+                    .Where(e => e.EntityId == entityId && e.Active)
                     .Include(r=>r.Ubigeo)
                     .OrderBy(e => e.Description)
                     .ToListAsync();
@@ -32,13 +32,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
            
         }
 
-        public async Task<List<EntityBranch>> GetAllByRucToSelect2Async(string ruc)
+        public async Task<List<EntityBranch>> GetAllByEntityToSelect2Async(int entityId)
         {
             try
             {
                 var data = await _context.Establecimiento
                     .Include(r => r.Ubigeo)
-                    .Where(e => e.Ruc == ruc && e.Active)
+                    .Where(e => e.EntityId == entityId && e.Active)
                     .Select(m => new EntityBranch
                     {
                         EntityBranchId = m.EntityBranchId,
@@ -57,7 +57,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         }
 
-        public async Task<List<EntityBranch>> GetAllByRucToSelectModal(string ruc)
+        public async Task<List<EntityBranch>> GetAllByEntityToSelectModal(int entityId)
         {
             try
             {
@@ -79,12 +79,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task<List<EntityBranch>> GetListBySuggestion(string ruc, string? search)
+        public async Task<List<EntityBranch>> GetListBySuggestion(int entityId, string? search)
         {
             try
             {
                 var query = _context.Establecimiento
-                .Include(r => r.RucNavigation)
+                .Include(r => r.Entity)
                 .AsQueryable();
 
                 if (!String.IsNullOrWhiteSpace(search))
@@ -99,7 +99,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 }
 
                 var data = await query
-                .Where(q => q.Ruc == ruc)
+                .Where(q => q.EntityId == entityId)
                 .Where(q => q.Active)
                 .Select(m => new EntityBranch
                 {
@@ -107,9 +107,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     Description = m.Description,
                     CodeSunat = m.CodeSunat,
                     Area = m.Area,
-                    RucNavigation = new VentaConfig
+                    Entity = new Entity
                     {
-                        Empresa = m.RucNavigation.Empresa
+                        Name = m.Entity.Name,
+                        DocumentNumber = m.Entity.DocumentNumber,
+                        DocumentType = m.Entity.DocumentType,
                     }
                 })
                 .AsNoTracking()
@@ -129,7 +131,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 var data = await _context.Establecimiento
                     .Include(r => r.Ubigeo)
-                    .Include(r => r.RucNavigation)
+                    .Include(r => r.Entity)
                     .AsNoTracking()
                     .FirstOrDefaultAsync(r => r.EntityBranchId == id);
 
@@ -153,7 +155,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 var query = _context.Establecimiento
                 .Include(r => r.Ubigeo)
-                .Include(e => e.RucNavigation)
                 .Include(e => e.Entity)
                 .AsQueryable();
                 if (!string.IsNullOrEmpty(search))
@@ -239,15 +240,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 throw;
             }
-            
         }
 
-        public async Task<bool> GetBySerieAsync(string ruc, string serie)
+        public async Task<bool> GetBySerieAsync(int entityId, string serie)
         {
             try
             {
                 var existe = await _context.Establecimiento
-                .AnyAsync(r => r.Ruc == ruc && r.Serie == serie);
+                .AnyAsync(r => r.EntityId == entityId && r.Serie == serie);
                 return existe;
             }
             catch (Exception ex)
@@ -256,14 +256,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task<GuiaRemision?> GetLastBySerieAsync(string serie, string ruc)
+        public async Task<GuiaRemision?> GetLastBySerieAsync(string serie, int entityId)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(serie))
-                    return null;
-
-                if (string.IsNullOrWhiteSpace(ruc))
                     return null;
 
                 var data = await _context.GuiaRemision

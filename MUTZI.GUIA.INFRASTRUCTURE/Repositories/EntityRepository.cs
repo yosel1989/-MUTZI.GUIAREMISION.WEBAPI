@@ -3,6 +3,9 @@ using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -47,9 +50,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<(int total, List<Entity>)> GetDataTableAsync(int pageNumber, int pageSize, string? search, string role)
         {
             var query = _context.Entities
-                .Include(x => x.DocumentType)
-                .Include(x => x.Country)
+                //.Include(x => x.DocumentType)
+                //.Include(x => x.Country)
+                //.Include(x => x.Roles)
                 .AsQueryable();
+
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(e => 
@@ -83,8 +88,69 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
 
 
+        public async Task<(int total, List<Entity>)> GetDataTableByRoleAsync(int pageNumber, int pageSize, string? search, string role)
+        {
+            var query = _context.Entities
+                .AsQueryable();
 
-        public async Task<(int total, List<Entity>)> GetListAsync(int pageNumber, int pageSize, string? search, string? type)
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(e =>
+                    e.Name.Contains(search) ||
+                    e.FirstName.Contains(search) ||
+                    e.LastName.Contains(search) ||
+                    e.DocumentType.DescripcionCorta.Contains(search) ||
+                    e.DocumentNumber.Contains(search) ||
+                    e.Country.Name.Contains(search)
+                );
+            }
+
+            if (!string.IsNullOrEmpty(role))
+            {
+                if (role != "entidad")
+                {
+                    query = query.Where(e => e.Roles.Any(x => x.Role == role));
+                }
+            }
+
+            var totalRecords = await query.CountAsync();
+
+            var data = await query
+                .OrderByDescending(p => p.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .Select(x => new Entity
+                {
+                    EntityId = x.EntityId,
+                    Type = x.Type,
+                    Name = x.Name,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    DocumentTypeId = x.DocumentTypeId,
+                    DocumentNumber = x.DocumentNumber,
+                    UbigeoId = x.UbigeoId,
+                    Address = x.Address,
+                    CountryId = x.CountryId,
+                    IsInternal = x.IsInternal,
+                    Active = x.Active,
+                    CreatedAt = x.CreatedAt,
+                    CreatedAtUser = x.CreatedAtUser,
+                    CreatedAtUserName = x.CreatedAtUserName,
+                    UpdatedAt = x.UpdatedAt,
+                    UpdatedAtUser = x.UpdatedAtUser,
+                    UpdatedAtUserName = x.UpdatedAtUserName,
+                    Roles = x.Roles.Where(x => x.Role == role).ToList(),
+                    DocumentType = x.DocumentType
+                })
+                .ToListAsync();
+
+            return (totalRecords, data);
+        }
+
+
+
+        public async Task<(int total, List<Entity>)> GetListAsync(int pageNumber, int pageSize, string? search, string? type, string? roles, bool? isInternal)
         {
             var query = _context.Entities
                 .Where(x => x.Active)
@@ -103,6 +169,17 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             if (!string.IsNullOrEmpty(type))
             {
                 query = query.Where(e => e.Type == type);
+            }
+
+            if (!string.IsNullOrEmpty(roles))
+            {
+                var listRoles = roles.Split(',').Select(r => r.Trim()).ToList();
+                query = query.Where(e => e.Roles.Any(r => listRoles.Contains(r.Role) && r.Active));
+            }
+
+            if (isInternal is not null)
+            {
+                query = query.Where(e => e.IsInternal == isInternal);
             }
 
             var totalRecords = await query.CountAsync();

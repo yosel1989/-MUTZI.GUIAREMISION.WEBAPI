@@ -40,7 +40,7 @@ public class AuthService: IAuthService
         var UserLocalComercialId = user.FindFirst("UserLocalComercialId")?.Value;
         var IdUsuarioSN = user.FindFirst("IdUsuarioSN")?.Value;
         var ProfileAppId = user.FindAll("ProfileAppId");
-        var RucEmpresa = user.FindFirst("rucempresa")?.Value;
+        var RucEmpresa = user.FindFirst("RucEmpresa")?.Value;
 
         var perfiles = ProfileAppId?
             .Select(p =>

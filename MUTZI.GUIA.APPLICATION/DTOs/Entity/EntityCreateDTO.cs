@@ -47,7 +47,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
 
         [JsonPropertyName("is_internal")]
         [Description("Indica si la entidad pertenece al consorcio o no es empresa tercera.")]
-        public bool IsInternal { get; set; } = true;
+        public bool IsInternal { get; set; } = false;
 
         [JsonPropertyName("role")]
         [Description("Indica el rol con el que será registrado la entidad: 'cliente', 'proveedor', 'transportista', 'emisor' o ningun rol dejarlo solo 'entidad'")]

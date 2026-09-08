@@ -64,11 +64,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("usuario_modifico_nombre")]
         public string? UsuarioModificoNombre { get; set; }
 
-        [JsonPropertyName("estado")]
-        public string? Estado { get; set; }
-
-        [JsonPropertyName("id_estado")]
-        public sbyte? EstadoId { get; set; }
+        [JsonPropertyName("active")]
+        public bool Active { get; set; }
 
         [JsonPropertyName("tipo")]
         public string Tipo { get; set; }

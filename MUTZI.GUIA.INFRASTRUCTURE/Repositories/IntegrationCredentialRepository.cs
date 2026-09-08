@@ -30,17 +30,25 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<IntegrationCredential?> GetByIdAsync(int id)
         {
-            var IntegrationCredential = await _context.IntegrationCredentials.FindAsync(id);
+            var IntegrationCredential = await _context.IntegrationCredentials
+                .Include(x => x.Entity)
+                .FirstOrDefaultAsync(x => x.IntegrationCredentialId == id);
             return IntegrationCredential;
         }
 
-        public async Task<IntegrationCredential?> GetByEntityId(int entityId, string provider)
+        public async Task<IntegrationCredential?> GetByEntityId(int entityId, string provider, bool strict)
         {
             var IntegrationCredential = await _context.IntegrationCredentials
                 .Where(x => x.EntityId == entityId)
                 .Where(x => x.Provider == provider)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
+
+            if (strict)
+            {
+                throw new Exception($"La entidad emisora no tiene credenciales registradas para {provider}");
+            }
+
             return IntegrationCredential;
         }
 

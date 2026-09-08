@@ -45,7 +45,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<(int GuiaId, string NumeroGuia)> CreateGuiaTransportistaTransactionalAsync(
             EntityBranch remitente,
-            Transportista remiteTransportista,
+            Entity remiteTransportista,
             EntityBranch destinatario,
             List<GuiaRemisionConductor> conductor,
             List<GuiaRemisionUnidadTransporte> transporte,
@@ -65,9 +65,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                 // Guía
                 guiaRemision.RemitenteId = remitente.EntityBranchId;
-                guiaRemision.Ruc = remitente.Ruc;
+                guiaRemision.Ruc = remitente.Entity.DocumentNumber;
                 guiaRemision.DestinatarioId = destinatario.EntityBranchId;
-                guiaRemision.RemiteTransportistaId = remiteTransportista.TransportistaId;
+                guiaRemision.RemiteTransportistaId = remiteTransportista.EntityId;
                 //guiaRemision.Nombre = "REGISTRADO";
                 guiaRemision.EstadoId = 0;
 
@@ -162,7 +162,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     foreach (var emailRemite in emailRemiteTransportistas)
                     {
                         emailRemite.GuiaId = guiaRemision.GuiaRemisionId;
-                        emailRemite.RemiteTransportistaId = remiteTransportista.TransportistaId;
+                        emailRemite.RemiteTransportistaId = remiteTransportista.EntityId;
                         await _context.EmailRemiteTransportistaGuids.AddAsync(emailRemite);
                     }
                     await _context.SaveChangesAsync();

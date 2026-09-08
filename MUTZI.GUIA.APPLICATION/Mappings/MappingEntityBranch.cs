@@ -18,7 +18,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Pais, opt => opt.MapFrom(src => src.Entity.Country.Code));
 
             CreateMap<EntityBranch, EntityBranchListToModalDTO>()
-                .ForMember(dest => dest.Entidad, opt => opt.MapFrom(src => src.RucNavigation.Empresa));
+                .ForMember(dest => dest.Entidad, opt => opt.MapFrom(src => src.Entity.Name == null ? $"{src.Entity.FirstName} {src.Entity.LastName}" : src.Entity.Name));
 
             CreateMap<EntityBranch, EntityBranchListDTO>()
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))

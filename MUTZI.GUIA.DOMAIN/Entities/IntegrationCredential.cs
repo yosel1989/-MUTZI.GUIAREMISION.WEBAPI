@@ -9,13 +9,13 @@ namespace MUTZI.GUIA.DOMAIN.Entities
     public class IntegrationCredential
     {
         [Key]
-        [Column("integration_credential")]
+        [Column("integration_credential_id")]
         [Description("Identificador único de la integración.")]
         public int IntegrationCredentialId { get; set; }
 
         [Column("entity_id")]
         [Description("Identificador único de la entidad")]
-        public int EntityId { get; set; }
+        public int? EntityId { get; set; }
 
         [Column("provider")]
         [Description("Proveedor del servicio a integrar")]
@@ -24,6 +24,10 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Column("key")]
         [Description("Llave para servicio a integrar")]
         public string Key { get; set; }
+
+        [Column("key_test")]
+        [Description("Llave para prueba del servicio a integrar")]
+        public string? KeyTest { get; set; }
 
         [Column("active")]
         [Description("Estado de la entidad: activa o inactiva")]
@@ -56,7 +60,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         // Relaciones
 
         [ForeignKey(nameof(EntityId))]
-        public virtual Entity Entity { get; set; }
+        public virtual Entity? Entity { get; set; }
 
     }
 }

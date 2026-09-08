@@ -15,6 +15,18 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
     public class GuiaRemitenteCreateDTO
     {
+        [JsonPropertyName("entity_id")]
+        [SwaggerSchema("Recibe un número, aquí va el id de la entidad emisora.", Nullable = false)]
+        [Required]
+        public int EntityId { get; set; }
+
+
+        [JsonPropertyName("entity_carrier_id")]
+        [SwaggerSchema("Recibe un número, aquí va el id de la entidad transportista.", Nullable = false)]
+        [Required]
+        public int? TransporterId { get; set; }
+
+
 
         [JsonPropertyName("tipo_transporte")]
         [SwaggerSchema("Recibe un texto y solo pueden ser: PUBLICO ó PRIVADO", Nullable = false)]

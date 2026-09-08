@@ -64,7 +64,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                         case "remitente":
                         {
-                            query = query.Where(x => x.Remitente.Ruc == val);
+                            query = query.Where(x => x.Remitente.Entity.DocumentNumber == val);
                             break;
                         }
 
@@ -84,7 +84,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                         case "destinatario":
                         {
-                            query = query.Where(x => x.Destinatario.Ruc == val);
+                            query = query.Where(x => x.Destinatario.Entity.DocumentNumber == val);
                             break;
                         }
 
@@ -168,9 +168,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         {
                             query = query.Where(x => 
                                 x.Remitente.Description.ToLower().Contains(val) ||
-                                x.Remitente.Ruc.ToLower().Contains(val) ||
+                                x.Remitente.Entity.DocumentNumber.ToLower().Contains(val) ||
                                 x.Destinatario.Description.ToLower().Contains(val) ||
-                                x.Destinatario.Ruc.ToLower().Contains(val) ||
+                                x.Destinatario.Entity.DocumentNumber.ToLower().Contains(val) ||
                                 x.NumeroGuia.Contains(val) ||
                                 x.MotivoTraslado.Nombre.ToLower().Contains(val) ||
                                 x.TipoTransporte.ToLower().Contains(val) ||
@@ -218,22 +218,32 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Hora = g.Hora,
                         RespuestaTicket = g.RespuestaTicket,
                         Remitente = new EntityBranch {
-                            Ruc = g.Remitente.Ruc,
+                            EntityBranchId = g.Remitente.EntityBranchId,
+                            EntityId = g.Remitente.EntityId,
                             Description = g.Remitente.Description,
                             Address = g.Remitente.Address,
-                            RucNavigation = new VentaConfig
+                            Entity = new Entity
                             {
-                                Empresa = g.Remitente.RucNavigation.Empresa
+                                Name = g.Remitente.Entity.Name,
+                                FirstName = g.Remitente.Entity.FirstName,
+                                LastName = g.Remitente.Entity.LastName,
+                                DocumentTypeId = g.Remitente.Entity.DocumentTypeId,
+                                DocumentNumber = g.Remitente.Entity.DocumentNumber
                             }
                         },
                         Destinatario = new EntityBranch
                         {
-                            Ruc = g.Destinatario.Ruc,
+                            EntityBranchId = g.Destinatario.EntityBranchId,
+                            EntityId = g.Destinatario.EntityId,
                             Description = g.Destinatario.Description,
                             Address = g.Destinatario.Address,
-                            RucNavigation = new VentaConfig
+                            Entity = new Entity
                             {
-                                Empresa = g.Destinatario.RucNavigation.Empresa
+                                Name = g.Destinatario.Entity.Name,
+                                FirstName = g.Destinatario.Entity.FirstName,
+                                LastName = g.Destinatario.Entity.LastName,
+                                DocumentTypeId = g.Destinatario.Entity.DocumentTypeId,
+                                DocumentNumber = g.Destinatario.Entity.DocumentNumber
                             }
                         },
                         Proveedor = g.Proveedor == null ? null : new Proveedor
@@ -275,7 +285,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
                 .Include(r => r.Remitente)
-                    .ThenInclude(rem => rem.RucNavigation)
+                    .ThenInclude(rem => rem.Entity)
                 .Include(d => d.Destinatario)
                     .ThenInclude(des => des.Ubigeo)
                 .Include(p => p.Proveedor)
@@ -317,7 +327,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                     .ThenInclude(h => h.Ubigeo)
                 .Include(g => g.Destinatario)
-                    .ThenInclude(h => h.RucNavigation)
+                    .ThenInclude(h => h.Entity)
 
                 .Include(g => g.RemiteTransportista)
                 .Include(g => g.RucNavigation)
@@ -425,7 +435,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     Remitente = new EntityBranch
                     {
                         EntityBranchId = g.Remitente.EntityBranchId,
-                        Ruc = g.Remitente.Ruc,
+                        EntityId = g.Remitente.EntityId,
                         UbigeoId = g.Remitente.UbigeoId,
                         Ubigeo = g.Remitente.Ubigeo,
                         Address = g.Remitente.Address,
@@ -435,12 +445,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UsuarioRegistro = g.Remitente.UsuarioRegistro,
                         FechaModifico = g.Remitente.FechaModifico,
                         UsuarioModifico = g.Remitente.UsuarioModifico,
-                        RucNavigation = g.Remitente.RucNavigation
+                        Entity = g.Remitente.Entity
                     },
                     Destinatario = new EntityBranch
                     {
                         EntityBranchId = g.Destinatario.EntityBranchId,
-                        Ruc = g.Destinatario.Ruc,
+                        EntityId = g.Destinatario.EntityId,
                         UbigeoId = g.Destinatario.UbigeoId,
                         Ubigeo = g.Destinatario.Ubigeo,
                         Address = g.Destinatario.Address,
@@ -450,7 +460,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UsuarioRegistro = g.Destinatario.UsuarioRegistro,
                         FechaModifico = g.Destinatario.FechaModifico,
                         UsuarioModifico = g.Destinatario.UsuarioModifico,
-                        RucNavigation = g.Destinatario.RucNavigation
+                        Entity = g.Destinatario.Entity
                     },
 
                     Proveedor = g.Proveedor == null ? null : new Proveedor
@@ -638,7 +648,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 // Guía
                 guiaRemision.RemitenteId = remitente.EntityBranchId;
-                guiaRemision.Ruc = remitente.Ruc;
+                guiaRemision.Ruc = remitente.Entity.DocumentNumber;
                 guiaRemision.DestinatarioId = destinatario.EntityBranchId;
                 //guiaRemision.Nombre = EnumGuiaRemisionEstado.Registrada.GetDescription();
                 guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Registrada;
@@ -830,22 +840,32 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         RespuestaTicket = g.RespuestaTicket,
                         Remitente = new EntityBranch
                         {
-                            Ruc = g.Remitente.Ruc,
+                            EntityBranchId = g.Remitente.EntityBranchId,
+                            EntityId = g.Remitente.EntityId,
                             Description = g.Remitente.Description,
                             Address = g.Remitente.Address,
-                            RucNavigation = new VentaConfig
+                            Entity = new Entity
                             {
-                                Empresa = g.Remitente.RucNavigation.Empresa
+                                Name = g.Remitente.Entity.Name,
+                                FirstName = g.Remitente.Entity.FirstName,
+                                LastName = g.Remitente.Entity.LastName,
+                                DocumentTypeId = g.Remitente.Entity.DocumentTypeId,
+                                DocumentNumber = g.Remitente.Entity.DocumentNumber
                             }
                         },
                         Destinatario = new EntityBranch
                         {
-                            Ruc = g.Destinatario.Ruc,
+                            EntityBranchId = g.Destinatario.EntityBranchId,
+                            EntityId = g.Destinatario.EntityId,
                             Description = g.Destinatario.Description,
                             Address = g.Destinatario.Address,
-                            RucNavigation = new VentaConfig
+                            Entity = new Entity
                             {
-                                Empresa = g.Destinatario.RucNavigation.Empresa
+                                Name = g.Destinatario.Entity.Name,
+                                FirstName = g.Destinatario.Entity.FirstName,
+                                LastName = g.Destinatario.Entity.LastName,
+                                DocumentTypeId = g.Destinatario.Entity.DocumentTypeId,
+                                DocumentNumber = g.Destinatario.Entity.DocumentNumber
                             }
                         },
                         Proveedor = g.Proveedor == null ? null : new Proveedor

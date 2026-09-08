@@ -51,12 +51,12 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.FechaEmision, opt => opt.MapFrom(src => src.Fecha.ToString("yyyy-MM-dd")))
                 //.ForMember(dest => dest.HoraEmision, opt => opt.MapFrom(src => src.Hora.ToString(@"hh\:mm\:ss")))
                 .ForMember(dest => dest.HoraEmision, opt => opt.MapFrom(src => src.Hora))
-                .ForMember(dest => dest.EntidadRemitente, opt => opt.MapFrom(src => src.Remitente.RucNavigation.Empresa))
-                .ForMember(dest => dest.NumeroDocumentoRemitente, opt => opt.MapFrom(src => src.Remitente.Ruc))
+                .ForMember(dest => dest.EntidadRemitente, opt => opt.MapFrom(src => src.Remitente.Entity.Name))
+                .ForMember(dest => dest.NumeroDocumentoRemitente, opt => opt.MapFrom(src => src.Remitente.Entity.DocumentNumber))
                 .ForMember(dest => dest.EstablecimientoRemitente, opt => opt.MapFrom(src => src.Remitente.Description))
-                .ForMember(dest => dest.EntidadDestinatario, opt => opt.MapFrom(src => src.Destinatario.RucNavigation.Empresa))
+                .ForMember(dest => dest.EntidadDestinatario, opt => opt.MapFrom(src => src.Destinatario.Entity.Name))
                 .ForMember(dest => dest.EstablecimientoDestinatario, opt => opt.MapFrom(src => src.Destinatario.Description))
-                .ForMember(dest => dest.NumeroDocumentoDestinatario, opt => opt.MapFrom(src => src.Destinatario.Ruc))
+                .ForMember(dest => dest.NumeroDocumentoDestinatario, opt => opt.MapFrom(src => src.Destinatario.Entity.DocumentNumber))
                 .ForMember(dest => dest.EntidadRemitente, opt => opt.MapFrom(src => src.RucNavigation.Empresa))
                 .ForMember(dest => dest.DistritoOrigen, opt => opt.MapFrom(src => src.Origens.FirstOrDefault().Ubigeo.Distrito))
                 .ForMember(dest => dest.DireccionOrigen, opt => opt.MapFrom(src => src.Remitente.Address))
@@ -87,7 +87,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             //GuiaRemision de remisión por ticket
             CreateMap<GuiaRemision, GuiaPorTicketDTO>()
-                .ForMember(dest => dest.Ruc, opt => opt.MapFrom(src => src.Remitente.Ruc))
+                .ForMember(dest => dest.Ruc, opt => opt.MapFrom(src => src.Remitente.Entity.DocumentNumber))
                 ;
             CreateMap<GuiaRemisionDatosEnvioUpdateDTO, GuiaRemisionDatoEnvio>()
                 .ForMember(dest => dest.FechaEnvio, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.FechaEnvio) ? (DateOnly?)null : DateOnly.Parse(src.FechaEnvio)))

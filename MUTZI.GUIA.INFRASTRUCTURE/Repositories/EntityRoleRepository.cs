@@ -80,7 +80,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<IEnumerable<EntityRole>> GetByEntityAsync(int entityId)
         {
             var roles = await _context.EntityRoles
-                .Where(r => r.EntityId == entityId)
+                .Where(r => r.EntityId == entityId && r.Active)
                 .AsNoTracking()
                 .ToListAsync();
             return roles;

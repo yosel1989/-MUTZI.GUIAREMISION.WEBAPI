@@ -52,21 +52,21 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         }
 
         [HttpGet]
-        [Route("listar-select/por-ruc/{ruc}")]
+        [Route("list-by-entity/{entityId}")]
         [SwaggerOperation(
-            Summary = "Listar establecimientos para select",
-            Description = "Lista los establecimientos para select",
+            Summary = "Listar establecimientos",
+            Description = "Lista los establecimientos por entidad, para seleccionar",
             OperationId = "listar_establecimiento_select")
         ]
         [Permission("listar_establecimiento_select")]
         [ProducesResponseType(typeof(List<EntityBranchToSelectDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<EntityBranchToSelectDTO>>> GetToSelect(string ruc)
+        public async Task<ActionResult<List<EntityBranchToSelectDTO>>> GetToSelect(int entityId)
         {
             try
             {
-                var remitentes = await _service.GetAllByRucToSelect2Async(ruc);
+                var remitentes = await _service.GetAllByEntityToSelect2Async(entityId);
                 return Ok(remitentes);
             }
             catch (Exception ex)
@@ -92,11 +92,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(EntityBranchListToModalDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<EntityBranchListToModalDTO>>> GetBySuggestion(string ruc, [FromQuery] string? search)
+        public async Task<ActionResult<List<EntityBranchListToModalDTO>>> GetBySuggestion(int entityId, [FromQuery] string? search)
         {
             try
             {
-                var data = await _service.GetListBySuggestionAsync(ruc, search);
+                var data = await _service.GetListBySuggestionAsync(entityId, search);
                 return Ok(data);
             }
             catch (Exception ex)

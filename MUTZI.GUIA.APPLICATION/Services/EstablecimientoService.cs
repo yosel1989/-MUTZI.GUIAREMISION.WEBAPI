@@ -23,21 +23,21 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _mapper = mapper;
             _authService = authService;
         }
-        public async Task<List<EntityBranchListDTO>> GetAllByRucToSelectAsync(string ruc)
+        public async Task<List<EntityBranchListDTO>> GetAllByEntityToSelectAsync(int entityId)
         {
-            var data = await _repository.GetAllByRucToSelectAsync(ruc);
+            var data = await _repository.GetAllByEntityToSelectAsync(entityId);
             return _mapper.Map<List<EntityBranchListDTO>>(data);
         }
 
-        public async Task<List<EntityBranchToSelectDTO>> GetAllByRucToSelect2Async(string ruc)
+        public async Task<List<EntityBranchToSelectDTO>> GetAllByEntityToSelect2Async(int entityId)
         {
-            var data = await _repository.GetAllByRucToSelect2Async(ruc);
+            var data = await _repository.GetAllByEntityToSelect2Async(entityId);
             return _mapper.Map<List<EntityBranchToSelectDTO>>(data);
         }
 
-        public async Task<List<EntityBranchListToModalDTO>> GetListBySuggestionAsync(string ruc, string? search)
+        public async Task<List<EntityBranchListToModalDTO>> GetListBySuggestionAsync(int entityId, string? search)
         {
-            var data = await _repository.GetListBySuggestion(ruc, search);
+            var data = await _repository.GetListBySuggestion(entityId, search);
             return _mapper.Map<List<EntityBranchListToModalDTO>>(data);
         }
 
@@ -86,8 +86,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
         public async Task<int> CreateAsync(EntityBranchCreateDTO createDTO)
         {
             var currentUser = _authService.CurrentUser();
-            var existe = await _repository.GetBySerieAsync(createDTO.Ruc, createDTO.Serie);
-            if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
+            var existe = await _repository.GetBySerieAsync(createDTO.EntityId, createDTO.Serie);
+            if (existe) { throw new Exception("La serie ya se encuentra registrada a esa entidad"); }
             try
             {
                 var establecimiento = _mapper.Map<EntityBranch>(createDTO);
@@ -117,8 +117,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 }
                 if (updateDTO.Serie != existingEstablecimiento.Serie)
                 {
-                    var existe = await _repository.GetBySerieAsync(updateDTO.Ruc, updateDTO.Serie);
-                    if (existe) { throw new Exception("La serie ya se encuentra registrado con este RUC."); }
+                    var existe = await _repository.GetBySerieAsync(updateDTO.EntityId, updateDTO.Serie);
+                    if (existe) { throw new Exception("La serie ya se encuentra registrada con está entidad"); }
                 }
                 var establecimientoDomain = _mapper.Map(updateDTO, existingEstablecimiento);
                 establecimientoDomain.UsuarioModifico = currentUser.UserName;
@@ -152,7 +152,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var serieCompleta = prefix + serieBase;
 
                     // Obtener la última guía registrada para esa serie
-                    var lastGuia = await _repository.GetLastBySerieAsync(serieCompleta, establecimiento.Ruc);
+                    var lastGuia = await _repository.GetLastBySerieAsync(serieCompleta, establecimiento.EntityId);
 
                     // Calcular el siguiente correlativo (si no existe, iniciar en 1)
                     int nextCorrelativo = 1;

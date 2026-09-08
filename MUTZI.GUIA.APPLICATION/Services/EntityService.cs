@@ -69,7 +69,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                 if(newEntity.Role != "entidad")
                 {
-                    await _entityRoleRepository.SyncToEntityAsync(outputEntity.EntityId, new List<EntityRole> { 
+                    await _entityRoleRepository.AddAsync( 
                         new EntityRole { 
                             EntityId = outputEntity.EntityId, 
                             Role = newEntity.Role,
@@ -77,7 +77,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             CreatedAtUser = user.UserName,
                             CreatedAtUserName = $"{user.FirstName} {user.LastName}"
                         } 
-                    }, user.UserName, $"{user.FirstName} {user.LastName}");
+                    );
                 }
                 
                 await _appDBContext.CommitAsync();
@@ -142,9 +142,23 @@ namespace MUTZI.GUIA.APPLICATION.Services
             };
         }
 
-        public async Task<PagedResult<EntityListDTO>> GetListAsync(int pageNumber, int pageSize, string? search, string? type)
+        public async Task<PagedResult<EntityByRoleDTO>> GetDataTableByRoleAsync(int pageNumber, int pageSize, string? search, string role)
         {
-            var (totalRecords, data) = await _repository.GetListAsync(pageNumber, pageSize, search, type);
+            var (totalRecords, data) = await _repository.GetDataTableByRoleAsync(pageNumber, pageSize, search, role);
+            var dataDTO = _mapper.Map<List<EntityByRoleDTO>>(data);
+            return new PagedResult<EntityByRoleDTO>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalRecords = totalRecords,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
+                Data = dataDTO
+            };
+        }
+
+        public async Task<PagedResult<EntityListDTO>> GetListAsync(int pageNumber, int pageSize, string? search, string? type, string? roles, bool? isInternal)
+        {
+            var (totalRecords, data) = await _repository.GetListAsync(pageNumber, pageSize, search, type, roles, isInternal);
             var dataDTO = _mapper.Map<List<EntityListDTO>>(data);
             return new PagedResult<EntityListDTO>
             {

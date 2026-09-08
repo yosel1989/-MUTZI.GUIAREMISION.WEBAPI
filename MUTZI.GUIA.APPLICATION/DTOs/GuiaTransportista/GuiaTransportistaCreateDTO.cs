@@ -12,9 +12,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
 {
     public class GuiaTransportistaCreateDTO
     {
+        [JsonPropertyName("entity_id")]
+        [SwaggerSchema("Recibe un número, el id de la empresa transportista emisora", Nullable = false)]
+        [Required]
+        public int EntityId { get; set; }
+
 
         [JsonPropertyName("fecha")]
-        [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false, Title ="dddd")]
+        [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]
         [StringLength(10)]
         [MinLength(10)]
         [Required]

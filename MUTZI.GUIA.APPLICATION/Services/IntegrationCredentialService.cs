@@ -63,6 +63,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             IntegrationCredential.Provider = updateIntegrationCredential.Provider;
             IntegrationCredential.Key = updateIntegrationCredential.Key;
+            IntegrationCredential.KeyTest = updateIntegrationCredential.KeyTest;
             IntegrationCredential.UpdatedAt = DateTime.UtcNow;
             IntegrationCredential.UpdatedAtUser = user.UserName;
             IntegrationCredential.UpdatedAtUserName = $"{user.FirstName} {user.LastName}";
@@ -135,6 +136,15 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 throw;
             }
         }
+
+        public List<object> GetProviderToSelect()
+        {
+            return new List<object>
+            {
+                new { label = "Efact", value = "efact" }
+            };
+        }
+
 
     }
 }

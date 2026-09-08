@@ -199,5 +199,34 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
 
+
+        [HttpGet]
+        [Route("provider-to-select")]
+        [SwaggerOperation(
+            Summary = "Obtener el listado de proveedores de servicios de integración",
+            Description = "Obtener un listado para seleccionar del listado de proveedores de servicios de integración",
+            OperationId = "integration_credential_provider_to_select"
+        )]
+        [ProducesResponseType(typeof(List<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetProviderToSelect()
+        {
+            try
+            {
+                var result = _service.GetProviderToSelect();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al obtener el listado de proveedores de servicios de integración.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
     }
 }

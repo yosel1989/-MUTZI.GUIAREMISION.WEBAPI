@@ -6,17 +6,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 {
     public class EntityBranchCreateDTO
     {
-        [JsonPropertyName("ruc")]
-        [SwaggerSchema("Recibe un texto, es el ruc del remitente", Nullable = true)]
-        //[Required(ErrorMessage = "El Nro documento del remitente es obligatoria")]
-        //[StringLength(11, ErrorMessage = "El número de documento del remitente no puede exceder los 11 caracteres")]
-        //[MinLength(11)]
-        public string? Ruc { get; set; }
 
         [JsonPropertyName("entity_id")]
         [SwaggerSchema("Recibe un número, aquí se coloca el identificador de la entidad", Nullable = false)]
         [Required]
-        public int? EntityId { get; set; }
+        public int EntityId { get; set; }
 
         [JsonPropertyName("description")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la descripción o nombre del remitente", Nullable = false)]
@@ -54,8 +48,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public string Pais { get; set; }
 
         [JsonPropertyName("serie")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = false)]
-        [StringLength(3, ErrorMessage = "La serie requiere 3 caracteres")]
+        [SwaggerSchema("Recibe un texto, aquí se coloca la serie que posteriormente se usa en las guías de remisión, ejm: T001, T002", Nullable = false)]
+        [StringLength(4, ErrorMessage = "La serie requiere 4 caracteres")]
         public string Serie { get; set; }
 
         [JsonPropertyName("code_sunat")]

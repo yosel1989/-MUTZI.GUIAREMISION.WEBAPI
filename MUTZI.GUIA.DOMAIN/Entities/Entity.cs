@@ -53,7 +53,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities
 
         [Column("is_internal")]
         [Description("Indica si la entidad pertenece al consorcio o no es empresa tercera.")]
-        public bool IsInternal { get; set; } = true;
+        public bool IsInternal { get; set; } = false;
 
         [Column("active")]
         [Description("Estado de la entidad: activa o inactiva")]

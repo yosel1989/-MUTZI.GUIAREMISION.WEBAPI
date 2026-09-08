@@ -11,10 +11,7 @@ public partial class EntityBranch
     public int EntityBranchId { get; set; }
 
     [Column("entity_id")]
-    public int? EntityId { get; set; }
-
-    [Column("ruc")]
-    public string? Ruc { get; set; } = null!;
+    public int EntityId { get; set; }
 
     [Column("description")]
     public string Description { get; set; } = null!;
@@ -68,9 +65,6 @@ public partial class EntityBranch
     public bool IsMain { get; set; } = false;
 
     // Relaciones
-
-    [ForeignKey(nameof(Ruc))]
-    public virtual VentaConfig RucNavigation { get; set; } = null!;
 
     [ForeignKey(nameof(UbigeoId))]
     public virtual Ubigeo Ubigeo { get; set; } = null!;

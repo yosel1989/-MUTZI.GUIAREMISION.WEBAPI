@@ -4,17 +4,17 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 {
     public interface IEstablecimientoRepository
     {
-        Task<List<EntityBranch>> GetAllByRucToSelectAsync(string ruc);
+        Task<List<EntityBranch>> GetAllByEntityToSelectAsync(int entityId);
 
-        Task<List<EntityBranch>> GetAllByRucToSelect2Async(string ruc);
-        Task<List<EntityBranch>> GetAllByRucToSelectModal(string ruc);
-        Task<List<EntityBranch>> GetListBySuggestion(string ruc, string? search);
+        Task<List<EntityBranch>> GetAllByEntityToSelect2Async(int entityId);
+        Task<List<EntityBranch>> GetAllByEntityToSelectModal(int entityId);
+        Task<List<EntityBranch>> GetListBySuggestion(int entityId, string? search);
         Task<EntityBranch?> GetByIdAsync(int id, bool strict = false, string? tipo = null);
         Task<(List<EntityBranch>, int)> GetListAsync(int pageNumber, int pageSize, string? search);
         Task DeleteAsync(int id);
         Task<EntityBranch> UpdateAsync(EntityBranch establecimiento);
         Task CreateAsync(EntityBranch nuevoEstablecimiento);
-        Task<bool> GetBySerieAsync(string ruc, string serie);
-        Task<GuiaRemision?> GetLastBySerieAsync(string serie, string ruc);
+        Task<bool> GetBySerieAsync(int entityId, string serie);
+        Task<GuiaRemision?> GetLastBySerieAsync(string serie, int entityId);
     }
 }

@@ -8,7 +8,10 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
         public MappingIntegrationCredential()
         {
 
-            CreateMap<IntegrationCredential, IntegrationCredentialDTO>();
+            CreateMap<IntegrationCredential, IntegrationCredentialDTO>()
+                .ForMember(dest => dest.EntityName, opt => opt.MapFrom(src => src.Entity.Name))
+                .ForMember(dest => dest.EntityDocumentNumber, opt => opt.MapFrom(src => src.Entity.DocumentNumber));
+
             CreateMap<IntegrationCredentialCreateDTO, IntegrationCredential>();
 
         }
