@@ -256,7 +256,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var currentUser = _authService.CurrentUser();
                     // Mapear todos los objetos
                     var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(request.MotivoTrasladoId, true);
-                    var transportista = await _entity.GetByIdAsync(request.DatosEnvio.TransportistaId ?? 0);
+                    var transportista = await _entityRepository.GetByIdAsync(request.TransporterId ?? 0);
                     var remitente = await _establecimientoRepository.GetByIdAsync(request.RemitenteId, true, "Remitente");
                     var destinatario = await _establecimientoRepository.GetByIdAsync(request.DestinatarioId, true, "Destinatario");
                     var destinatarioEmails = request.DestinatarioEmail.Select(p => _mapper.Map<GuiaRemisionEmailDestinatario>(p)).ToList();
