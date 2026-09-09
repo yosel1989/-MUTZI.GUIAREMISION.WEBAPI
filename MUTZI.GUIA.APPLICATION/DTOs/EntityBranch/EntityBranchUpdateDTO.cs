@@ -13,16 +13,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public int EntityBranchId { get; set; }
 
         [JsonPropertyName("entity_id")]
-        [SwaggerSchema("Recibe un número, aquí se coloca el id de la entidad.", Nullable = false)]
-        [Required(ErrorMessage = "El id del establecimiento es requerido")]
         public int EntityId { get; set; }
 
+        [JsonPropertyName("entity_name")]
+        public string? EntityName { get; set; }
 
-        [JsonPropertyName("description")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la descripción o nombre del establecimiento", Nullable = false)]
-        [MaxLength(200)]
-        [Required]
-        public string Description { get; set; }
+        [JsonPropertyName("entity_document_number")]
+        public string? EntityDocumentNumber { get; set; }
 
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del establecimiento, ejm: 150131", Nullable = false)]

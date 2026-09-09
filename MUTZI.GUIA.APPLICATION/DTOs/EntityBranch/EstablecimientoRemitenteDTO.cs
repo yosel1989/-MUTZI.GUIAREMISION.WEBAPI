@@ -10,24 +10,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public int EntityBranchId { get; set; }
 
         [JsonPropertyName("entity_id")]
-        [SwaggerSchema("Devuelve un entero, el ID de la entidad.", Nullable = false)]
-        public int EntityId { get; set; }
+        public int? EntityId { get; set; }
 
-        [JsonPropertyName("razon_social")]
-        [SwaggerSchema("Devuelve un texto, el nombre de la empresa asociada al remitente/sucursal.", Nullable = false)]
-        public string RazonSocial { get; set; }
+        [JsonPropertyName("entity_name")]
+        public string? EntityName { get; set; }
 
-        [JsonPropertyName("document_number")]
-        [SwaggerSchema("Devuelve un texto, el número de documento de la entidad.", Nullable = false)]
-        public string? DocumentNumber { get; set; }
-
-        [JsonPropertyName("ruc")]
-        [SwaggerSchema("Devuelve en texto el ruc del remitente. Asimismo, ese ruc está asociado a la empresa.", Nullable = false)]
-        public string Ruc { get; set; }
-
-        [JsonPropertyName("description")]
-        [SwaggerSchema("Devuelve en texto la descripción o nombre del remitente/sucursal.", Nullable = false)]
-        public string Description { get; set; }
+        [JsonPropertyName("entity_document_number")]
+        public string? EntityDocumentNumber { get; set; }
 
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Devuelve un texto, aquí devuelve el ubigeo de la dirección fiscal del remitente, ejm: 150131", Nullable = false)]

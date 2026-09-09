@@ -87,9 +87,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [HttpDelete]
         [Route("{id}")]
         [SwaggerOperation(
-        Summary = "Eliminar perfil",
-        Description = "Elimina un perfil de la bbdd",
-        OperationId = "eliminar_perfil")]
+            Summary = "Eliminar perfil",
+            Description = "Elimina un perfil de la bbdd",
+            OperationId = "eliminar_perfil"
+        )]
         [ProducesResponseType(typeof(DeletedDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]

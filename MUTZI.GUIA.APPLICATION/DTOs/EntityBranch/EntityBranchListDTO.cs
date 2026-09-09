@@ -9,13 +9,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve un entero, el ID del remitente en la bbdd", Nullable = false)]
         public int EstablecimientoId { get; set; }
 
-        [JsonPropertyName("description")]
-        [SwaggerSchema("Devuelve el nombre asociada al establecimiento.", Nullable = false)]
-        public string Description { get; set; }
+        [JsonPropertyName("entity_id")]
+        public int? EntityId { get; set; }
 
-        [JsonPropertyName("ruc")]
-        [SwaggerSchema("Devuelve en texto el ruc asociado a la empresa.", Nullable = false)]
-        public string Ruc { get; set; }
+        [JsonPropertyName("entity_name")]
+        public string? EntityName { get; set; }
+
+        [JsonPropertyName("entity_document_number")]
+        public string? EntityDocumentNumber { get; set; }
 
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Devuelve un texto, aquí devuelve el ubigeo de la dirección fiscal del remitente, ejm: 150131", Nullable = false)]

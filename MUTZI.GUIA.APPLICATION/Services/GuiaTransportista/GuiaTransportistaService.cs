@@ -153,7 +153,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
         {
             try
             {
-                if (guia.RemiteTransportista.NumeroDocumento == guia.Remitente.Ruc)
+                if (guia.RemiteTransportista.NumeroDocumento == guia.Remitente.EntityDocumentNumber)
                 {
                     return (false, $"'El 'Número de documento de identidad del remitente', no debe ser igual al número de RUC del transportista.'.");
                 }

@@ -10,11 +10,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("entity_id")]
         public int? EntityId { get; set; }
 
-        [JsonPropertyName("document_number")]
-        public string? DocumentNumber { get; set; }
+        [JsonPropertyName("entity_name")]
+        public string? EntityName { get; set; }
 
-        [JsonPropertyName("ruc")]
-        public string Ruc { get; set; } = null!;
+        [JsonPropertyName("entity_document_number")]
+        public string? EntityDocumentNumber { get; set; }
 
         [JsonPropertyName("description")]
         public string Description { get; set; } = null!;
@@ -69,9 +69,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 
         [JsonPropertyName("tipo")]
         public string Tipo { get; set; }
-
-        [JsonPropertyName("razon_social")]
-        public string RazonSocial { get; set; }
 
         [JsonPropertyName("area")]
         public string? Area { get; set; }

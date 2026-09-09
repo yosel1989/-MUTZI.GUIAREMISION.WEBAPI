@@ -13,12 +13,12 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))
-                .ForMember(dest => dest.RazonSocial, opt => opt.MapFrom(src => src.Entity.Name ?? $"{src.Entity.FirstName} {src.Entity.LastName}"))
-                .ForMember(dest => dest.DocumentNumber, opt => opt.MapFrom(src => src.Entity.DocumentNumber))
+                .ForMember(dest => dest.EntityName, opt => opt.MapFrom(src => src.Entity.Name ?? $"{src.Entity.FirstName} {src.Entity.LastName}"))
+                .ForMember(dest => dest.EntityDocumentNumber, opt => opt.MapFrom(src => src.Entity.DocumentNumber))
                 .ForMember(dest => dest.Pais, opt => opt.MapFrom(src => src.Entity.Country.Code));
 
             CreateMap<EntityBranch, EntityBranchListToModalDTO>()
-                .ForMember(dest => dest.Entidad, opt => opt.MapFrom(src => src.Entity.Name == null ? $"{src.Entity.FirstName} {src.Entity.LastName}" : src.Entity.Name));
+                .ForMember(dest => dest.EntityName, opt => opt.MapFrom(src => src.Entity.Name == null ? $"{src.Entity.FirstName} {src.Entity.LastName}" : src.Entity.Name));
 
             CreateMap<EntityBranch, EntityBranchListDTO>()
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
@@ -32,8 +32,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Departamento, opt => opt.MapFrom(src => src.Ubigeo.Departamento))
                 .ForMember(dest => dest.Provincia, opt => opt.MapFrom(src => src.Ubigeo.Provincia))
                 .ForMember(dest => dest.Distrito, opt => opt.MapFrom(src => src.Ubigeo.Distrito))
-                .ForMember(dest => dest.RazonSocial, opt => opt.MapFrom(src => src.Entity.Name ?? $"{src.Entity.FirstName} {src.Entity.LastName}"))
-                .ForMember(dest => dest.DocumentNumber, opt => opt.MapFrom(src => src.Entity.DocumentNumber));
+                .ForMember(dest => dest.EntityName, opt => opt.MapFrom(src => src.Entity.Name ?? $"{src.Entity.FirstName} {src.Entity.LastName}"))
+                .ForMember(dest => dest.EntityDocumentNumber, opt => opt.MapFrom(src => src.Entity.DocumentNumber));
 
             CreateMap<EntityBranch, EstadoActualizadoResponseDTO>();
         }

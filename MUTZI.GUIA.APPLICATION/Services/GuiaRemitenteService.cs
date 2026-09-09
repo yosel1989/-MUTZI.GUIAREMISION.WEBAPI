@@ -412,8 +412,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                 if(guia.MotivoTrasladoCodigo != "07")
                 {
-                    if (guia.Remitente.Ruc != ruc)
-                        return (false, $"El RUC del remitente ({guia.Remitente.Ruc}) no coincide con el RUC de la empresa ({ruc}).");
+                    if (guia.Remitente.EntityDocumentNumber != ruc)
+                        return (false, $"El RUC del remitente ({guia.Remitente.EntityDocumentNumber}) no coincide con el RUC de la empresa ({ruc}).");
                 }
 
                 
@@ -421,7 +421,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                 _ = guia.TipoTRansporteCode18();
                 //_ = guia.TipoTrasladoCode20();
-                _ = guia.getTipoCodigoDocumento("RUC", guia.Remitente.Ruc);
+                _ = guia.getTipoCodigoDocumento("RUC", guia.Remitente.EntityDocumentNumber);
                 //_ = guia.getTipoCodigoDocumento(guia.Destinatario.TipoDocumento, guia.Destinatario.NumeroDocumento);
 
                 if (guia.Proveedor != null)

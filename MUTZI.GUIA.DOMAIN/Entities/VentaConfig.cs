@@ -53,10 +53,6 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [MaxLength(45)]
         public string? NumeroDocumento { get; set; }
 
-
-        public virtual ICollection<GuiaRemision> GuiaRemisions { get; set; } = new List<GuiaRemision>();
-
-        public virtual ICollection<EntityBranch> Establecimientos { get; set; } = new List<EntityBranch>();
     }
 
 }

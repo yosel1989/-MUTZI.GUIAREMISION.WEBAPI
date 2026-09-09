@@ -62,7 +62,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                             SignatoryParty = new List<SignatoryParty> {
                                 new SignatoryParty {
                                     PartyIdentification = new List<PartyIdentification> {
-                                        new PartyIdentification { ID = new List<ID> { new ID { _ = guia.Remitente.Ruc } } }
+                                        new PartyIdentification { ID = new List<ID> { new ID { _ = guia.Remitente.EntityDocumentNumber } } }
                                     },
                                     PartyName = new List<PartyName> {
                                         new PartyName { Name = new List<Name> { new Name { _ = guia.Remitente.Description } } }
@@ -86,7 +86,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                 new Party {
                                     PartyIdentification = new List<PartyIdentification> {
                                         new PartyIdentification {
-                                            ID = new List<ID> { new ID { _ = guia.Remitente.Ruc, schemeID = EspacioNombreGuiaRemision._DocumentType06 } }
+                                            ID = new List<ID> { new ID { _ = guia.Remitente.EntityDocumentNumber, schemeID = EspacioNombreGuiaRemision._DocumentType06 } }
                                         }
                                     },
                                     PostalAddress = guia.Origen == null ? null : new List<PostalAddress> {
@@ -115,7 +115,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                 new Party {
                                     PartyIdentification = new List<PartyIdentification> {
                                         new PartyIdentification {
-                                            ID = new List<ID> { new ID { _ = guia.Destinatario.Ruc, schemeID = guia.getTipoCodigoDocumento("RUC") } }
+                                            ID = new List<ID> { new ID { _ = guia.Destinatario.EntityDocumentNumber, schemeID = guia.getTipoCodigoDocumento("RUC") } }
                                         }
                                     },
                                     PostalAddress = guia.Destino == null ? null : new List<PostalAddress> {
@@ -130,7 +130,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                         }
                                     },
                                     PartyLegalEntity = new List<PartyLegalEntity> {
-                                        new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.Destinatario.RazonSocial } } }
+                                        new PartyLegalEntity { RegistrationName = new List<RegistrationName> { new RegistrationName { _ = guia.Destinatario.EntityName } } }
                                     },
                                     Contact = guia.DestinatarioEmail.Count > 0 ? new List<Contact>
                                     {
@@ -207,7 +207,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                         ID = new List<ID>{ new ID { _ = destino.UbigeoId }},
                         AddressTypeCode = string.IsNullOrWhiteSpace(guia.Destinatario.CodeSunat)?null: new List<AddressTypeCode>{ new AddressTypeCode {
                             _ = guia.Destinatario.CodeSunat,
-                            listID = guia.Destinatario.Ruc
+                            listID = guia.Destinatario.EntityDocumentNumber
                         }},
                             CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},
                             CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = destino.Departamento }},
@@ -378,7 +378,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                 new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }
             );
 
-            var nombreArchivo = getNombreDocumentoFile(guia, guia.Remitente.Ruc);
+            var nombreArchivo = getNombreDocumentoFile(guia, guia.Remitente.EntityDocumentNumber);
             //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.NumeroDocumentoRemitente));
 
             // Convertir el string JSON a un stream de memoria
