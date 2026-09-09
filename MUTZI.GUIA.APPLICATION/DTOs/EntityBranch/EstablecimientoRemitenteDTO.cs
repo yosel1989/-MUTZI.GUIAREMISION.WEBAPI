@@ -10,20 +10,20 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public int EntityBranchId { get; set; }
 
         [JsonPropertyName("entity_id")]
-        [SwaggerSchema("Devuelve un entero, el ID de la entidad.", Nullable = false)]
         public int EntityId { get; set; }
 
-        [JsonPropertyName("razon_social")]
-        [SwaggerSchema("Devuelve un texto, el nombre de la empresa asociada al remitente/sucursal.", Nullable = false)]
-        public string RazonSocial { get; set; }
+        [JsonPropertyName("entity_name")]
+        public string EntityName { get; set; }
 
-        [JsonPropertyName("document_number")]
-        [SwaggerSchema("Devuelve un texto, el número de documento de la entidad.", Nullable = false)]
-        public string? DocumentNumber { get; set; }
+        [JsonPropertyName("entity_document_number")]
+        public string EntityDocumentNumber { get; set; }
 
-        [JsonPropertyName("ruc")]
-        [SwaggerSchema("Devuelve en texto el ruc del remitente. Asimismo, ese ruc está asociado a la empresa.", Nullable = false)]
-        public string Ruc { get; set; }
+        [JsonPropertyName("entity_address")]
+        [SwaggerSchema("Devuelve un texto, la dirección fiscal de la entidad.", Nullable = false)]
+        public string EntityAddress { get; set; }
+
+        [JsonPropertyName("entity_country")]
+        public string EntityCountry { get; set; }
 
         [JsonPropertyName("description")]
         [SwaggerSchema("Devuelve en texto la descripción o nombre del remitente/sucursal.", Nullable = false)]
@@ -31,19 +31,19 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Devuelve un texto, aquí devuelve el ubigeo de la dirección fiscal del remitente, ejm: 150131", Nullable = false)]
-        public string UbigeoID { get; set; }
+        public string UbigeoId { get; set; }
 
-        [JsonPropertyName("departamento")]
+        [JsonPropertyName("department")]
         [SwaggerSchema("Devuelve un texto, el departamento de la dirección fiscal del remitente", Nullable = false)]
-        public string Departamento { get; set; }
+        public string Department { get; set; }
 
-        [JsonPropertyName("provincia")]
+        [JsonPropertyName("province")]
         [SwaggerSchema("Devuelve un texto, la provincia de la dirección fiscal del remitente", Nullable = false)]
-        public string Provincia { get; set; }
+        public string Province { get; set; }
 
-        [JsonPropertyName("distrito")]
+        [JsonPropertyName("district")]
         [SwaggerSchema("Devuelve un texto, el distrito de la dirección fiscal del remitente", Nullable = false)]
-        public string Distrito { get; set; }
+        public string District { get; set; }
 
         [JsonPropertyName("address")]
         [SwaggerSchema("Devuelve un texto, la direccion fiscal del remitente", Nullable = false)]
@@ -53,17 +53,13 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve un texto, el correo electrónico del remitente", Nullable = false)]
         public string Email { get; set; }
 
-        [JsonPropertyName("pais")]
-        [SwaggerSchema("Devuelve un texto, el CodeSunat de PAIS referente, ejm: PE", Nullable = false)]
-        public string Pais { get; set; }
-
         [JsonPropertyName("serie")]
         [SwaggerSchema("Devuelve un texto, la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
         public string Serie { get; set; }
 
-        [JsonPropertyName("nueva_serie")]
+        [JsonPropertyName("new_serie")]
         [SwaggerSchema("Devuelve un texto, la nueva serie que se usará en las guías de remisión, ejm: T001, V001", Nullable = true)]
-        public string NuevaSerie { get; set; }
+        public string NewSerie { get; set; }
 
         [JsonPropertyName("nuevo_correlativo")]
         [SwaggerSchema("Devuelve un entero, el nuevo correlativo que se usará en las guías de remisión, ejm: 1, 2, 3", Nullable = true)]

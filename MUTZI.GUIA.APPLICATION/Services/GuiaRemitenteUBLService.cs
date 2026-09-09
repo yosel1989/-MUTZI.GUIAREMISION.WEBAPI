@@ -87,9 +87,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         ID = new List<ID>{ new ID { _ = "IDSignature" } },
                         SignatoryParty = new List<SignatoryParty>{ new SignatoryParty {
                             // Ruc del remitente
-                            PartyIdentification= new List<PartyIdentification>{ new PartyIdentification { ID = new List<ID> { new ID {  _ = guia.Remitente.Ruc } } }},
+                            PartyIdentification= new List<PartyIdentification>{ new PartyIdentification { ID = new List<ID> { new ID {  _ = guia.Remitente.EntityDocumentNumber } } }},
                             // Razón social del remitente
-                            PartyName = new List<PartyName>{ new PartyName { Name = new List<Name> { new Name {  _ = guia.Remitente.RazonSocial} } }},
+                            PartyName = new List<PartyName>{ new PartyName { Name = new List<Name> { new Name {  _ = guia.Remitente.EntityName} } }},
                         }},
                         DigitalSignatureAttachment = new List<DigitalSignatureAttachment>{ new DigitalSignatureAttachment {
                             ExternalReference = new List<ExternalReference>{new ExternalReference { URI = new List<URI> { new URI() {_ = "IDSignature" }}}}
@@ -99,9 +99,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         ID = new List<ID>{ new ID { _ = "IDSignature" } },
                         SignatoryParty = new List<SignatoryParty>{ new SignatoryParty {
                             // Ruc del remitente
-                            PartyIdentification= new List<PartyIdentification>{ new PartyIdentification { ID = new List<ID> { new ID {  _ = guia.Destinatario.Ruc } } }},
+                            PartyIdentification= new List<PartyIdentification>{ new PartyIdentification { ID = new List<ID> { new ID {  _ = guia.Destinatario.EntityDocumentNumber } } }},
                             // Razón social del remitente
-                            PartyName = new List<PartyName>{ new PartyName { Name = new List<Name> { new Name {  _ = guia.Destinatario.RazonSocial} } }},
+                            PartyName = new List<PartyName>{ new PartyName { Name = new List<Name> { new Name {  _ = guia.Destinatario.EntityName} } }},
                         }},
                         DigitalSignatureAttachment = new List<DigitalSignatureAttachment>{ new DigitalSignatureAttachment {
                             ExternalReference = new List<ExternalReference>{new ExternalReference { URI = new List<URI> { new URI() {_ = "IDSignature" }}}}
@@ -116,7 +116,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             // Código SUNAT del tipo de documento de identidad y numeró de documento del remitente
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { 
                                 // Número de documento de identidad del remitente
-                                _ = guia.Remitente.Ruc,  
+                                _ = guia.Remitente.EntityDocumentNumber,  
                                 // Código del tipo de documento de identidad del remitente 
                                 schemeID = EspacioNombreGuiaRemision._DocumentType06  
                             }}}},
@@ -126,24 +126,24 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 // Código de Ubigeo
                                 ID = new List<ID> { new ID { _ = guia.Remitente.UbigeoId } },
                                 // Departamento
-                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Remitente.Departamento } },
+                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Remitente.Department } },
                                 // Provincia
-                                CityName = new List<CityName>{ new CityName { _ = guia.Remitente.Provincia} },
+                                CityName = new List<CityName>{ new CityName { _ = guia.Remitente.Province} },
                                 // Dirección completa y detallada
                                 StreetName = new List<StreetName>{ new StreetName { _ = guia.Remitente.Address } },
                                 // Urbanización
-                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Remitente.Departamento } },
+                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Remitente.Department } },
                                 // Distrito
-                                District= new List<District>{ new District { _ = guia.Remitente.Distrito } },
+                                District= new List<District>{ new District { _ = guia.Remitente.District } },
                                 // Código de país
-                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.Pais } }}}
+                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.EntityCountry } }}}
                             }},
 
                             // Apellidos y nombres, denominación o razón social del remitente
                             PartyLegalEntity = new List<PartyLegalEntity>{ 
                                 new PartyLegalEntity { 
                                     RegistrationName = new List<RegistrationName> { 
-                                        new RegistrationName { _  = guia.Remitente.RazonSocial }}
+                                        new RegistrationName { _  = guia.Remitente.EntityName }}
                                 }},
 
                             // 
@@ -168,7 +168,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             // Código SUNAT del tipo de documento de identidad y numeró de documento del remitente
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID  = new List<ID> { new ID { 
                                 // Número de documento de identidad del remitente
-                                _ = guia.Destinatario.Ruc,  
+                                _ = guia.Destinatario.EntityDocumentNumber,  
                                 // Código del tipo de documento de identidad del remitente 
                                 schemeID = EspacioNombreGuiaRemision._DocumentType06
                             }}}},
@@ -178,24 +178,24 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 // Código de Ubigeo
                                 ID = new List<ID> { new ID { _ = guia.Destinatario.UbigeoId } },
                                 // Departamento
-                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Departamento } },
+                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Department } },
                                 // Provincia
-                                CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Provincia} },
+                                CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Province} },
                                 // Dirección completa y detallada
                                 StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Address } },
                                 // Urbanización
-                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Departamento } },
+                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Department } },
                                 // Distrito
-                                District= new List<District>{ new District { _ = guia.Destinatario.Distrito } },
+                                District= new List<District>{ new District { _ = guia.Destinatario.District } },
                                 // Código de país
-                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.Pais } }}}
+                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.EntityCountry } }}}
                             }},
 
                             // Apellidos y nombres, denominación o razón social del remitente
                             PartyLegalEntity = new List<PartyLegalEntity>{
                                 new PartyLegalEntity {
                                     RegistrationName = new List<RegistrationName> {
-                                        new RegistrationName { _  = guia.Destinatario.RazonSocial }}
+                                        new RegistrationName { _  = guia.Destinatario.EntityName }}
                                 }},
 
                             // 
@@ -223,9 +223,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             PartyIdentification = new List<PartyIdentification>{ new PartyIdentification {
                                 ID = new List<ID>{ new ID { 
                                     // Número de documento de identidad del destinatario
-                                    _ = guia.Destinatario.Ruc, 
+                                    _ = guia.Destinatario.EntityDocumentNumber, 
                                     // Código del tipo de documento de identidad del destinatario
-                                    schemeID = guia.getTipoCodigoDocumento("RUC", guia.Destinatario.Ruc)  
+                                    schemeID = guia.getTipoCodigoDocumento("RUC", guia.Destinatario.EntityDocumentNumber)  
                                 }}
                             }},
 
@@ -236,20 +236,20 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 // Dirección completa y detallada
                                 StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Address } },
                                 // Urbanizacion
-                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Departamento } },
+                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Department } },
                                 // Provincia
-                                CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Provincia } },
+                                CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Province } },
                                 // Departamento
-                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Departamento } },
+                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Department } },
                                 // Distrito
-                                District= new List<District>{ new District { _ = guia.Destinatario.Distrito } },
+                                District= new List<District>{ new District { _ = guia.Destinatario.District } },
                                 // Codigo de Pais
-                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.Pais } }}}
+                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.EntityCountry } }}}
                             }},
 
                             // Apellidos y nombres, denominación o razón social del destinatario
                             PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity {
-                                RegistrationName = new List<RegistrationName>{ new RegistrationName { _ = guia.Destinatario.RazonSocial } }
+                                RegistrationName = new List<RegistrationName>{ new RegistrationName { _ = guia.Destinatario.EntityName } }
                             }},
                             
                             // Correo del destinatario
@@ -418,7 +418,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 // El código sunat del remitente , se coloca aquí porque en el caso que no sea compra, el traslado se realiza desde la empresa hacia otro punto, por lo tanto el codSunat del remitente va en el punto de partida, y el codSunat del destinatario (cliente) va en el punto de llegada.
                                 _ = guia.Remitente.CodeSunat,
                                 // El número de documento del remitente, se coloca aquí porque en el caso que no sea compra, el traslado se realiza desde la empresa hacia otro punto, por lo tanto el número de documento del remitente va en el punto de partida, y el número de documento del destinatario (cliente) va en el punto de llegada.
-                                listID = guia.Remitente.Ruc
+                                listID = guia.Remitente.EntityDocumentNumber
                             }},
                             // Urbanizacion
                             CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Origen.Departamento } },
@@ -472,7 +472,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             // Número de RUC asociado al punto de llegada
                             //Si es traslado, se coloca el ruc del remitente, ya que es traslado entre sucursales nomas; si es venta o compra, el numeroDoc del destinatario
                             //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.NumeroDocumentoRemitente : guia.Destinatario.NumeroDocumento
-                            listID = guia.Destinatario.Ruc
+                            listID = guia.Destinatario.EntityDocumentNumber
                         }},
                         // Urbanización
                         CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = destino.Departamento }},
@@ -848,7 +848,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             );
 
             //Se está guardando en la carpeta ahora mismo. Actualización, se pasó a producción y ahora se guarda en AWS
-            var nombreArchivo = guia.MotivoTrasladoCodigo != "07" ? getNombreDocumentoFile(guia, guia.Remitente.Ruc) : getNombreDocumentoFile(guia, guia.Destinatario.Ruc);
+            var nombreArchivo = guia.MotivoTrasladoCodigo != "07" ? getNombreDocumentoFile(guia, guia.Remitente.EntityDocumentNumber) : getNombreDocumentoFile(guia, guia.Destinatario.EntityDocumentNumber);
             //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.NumeroDocumentoRemitente));//Ya no se usa
 
             // Convertir el string JSON a un stream de memoria

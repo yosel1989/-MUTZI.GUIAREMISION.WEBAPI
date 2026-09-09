@@ -12,13 +12,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
     public class GuiaTransportistaService : IGuiaTransportistaService
     {
         private readonly IGuiaTransportistaRepository _repository;
-        private readonly IEstablecimientoRepository _establecimientoRepository;
+        private readonly IEntityBranchRepository _establecimientoRepository;
         private readonly IIntegrationCredentialRepository _integrationCredentialRepository;
         private readonly IEntityRepository _entityRepository;
         private readonly IMapper _mapper;
         public GuiaTransportistaService(
             IGuiaTransportistaRepository repository,
-            IEstablecimientoRepository establecimientoRepository,
+            IEntityBranchRepository establecimientoRepository,
             IIntegrationCredentialRepository integrationCredentialRepository,
             IEntityRepository entityRepository,
             IMapper mapper
@@ -153,7 +153,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
         {
             try
             {
-                if (guia.RemiteTransportista.NumeroDocumento == guia.Remitente.Ruc)
+                if (guia.RemiteTransportista.NumeroDocumento == guia.Remitente.EntityDocumentNumber)
                 {
                     return (false, $"'El 'Número de documento de identidad del remitente', no debe ser igual al número de RUC del transportista.'.");
                 }

@@ -1,4 +1,5 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.IntegrationCredential;
+using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Mappings
@@ -13,6 +14,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.EntityDocumentNumber, opt => opt.MapFrom(src => src.Entity.DocumentNumber));
 
             CreateMap<IntegrationCredentialCreateDTO, IntegrationCredential>();
+            CreateMap<IntegrationCredential, ToggleActiveResponseDTO>();
 
         }
     }

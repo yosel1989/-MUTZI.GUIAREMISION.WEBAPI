@@ -7,7 +7,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
     [SwaggerSchema("Recibe un objeto establecimiento para actualizar", Nullable = false)]
     public class EntityBranchUpdateDTO
     {
-        [JsonPropertyName("entity_branch_id")]
+        [JsonPropertyName("id")]
         [SwaggerSchema("Recibe un número, es el id del establecimiento", Nullable = false)]
         [Required(ErrorMessage = "El id del establecimiento es requerido")]
         public int EntityBranchId { get; set; }
@@ -32,7 +32,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [MinLength(6)]
         //El ubigeo no puede ser 000000
         [RegularExpression(@"^(?!000000)\d{6}$", ErrorMessage = "El ubigeo debe tener 6 caracteres y no puede ser 000000")]
-        public string UbigeoID { get; set; }
+        public string UbigeoId { get; set; }
 
         [JsonPropertyName("address")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la direccion fiscal del establecimiento", Nullable = false)]
@@ -46,12 +46,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         //[Required]
         //[EmailAddress(ErrorMessage = "El formato del correo es inválido")]
         public string? Email { get; set; }
-
-        [JsonPropertyName("pais")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el CodeSunat de PAIS referente, ejm: PE", Nullable = false)]
-        [MaxLength(3)]
-        [Required]
-        public string Pais { get; set; }
 
         [JsonPropertyName("serie")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = false)]
@@ -71,5 +65,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("is_main")]
         [SwaggerSchema("Recibe un boolean, aquí recibe un indicador si es anexo principal", Nullable = false)]
         public bool IsMain { get; set; }
+
+        [JsonPropertyName("type")]
+        [SwaggerSchema("Recibe un texto, se coloca el tipo de establecimiento segpun sunat : 'domicilio_fiscal', 'casa_matriz', 'sucursal', 'agencia', 'local_comercial', 'sede_productiva', 'almacen', 'oficina_administrativa'", Nullable = true)]
+        [MaxLength(100)]
+        public string Type { get; set; }
+
     }
 }

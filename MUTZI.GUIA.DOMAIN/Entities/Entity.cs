@@ -91,6 +91,9 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [ForeignKey(nameof(CountryId))]
         public virtual Country Country { get; set; }
 
+        [ForeignKey(nameof(UbigeoId))]
+        public virtual Ubigeo Ubigeo { get; set; }
+
         public virtual List<EntityRole> Roles { get; set; } = new List<EntityRole>();
     }
 }

@@ -112,7 +112,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         }*/
 
 
-        public async Task<EstadoActualizadoResponseDTO> ToggleActiveAsync(int id, EstadoActualizadoRequestDTO infoRequestDto)
+        public async Task<ToggleActiveResponseDTO> ToggleActiveAsync(int id, EstadoActualizadoRequestDTO infoRequestDto)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 existing.UpdatedAt = DateTime.UtcNow;
                 var conductorActualizado = await _repository.UpdateAsync(existing);
 
-                return _mapper.Map<EstadoActualizadoResponseDTO>(conductorActualizado);
+                return _mapper.Map<ToggleActiveResponseDTO>(conductorActualizado);
             }
             catch (Exception ex)
             {
@@ -143,6 +143,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 new { label = "Efact", value = "efact" }
             };
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
         }
 
 

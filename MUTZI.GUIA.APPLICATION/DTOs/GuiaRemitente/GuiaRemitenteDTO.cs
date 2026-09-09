@@ -138,15 +138,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
             switch (this.MotivoTrasladoId)
             {
                 case (int)SunatCatalogoEnum.MotivoTraslado.VENTA:
-                    if (this.Remitente.Ruc == this.Destinatario.Ruc)
+                    if (this.Remitente.EntityDocumentNumber == this.Destinatario.EntityDocumentNumber)
                         throw new System.Exception("Si el tipo de traslado es VENTA, el 'Tipo y Número de documento de identidad del destinatario' no puede ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "01";
                 case (int)SunatCatalogoEnum.MotivoTraslado.COMPRA:
-                    if (this.Remitente.Ruc != this.Remitente.Ruc)
+                    if (this.Remitente.EntityDocumentNumber != this.Remitente.EntityDocumentNumber)
                         throw new System.Exception("Si el tipo de traslado es COMPRA, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "02";
                 case (int)SunatCatalogoEnum.MotivoTraslado.TRASLADO_ENTRE_ESTABLECIMIENTOS_DE_LA_MISMA_EMPRESA:
-                    if (this.Remitente.Ruc != this.Remitente.Ruc)
+                    if (this.Remitente.EntityDocumentNumber != this.Remitente.EntityDocumentNumber)
                         throw new System.Exception("Si el tipo de traslado es TRASLADO, el 'Tipo y Número de documento de identidad del destinatario' debe ser igual al 'Tipo y Número de documento de identidad del remitente'.");
                     return "04";
                 default:

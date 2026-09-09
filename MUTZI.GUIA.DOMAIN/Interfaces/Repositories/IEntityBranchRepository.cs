@@ -2,7 +2,7 @@
 
 namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 {
-    public interface IEstablecimientoRepository
+    public interface IEntityBranchRepository
     {
         Task<List<EntityBranch>> GetAllByEntityToSelectAsync(int entityId);
 

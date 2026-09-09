@@ -41,4 +41,29 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Shared
         public string? UsuarioModificoNombre { get; set; }
 
     }
+
+
+    public class ToggleActiveResponseDTO
+    {
+        [JsonPropertyName("id")]
+        [SwaggerSchema("Devuelve un entero, el ID afectado por la transacción en la bbdd.", Nullable = false)]
+        public int Id { get; set; }
+
+        [JsonPropertyName("active")]
+        [SwaggerSchema("Devuelve el estado del registro, activado = true, inactivo = false", Nullable = false)]
+        public bool Active { get; set; }
+
+        [JsonPropertyName("updated_at")]
+        [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00, es la fecha de la última edición realizada en la guía", Nullable = true)]
+        public DateTime? UpdatedAt { get; set; }
+
+        [JsonPropertyName("updated_at_user")]
+        [SwaggerSchema("Recibe un texto, se coloca el usuario que modifico el estado del registro.", Nullable = false)]
+        public string? UpdatedAtUser { get; set; }
+
+        [JsonPropertyName("updated_at_user_name")]
+        [SwaggerSchema("Recibe un texto, se coloca el nombre del usuario que modifico el estado del registro.", Nullable = false)]
+        public string? UpdatedAtUserName { get; set; }
+
+    }
 }

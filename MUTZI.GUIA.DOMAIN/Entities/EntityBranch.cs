@@ -22,9 +22,6 @@ public partial class EntityBranch
     [Column("address")]
     public string Address { get; set; } = null!;
 
-    [Column("pais")]
-    public string Pais { get; set; } = null!;
-
     [Column("email")]
     public string? Email { get; set; }
 
@@ -34,29 +31,29 @@ public partial class EntityBranch
     [Column("code_sunat")]
     public string CodeSunat { get; set; }
 
-    [Column("fecha_registro")]
-    public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    [Column("fecha_modifico")]
-    public DateTime? FechaModifico { get; set; }
+    [Column("created_at_user")]
+    public string CreatedAtUser { get; set; }
 
-    [Column("usuario_registro")]
-    public string UsuarioRegistro { get; set; }
+    [Column("created_at_user_name")]
+    public string CreatedAtUserName { get; set; }
 
-    [Column("usuario_registro_nombre")]
-    public string UsuarioRegistroNombre { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
-    [Column("usuario_modifico")]
-    public string? UsuarioModifico { get; set; }
+    [Column("updated_at_user")]
+    public string? UpdatedAtUser { get; set; }
 
-    [Column("usuario_modifico_nombre")]
-    public string? UsuarioModificoNombre { get; set; }
+    [Column("updated_at_user_name")]
+    public string? UpdatedAtUserName { get; set; }
 
     [Column("active")]
     public bool Active { get; set; } = true;
 
-    [Column("tipo")]
-    public string Tipo { get; set; }
+    [Column("type")]
+    public string Type { get; set; }
 
     [Column("area")]
     public string? Area { get; set; }

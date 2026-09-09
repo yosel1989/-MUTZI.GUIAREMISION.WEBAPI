@@ -5,10 +5,10 @@ using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
-    public class EstablecimientoRepository: IEstablecimientoRepository
+    public class EntityBranchRepository: IEntityBranchRepository
     {
         private readonly LogisticaContext _context;
-        public EstablecimientoRepository(LogisticaContext context)
+        public EntityBranchRepository(LogisticaContext context)
         {
             _context = context;
         }
@@ -107,6 +107,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     Description = m.Description,
                     CodeSunat = m.CodeSunat,
                     Area = m.Area,
+                    Serie = m.Serie,
                     Entity = new Entity
                     {
                         Name = m.Entity.Name,
@@ -132,7 +133,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var data = await _context.Establecimiento
                     .Include(r => r.Ubigeo)
                     .Include(r => r.Entity)
-                    .AsNoTracking()
+                        .ThenInclude(r => r.Ubigeo)
+                    //.AsNoTracking()
                     .FirstOrDefaultAsync(r => r.EntityBranchId == id);
 
                 if(strict && data is null)
@@ -171,12 +173,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         x.Ubigeo.Distrito.ToLower().Contains(val) ||
                         x.Address.ToLower().Contains(val) ||
                         x.Email.ToLower().Contains(val) ||
-                        x.Pais.ToLower().Contains(val) ||
                         x.Serie.Contains(val) ||
                         x.CodeSunat.ToLower().Contains(val) ||
-                        x.UsuarioRegistroNombre.ToLower().Contains(val) ||
+                        x.CreatedAtUserName.ToLower().Contains(val) ||
                         x.Area.ToLower().Contains(val) ||
-                        x.UsuarioModificoNombre.ToLower().Contains(val)
+                        x.UpdatedAtUserName.ToLower().Contains(val)
                     );
                 }
                 var totalRecords = await query.CountAsync();
@@ -217,11 +218,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             try
             {
-                _context.Establecimiento.Update(actualizarEstablecimiento);
-                actualizarEstablecimiento.FechaModifico = DateTime.UtcNow;
+                actualizarEstablecimiento.UpdatedAt = DateTime.UtcNow;
                 await _context.SaveChangesAsync();
-                await _context.Entry(actualizarEstablecimiento).ReloadAsync();
-                return actualizarEstablecimiento;
+                //await _context.Entry(actualizarEstablecimiento).ReloadAsync();
+                return await GetByIdAsync(actualizarEstablecimiento.EntityBranchId, true, null);
             }
             catch (Exception ex)
             {

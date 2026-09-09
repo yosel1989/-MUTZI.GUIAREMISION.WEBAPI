@@ -10,6 +10,8 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
         Task<IntegrationCredential?> GetByEntityId(int entityId, string provider, bool strict = false);
         Task<(int total, List<IntegrationCredential>)> GetDataTableAsync(int pageNumber, int pageSize, string? search);
 
+        Task DeleteAsync(int id);
+
         // Validations
 
         Task<bool> HasManyProvider(int entityId, string provider);
