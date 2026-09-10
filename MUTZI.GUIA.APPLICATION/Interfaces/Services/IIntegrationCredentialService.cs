@@ -14,8 +14,10 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
 
         Task<PagedResult<IntegrationCredentialDTO>> GetDataTableAsync(int pageNumber, int pageSize, string? search);
 
-        Task<EstadoActualizadoResponseDTO> ToggleActiveAsync(int id, EstadoActualizadoRequestDTO infoRequestDto);
+        Task<ToggleActiveResponseDTO> ToggleActiveAsync(int id, EstadoActualizadoRequestDTO infoRequestDto);
 
         List<object> GetProviderToSelect();
+
+        Task DeleteAsync(int id);
     }
 }

@@ -80,6 +80,23 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return (totalRecords, data);
         }
 
+        public async Task DeleteAsync(int id)
+        {
+            try
+            {
+                var model = await _context.IntegrationCredentials.FindAsync(id);
+                if (model != null)
+                {
+                    _context.IntegrationCredentials.Remove(model);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
 
 
         /*public async Task<(int total, List<IntegrationCredential>)> GetListAsync(int pageNumber, int pageSize, string? search, string? type)

@@ -26,7 +26,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [MinLength(6)]
         //El ubigeo no puede ser 000000
         [RegularExpression(@"^(?!000000)\d{6}$", ErrorMessage = "El ubigeo debe tener 6 caracteres y no puede ser 000000")]
-        public string UbigeoID { get; set; }
+        public string UbigeoId { get; set; }
 
         [JsonPropertyName("address")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la direccion fiscal del remitente", Nullable = false)]
@@ -41,12 +41,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         //[EmailAddress(ErrorMessage = "El formato del correo es inválido")]
         public string? Email { get; set; }
 
-        [JsonPropertyName("pais")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca el CodeSunat de PAIS referente, ejm: PE", Nullable = false)]
-        [MaxLength(3)]
-        [Required]
-        public string Pais { get; set; }
-
         [JsonPropertyName("serie")]
         [SwaggerSchema("Recibe un texto, aquí se coloca la serie que posteriormente se usa en las guías de remisión, ejm: T001, T002", Nullable = false)]
         [StringLength(4, ErrorMessage = "La serie requiere 4 caracteres")]
@@ -57,19 +51,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
         public string CodeSunat { get; set; }
 
-        [JsonPropertyName("empleado_id_creacion")]
-        [SwaggerSchema("Recibe un entero, aquí se soloca el ID del empleado que ha realizado la transacción", Nullable = true)]
-        public int? EmpleadoIDCreacion { get; set; }
-
-        [JsonPropertyName("empleado_nombre_creacion")]
-        [SwaggerSchema("Recibe un texto, se coloca el nombre del empleado que ha realizado la transacción en el sistema", Nullable = true)]
-        [MaxLength(100)]
-        public string? EmpleadoNombreCreacion { get; set; }
-
-        [JsonPropertyName("tipo")]
+        [JsonPropertyName("type")]
         [SwaggerSchema("Recibe un texto, se coloca el tipo de establecimiento segpun sunat : 'domicilio_fiscal', 'casa_matriz', 'sucursal', 'agencia', 'local_comercial', 'sede_productiva', 'almacen', 'oficina_administrativa'", Nullable = true)]
         [MaxLength(100)]
-        public string Tipo { get; set; }
+        public string Type { get; set; }
 
         [JsonPropertyName("area")]
         [SwaggerSchema("Recibe un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]

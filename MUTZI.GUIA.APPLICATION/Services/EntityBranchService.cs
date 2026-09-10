@@ -8,13 +8,13 @@ using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
 namespace MUTZI.GUIA.APPLICATION.Services
 {
-    public class EstablecimientoService : IEstablecimientoService
+    public class EntityBranchService : IEntityBranchService
     {
-        private readonly IEstablecimientoRepository _repository;
+        private readonly IEntityBranchRepository _repository;
         private readonly IAuthService _authService;
         private readonly IMapper _mapper;
-        public EstablecimientoService(
-            IEstablecimientoRepository repository,
+        public EntityBranchService(
+            IEntityBranchRepository repository,
             IMapper mapper,
             IAuthService authService
         )
@@ -75,9 +75,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 throw new KeyNotFoundException($"Conductor con ID {id} no encontrado.");
             }
             existing.Active = infoRequestDto.Active;
-            existing.UsuarioModifico = currentUser.UserName;
-            existing.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
-            existing.FechaModifico = DateTime.UtcNow;
+            existing.UpdatedAtUser = currentUser.UserName;
+            existing.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
+            existing.UpdatedAt = DateTime.UtcNow;
             var establecimientoActualizado = await _repository.UpdateAsync(existing);
 
             return _mapper.Map<EstadoActualizadoResponseDTO>(establecimientoActualizado);
@@ -91,9 +91,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             try
             {
                 var establecimiento = _mapper.Map<EntityBranch>(createDTO);
-                establecimiento.UsuarioRegistro = currentUser.UserName;
-                establecimiento.UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
-                establecimiento.FechaRegistro = DateTime.UtcNow;
+                establecimiento.CreatedAtUser = currentUser.UserName;
+                establecimiento.CreatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
+                establecimiento.CreatedAt = DateTime.UtcNow;
                 await _repository.CreateAsync(establecimiento);
                 return establecimiento.EntityBranchId;
             }
@@ -120,11 +120,22 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var existe = await _repository.GetBySerieAsync(updateDTO.EntityId, updateDTO.Serie);
                     if (existe) { throw new Exception("La serie ya se encuentra registrada con está entidad"); }
                 }
-                var establecimientoDomain = _mapper.Map(updateDTO, existingEstablecimiento);
-                establecimientoDomain.UsuarioModifico = currentUser.UserName;
-                establecimientoDomain.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
-                establecimientoDomain.FechaModifico = DateTime.UtcNow;
-                var establecimientoActualizado = await _repository.UpdateAsync(establecimientoDomain);
+
+
+                existingEstablecimiento.EntityId = updateDTO.EntityId;
+                existingEstablecimiento.Description = updateDTO.Description;
+                existingEstablecimiento.Area = updateDTO.Area;
+                existingEstablecimiento.UbigeoId = updateDTO.UbigeoId;
+                existingEstablecimiento.Address = updateDTO.Address;
+                existingEstablecimiento.Email = updateDTO.Email;
+                existingEstablecimiento.Serie = updateDTO.Serie;
+                existingEstablecimiento.CodeSunat = updateDTO.CodeSunat;
+                existingEstablecimiento.Type = updateDTO.Type;
+                existingEstablecimiento.IsMain = updateDTO.IsMain;
+                existingEstablecimiento.UpdatedAt = DateTime.UtcNow;
+                existingEstablecimiento.UpdatedAtUser = currentUser.UserName;
+                existingEstablecimiento.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
+                var establecimientoActualizado = await _repository.UpdateAsync(existingEstablecimiento);
                 return _mapper.Map<EntityBranchDTO>(establecimientoActualizado);
             }
             catch (Exception ex)
@@ -165,7 +176,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     // Formatear correlativo a 8 dígitos y construir número de guía
                     string correlativoStr = nextCorrelativo.ToString("D8");
 
-                    dto.NuevaSerie = serieCompleta;
+                    dto.NewSerie = serieCompleta;
                     dto.NuevoCorrelativo = nextCorrelativo;
                     dto.NuevoNumeroGuia = $"{serieCompleta}-{correlativoStr}";
                 }

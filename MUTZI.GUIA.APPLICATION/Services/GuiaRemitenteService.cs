@@ -25,7 +25,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
     {
         private readonly IGuiaRemitenteRepository _repository;
         private readonly IGuiaRemisionHistorialRepository _guiaRemisionHistorialRepository;
-        private readonly IEstablecimientoRepository _establecimientoRepository;
+        private readonly IEntityBranchRepository _establecimientoRepository;
         private readonly IEntityRepository _entityRepository;
         private readonly IMotivoTrasladoRepository _motivoTrasladoRepository;
         private readonly ITransportistaRepository _transportistaRepository;
@@ -45,7 +45,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             IVentaConfigRepository ventaConfigRepository,
             IMotivoTrasladoRepository motivoTrasladoRepository,
             ITransportistaRepository transportistaRepository,
-            IEstablecimientoRepository establecimientoRepository,
+            IEntityBranchRepository establecimientoRepository,
             IIntegrationCredentialRepository integrationCredentialRepository,
             IProveedorRepository proveedorRepository,
             IEntityRepository entityRepository,

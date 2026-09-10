@@ -4,7 +4,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
 {
-    public interface IEstablecimientoService
+    public interface IEntityBranchService
     {
         Task<List<EntityBranchListDTO>> GetAllByEntityToSelectAsync(int entityId);
         Task<List<EntityBranchToSelectDTO>> GetAllByEntityToSelect2Async(int entityId);

@@ -7,7 +7,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
     {
         [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, el ID del remitente en la bbdd", Nullable = false)]
-        public int EstablecimientoId { get; set; }
+        public int EntityBranchId { get; set; }
 
         [JsonPropertyName("entity_id")]
         public int? EntityId { get; set; }
@@ -18,12 +18,28 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("entity_document_number")]
         public string? EntityDocumentNumber { get; set; }
 
-        [JsonPropertyName("codigo_sunat")]
+        [JsonPropertyName("code_sunat")]
         [SwaggerSchema("Devuelve el código de establecimiento registrado en SUNAT. Ejem: 0001, 0012", Nullable = false)]
-        public string CodigoSunat { get; set; }
+        public string CodeSunat { get; set; }
 
+<<<<<<< HEAD
+=======
+        [JsonPropertyName("entity_id")]
+        public int EntityId { get; set; }
+
+        [JsonPropertyName("entity_name")]
+        public string EntityName { get; set; }
+
+        [JsonPropertyName("entity_document_number")]
+        public string EntityDocumentNumber { get; set; }
+
+>>>>>>> 36e910039164c0a62d67b3e4d04ae8dc2c9f2b69
         [JsonPropertyName("area")]
         [SwaggerSchema("Devuelve un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
         public string? Area { get; set; }
+
+        [JsonPropertyName("serie")]
+        [SwaggerSchema("Devuelve un texto, la serie , ejm: T001, T002", Nullable = false)]
+        public string Serie { get; set; }
     }
 }

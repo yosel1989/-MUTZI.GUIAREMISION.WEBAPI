@@ -131,7 +131,7 @@ builder.Services.AddScoped<IUnidadTransporteRepository, UnidadTransporteReposito
 builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<IUbigeoRepository, UbigeoRepository>();
 builder.Services.AddScoped<ITransportistaRepository, TransportistaRepository>();
-builder.Services.AddScoped<IEstablecimientoRepository, EstablecimientoRepository>();
+builder.Services.AddScoped<IEntityBranchRepository, EntityBranchRepository>();
 builder.Services.AddScoped<IPerfilRepository, PerfilRepository>();
 builder.Services.AddScoped<IPermisoRepository, PermisoRepository>();
 builder.Services.AddScoped<IPerfilPermisoRepository, PerfilPermisoRepository>();
@@ -173,7 +173,7 @@ builder.Services.AddScoped<IUnidadTransporteService, UnidadTransporteService>();
 builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<IUbigeoService, UbigeoService>();
 builder.Services.AddScoped<IS3FileService, S3FileService>();
-builder.Services.AddScoped<IEstablecimientoService, EstablecimientoService>();
+builder.Services.AddScoped<IEntityBranchService, EntityBranchService>();
 builder.Services.AddScoped<ITransportistaService, TransportistaService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGuiaRemisionHistorialService, GuiaRemisionHistorialService>();

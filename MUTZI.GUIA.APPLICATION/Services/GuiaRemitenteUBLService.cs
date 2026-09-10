@@ -126,17 +126,17 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 // Código de Ubigeo
                                 ID = new List<ID> { new ID { _ = guia.Remitente.UbigeoId } },
                                 // Departamento
-                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Remitente.Departamento } },
+                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Remitente.Department } },
                                 // Provincia
-                                CityName = new List<CityName>{ new CityName { _ = guia.Remitente.Provincia} },
+                                CityName = new List<CityName>{ new CityName { _ = guia.Remitente.Province} },
                                 // Dirección completa y detallada
                                 StreetName = new List<StreetName>{ new StreetName { _ = guia.Remitente.Address } },
                                 // Urbanización
-                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Remitente.Departamento } },
+                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Remitente.Department } },
                                 // Distrito
-                                District= new List<District>{ new District { _ = guia.Remitente.Distrito } },
+                                District= new List<District>{ new District { _ = guia.Remitente.District } },
                                 // Código de país
-                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.Pais } }}}
+                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.EntityCountry } }}}
                             }},
 
                             // Apellidos y nombres, denominación o razón social del remitente
@@ -178,17 +178,17 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 // Código de Ubigeo
                                 ID = new List<ID> { new ID { _ = guia.Destinatario.UbigeoId } },
                                 // Departamento
-                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Departamento } },
+                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Department } },
                                 // Provincia
-                                CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Provincia} },
+                                CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Province} },
                                 // Dirección completa y detallada
                                 StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Address } },
                                 // Urbanización
-                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Departamento } },
+                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Department } },
                                 // Distrito
-                                District= new List<District>{ new District { _ = guia.Destinatario.Distrito } },
+                                District= new List<District>{ new District { _ = guia.Destinatario.District } },
                                 // Código de país
-                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.Pais } }}}
+                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.EntityCountry } }}}
                             }},
 
                             // Apellidos y nombres, denominación o razón social del remitente
@@ -225,7 +225,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                     // Número de documento de identidad del destinatario
                                     _ = guia.Destinatario.EntityDocumentNumber, 
                                     // Código del tipo de documento de identidad del destinatario
+<<<<<<< HEAD
                                     schemeID = guia.getTipoCodigoDocumento("RUC", guia.Destinatario.EntityName)  
+=======
+                                    schemeID = guia.getTipoCodigoDocumento("RUC", guia.Destinatario.EntityDocumentNumber)  
+>>>>>>> 36e910039164c0a62d67b3e4d04ae8dc2c9f2b69
                                 }}
                             }},
 
@@ -236,15 +240,15 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                 // Dirección completa y detallada
                                 StreetName = new List<StreetName>{ new StreetName { _ = guia.Destinatario.Address } },
                                 // Urbanizacion
-                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Departamento } },
+                                CitySubdivisionName = new List<CitySubdivisionName>{ new CitySubdivisionName { _ = guia.Destinatario.Department } },
                                 // Provincia
-                                CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Provincia } },
+                                CityName = new List<CityName>{ new CityName { _ = guia.Destinatario.Province } },
                                 // Departamento
-                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Departamento } },
+                                CountrySubentity = new List<CountrySubentity>{ new CountrySubentity { _ = guia.Destinatario.Department } },
                                 // Distrito
-                                District= new List<District>{ new District { _ = guia.Destinatario.Distrito } },
+                                District= new List<District>{ new District { _ = guia.Destinatario.District } },
                                 // Codigo de Pais
-                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.Pais } }}}
+                                Country = new List<Country>{ new Country {  IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.EntityCountry } }}}
                             }},
 
                             // Apellidos y nombres, denominación o razón social del destinatario

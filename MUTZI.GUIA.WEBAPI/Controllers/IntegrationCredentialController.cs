@@ -6,6 +6,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.IntegrationCredential;
 using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
+using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -174,7 +175,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             Description = "Activar o desactivar el estado de una credencial de integración",
             OperationId = "integration_credential_toggle_active"
         )]
-        [ProducesResponseType(typeof(ResponseDTO<EstadoActualizadoResponseDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseDTO<ToggleActiveResponseDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CambiarEstado(int id, [FromBody] EstadoActualizadoRequestDTO infoRequestDto)
@@ -182,10 +183,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             try
             {
                 var result = await _service.ToggleActiveAsync(id, infoRequestDto);
-                return Ok(new ResponseDTO<EstadoActualizadoResponseDTO>
+                return Ok(new ResponseDTO<ToggleActiveResponseDTO>
                 {
                     Data = result,
-                    Detalle = $"Se actualizó el estado de la de credencial con código: COD-{id.ToString("D4")} al estado {result.Estado}."
+                    Detalle = $"Se { (result.Active ? "activó" : "desactivó") } la credencial de la integración con código: COD-{id.ToString("D4")}."
                 });
             }
             catch (Exception ex)
@@ -223,6 +224,35 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al obtener el listado de proveedores de servicios de integración.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+
+        [HttpDelete]
+        [Route("{id}")]
+        [SwaggerOperation(
+            Summary = "Eliminar credencial de integración",
+            Description = "Elimina un registro de la tabla de credenciales de integración",
+            OperationId = "integration_credential_delete"
+        )]
+        [ProducesResponseType(typeof(DeletedDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _service.DeleteAsync(id);
+                return Ok(new DeletedDTO { Id = id, Detalle = "Se eliminó el establecimiento con éxito." });
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al eliminar remitente.",
                     Detalle = errorMsg
                 });
             }

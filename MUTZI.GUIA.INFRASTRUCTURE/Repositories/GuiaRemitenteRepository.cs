@@ -439,12 +439,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UbigeoId = g.Remitente.UbigeoId,
                         Ubigeo = g.Remitente.Ubigeo,
                         Address = g.Remitente.Address,
-                        Pais = g.Remitente.Pais,
                         CodeSunat = g.Remitente.CodeSunat,
-                        FechaRegistro = g.Remitente.FechaRegistro,
-                        UsuarioRegistro = g.Remitente.UsuarioRegistro,
-                        FechaModifico = g.Remitente.FechaModifico,
-                        UsuarioModifico = g.Remitente.UsuarioModifico,
+                        CreatedAt = g.Remitente.CreatedAt,
+                        CreatedAtUser = g.Remitente.CreatedAtUser,
+                        UpdatedAt = g.Remitente.UpdatedAt,
+                        UpdatedAtUser = g.Remitente.UpdatedAtUser,
                         Entity = g.Remitente.Entity
                     },
                     Destinatario = new EntityBranch
@@ -454,12 +453,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UbigeoId = g.Destinatario.UbigeoId,
                         Ubigeo = g.Destinatario.Ubigeo,
                         Address = g.Destinatario.Address,
-                        Pais = g.Destinatario.Pais,
                         CodeSunat = g.Destinatario.CodeSunat,
-                        FechaRegistro = g.Destinatario.FechaRegistro,
-                        UsuarioRegistro = g.Destinatario.UsuarioRegistro,
-                        FechaModifico = g.Destinatario.FechaModifico,
-                        UsuarioModifico = g.Destinatario.UsuarioModifico,
+                        CreatedAt = g.Destinatario.CreatedAt,
+                        CreatedAtUser = g.Destinatario.CreatedAtUser,
+                        UpdatedAt = g.Destinatario.UpdatedAt,
+                        UpdatedAtUser = g.Destinatario.UpdatedAtUser,
                         Entity = g.Destinatario.Entity
                     },
 

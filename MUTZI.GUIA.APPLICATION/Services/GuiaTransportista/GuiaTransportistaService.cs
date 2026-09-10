@@ -12,13 +12,13 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
     public class GuiaTransportistaService : IGuiaTransportistaService
     {
         private readonly IGuiaTransportistaRepository _repository;
-        private readonly IEstablecimientoRepository _establecimientoRepository;
+        private readonly IEntityBranchRepository _establecimientoRepository;
         private readonly IIntegrationCredentialRepository _integrationCredentialRepository;
         private readonly IEntityRepository _entityRepository;
         private readonly IMapper _mapper;
         public GuiaTransportistaService(
             IGuiaTransportistaRepository repository,
-            IEstablecimientoRepository establecimientoRepository,
+            IEntityBranchRepository establecimientoRepository,
             IIntegrationCredentialRepository integrationCredentialRepository,
             IEntityRepository entityRepository,
             IMapper mapper

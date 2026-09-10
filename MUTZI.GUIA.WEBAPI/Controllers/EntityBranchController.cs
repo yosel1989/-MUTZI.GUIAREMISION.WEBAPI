@@ -11,13 +11,13 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
 {
-    [Route("establecimientos")]
+    [Route("entity-branchs")]
     [ApiController]
     [Authorize]
-    public class EstablecimientoController : ControllerBase
+    public class EntityBranchController : ControllerBase
     {
-        private readonly IEstablecimientoService _service;
-        public EstablecimientoController(IEstablecimientoService establecimientoService)
+        private readonly IEntityBranchService _service;
+        public EntityBranchController(IEntityBranchService establecimientoService)
         {
             _service = establecimientoService;
         }
@@ -82,7 +82,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 
 
         [HttpGet]
-        [Route("listar-sugerido/{ruc}")]
+        [Route("listar-sugerido/{entityId}")]
         [SwaggerOperation(
             Summary = "Listar establecimientos sugeridos",
             Description = "Lista los establecimientos sugeridos por número de documento o razón social, de una empresa especifica",

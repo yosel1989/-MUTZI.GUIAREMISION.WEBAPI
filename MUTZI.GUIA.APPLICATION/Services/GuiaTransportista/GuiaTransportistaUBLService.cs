@@ -93,11 +93,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                         new PostalAddress {
                                             ID                 = new List<ID>                { new ID                { _ = guia.Remitente.UbigeoId }},
                                             StreetName         = new List<StreetName>        { new StreetName        { _ = guia.Remitente.Address }},
-                                            CitySubdivisionName= new List<CitySubdivisionName>{ new CitySubdivisionName{ _ = guia.Remitente.Departamento }},
-                                            CityName           = new List<CityName>          { new CityName          { _ = guia.Remitente.Provincia }},
-                                            CountrySubentity   = new List<CountrySubentity>  { new CountrySubentity  { _ = guia.Remitente.Departamento }},
-                                            District           = new List<District>          { new District          { _ = guia.Remitente.Distrito }},
-                                            Country            = new List<Country>           { new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.Pais }}}}
+                                            CitySubdivisionName= new List<CitySubdivisionName>{ new CitySubdivisionName{ _ = guia.Remitente.Department }},
+                                            CityName           = new List<CityName>          { new CityName          { _ = guia.Remitente.Province }},
+                                            CountrySubentity   = new List<CountrySubentity>  { new CountrySubentity  { _ = guia.Remitente.Department }},
+                                            District           = new List<District>          { new District          { _ = guia.Remitente.District }},
+                                            Country            = new List<Country>           { new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Remitente.EntityCountry }}}}
                                         }
                                     },
                                     PartyLegalEntity = new List<PartyLegalEntity> {
@@ -122,11 +122,11 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                                         new PostalAddress {
                                             ID                 = new List<ID>                { new ID                { _ = guia.Destinatario.UbigeoId }},
                                             StreetName         = new List<StreetName>        { new StreetName        { _ = guia.Destinatario.Address }},
-                                            CitySubdivisionName= new List<CitySubdivisionName>{ new CitySubdivisionName{ _ = guia.Destinatario.Departamento}},
-                                            CityName           = new List<CityName>          { new CityName          { _ = guia.Destinatario.Provincia }},
-                                            CountrySubentity   = new List<CountrySubentity>  { new CountrySubentity  { _ = guia.Destinatario.Departamento }},
-                                            District           = new List<District>          { new District          { _ = guia.Destinatario.Distrito }},
-                                            Country            = new List<Country>           { new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.Pais }}}}
+                                            CitySubdivisionName= new List<CitySubdivisionName>{ new CitySubdivisionName{ _ = guia.Destinatario.Department}},
+                                            CityName           = new List<CityName>          { new CityName          { _ = guia.Destinatario.Province }},
+                                            CountrySubentity   = new List<CountrySubentity>  { new CountrySubentity  { _ = guia.Destinatario.Department }},
+                                            District           = new List<District>          { new District          { _ = guia.Destinatario.District }},
+                                            Country            = new List<Country>           { new Country { IdentificationCode = new List<IdentificationCode> { new IdentificationCode { _ = guia.Destinatario.EntityCountry }}}}
                                         }
                                     },
                                     PartyLegalEntity = new List<PartyLegalEntity> {
