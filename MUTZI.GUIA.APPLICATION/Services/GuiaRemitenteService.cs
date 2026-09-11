@@ -6,7 +6,6 @@ using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
-using MUTZI.GUIA.APPLICATION.DTOs.Transportista;
 using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
@@ -25,13 +24,15 @@ namespace MUTZI.GUIA.APPLICATION.Services
     {
         private readonly IGuiaRemitenteRepository _repository;
         private readonly IGuiaRemisionHistorialRepository _guiaRemisionHistorialRepository;
+        private readonly IIntegrationCredentialService _integrationCredentialService;
+        private readonly IIntegrationCredentialRepository _integrationCredentialRepository;
+        private readonly IGuiaRemisionTransportUnitRepository _guiaRemisionTransportUnitRepository;
         private readonly IEntityBranchRepository _establecimientoRepository;
         private readonly IEntityRepository _entityRepository;
         private readonly IMotivoTrasladoRepository _motivoTrasladoRepository;
         private readonly ITransportistaRepository _transportistaRepository;
         private readonly IProveedorRepository _proveedorRepository;
         private readonly IVentaConfigRepository _ventaConfigRepository;
-        private readonly IIntegrationCredentialRepository _integrationCredentialRepository;
         private readonly IGuiaRemitenteUBLService _guiaRemitenteUBLService;
         private readonly IEnvioService _envioService;
         private readonly IMapper _mapper;
@@ -40,12 +41,14 @@ namespace MUTZI.GUIA.APPLICATION.Services
         public GuiaRemitenteService(
             IGuiaRemitenteRepository repository,
             IGuiaRemisionHistorialRepository guiaRemisionHistorialRepository,
+            IGuiaRemisionTransportUnitRepository guiaRemisionTransportUnitRepository,
             IGuiaRemitenteUBLService guiaRemitenteUBLService,
             IEnvioService envioService,
             IVentaConfigRepository ventaConfigRepository,
             IMotivoTrasladoRepository motivoTrasladoRepository,
             ITransportistaRepository transportistaRepository,
             IEntityBranchRepository establecimientoRepository,
+            IIntegrationCredentialService integrationCredentialService,
             IIntegrationCredentialRepository integrationCredentialRepository,
             IProveedorRepository proveedorRepository,
             IEntityRepository entityRepository,
@@ -56,6 +59,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         {
             _repository = repository;
             _guiaRemisionHistorialRepository = guiaRemisionHistorialRepository;
+            _guiaRemisionTransportUnitRepository = guiaRemisionTransportUnitRepository;
             _guiaRemitenteUBLService = guiaRemitenteUBLService;
             _envioService = envioService;
             _establecimientoRepository = establecimientoRepository;
@@ -64,6 +68,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _proveedorRepository = proveedorRepository;
             _entityRepository = entityRepository;
             _ventaConfigRepository = ventaConfigRepository;
+            _integrationCredentialService = integrationCredentialService;
             _integrationCredentialRepository = integrationCredentialRepository;
             _mapper = mapper;
             _authService = authService;
@@ -254,24 +259,27 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 try
                 {
                     var currentUser = _authService.CurrentUser();
+                    var currentDate = DateTime.UtcNow;
                     // Mapear todos los objetos
                     var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(request.MotivoTrasladoId, true);
-                    var transportista = await _entityRepository.GetByIdAsync(request.TransporterId ?? 0);
                     var remitente = await _establecimientoRepository.GetByIdAsync(request.RemitenteId, true, "Remitente");
                     var destinatario = await _establecimientoRepository.GetByIdAsync(request.DestinatarioId, true, "Destinatario");
                     var destinatarioEmails = request.DestinatarioEmail.Select(p => _mapper.Map<GuiaRemisionEmailDestinatario>(p)).ToList();
                     var proveedor = await _proveedorRepository.GetByIdAsync(request.ProveedorId ?? 0);
                     var conductor = request.DatosEnvio.ConductorId?.Select(p => _mapper.Map<GuiaRemisionConductor>(p)).ToList() ?? [];
-                    var transporte = request.DatosEnvio.TransporteId?.Select(p => _mapper.Map<GuiaRemisionUnidadTransporte>(p)).ToList() ?? [];
+
+                    var entityTransporter = await _entityRepository.GetByIdAsync(request.TransporterId ?? 0);
+                    var transportUnits = request.TransportUnits;
+
                     var guiaRemision = _mapper.Map<GuiaRemision>(request);
                     var datosEnvio = _mapper.Map<GuiaRemisionDatoEnvio>(request.DatosEnvio);
-                    request.DatosEnvio.Transportista = transportista != null ? _mapper.Map<TransportistaDTO>(transportista) : null;
+
                     var origen = _mapper.Map<GuiaRemisionOrigen>(request.Origen);
                     var destino = request.Destino.Select(p => _mapper.Map<GuiaRemisionDestino>(p)).ToList();
                     var detalles = request.Productos.Select(p => _mapper.Map<GuiaRemisionDetalle>(p)).ToList();
                     var docRelacionados = request.DocRelacionado?.Select(p => _mapper.Map<GuiaRemisionDocumentoRelacionado>(p)).ToList();
                     var ventaConfig = await _ventaConfigRepository.GetByRucAsync(ruc);
-                    var integrationCredential = await _integrationCredentialRepository.GetByEntityId(request.EntityId, "efact", strict: true);
+                    var integrationCredential = await _integrationCredentialRepository.GetByEntityId(request.EntityId ?? 0, "efact", strict: true);
 
                     request.ValidarBienesNormalizados();
 
@@ -293,9 +301,36 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                     // Llamar al repositorio
                     var (guia_id, numero_guia) = await _repository.CreateGuiaRemisionTransactionalAsync(
-                        remitente, destinatario, proveedor, conductor, transporte,
-                        guiaRemision, datosEnvio, origen, destino, detalles, docRelacionados, destinatarioEmails
+                        remitente, 
+                        destinatario, 
+                        proveedor, 
+                        conductor,
+                        entityTransporter,
+                        transportUnits,
+                        guiaRemision, 
+                        datosEnvio, 
+                        origen, 
+                        destino, 
+                        detalles, 
+                        docRelacionados, 
+                        destinatarioEmails
                     );
+
+                    // Registrar los vehiculos solo si tiene registro
+                    if(request.TransportUnits != null)
+                    {
+                        var _transportUnits = request.TransportUnits.Select(transportUnit =>
+                        {
+                            var guiaRemisionTransportUnit = _mapper.Map<GuiaRemisionTransportUnit>(transportUnit);
+                            guiaRemisionTransportUnit.GuiaRemisionId = guia_id;
+                            guiaRemisionTransportUnit.CreatedAt = currentDate;
+                            guiaRemisionTransportUnit.CreatedAtUser = currentUser.UserName;
+                            guiaRemisionTransportUnit.CreatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+
+                            return guiaRemisionTransportUnit;
+                        }).ToList();
+                        await _guiaRemisionTransportUnitRepository.Create(_transportUnits);
+                    }
 
                     // Registrar el historial
                     await _guiaRemisionHistorialRepository.RegistrarAsync(new GuiaRemisionHistorial
@@ -767,6 +802,14 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     Detalle = errorMsg
                 };
             }
+        }
+
+
+        public async Task GetDocumentAsync(
+             int guiaRemisionId, int entityId
+        )
+        {
+            TokenResponseDTO token = await _integrationCredentialService.GetTokenAsync(entityId, "efact");
         }
     }
 }

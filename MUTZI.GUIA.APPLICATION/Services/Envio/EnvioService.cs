@@ -22,6 +22,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
         private readonly IGuiaRemitenteUBLService _guiaRemitenteUBLService;
         private readonly IGuiaTransportistaUBLService _guiaTransportistaUBLService;
         private readonly IVentaConfigService _ventaConfigService;
+        private readonly IIntegrationCredentialService _integrationCredentialService;
         private readonly HttpClient _httpClient;
         private string Url_Base_Efact = "";
         private readonly IS3FileService _s3FileService;
@@ -32,7 +33,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             //IGuiaRemitenteService guiaRemitenteBDService, 
             IGuiaTransportistaService guiaTransportistaBDService, 
             IGuiaRemitenteUBLService guiaRemitenteUBLService, 
-            IGuiaTransportistaUBLService guiaTransportistaUBLService, 
+            IGuiaTransportistaUBLService guiaTransportistaUBLService,
+            IIntegrationCredentialService integrationCredentialService,
             IVentaConfigService ventaConfigService, 
             HttpClient httpClient, 
             IS3FileService s3FileService,
@@ -43,6 +45,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.Envio
             //_guiaRemitenteBDService = guiaRemitenteBDService;
             _guiaTransportistaBDService = guiaTransportistaBDService;
             _guiaRemitenteUBLService = guiaRemitenteUBLService;
+            _integrationCredentialService = integrationCredentialService;
             _guiaTransportistaUBLService = guiaTransportistaUBLService;
             _ventaConfigService = ventaConfigService;
             _httpClient = httpClient;

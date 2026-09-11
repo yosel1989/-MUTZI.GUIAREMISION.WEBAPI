@@ -20,6 +20,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un entero, es el número ID de la guía.", Nullable = false)]
         public int GuiaRemisionId { get; set; }
 
+        [JsonPropertyName("entity_id")]
+        [SwaggerSchema("Devuelve un entero, es el número ID de la guía.", Nullable = false)]
+        public int? EntityId { get; set; }
+
         [JsonPropertyName("tipo_guia")]
         [SwaggerSchema("Devuelve en texto el tipo de guía: REMITENTE ó TRANSPORTISTA", Nullable = false)]
         public string TipoGuia { get; set; }

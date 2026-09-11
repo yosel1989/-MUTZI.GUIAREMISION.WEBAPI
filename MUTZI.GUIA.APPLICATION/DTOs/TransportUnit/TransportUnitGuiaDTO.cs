@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
 {
     [SwaggerSchema("Devuelve un objeto transporte asociado a los datos de envío de una guía de remisión")]
-    public class UnidadTransporteGuiaDTO
+    public class TransportUnitGuiaDTO
     {
         [JsonPropertyName("transporte_guia_id")]
         [SwaggerSchema("Devuelve en entero el ID del transporte asociado a los datos de envío de una guía de remisión.", Nullable = false)]

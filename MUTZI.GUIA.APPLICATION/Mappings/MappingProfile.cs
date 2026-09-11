@@ -110,7 +110,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<DestinoUpdateDTO, GuiaRemisionDestino>();
             CreateMap<ProductosUpdateDTO, GuiaRemisionDetalle>();
             
-            CreateMap<UnidadTransporteGuiaUpdateDTO, GuiaRemisionUnidadTransporte>();
+            CreateMap<TransportUnitGuiaUpdateDTO, GuiaRemisionUnidadTransporte>();
             //Guias de transportista
             CreateMap<GuiaRemision, GuiaTransportistaDTO>()
                 .ForMember(dest => dest.SerieCorrelativo, opt => opt.MapFrom(src => src.NumeroGuia))
@@ -178,11 +178,11 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 }))
                 .ForMember(dest => dest.GuiaRemisionUnidadesTransporte, opt => opt.MapFrom((src, dest, destMember, context) =>
                 {
-                    if (src?.GuiaRemisionUnidadesTransporte == null) return new List<UnidadTransporteGuiaDTO>();
+                    if (src?.GuiaRemisionUnidadesTransporte == null) return new List<TransportUnitGuiaDTO>();
                     return src.GuiaRemisionUnidadesTransporte
                         .Select((c, i) =>
                         {
-                            var dto = context.Mapper.Map<UnidadTransporteGuiaDTO>(c);
+                            var dto = context.Mapper.Map<TransportUnitGuiaDTO>(c);
                             dto.JobTitle = i == 0 ? "Principal" : "Secundario";
                             return dto;
                         })
@@ -214,11 +214,11 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 }))
                 .ForMember(dest => dest.TransporteGuia, opt => opt.MapFrom((src, dest, destMember, context) =>
                 {
-                    if (src?.GuiaRemisionUnidadesTransporte == null) return new List<UnidadTransporteGuiaDTO>();
+                    if (src?.GuiaRemisionUnidadesTransporte == null) return new List<TransportUnitGuiaDTO>();
                     return src.GuiaRemisionUnidadesTransporte
                         .Select((c, i) =>
                         {
-                            var dto = context.Mapper.Map<UnidadTransporteGuiaDTO>(c);
+                            var dto = context.Mapper.Map<TransportUnitGuiaDTO>(c);
                             dto.JobTitle = i == 0 ? "Principal" : "Secundario";
                             return dto;
                         })
@@ -263,7 +263,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             
             //GuiaRemisionUnidadesTransporte
-            CreateMap<GuiaRemisionUnidadTransporte, UnidadTransporteGuiaDTO>()
+            CreateMap<GuiaRemisionUnidadTransporte, TransportUnitGuiaDTO>()
                 .ForMember(dest => dest.UnidadTransporteId, opt => opt.MapFrom(src => src.UnidadTransporte.UnidadTransporteId))
                 .ForMember(dest => dest.Placa, opt => opt.MapFrom(src => src.UnidadTransporte.Placa))
                 .ForMember(dest => dest.Tarjeta, opt => opt.MapFrom(src => src.UnidadTransporte.Tarjeta))
@@ -271,7 +271,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.CodEmisorVehicular, opt => opt.MapFrom(src => src.UnidadTransporte.EntidadReguladoraVehicular.CodigoSunat))
                 .ForMember(dest => dest.EmisorVehicular, opt => opt.MapFrom(src => src.UnidadTransporte.EntidadReguladoraVehicular.DescripcionCorta))
                 ;
-            CreateMap<UnidadTransporteCreateDTO, TransportUnit>();
+            CreateMap<TransportUnitCreateDTO, TransportUnit>();
             CreateMap<int, GuiaRemisionUnidadTransporte>()
             .ForMember(dest => dest.UnidadTransporteId, opt => opt.MapFrom(src => src));
         }

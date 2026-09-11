@@ -1,4 +1,5 @@
 ﻿
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemisionTransportUnit;
 using MUTZI.GUIA.DOMAIN.Entities;
 
 namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
@@ -12,12 +13,14 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<GuiaRemision?> GetByIdAsync(int id);
         Task<GuiaRemision> GetByIdAsync2(int id);
         Task<GuiaRemision> GetByTicketAsync(string ticket);
+
         Task <(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(
             EntityBranch remitente,
             EntityBranch destinatario,
             Proveedor? proveedor,
             List<GuiaRemisionConductor> conductor,
-            List<GuiaRemisionUnidadTransporte> transporte,
+            Entity? transportista,
+            List<GuiaRemisionTransportUnitCreateDTO>? vehiculos,
             GuiaRemision guiaRemision,
             GuiaRemisionDatoEnvio datosEnvio,
             GuiaRemisionOrigen origen,

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
 
@@ -26,5 +27,9 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
         Task<GuiaRemisionListDTO> AnularAsync(int id, string descripcion);
         Task<GuiaRemisionListDTO> RechazarAsync(int id, string descripcion);
         Task<object> AprobarEnviarAsync(int id);
+
+
+
+        Task GetDocumentAsync(int guiaRemisionId, int entityId);
     }
 }

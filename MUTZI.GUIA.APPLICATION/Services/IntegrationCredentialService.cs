@@ -1,12 +1,18 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
+using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.IntegrationCredential;
 using MUTZI.GUIA.APPLICATION.DTOs.Shared;
+using MUTZI.GUIA.APPLICATION.Helpers;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace MUTZI.GUIA.APPLICATION.Services
 {
@@ -17,18 +23,24 @@ namespace MUTZI.GUIA.APPLICATION.Services
         private readonly IAuthService _authService;
         private readonly ILogger<IntegrationCredentialService> _logger;
         private readonly IAppDBContext _appDBContext;
+        private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
         public IntegrationCredentialService(
             IIntegrationCredentialRepository repository,
             IMapper mapper,
             IAuthService authService,
-            IAppDBContext appDBContext
+            IAppDBContext appDBContext,
+            IConfiguration configuration,
+            HttpClient httpClient
         )
         {
             _repository = repository;
             _mapper = mapper;
             _authService = authService;
             _appDBContext = appDBContext;
+            _configuration = configuration;
+            _httpClient = httpClient;
         }
 
         
@@ -97,6 +109,14 @@ namespace MUTZI.GUIA.APPLICATION.Services
             };
         }
 
+        public async Task<IntegrationCredentialDTO> GetByEntityAsync(int entityId, string provider)
+        {
+            var IntegrationCredential = await _repository.GetByEntityId(entityId, provider, strict: true);
+
+            var IntegrationCredentialDTO = _mapper.Map<IntegrationCredentialDTO>(IntegrationCredential);
+            return IntegrationCredentialDTO;
+        }
+
         /*public async Task<PagedResult<IntegrationCredentialListDTO>> GetListAsync(int pageNumber, int pageSize, string? search, string? type)
         {
             var (totalRecords, data) = await _repository.GetListAsync(pageNumber, pageSize, search, type);
@@ -150,6 +170,45 @@ namespace MUTZI.GUIA.APPLICATION.Services
             await _repository.DeleteAsync(id);
         }
 
+
+        public async Task<TokenResponseDTO> GetTokenAsync(int entityId, string provider)
+        {
+            var integrationCredential = await _repository.GetByEntityId(entityId, provider, strict: true);
+            var urlBaseProvider = _configuration["AppSettings:url_base_facturador"];
+
+            if (string.IsNullOrEmpty(urlBaseProvider))
+                throw new Exception("La URL base del proveedor no está configurada.");
+
+            string credentials = "client:secret";
+            string base64Credentials = Helper.Base64Encode(credentials);
+
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Basic", base64Credentials);
+
+            var parameters = new Dictionary<string, string>
+            {
+                { "username", integrationCredential.Entity.DocumentNumber },
+                { "password", integrationCredential.KeyTest }, // contraseña
+                { "grant_type", "password" }
+            };
+
+            var url = $"{urlBaseProvider}/api-efact-ose/oauth/token";
+
+            var response = await _httpClient.PostAsync(url, new FormUrlEncodedContent(parameters));
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            Console.WriteLine("=== RESPONSE BODY ===");
+            Console.WriteLine(responseContent);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"[Efact] Error al obtener token: {response.StatusCode} - {responseContent}");
+            }
+
+            var token = JsonConvert.DeserializeObject<TokenResponseDTO>(responseContent);
+
+            return token;
+        }
 
     }
 }

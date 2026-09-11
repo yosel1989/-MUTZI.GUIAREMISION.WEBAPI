@@ -31,10 +31,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "listar_unidad_transporte"
         )]
         [Permission("listar_unidad_transporte")]
-        [ProducesResponseType(typeof(PagedResult<UnidadTransporteDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<TransportUnitDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<UnidadTransporteDTO>>> GetAll(int pageNumber, int pageSize, [FromQuery] string? search)
+        public async Task<ActionResult<PagedResult<TransportUnitDTO>>> GetAll(int pageNumber, int pageSize, [FromQuery] string? search)
         {
             try
             {
@@ -61,10 +61,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "listar_unidad_transporte_sugerido"
         )]
         [Permission("listar_unidad_transporte_sugerido")]
-        [ProducesResponseType(typeof(UnidadTransporteListDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TransportUnitListDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<UnidadTransporteListDTO>>> GetBySuggestion([FromQuery] string? numeroDoc)
+        public async Task<ActionResult<List<TransportUnitListDTO>>> GetBySuggestion([FromQuery] string? numeroDoc)
         {
             try
             {
@@ -90,10 +90,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "buscar_unidad_transporte_por_id"
         )]
         [Permission("buscar_unidad_transporte_por_id")]
-        [ProducesResponseType(typeof(UnidadTransporteDTO), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TransportUnitDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UnidadTransporteDTO>> GetById(int id)
+        public async Task<ActionResult<TransportUnitDTO>> GetById(int id)
         {
             try
             {
@@ -129,7 +129,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(CreatedDTO), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<int>> Create(UnidadTransporteCreateDTO transporteDto)
+        public async Task<ActionResult<int>> Create(TransportUnitCreateDTO transporteDto)
         {
             try
             {
@@ -155,15 +155,15 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             OperationId = "editar_unidad_transporte"
         )]
         [Permission("editar_unidad_transporte")]
-        [ProducesResponseType(typeof(ResponseDTO<UnidadTransporteDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseDTO<TransportUnitDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ResponseDTO<UnidadTransporteDTO>>> Update(int id, [FromBody] UnidadTransporteUpdateDTO transporteDto)
+        public async Task<ActionResult<ResponseDTO<TransportUnitDTO>>> Update(int id, [FromBody] TransportUnitUpdateDTO transporteDto)
         {
             try
             {
                 var updatedTransporte = await _service.UpdateAsync(id, transporteDto);
-                return Ok(new ResponseDTO<UnidadTransporteDTO>
+                return Ok(new ResponseDTO<TransportUnitDTO>
                 {
                     Data = updatedTransporte,
                     Detalle = $"Datos de la unidad de transporte COD-{id.ToString("D4")} editados con éxito."

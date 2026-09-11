@@ -7,6 +7,7 @@ using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemision;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Envio;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaTransportista;
@@ -24,17 +25,20 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         private readonly ICatalogoService _catalogoService;
         private readonly IGuiaTransportistaService _guiasTransportistaBDService;
         private readonly IEnvioService _envioService;
+        private readonly IDocumentoService _documentService;
         public GuiaRemisionController(
             IGuiaRemitenteService guiaRemisionBDService, 
             IGuiaTransportistaService guiaTransportistaService,
             ICatalogoService catalogoService,
-            IEnvioService envioService
+            IEnvioService envioService,
+            IDocumentoService documentService
         )
         {
             _guiasRemisionBDService = guiaRemisionBDService;
             _guiasTransportistaBDService = guiaTransportistaService;
             _catalogoService = catalogoService;
             _envioService = envioService;
+            _documentService = documentService;
         }
 
         [HttpGet]
@@ -452,8 +456,32 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         }
 
 
-      
-        
 
+
+        [HttpGet("pdf/{guiaRemisionId}/{entityId}")]
+        [SwaggerOperation(
+            Summary = "Obtener guía en PDF",
+            Description = "Obtiene un archivo PDF de la guía emitida. (En tipoGuia solo acepta valores de: 'REMITENTE' ó 'TRANSPORTISTA')",
+            OperationId = "guia_remision_get_pdf"
+        )]
+        [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task GetPdf(int guiaRemisionId, int entityId)
+        {
+            await _guiasRemisionBDService.GetDocumentAsync(entityId, guiaRemisionId);
+
+            /*if (exito && archivo != null)
+                return File(archivo, "application/pdf", $"{numeroGuia}.pdf");
+
+            if (estado != null && estado.Code == "-9998")
+                return StatusCode(StatusCodes.Status202Accepted, estado);
+
+            if (estado != null)
+                return StatusCode(StatusCodes.Status400BadRequest, estado);
+
+            return StatusCode(StatusCodes.Status500InternalServerError, error);*/
+        }
     }
 }

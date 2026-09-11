@@ -12,6 +12,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.Documento
         Task <(bool Exito, string Guid, EfactResponseDTO Estado, InternalErrorResponseDTO Error)> ObtenerGuidDesdeTicketAsync(string numeroGuia, string token);
         Task<(byte[] Archivo, EfactResponseDTO Estado, string Error)> ObtenerDocumentoAsync(string tipo, string guid, string token);
         Task<(bool Exito, byte[] Archivo, EfactResponseDTO Estado, InternalErrorResponseDTO Error)> ObtenerDocumentoCompletoAsync(
-    string tipo, string ruc, string tipoGuia, string numeroGuia);
+                string tipo, string ruc, string tipoGuia, string numeroGuia
+        );
     }
 }

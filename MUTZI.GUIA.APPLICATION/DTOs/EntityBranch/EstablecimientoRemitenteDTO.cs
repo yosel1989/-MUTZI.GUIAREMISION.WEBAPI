@@ -23,7 +23,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public string EntityAddress { get; set; }
 
         [JsonPropertyName("entity_country")]
-        public string EntityCountry { get; set; }
+        public string EntityCountry { get; set; } = "";
 
         [JsonPropertyName("description")]
         [SwaggerSchema("Devuelve en texto la descripción o nombre del remitente/sucursal.", Nullable = false)]

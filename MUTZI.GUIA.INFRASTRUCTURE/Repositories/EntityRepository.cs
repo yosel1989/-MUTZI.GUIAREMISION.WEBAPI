@@ -25,12 +25,23 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         {
             _context.Entities.Update(updateEntity);
             await _context.SaveChangesAsync();
-            return updateEntity;
+
+            return await GetByIdAsync(updateEntity.EntityId, true);
         }
 
-        public async Task<Entity?> GetByIdAsync(int id)
+        public async Task<Entity?> GetByIdAsync(int id, bool strict)
         {
-            var entity = await _context.Entities.FindAsync(id);
+            var entity = await _context.Entities
+                .Include(x => x.Country)
+                .Include(x => x.DocumentType)
+                .Include(x => x.Ubigeo)
+                .FirstOrDefaultAsync(x => x.EntityId == id);
+
+            if (strict && entity is null)
+            {
+                throw new Exception("No se encontro la entidad en los registros.");
+            }
+
             return entity;
         }
 

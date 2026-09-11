@@ -16,12 +16,19 @@ namespace MUTZI.GUIA.APPLICATION.Services.Documento
         private readonly HttpClient _httpClient;
         private readonly IConfiguration _config;
         private readonly IVentaConfigService _ventaConfigService;
+        private readonly IIntegrationCredentialService _integrationCredentialService;
         private readonly string _urlBaseEfact;
-        public DocumentoService(HttpClient httpClient, IConfiguration config, IVentaConfigService ventaConfigService)
+        public DocumentoService(
+            HttpClient httpClient, 
+            IConfiguration config, 
+            IVentaConfigService ventaConfigService,
+            IIntegrationCredentialService integrationCredentialService
+        )
         {
             _httpClient = httpClient;
             _config = config;
             _ventaConfigService = ventaConfigService;
+            _integrationCredentialService = integrationCredentialService;
             _urlBaseEfact = _config["AppSettings:url_base_facturador"];
         }
         public string ObtenerTipoGuia(string tipoGuia)
@@ -160,7 +167,8 @@ namespace MUTZI.GUIA.APPLICATION.Services.Documento
             return (null, null, errorMsg);
         }
         public async Task<(bool Exito, byte[] Archivo, EfactResponseDTO Estado, InternalErrorResponseDTO Error)> ObtenerDocumentoCompletoAsync(
-    string tipo, string ruc, string tipoGuia, string numeroGuia)
+            string tipo, string ruc, string tipoGuia, string numeroGuia
+        )
         {
             var token = await _ventaConfigService.ObtenerTokenAsync(ruc);
             if (token == null || string.IsNullOrEmpty(token.AccessToken))

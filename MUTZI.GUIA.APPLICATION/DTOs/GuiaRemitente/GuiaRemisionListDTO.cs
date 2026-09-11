@@ -14,6 +14,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un identificador privado de la guía.", Nullable = false)]
         public Guid GuiaRemisionUuid { get; set; }
 
+        [JsonPropertyName("entity_id")]
+        [SwaggerSchema("Devuelve un número, es el id de la entidad emisora a la que pertenece la guía de remisión.", Nullable = false)]
+        public int? EntityId { get; set; }
+
         [JsonPropertyName("entidad_remitente")]
         [SwaggerSchema("Devuelve un texto, es el nombre o razón social a la que pertenece la guía de remisión", Nullable = false)]
         public string EntidadRemitente { get; set; }

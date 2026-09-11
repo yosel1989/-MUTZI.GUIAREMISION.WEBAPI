@@ -1,15 +1,16 @@
-﻿using MUTZI.GUIA.APPLICATION.Helpers;
+﻿using MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio;
+using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemisionTransportUnit;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Origen;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
+using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
+using MUTZI.GUIA.APPLICATION.Enums;
+using MUTZI.GUIA.APPLICATION.Helpers;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
-using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
-using MUTZI.GUIA.APPLICATION.DTOs.Proveedor;
-using MUTZI.GUIA.APPLICATION.Enums;
-using MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 {
@@ -18,13 +19,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [JsonPropertyName("entity_id")]
         [SwaggerSchema("Recibe un número, aquí va el id de la entidad emisora.", Nullable = false)]
         [Required]
-        public int EntityId { get; set; }
-
-
-        [JsonPropertyName("entity_carrier_id")]
-        [SwaggerSchema("Recibe un número, aquí va el id de la entidad transportista.", Nullable = false)]
-        [Required]
-        public int? TransporterId { get; set; }
+        public int? EntityId { get; set; }
 
 
 
@@ -56,7 +51,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("observacion")]
         [SwaggerSchema("Recibe un texto, donde se detalla una observación o comentario sobre la guía de remisión", Nullable = true)]
-        [MaxLength(100)]
+        [MaxLength(2500)]
         public string? Observacion { get; set; }
 
         [JsonPropertyName("registro_mtc")]
@@ -83,9 +78,22 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [Required]
         public EntityBranchDTO Destinatario { get; set; }
 
+
+        [JsonPropertyName("entity_carrier_id")]
+        [SwaggerSchema("Recibe un número, aquí va el id de la entidad transportista.", Nullable = false)]
+        public int? TransporterId { get; set; }
+
+
+        [JsonPropertyName("transport_units")]
+        [Required]
+        public List<GuiaRemisionTransportUnitCreateDTO>? TransportUnits { get; set; } = null;
+
+
         [JsonPropertyName("destinatario_email")]
         [Required]
         public List<string> DestinatarioEmail { get; set; } = new List<string>();
+
+
 
         [JsonPropertyName("proveedor_id")]
         [SwaggerSchema("Recibe un objeto con el ID del proveedor que va a ser asociado a la guía", Nullable = true)]

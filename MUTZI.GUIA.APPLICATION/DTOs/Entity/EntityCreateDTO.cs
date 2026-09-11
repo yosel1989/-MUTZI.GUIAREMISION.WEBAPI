@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
@@ -52,6 +53,12 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
         [JsonPropertyName("role")]
         [Description("Indica el rol con el que será registrado la entidad: 'cliente', 'proveedor', 'transportista', 'emisor' o ningun rol dejarlo solo 'entidad'")]
         public string Role { get; set; }
+
+        // Condicionales
+
+        [Column("mtc_code")]
+        [Description("Número de registro MTC ")]
+        public string? MtcCode { get; set; }
 
     }
 }

@@ -15,10 +15,10 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country.Code))
                 ;
             CreateMap<Entity, EntityByRoleDTO>()
-                    .ForMember(dest => dest.DocumentType, opt => opt.MapFrom(src => src.DocumentType.DescripcionCorta))
-                    .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country.Code))
-                    .ForMember(dest => dest.Active, opt => opt.MapFrom(src => src.Roles.FirstOrDefault().Active ) )
-                    ;
+                .ForMember(dest => dest.DocumentType, opt => opt.MapFrom(src => src.DocumentType.DescripcionCorta))
+                .ForMember(dest => dest.Country, opt => opt.MapFrom(src => src.Country.Code))
+                .ForMember(dest => dest.Active, opt => opt.MapFrom(src => src.Roles.FirstOrDefault().Active ) )
+                ;
             CreateMap<EntityCreateDTO, Entity>();
             CreateMap<Entity, EntityListDTO>()
                 .ForMember(dest => dest.DocumentType, opt => opt.MapFrom(src => src.DocumentType.DescripcionCorta))

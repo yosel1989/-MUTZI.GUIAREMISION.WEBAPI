@@ -14,6 +14,9 @@ public partial class GuiaRemision
     [Column("guia_remision_uuid")]
     public Guid GuiaRemisionUuid { get; set; } = Guid.NewGuid();
 
+    [Column("entity_id")]
+    public int? EntityId { get; set; }
+
     [Column("numero_guia")]
     [MaxLength(15)]
     public string NumeroGuia { get; set; } = null!;

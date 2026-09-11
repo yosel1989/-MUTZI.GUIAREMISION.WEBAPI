@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
@@ -49,5 +50,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
         [Description("Indica si la entidad pertenece al consorcio o no es empresa tercera.")]
         public bool IsInternal { get; set; } = false;
 
+
+        // Condicionales
+
+        [Column("mtc_code")]
+        [Description("Número de registro MTC ")]
+        public string? MtcCode { get; set; }
     }
 }

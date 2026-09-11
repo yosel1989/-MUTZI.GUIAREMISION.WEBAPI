@@ -83,6 +83,14 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Description("Nombre del usuario que modificó el registro")]
         public string? UpdatedAtUserName { get; set; }
 
+
+        // Condicionales
+
+        [Column("mtc_code")]
+        [Description("Número de registro MTC ")]
+        public string? MtcCode { get; set; }
+
+
         // Relaciones
 
         [ForeignKey(nameof(DocumentTypeId))]
@@ -95,5 +103,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         public virtual Ubigeo Ubigeo { get; set; }
 
         public virtual List<EntityRole> Roles { get; set; } = new List<EntityRole>();
+
+
     }
 }

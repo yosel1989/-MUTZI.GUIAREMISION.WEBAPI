@@ -118,6 +118,7 @@ builder.Services.AddAutoMapper(typeof(MappingPersona).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingOperacionResponsable).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingEntity).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingIntegrationCredential).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingGuiaRemision).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -152,6 +153,7 @@ builder.Services.AddScoped<IEntityRepository, EntityRepository>();
 builder.Services.AddScoped<IEntityRoleRepository, EntityRoleRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IIntegrationCredentialRepository, IntegrationCredentialRepository>();
+builder.Services.AddScoped<IGuiaRemisionTransportUnitRepository, GuiaRemisionTransportUnitRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();

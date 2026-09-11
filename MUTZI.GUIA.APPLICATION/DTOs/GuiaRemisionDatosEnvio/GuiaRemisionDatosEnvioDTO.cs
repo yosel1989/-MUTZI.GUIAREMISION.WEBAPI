@@ -76,6 +76,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
         public List<ConductorGuiaDTO?> GuiaRemisionConductores { get; set; } = new List<ConductorGuiaDTO?>();
 
         [JsonPropertyName("unidad_transporte")]
-        public List<UnidadTransporteGuiaDTO?> GuiaRemisionUnidadesTransporte { get; set; } = new List<UnidadTransporteGuiaDTO?>();
+        public List<TransportUnitGuiaDTO?> GuiaRemisionUnidadesTransporte { get; set; } = new List<TransportUnitGuiaDTO?>();
     }
 }

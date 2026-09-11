@@ -109,6 +109,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             entity.Address = updateEntity.Address;
             entity.CountryId = updateEntity.CountryId;
             entity.IsInternal = updateEntity.IsInternal;
+            entity.MtcCode = updateEntity.MtcCode;
             entity.UpdatedAt = DateTime.UtcNow;
             entity.UpdatedAtUser = user.UserName;
             entity.UpdatedAtUserName = $"{user.FirstName} {user.LastName}";

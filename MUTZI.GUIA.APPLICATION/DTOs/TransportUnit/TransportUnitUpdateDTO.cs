@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
 {
     [SwaggerSchema("Recibe un objeto Unidad de UnidadTransporte para actualizar", Nullable = true)]
-    public class UnidadTransporteUpdateDTO
+    public class TransportUnitUpdateDTO
     {
         [JsonPropertyName("descripcion")]
         [SwaggerSchema("Recibe un texto, se coloca una descripción del vehículo, Ejm: CAMIONETA, CUSTER, etc.", Nullable = true)]

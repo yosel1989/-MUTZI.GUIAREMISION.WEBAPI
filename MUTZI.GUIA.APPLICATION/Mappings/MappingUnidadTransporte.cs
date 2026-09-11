@@ -8,12 +8,12 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
     {
         public MappingUnidadTransporte()
         {
-            CreateMap<TransportUnit, UnidadTransporteDTO>()
+            CreateMap<TransportUnit, TransportUnitDTO>()
                 .ForMember(dest => dest.EntidadReguladoraVehicularNombre, opt => opt.MapFrom(src => src.EntidadReguladoraVehicular.DescripcionCorta));
             
-            CreateMap<TransportUnit, UnidadTransporteListDTO>();
-            CreateMap<UnidadTransporteCreateDTO, TransportUnit>();
-            CreateMap<UnidadTransporteUpdateDTO, TransportUnit>();
+            CreateMap<TransportUnit, TransportUnitListDTO>();
+            CreateMap<TransportUnitCreateDTO, TransportUnit>();
+            CreateMap<TransportUnitUpdateDTO, TransportUnit>();
             CreateMap<TransportUnit, EstadoActualizadoResponseDTO>();
         }
     }

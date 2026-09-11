@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
@@ -84,5 +85,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
         [JsonPropertyName("updated_at_user_name")]
         [Description("Nombre del usuario que modificó el registro")]
         public string? UpdatedAtUserName { get; set; }
+
+        // Condicionales
+
+        [Column("mtc_code")]
+        [Description("Número de registro MTC ")]
+        public string? MtcCode { get; set; }
     }
 }

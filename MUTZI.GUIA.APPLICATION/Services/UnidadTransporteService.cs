@@ -25,23 +25,23 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _mapper = mapper;
         }
 
-        public async Task<List<UnidadTransporteDTO>> GetAllAsycn()
+        public async Task<List<TransportUnitDTO>> GetAllAsycn()
         {
             var transportes = await _repository.GetAllAsync();
-            return _mapper.Map<List<UnidadTransporteDTO>>(transportes);
+            return _mapper.Map<List<TransportUnitDTO>>(transportes);
         }
 
-        public async Task<List<UnidadTransporteListDTO>> GetListBySuggestion(string numeroDoc)
+        public async Task<List<TransportUnitListDTO>> GetListBySuggestion(string numeroDoc)
         {
             var transportes=await _repository.GetListBySuggestion(numeroDoc);
-            return _mapper.Map<List<UnidadTransporteListDTO>>(transportes);
+            return _mapper.Map<List<TransportUnitListDTO>>(transportes);
         }
 
-        public async Task<PagedResult<UnidadTransporteDTO>> GetListAsync(int pageNumber, int pageSize, string? search)
+        public async Task<PagedResult<TransportUnitDTO>> GetListAsync(int pageNumber, int pageSize, string? search)
         {
             var (transporte, totalRecords)= await _repository.GetListAsync(pageNumber, pageSize, search);
-            var transporteDto = _mapper.Map<List<UnidadTransporteDTO>>(transporte);
-            return new PagedResult<UnidadTransporteDTO>
+            var transporteDto = _mapper.Map<List<TransportUnitDTO>>(transporte);
+            return new PagedResult<TransportUnitDTO>
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
@@ -51,13 +51,13 @@ namespace MUTZI.GUIA.APPLICATION.Services
             };
         }
 
-        public async Task<UnidadTransporteDTO?> GetByIdAsync(int id)
+        public async Task<TransportUnitDTO?> GetByIdAsync(int id)
         {
             var transporte = await _repository.GetByIdAsync(id);
-            return transporte == null ? null : _mapper.Map<UnidadTransporteDTO>(transporte);
+            return transporte == null ? null : _mapper.Map<TransportUnitDTO>(transporte);
         }
 
-        public async Task<int> CreateAsync(UnidadTransporteCreateDTO createDTO)
+        public async Task<int> CreateAsync(TransportUnitCreateDTO createDTO)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
         }
 
-        public async Task<UnidadTransporteDTO> UpdateAsync(int id, UnidadTransporteUpdateDTO updateDTO)
+        public async Task<TransportUnitDTO> UpdateAsync(int id, TransportUnitUpdateDTO updateDTO)
         {
             try
             {
@@ -94,7 +94,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 existingTransporte.FechaModifico = DateTime.UtcNow;
 
                 await _repository.UpdateAsync(existingTransporte);
-                return _mapper.Map<UnidadTransporteDTO>(existingTransporte);
+                return _mapper.Map<TransportUnitDTO>(existingTransporte);
             }
             catch (Exception ex)
             {

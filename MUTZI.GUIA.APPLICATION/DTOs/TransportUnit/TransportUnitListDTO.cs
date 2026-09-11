@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
 {
-    public class UnidadTransporteListDTO
+    public class TransportUnitListDTO
     {
         [JsonPropertyName("id")]
         [SwaggerSchema("Devuelve un entero, el ID del transporte en la bbdd", Nullable = false)]
