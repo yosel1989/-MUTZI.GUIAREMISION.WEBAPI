@@ -12,7 +12,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
         Task<EntityBranchDTO?> GetByIdAsync(int id);
         Task<PagedResult<EntityBranchDTO>> GetListAsync(int pageNumber, int pageSize, string? search);
         Task DeleteAsync(int id);
-        Task<EstadoActualizadoResponseDTO> CambiarEstadoAsync(int id, EstadoActualizadoRequestDTO infoRequestDto);
+        Task<ToggleActiveResponseDTO> ToggleActiveAsync(int id, EstadoActualizadoRequestDTO infoRequestDto);
         Task<int> CreateAsync(EntityBranchCreateDTO createDTO);
 
         Task<EntityBranchDTO> UpdateAsync(int id, EntityBranchUpdateDTO updateDTO);

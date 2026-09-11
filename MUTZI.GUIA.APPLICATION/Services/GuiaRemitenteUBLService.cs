@@ -225,11 +225,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                                     // Número de documento de identidad del destinatario
                                     _ = guia.Destinatario.EntityDocumentNumber, 
                                     // Código del tipo de documento de identidad del destinatario
-<<<<<<< HEAD
-                                    schemeID = guia.getTipoCodigoDocumento("RUC", guia.Destinatario.EntityName)  
-=======
                                     schemeID = guia.getTipoCodigoDocumento("RUC", guia.Destinatario.EntityDocumentNumber)  
->>>>>>> 36e910039164c0a62d67b3e4d04ae8dc2c9f2b69
                                 }}
                             }},
 

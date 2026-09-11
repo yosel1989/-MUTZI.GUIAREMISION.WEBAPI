@@ -10,16 +10,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public int EntityBranchId { get; set; }
 
         [JsonPropertyName("entity_id")]
-        public int? EntityId { get; set; }
-
-<<<<<<< HEAD
-        [JsonPropertyName("entity_name")]
-        public string? EntityName { get; set; }
-
-        [JsonPropertyName("entity_document_number")]
-        public string? EntityDocumentNumber { get; set; }
-=======
-        [JsonPropertyName("entity_id")]
         public int EntityId { get; set; }
 
         [JsonPropertyName("entity_name")]
@@ -30,7 +20,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 
         [JsonPropertyName("entity_document_number")]
         public string EntityDocumentNumber { get; set; }
->>>>>>> 36e910039164c0a62d67b3e4d04ae8dc2c9f2b69
 
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Devuelve un texto, aquí devuelve el ubigeo de la dirección fiscal del remitente, ejm: 150131", Nullable = false)]

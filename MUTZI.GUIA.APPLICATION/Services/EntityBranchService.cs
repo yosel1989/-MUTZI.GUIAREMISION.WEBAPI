@@ -66,7 +66,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             await _repository.DeleteAsync(id);
         }
 
-        public async Task<EstadoActualizadoResponseDTO> CambiarEstadoAsync(int id, EstadoActualizadoRequestDTO infoRequestDto)
+        public async Task<ToggleActiveResponseDTO> ToggleActiveAsync(int id, EstadoActualizadoRequestDTO infoRequestDto)
         {
             var currentUser = _authService.CurrentUser();
             var existing = await _repository.GetByIdAsync(id);
@@ -80,7 +80,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             existing.UpdatedAt = DateTime.UtcNow;
             var establecimientoActualizado = await _repository.UpdateAsync(existing);
 
-            return _mapper.Map<EstadoActualizadoResponseDTO>(establecimientoActualizado);
+            return _mapper.Map<ToggleActiveResponseDTO>(establecimientoActualizado);
         }
 
         public async Task<int> CreateAsync(EntityBranchCreateDTO createDTO)

@@ -178,25 +178,25 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         }
 
         [HttpPut]
-        [Route("{id}/actualizar-estado")]
+        [Route("{id}/toggle-active")]
         [SwaggerOperation(
             Summary = "Actualizar estado de un establecimiento",
             Description = "Actualizar el estado de un establecimiento en la bbdd. 1='activo', 0='inactivo'.",
             OperationId = "editar_estado_establecimiento"
         )]
         [Permission("editar_estado_establecimiento")]
-        [ProducesResponseType(typeof(ResponseDTO<EstadoActualizadoResponseDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseDTO<ToggleActiveResponseDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CambiarEstado(int id, [FromBody] EstadoActualizadoRequestDTO infoRequestDto)
+        public async Task<IActionResult> ToggleActive(int id, [FromBody] EstadoActualizadoRequestDTO infoRequestDto)
         {
             try
             {
-                var result = await _service.CambiarEstadoAsync(id, infoRequestDto);
-                return Ok(new ResponseDTO<EstadoActualizadoResponseDTO>
+                var result = await _service.ToggleActiveAsync(id, infoRequestDto);
+                return Ok(new ResponseDTO<ToggleActiveResponseDTO>
                 {
                     Data = result,
-                    Detalle = $"Se actualizó el estado del establecimiento con código: COD-{id.ToString("D4")} a {result.Estado} correctamente."
+                    Detalle = $"Se {(result.Active ? "activó" : "desactivó")} el establecimiento COD-{id.ToString("D4")} con éxito."
                 });
             }
             catch (Exception ex)

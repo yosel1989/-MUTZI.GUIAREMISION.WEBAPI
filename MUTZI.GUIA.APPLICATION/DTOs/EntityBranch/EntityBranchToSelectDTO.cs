@@ -18,15 +18,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("entity_document_number")]
         public string EntityDocumentNumber { get; set; }
 
-        [JsonPropertyName("entity_id")]
-        public int? EntityId { get; set; }
-
-        [JsonPropertyName("entity_name")]
-        public string? EntityName { get; set; }
-
-        [JsonPropertyName("entity_document_number")]
-        public string? EntityDocumentNumber { get; set; }
-
         [JsonPropertyName("area")]
         [SwaggerSchema("Devuelve un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
         public string? Area { get; set; }

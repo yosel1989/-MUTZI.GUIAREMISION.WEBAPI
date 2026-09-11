@@ -21,6 +21,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("entity_document_number")]
         public string? EntityDocumentNumber { get; set; }
 
+        [JsonPropertyName("description")]
+        public string Description { get; set; }
+
         [JsonPropertyName("ubigeo_id")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el ubigeo de la dirección fiscal del establecimiento, ejm: 150131", Nullable = false)]
         [Required(ErrorMessage = "EL ubigeo es obligatorio")]

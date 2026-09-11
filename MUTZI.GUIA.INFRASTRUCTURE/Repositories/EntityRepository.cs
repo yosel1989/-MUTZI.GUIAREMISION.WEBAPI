@@ -3,9 +3,6 @@ using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -50,9 +47,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<(int total, List<Entity>)> GetDataTableAsync(int pageNumber, int pageSize, string? search, string role)
         {
             var query = _context.Entities
-                //.Include(x => x.DocumentType)
-                //.Include(x => x.Country)
-                //.Include(x => x.Roles)
+                .Include(x => x.DocumentType)
+                .Include(x => x.Country)
+                .Include(x => x.Roles)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(search))

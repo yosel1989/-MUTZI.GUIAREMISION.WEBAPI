@@ -11,12 +11,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         public int EntityId { get; set; }
 
         [JsonPropertyName("entity_name")]
-<<<<<<< HEAD
-        public string? EntityName { get; set; }
-
-        [JsonPropertyName("entity_document_number")]
-        public string? EntityDocumentNumber { get; set; }
-=======
         public string EntityName { get; set; }
 
         [JsonPropertyName("entity_document_number")]
@@ -36,7 +30,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
 
         [JsonPropertyName("entity_country")]
         public string EntityCountry { get; set; }
->>>>>>> 36e910039164c0a62d67b3e4d04ae8dc2c9f2b69
 
         [JsonPropertyName("description")]
         public string Description { get; set; } = null!;
@@ -86,13 +79,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("active")]
         public bool Active { get; set; }
 
-<<<<<<< HEAD
-        [JsonPropertyName("tipo")]
-        public string Tipo { get; set; }
-=======
         [JsonPropertyName("type")]
         public string Type { get; set; }
->>>>>>> 36e910039164c0a62d67b3e4d04ae8dc2c9f2b69
 
         [JsonPropertyName("area")]
         public string? Area { get; set; }
