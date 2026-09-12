@@ -30,6 +30,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente
 
 
 
-        Task GetDocumentAsync(int guiaRemisionId, int entityId);
+        Task<byte[]> GetDocumentAsync(int guiaRemisionId, int entityId);
     }
 }

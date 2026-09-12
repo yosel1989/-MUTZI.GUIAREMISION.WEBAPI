@@ -11,7 +11,6 @@ using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using Newtonsoft.Json;
-using System.Net.Http;
 using System.Net.Http.Headers;
 
 namespace MUTZI.GUIA.APPLICATION.Services
@@ -208,6 +207,79 @@ namespace MUTZI.GUIA.APPLICATION.Services
             var token = JsonConvert.DeserializeObject<TokenResponseDTO>(responseContent);
 
             return token;
+        }
+
+
+        public async Task<string> ObtenerGuidDesdeTicketAsync(string numeroGuia, string token)
+        {
+            var urlBase = _configuration["AppSettings:url_base_facturador"];
+            var ticketNomenclatura = $"{numeroGuia}";
+            var url = $"{urlBase}/api-efact-ose/v1/ticket/{ticketNomenclatura}";
+
+            _httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync(url);
+            var json = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    var efactError = JsonConvert.DeserializeObject<EfactResponseDTO>(json);
+
+                    throw new Exception(efactError.Description);
+                }
+                catch
+                {
+                    throw new Exception($"Error al obtener el Guid en Efact, {json}");
+                }
+            }
+
+            var result = JsonConvert.DeserializeObject<TicketResponseDTO>(json);
+            var guid = result?.Tickets?.FirstOrDefault();
+
+            if (string.IsNullOrEmpty(guid))
+            {
+                throw new Exception($"No se encontró ningún GUID en la respuesta., {json}");
+            }
+
+            return guid;
+        }
+
+
+        public async Task<byte[]> ObtenerDocumentoAsync(string tipo, string guid, string token)
+        {
+            var urlBase = _configuration["AppSettings:url_base_facturador"];
+            var url = $"{urlBase}/api-efact-ose/v1/{tipo}/{guid}";
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.GetAsync(url);
+            var contentType = response.Content.Headers.ContentType?.MediaType;
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Si el archivo está disponible, lo devolvemos
+                if (contentType == "application/pdf" || contentType == "application/xml" || contentType == "application/cdr" || contentType == "application/octet-stream")
+                {
+                    var bytes = await response.Content.ReadAsByteArrayAsync();
+                    return bytes;
+                }
+                // Si la respuesta es JSON, puede estar en proceso
+                var json = await response.Content.ReadAsStringAsync();
+                try
+                {
+                    var estado = JsonConvert.DeserializeObject<EfactResponseDTO>(json);
+                    if (estado != null && estado.Code == "-9998")
+                    {
+                        throw new Exception("El documento esta en proceso de validación con SUNAT."); // En proceso
+                    }
+                }
+                catch { }
+            }
+            // Si hay error, devolvemos el mensaje
+            var errorMsg = await response.Content.ReadAsStringAsync();
+            throw new Exception(errorMsg);
         }
 
     }

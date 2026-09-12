@@ -468,9 +468,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task GetPdf(int guiaRemisionId, int entityId)
+        public async Task<ActionResult> GetPdf(int guiaRemisionId, int entityId)
         {
-            await _guiasRemisionBDService.GetDocumentAsync(entityId, guiaRemisionId);
+            byte[] archivo = await _guiasRemisionBDService.GetDocumentAsync(guiaRemisionId, entityId);
+
+            return File(archivo, "application/pdf", $"aaa.pdf");
 
             /*if (exito && archivo != null)
                 return File(archivo, "application/pdf", $"{numeroGuia}.pdf");

@@ -805,11 +805,17 @@ namespace MUTZI.GUIA.APPLICATION.Services
         }
 
 
-        public async Task GetDocumentAsync(
+        public async Task<byte[]> GetDocumentAsync(
              int guiaRemisionId, int entityId
         )
         {
             TokenResponseDTO token = await _integrationCredentialService.GetTokenAsync(entityId, "efact");
+            GuiaRemitenteDTO guia = _mapper.Map<GuiaRemitenteDTO>(await _repository.GetByIdAsync(guiaRemisionId));
+
+            string guid = await _integrationCredentialService.ObtenerGuidDesdeTicketAsync($"{guia.Ruc}-{guia.TipoGuia}-{guia.SerieCorrelativo}", token.AccessToken);
+            byte[] pdfByte = await _integrationCredentialService.ObtenerDocumentoAsync("pdf", guid, token.AccessToken);
+
+            return pdfByte;
         }
     }
 }

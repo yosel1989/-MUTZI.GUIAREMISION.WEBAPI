@@ -23,6 +23,12 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
 
         Task DeleteAsync(int id);
 
+
+
         Task<TokenResponseDTO> GetTokenAsync(int entityId, string provider);
+
+        Task<string> ObtenerGuidDesdeTicketAsync(string numeroGuia, string token);
+
+        Task<byte[]> ObtenerDocumentoAsync(string tipo, string guid, string token);
     }
 }
