@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemisionTransportUnit;
 using MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
@@ -391,6 +390,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 //.Include(g => g.Origens)
                 .Include(g => g.DocRelacionados)
                     .ThenInclude(h => h.TipoDocumentoReferencia)
+                
+                .Include(g => g.GuiaRemisionTransportUnits)
+                    .ThenInclude(h => h.TransportUnit)
+
                 .Where(g => g.GuiaRemisionId == id)
                 .Select(g => new GuiaRemision
                 {
@@ -584,6 +587,24 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Descripcion = g.Area.Descripcion
                     },
 
+                    // Unidades de transporte solo si el tipo de transporte fue PRIVADA
+                    GuiaRemisionTransportUnits = g.GuiaRemisionTransportUnits.Select(x => new GuiaRemisionTransportUnit
+                    {
+                        GuiaRemisionId = x.GuiaRemisionId,
+                        TransportUnitId= x.TransportUnitId,
+                        TransportUnit = new TransportUnit
+                        {
+                            Placa = x.TransportUnit.Placa,
+                            Tarjeta = x.TransportUnit.Tarjeta,
+                            EmisorVehicular = x.TransportUnit.EmisorVehicular,
+                            NroAutorizacion = x.TransportUnit.NroAutorizacion,
+                            EntidadReguladoraVehicular = new EntidadReguladora
+                            {
+                                DescripcionCorta = x.TransportUnit.EntidadReguladoraVehicular.DescripcionCorta,
+                                CodigoSunat = x.TransportUnit.EntidadReguladoraVehicular.CodigoSunat
+                            }
+                        }
+                    }).ToList()
                 })
                 .FirstOrDefaultAsync();
 
@@ -633,8 +654,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             EntityBranch destinatario,
             Proveedor proveedor,
             List<GuiaRemisionConductor> conductor,
-            Entity? entityTransport,
-            List<GuiaRemisionTransportUnitCreateDTO>? vehiculos,
             GuiaRemision guiaRemision,
             GuiaRemisionDatoEnvio datosEnvio,
             GuiaRemisionOrigen origen,

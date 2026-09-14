@@ -2,6 +2,7 @@ using FluentValidation;
 using Genexs.AWS.Library;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -55,6 +56,7 @@ builder.Services.AddControllers(
     options =>
     {
         options.Filters.Add<PermissionFilter>();
+        options.Filters.Add<FluentValidationAsyncFilter>();
         options.Filters.Add(new ProducesAttribute("application/json"));
     }
 )
@@ -66,13 +68,16 @@ builder.Services.AddControllers(
     {
         options.InvalidModelStateResponseFactory = context =>
         {
+            var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+            var dtoType = actionDescriptor?.Parameters.FirstOrDefault()?.ParameterType?.Name;
+
             var allErrors = context.ModelState.Values
                 .SelectMany(v => v.Errors)
                 .Select(e => e.ErrorMessage);
 
             var errorResponse = new BadRequestResponseDTO
             {
-                Error = "Error de validación.",
+                Error = $"Error de validación en {dtoType}.",
                 Detalle = string.Join(" | ", allErrors)
             };
 
@@ -154,6 +159,7 @@ builder.Services.AddScoped<IEntityRoleRepository, EntityRoleRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IIntegrationCredentialRepository, IntegrationCredentialRepository>();
 builder.Services.AddScoped<IGuiaRemisionTransportUnitRepository, GuiaRemisionTransportUnitRepository>();
+builder.Services.AddScoped<IGuiaRemisionEntityCarrierRepository, GuiaRemisionEntityCarrierRepository>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();
@@ -299,7 +305,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.UseMiddleware<FluentValidationMiddleware>();
 
 app.UseEndpoints(endpoints =>
 {

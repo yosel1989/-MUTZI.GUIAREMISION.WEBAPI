@@ -1,5 +1,6 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemisionTransportUnit;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.DocRelacionado;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.EmailDestinatarioGuia;
@@ -106,6 +107,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("productos")]
         public List<GuiaRemisionDetalleDTO> Productos { get; set; }
+
+        [JsonPropertyName("transport_units")]
+        public List<GuiaRemisionTransportUnitDTO>? TransportUnits { get; set; } = null;
 
         [JsonPropertyName("fecha_registro")]
         public DateTime FechaRegistro { get; set; }

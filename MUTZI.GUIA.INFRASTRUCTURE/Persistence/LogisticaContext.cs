@@ -42,6 +42,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<OperacionResponsable> OperacionResponsable { get; set; }
     public virtual DbSet<IntegrationCredential> IntegrationCredentials { get; set; }
     public virtual DbSet<GuiaRemisionTransportUnit> GuiaRemisionTransportUnits { get; set; }
+    public virtual DbSet<GuiaRemisionEntityCarrier> GuiaRemisionEntityCarriers { get; set; }
 
     // Catalogos
     public virtual DbSet<Area> Area { get; set; }
@@ -94,6 +95,9 @@ public partial class LogisticaContext : DbContext
 
         modelBuilder.Entity<GuiaRemisionTransportUnit>()
         .HasKey(pp => new { pp.GuiaRemisionId, pp.TransportUnitId });
+
+        modelBuilder.Entity<GuiaRemisionEntityCarrier>()
+        .HasKey(pp => new { pp.GuiaRemisionId, pp.EntityId });
 
         modelBuilder.Entity<GuiaRemisionEstadoPermiso>()
         .HasKey(pp => new { pp.GuiaRemisionEstadoId, pp.GuiaRemisionEstadoIdPermitido });

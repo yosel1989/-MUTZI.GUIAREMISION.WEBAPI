@@ -62,17 +62,17 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio
 
         //[JsonPropertyName("unidad_transporte")]
         //public List<UnidadTransporteCreateDTO?> UnidadTransporte { get; set; }
-        [JsonPropertyName("transporte")]
-        [SwaggerSchema("Recibe la lista de enteros con los IDs de las unidades de transporte asociados a la guía de remisión.")]
-        public List<int>? TransporteId { get; set; }
+        //[JsonPropertyName("transporte")]
+        //[SwaggerSchema("Recibe la lista de enteros con los IDs de las unidades de transporte asociados a la guía de remisión.")]
+        //public List<int>? TransporteId { get; set; }
 
-        [JsonPropertyName("transportista_id")]
+        /*[JsonPropertyName("transportista_id")]
         [SwaggerSchema("Recibe un número, el id del transportista", Nullable = true)]
-        public int? TransportistaId { get; set; }
+        public int? TransportistaId { get; set; }*/
 
-        [JsonPropertyName("transportista")]
+        /*[JsonPropertyName("transportista")]
         [SwaggerSchema("Recibe un objeto de tipo transportista", Nullable = true)]
-        public TransportistaDTO? Transportista { get; set; }
+        public TransportistaDTO? Transportista { get; set; }*/
 
         [JsonPropertyName("indicador_transbordo_programado")]
         [SwaggerSchema("Recibe un boolean, aquí se coloca si es traslado se realizara en vehiculos pesados", Nullable = false)]

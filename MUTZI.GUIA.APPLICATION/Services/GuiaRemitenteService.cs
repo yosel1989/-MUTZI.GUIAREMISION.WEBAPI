@@ -27,6 +27,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         private readonly IIntegrationCredentialService _integrationCredentialService;
         private readonly IIntegrationCredentialRepository _integrationCredentialRepository;
         private readonly IGuiaRemisionTransportUnitRepository _guiaRemisionTransportUnitRepository;
+        private readonly IGuiaRemisionEntityCarrierRepository _guiaRemisionEntityCarrierRepository;
         private readonly IEntityBranchRepository _establecimientoRepository;
         private readonly IEntityRepository _entityRepository;
         private readonly IMotivoTrasladoRepository _motivoTrasladoRepository;
@@ -42,6 +43,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             IGuiaRemitenteRepository repository,
             IGuiaRemisionHistorialRepository guiaRemisionHistorialRepository,
             IGuiaRemisionTransportUnitRepository guiaRemisionTransportUnitRepository,
+            IGuiaRemisionEntityCarrierRepository guiaRemisionEntityCarrierRepository,
             IGuiaRemitenteUBLService guiaRemitenteUBLService,
             IEnvioService envioService,
             IVentaConfigRepository ventaConfigRepository,
@@ -60,6 +62,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _repository = repository;
             _guiaRemisionHistorialRepository = guiaRemisionHistorialRepository;
             _guiaRemisionTransportUnitRepository = guiaRemisionTransportUnitRepository;
+            _guiaRemisionEntityCarrierRepository = guiaRemisionEntityCarrierRepository;
             _guiaRemitenteUBLService = guiaRemitenteUBLService;
             _envioService = envioService;
             _establecimientoRepository = establecimientoRepository;
@@ -268,7 +271,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var proveedor = await _proveedorRepository.GetByIdAsync(request.ProveedorId ?? 0);
                     var conductor = request.DatosEnvio.ConductorId?.Select(p => _mapper.Map<GuiaRemisionConductor>(p)).ToList() ?? [];
 
-                    var entityTransporter = await _entityRepository.GetByIdAsync(request.TransporterId ?? 0);
+                    var entityTransporter = await _entityRepository.GetByIdAsync(request.EntityCarrierId ?? 0);
                     var transportUnits = request.TransportUnits;
 
                     var guiaRemision = _mapper.Map<GuiaRemision>(request);
@@ -305,8 +308,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         destinatario, 
                         proveedor, 
                         conductor,
-                        entityTransporter,
-                        transportUnits,
+                        //entityTransporter,
+                        //transportUnits,
                         guiaRemision, 
                         datosEnvio, 
                         origen, 
@@ -316,8 +319,22 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         destinatarioEmails
                     );
 
+                    // Registrar la empresa transportista si tiene registro
+
+                    if (request.EntityCarrierId != null)
+                    {
+                        await _guiaRemisionEntityCarrierRepository.Create(new GuiaRemisionEntityCarrier
+                        {
+                            GuiaRemisionId = guia_id,
+                            EntityId = request.EntityCarrierId ?? 0,
+                            CreatedAt = currentDate,
+                            CreatedAtUser = currentUser.UserName,
+                            CreatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}"
+                        });
+                    }
+
                     // Registrar los vehiculos solo si tiene registro
-                    if(request.TransportUnits != null)
+                    if(request.TransportUnits.Count > 0)
                     {
                         var _transportUnits = request.TransportUnits.Select(transportUnit =>
                         {
@@ -422,8 +439,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     if (!guia.DatosEnvio.IndicadorTrasladoVehiculoCategoria)
                     {
-                        if (guia.DatosEnvio.Transportista == null) { return (false, "Si tipoTransporte es PUBLICO, entonces debes seleccionar una empresa transportista."); }
-                        if (guia.DatosEnvio.Transportista.NumeroDocumento.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
+                        if (guia.EntityCarrierId == null) { return (false, "Si tipoTransporte es PUBLICO, entonces debes seleccionar una empresa transportista."); }
+                        if (guia.EntityCarrier.DocumentNumber.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
                         //if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RazonSocial)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
                         //if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RegistroMTC)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }
                     }

@@ -1,4 +1,5 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio;
+using MUTZI.GUIA.APPLICATION.DTOs.Entity;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemisionTransportUnit;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
@@ -20,7 +21,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Recibe un número, aquí va el id de la entidad emisora.", Nullable = false)]
         [Required]
         public int? EntityId { get; set; }
-
 
 
         [JsonPropertyName("tipo_transporte")]
@@ -79,14 +79,22 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         public EntityBranchDTO Destinatario { get; set; }
 
 
+
+        ///  Entidad Transportista
         [JsonPropertyName("entity_carrier_id")]
         [SwaggerSchema("Recibe un número, aquí va el id de la entidad transportista.", Nullable = false)]
-        public int? TransporterId { get; set; }
+        public int? EntityCarrierId { get; set; }
+
+        [JsonPropertyName("entity_carrier")]
+        [SwaggerSchema("Recibe un objeto, aquí va la entidad transportista.", Nullable = false)]
+        public EntityDTO EntityCarrier { get; set; }
 
 
+
+        /// Vehiculos o unidades de transporte
         [JsonPropertyName("transport_units")]
         [Required]
-        public List<GuiaRemisionTransportUnitCreateDTO>? TransportUnits { get; set; } = null;
+        public List<GuiaRemisionTransportUnitCreateDTO> TransportUnits { get; set; } = null;
 
 
         [JsonPropertyName("destinatario_email")]

@@ -147,4 +147,5 @@ public partial class GuiaRemision
     public virtual ICollection<EmailRemiteTransportistaGuid> EmailRemiteTransportistaGuids { get; set; } = new List<EmailRemiteTransportistaGuid>();
 
     public virtual ICollection<GuiaRemisionDetalle> GuiaDetalles { get; set; } = new List<GuiaRemisionDetalle>();
+    public virtual ICollection<GuiaRemisionTransportUnit> GuiaRemisionTransportUnits { get; set; } = new List<GuiaRemisionTransportUnit>();
 }
