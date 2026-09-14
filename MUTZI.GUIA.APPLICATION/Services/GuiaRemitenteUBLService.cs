@@ -708,16 +708,16 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     // Número y código SUNAT del tipo de documento de identidad del transportista
                     PartyIdentification = new List<PartyIdentification>{ new PartyIdentification { ID = new List<ID> { new ID { 
                         // Número de documento de identidad del transportista
-                        _ = guia.DatosEnvio.Transportista!.NumeroDocumento, 
+                        _ = guia.EntityCarrier.DocumentNumber, 
                         // Código del tipo de documento de identidad del transportista, por defecto es RUC
                         schemeID=EspacioNombreGuiaRemision._DocumentType06 
                     }}}},
                     // Número de Registro MTC
                     PartyLegalEntity = new List<PartyLegalEntity>{ new PartyLegalEntity {
                         // Apellidos y Nombres o denominación o razón social del transportista
-                        RegistrationName = new List<RegistrationName>{ new RegistrationName { _ = guia.DatosEnvio.Transportista.RazonSocial }},
+                        RegistrationName = new List<RegistrationName>{ new RegistrationName { _ = guia.EntityCarrier.Name }},
                         //Condicional: Corresponde al número de registro del MTC del transportista.
-                        CompanyID = new List<CompanyID>{ new CompanyID { _ = guia.DatosEnvio.Transportista.RegistroMTC ?? "NUMREGISTRANS" }}
+                        CompanyID = new List<CompanyID>{ new CompanyID { _ = guia.EntityCarrier.MtcCode ?? "NUMREGISTRANS" }}
                     }},
                 }};
             }
@@ -837,7 +837,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
 
             if (!string.IsNullOrEmpty(guia.Observacion))
-                root.DespatchAdvice[0].Note = new List<Note> { new Note { _ = guia.Observacion } };
+                root.DespatchAdvice[0].Note = new List<Note> { new Note { _ = guia.Observacion.Length > 250 ? (guia.Observacion.Substring(0,247) + "...") : guia.Observacion } };
 
 
 

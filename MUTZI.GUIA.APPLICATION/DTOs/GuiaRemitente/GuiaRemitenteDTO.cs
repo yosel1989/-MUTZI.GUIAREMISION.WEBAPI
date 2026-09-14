@@ -1,4 +1,5 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.DatosEnvio;
+using MUTZI.GUIA.APPLICATION.DTOs.Entity;
 using MUTZI.GUIA.APPLICATION.DTOs.Establecimiento;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemisionTransportUnit;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Destino;
@@ -44,6 +45,19 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [JsonPropertyName("tipo_transporte")]
         [SwaggerSchema("Devuelve un texto y solo pueden ser: PUBLICO ó PRIVADO", Nullable = false)]
         public string TipoTransporte { get; set; }
+
+
+
+
+        [JsonPropertyName("entity_carrier_id")]
+        [SwaggerSchema("Devuelve el id de la entidad transportista", Nullable = true)]
+        public int? EntityCarrierId { get; set; }
+
+        [JsonPropertyName("entity_carrier_id")]
+        [SwaggerSchema("Devuelve el objeto de la entidad transportista", Nullable = true)]
+        public EntityDTO? EntityCarrier { get; set; }
+
+
 
         [JsonPropertyName("motivo_traslado_id")]
         [SwaggerSchema("Devuelve un número y solo puede ser uno registrado en el catalogo de motivos de traslado", Nullable = false)]

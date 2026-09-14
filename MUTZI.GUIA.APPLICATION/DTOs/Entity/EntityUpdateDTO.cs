@@ -53,7 +53,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
 
         // Condicionales
 
-        [Column("mtc_code")]
+        [JsonPropertyName("mtc_code")]
         [Description("Número de registro MTC ")]
         public string? MtcCode { get; set; }
     }

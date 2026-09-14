@@ -16,7 +16,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
 
         Task<PagedResult<EntityByRoleDTO>> GetDataTableByRoleAsync(int pageNumber, int pageSize, string? search, string role);
 
-        Task<PagedResult<EntityListDTO>> GetListAsync(int pageNumber, int pageSize, string? search, string? type, string? roles, bool? isInternal);
+        Task<PagedResult<EntityListDTO>> GetListAsync(int pageNumber, int pageSize, string? search, string? type, string? roles, bool? isInternal, int? excludeId);
 
         Task<EstadoActualizadoResponseDTO> ToggleActiveAsync(int id, EstadoActualizadoRequestDTO infoRequestDto);
 

@@ -14,7 +14,10 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Enums;
 using MUTZI.GUIA.DOMAIN.Interfaces;
+using MUTZI.GUIA.DOMAIN.Interfaces.Document;
+using MUTZI.GUIA.DOMAIN.Interfaces.Factories;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
+using QuestPDF.Fluent;
 using System;
 using System.Text.Json;
 
@@ -35,6 +38,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         private readonly IProveedorRepository _proveedorRepository;
         private readonly IVentaConfigRepository _ventaConfigRepository;
         private readonly IGuiaRemitenteUBLService _guiaRemitenteUBLService;
+        private readonly IGuiaRemisionDocumentFactory _guiaRemisionDocumentFactory;
         private readonly IEnvioService _envioService;
         private readonly IMapper _mapper;
         private readonly IAuthService _authService;
@@ -53,6 +57,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             IIntegrationCredentialService integrationCredentialService,
             IIntegrationCredentialRepository integrationCredentialRepository,
             IProveedorRepository proveedorRepository,
+            IGuiaRemisionDocumentFactory guiaRemisionDocumentFactory,
             IEntityRepository entityRepository,
             IMapper mapper,
             IAuthService authService,
@@ -71,6 +76,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _proveedorRepository = proveedorRepository;
             _entityRepository = entityRepository;
             _ventaConfigRepository = ventaConfigRepository;
+            _guiaRemisionDocumentFactory = guiaRemisionDocumentFactory;
             _integrationCredentialService = integrationCredentialService;
             _integrationCredentialRepository = integrationCredentialRepository;
             _mapper = mapper;
@@ -492,10 +498,10 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     if (!guia.DatosEnvio.IndicadorTrasladoVehiculoCategoria)
                     {
-                        if (guia.DatosEnvio.Transportista == null) { return (false, "Si tipoTransporte es PUBLICO, entonces debes seleccionar una empresa transportista."); }
-                        if (guia.DatosEnvio.Transportista.NumeroDocumento.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
-                        if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RazonSocial)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
-                        if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RegistroMTC)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }
+                        if (guia.EntityCarrierId == null) { return (false, "Si el tipo de transporte es PUBLICO, entonces debes seleccionar una entidad transportista."); }
+                        if (guia.EntityCarrier.DocumentNumber.Length != 11) { return (false, "Si tipo de transporte es PUBLICO, la entidad transportista debe tener su número de documento en un formato RUC válido."); }
+                        if (string.IsNullOrWhiteSpace(guia.EntityCarrier.Name)) { return (false, "Si el tipo de transporte es PUBLICO, la razón social de la entidad transportista no puede estar vacía"); }
+                        if (string.IsNullOrWhiteSpace(guia.EntityCarrier.MtcCode)) { return (false, "Si tipo de transporte es PUBLICO, la entidad debe tener registrado el código MTC."); }
                     }
                     
                 }
@@ -516,19 +522,12 @@ namespace MUTZI.GUIA.APPLICATION.Services
         public async Task<GuiaRemisionListDTO> AprobarAsync(int id)
         {
             var currentUser = _authService.CurrentUser();
-            var guiaRemision = await _repository.GetByIdAsync2(id);
-            if (guiaRemision == null)
-            {
-                throw new KeyNotFoundException("GuiaRemision de remisión no encontrada");
-            }
-            /*if (guiaRemision.EstadoId == (int)EnumGuiaRemisionEstado.Aprobada)
-            {
-                throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Aprobada.GetDescription()}'");
-            }*/
-            guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Aprobada;
-            guiaRemision.UsuarioModifico = currentUser.UserName;
-            guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-            guiaRemision.FechaModifico = DateTime.UtcNow;
+            GuiaRemision guiaRemision = await _repository.GetByIdWithoutRelations(id, strict: true);
+
+            guiaRemision!.EstadoId = (int)EnumGuiaRemisionEstado.Aprobada;
+            guiaRemision!.UsuarioModifico = currentUser.UserName;
+            guiaRemision!.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision!.FechaModifico = DateTime.UtcNow;
 
             await _repository.UpdateAsync(guiaRemision);
 
@@ -708,7 +707,32 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             try
             {
-                var guiaAprobada = await AprobarAsync(id);
+                // Cambiar a estado aprobado
+                var currentUser = _authService.CurrentUser();
+                var currentDate = DateTime.UtcNow;
+                GuiaRemision guiaRemision = await _repository.GetByIdWithoutRelations(id, strict: true);
+
+                guiaRemision!.EstadoId = (int)EnumGuiaRemisionEstado.Aprobada;
+                guiaRemision!.UsuarioModifico = currentUser.UserName;
+                guiaRemision!.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+                guiaRemision!.FechaModifico = currentDate;
+
+                await _repository.UpdateAsync(guiaRemision);
+
+
+
+                // Registrar el historial
+                await _guiaRemisionHistorialRepository.RegistrarAsync(new GuiaRemisionHistorial
+                {
+                    GuiaRemisionId = guiaRemision.GuiaRemisionId,
+                    Motivo = "Guía aprobada",
+                    ValorNuevo = EnumGuiaRemisionEstado.Aprobada.GetDescription(),
+                    UsuarioRegistro = currentUser.UserName,
+                    UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}",
+                    AreaId = currentUser.AreaId,
+                    FechaRegistro = currentDate
+                });
+
 
 
                 var guiaExistente = await GetByIdAsync(id);
@@ -833,6 +857,15 @@ namespace MUTZI.GUIA.APPLICATION.Services
             byte[] pdfByte = await _integrationCredentialService.ObtenerDocumentoAsync("pdf", guid, token.AccessToken);
 
             return pdfByte;
+        }
+
+
+        public async Task<byte[]> GetDocumentInternalAsync(int guiaRemisionId, int entityId)
+        {
+            var guiaRemision = await _repository.GetByIdAsync(guiaRemisionId);
+            var document = _guiaRemisionDocumentFactory.Create(guiaRemision);
+
+            return document.GeneratePdf();
         }
     }
 }

@@ -60,6 +60,7 @@ public partial class LogisticaContext : DbContext
         optionsBuilder
             .EnableSensitiveDataLogging()
             .LogTo(Console.WriteLine, LogLevel.Information);
+
     }
 
 

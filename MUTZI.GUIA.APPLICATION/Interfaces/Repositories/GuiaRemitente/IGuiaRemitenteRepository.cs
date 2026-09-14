@@ -1,4 +1,5 @@
 ﻿
+using DocumentFormat.OpenXml.Spreadsheet;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemisionTransportUnit;
 using MUTZI.GUIA.DOMAIN.Entities;
 
@@ -12,6 +13,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaRemitente
         Task<GuiaRemision?> GetByUuidAsync(Guid uuid);
         Task<GuiaRemision?> GetByIdAsync(int id);
         Task<GuiaRemision> GetByIdAsync2(int id);
+        Task<GuiaRemision?> GetByIdWithoutRelations(int id, bool strict = false);
         Task<GuiaRemision> GetByTicketAsync(string ticket);
 
         Task <(int GuiaId, string NumeroGuia)> CreateGuiaRemisionTransactionalAsync(

@@ -32,20 +32,30 @@ using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Validators;
 using MUTZI.GUIA.DOMAIN.Interfaces;
+using MUTZI.GUIA.DOMAIN.Interfaces.Document;
+using MUTZI.GUIA.DOMAIN.Interfaces.Factories;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE;
 using MUTZI.GUIA.INFRASTRUCTURE.Adapters;
+using MUTZI.GUIA.INFRASTRUCTURE.Document;
+using MUTZI.GUIA.INFRASTRUCTURE.Factories;
 using MUTZI.GUIA.INFRASTRUCTURE.Interceptors;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Repositories.Catalogo;
 using MUTZI.GUIA.WEBAPI.Filters;
+using MUTZI.GUIA.WEBAPI.Helpers;
 using MUTZI.GUIA.WEBAPI.Middlewares;
+using QuestPDF.Infrastructure;
 using Serilog;
 using System.Text;
 
 
+FontHelper.RegisterFonts();
+
 var builder = WebApplication.CreateBuilder(args);
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 //AWS S3 Configuration
 builder.Services.AddSingleton<IS3Configuration, S3Configuration>();
@@ -91,17 +101,16 @@ builder.Services.AddSwaggerGen();
 
 // Registrar el DbContext con la cadena de conexión desde appsettings.json
 // Registrar el interceptor
-builder.Services.AddScoped<GuiaRemisionInterceptor>();
+//builder.Services.AddScoped<GuiaRemisionInterceptor>();
 
 
 var connectionString = builder.Configuration.GetConnectionString("cs_logistica");
 builder.Services.AddDbContext<LogisticaContext>((sp,options) =>
 {
-    options.UseMySql(
-        connectionString,
-        ServerVersion.AutoDetect(connectionString)
+    options.UseMySql( connectionString, ServerVersion.AutoDetect(connectionString),
+        opt => opt.CommandTimeout(120)
     );
-    options.AddInterceptors(sp.GetRequiredService<GuiaRemisionInterceptor>());
+    //options.AddInterceptors(sp.GetRequiredService<GuiaRemisionInterceptor>());
 });
 
 
@@ -160,6 +169,10 @@ builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IIntegrationCredentialRepository, IntegrationCredentialRepository>();
 builder.Services.AddScoped<IGuiaRemisionTransportUnitRepository, GuiaRemisionTransportUnitRepository>();
 builder.Services.AddScoped<IGuiaRemisionEntityCarrierRepository, GuiaRemisionEntityCarrierRepository>();
+
+
+//builder.Services.AddScoped<IGuiaRemisionDocument, GuiaRemisionDocument>();
+builder.Services.AddScoped<IGuiaRemisionDocumentFactory, GuiaRemisionDocumentFactory>();
 
 //Registrar servicios
 builder.Services.AddHttpClient();

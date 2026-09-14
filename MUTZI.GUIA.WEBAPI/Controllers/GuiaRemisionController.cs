@@ -485,5 +485,36 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 
             return StatusCode(StatusCodes.Status500InternalServerError, error);*/
         }
+
+
+
+
+        [HttpGet("pdf-internal/{guiaRemisionId}/{entityId}")]
+        [SwaggerOperation(
+            Summary = "Obtener guía en PDF formato interno",
+            Description = "Obtiene un archivo PDF de la guía emitida con un formato interno. (En tipoGuia solo acepta valores de: 'REMITENTE' ó 'TRANSPORTISTA')",
+            OperationId = "guia_remision_get_pdf"
+        )]
+        [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
+        [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> GetPdfInternal(int guiaRemisionId, int entityId)
+        {
+            byte[] archivo = await _guiasRemisionBDService.GetDocumentInternalAsync(guiaRemisionId, entityId);
+
+            return File(archivo, "application/pdf", $"aaa.pdf");
+
+            /*if (exito && archivo != null)
+                return File(archivo, "application/pdf", $"{numeroGuia}.pdf");
+
+            if (estado != null && estado.Code == "-9998")
+                return StatusCode(StatusCodes.Status202Accepted, estado);
+
+            if (estado != null)
+                return StatusCode(StatusCodes.Status400BadRequest, estado);
+
+            return StatusCode(StatusCodes.Status500InternalServerError, error);*/
+        }
     }
 }

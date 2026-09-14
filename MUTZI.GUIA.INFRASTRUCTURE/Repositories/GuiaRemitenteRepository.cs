@@ -4,6 +4,7 @@ using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 using MUTZI.GUIA.DOMAIN.Enums;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
+using Org.BouncyCastle.Tls;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 {
@@ -268,7 +269,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         AreaId = g.AreaId,
                         Area = new Area {
                             Descripcion = g.Area.Descripcion
-                        }
+                        },
+                        //GuiaRemisionEntityCarriers = g.GuiaRemisionEntityCarriers
                     })
                     .AsNoTracking()
                     .ToListAsync();
@@ -401,6 +403,27 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                     GuiaRemisionId = g.GuiaRemisionId,
                     GuiaRemisionUuid = g.GuiaRemisionUuid,
+                    EntityId = g.EntityId,
+                    Entity = new Entity
+                    {
+                        EntityId = g.Entity.EntityId,
+                        Name = g.Entity.Name,
+                        DocumentNumber = g.Entity.DocumentNumber,
+                        DocumentType = new TipoDocumento
+                        {
+                            CodigoSunat = g.Entity.DocumentType.CodigoSunat,
+                            DescripcionCorta = g.Entity.DocumentType.DescripcionCorta,
+                        },
+                        Address = g.Entity.Address,
+                        UbigeoId = g.Entity.UbigeoId,
+                        Ubigeo = new Ubigeo
+                        {
+                            UbigeoId = g.Entity.Ubigeo.UbigeoId,
+                            Departamento = g.Entity.Ubigeo.Departamento,
+                            Provincia = g.Entity.Ubigeo.Provincia,
+                            Distrito = g.Entity.Ubigeo.Distrito,
+                        }
+                    },
                     TipoGuia = g.TipoGuia,
                     Ruc = g.Ruc,
                     RucNavigation = new VentaConfig
@@ -463,7 +486,28 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         CreatedAtUser = g.Destinatario.CreatedAtUser,
                         UpdatedAt = g.Destinatario.UpdatedAt,
                         UpdatedAtUser = g.Destinatario.UpdatedAtUser,
-                        Entity = g.Destinatario.Entity
+                        Entity = new Entity { 
+                            EntityId = g.Destinatario.Entity.EntityId,
+                            Name = g.Destinatario.Entity.Name,
+                            FirstName = g.Destinatario.Entity.FirstName,
+                            LastName = g.Destinatario.Entity.LastName,
+                            UbigeoId = g.Destinatario.Entity.UbigeoId,
+                            Address = g.Destinatario.Entity.Address,
+                            DocumentNumber = g.Destinatario.Entity.DocumentNumber,  
+                            DocumentType = new TipoDocumento
+                            {
+                                CodigoSunat = g.Destinatario.Entity.DocumentType.CodigoSunat,
+                                DescripcionCorta = g.Destinatario.Entity.DocumentType.DescripcionCorta,
+                                TipoDocumentoId = g.Destinatario.Entity.DocumentType.TipoDocumentoId
+                            },
+                            Ubigeo = new Ubigeo
+                            {
+                                UbigeoId = g.Destinatario.Entity.Ubigeo.UbigeoId,
+                                Departamento = g.Destinatario.Entity.Ubigeo.Departamento,
+                                Provincia = g.Destinatario.Entity.Ubigeo.Provincia,
+                                Distrito = g.Destinatario.Entity.Ubigeo.Distrito,
+                            }
+                        }
                     },
 
                     Proveedor = g.Proveedor == null ? null : new Proveedor
@@ -604,7 +648,29 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 CodigoSunat = x.TransportUnit.EntidadReguladoraVehicular.CodigoSunat
                             }
                         }
-                    }).ToList()
+                    }).ToList(),
+
+                    GuiaRemisionEntityCarriers = g.GuiaRemisionEntityCarriers.Select(x => new GuiaRemisionEntityCarrier
+                    {
+                        GuiaRemisionId = x.GuiaRemisionId,
+                        EntityId = x.EntityId,
+                        Entity = new Entity
+                        {
+                            EntityId = x.Entity.EntityId,
+                            DocumentNumber = x.Entity.DocumentNumber,
+                            MtcCode = x.Entity.MtcCode,
+                            Address = x.Entity.Address,
+                            Name = x.Entity.Name,
+                            UbigeoId = x.Entity.UbigeoId,
+                            Ubigeo = new Ubigeo
+                            {
+                                UbigeoId = x.Entity.Ubigeo.UbigeoId,
+                                Departamento = x.Entity.Ubigeo.Departamento,
+                                Provincia = x.Entity.Ubigeo.Provincia,
+                                Distrito = x.Entity.Ubigeo.Distrito
+                            }
+                        }
+                    }).ToList(),
                 })
                 .FirstOrDefaultAsync();
 
@@ -644,7 +710,25 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 .Include(erm => erm.Estado)
                 .Include(erm => erm.Area)
                 .Include(erm => erm.MotivoTraslado)
+                .Include(erm => erm.GuiaRemisionTransportUnits)
+                .Include(erm => erm.GuiaRemisionEntityCarriers)
+                    .ThenInclude(h => h.Entity)
+                        .ThenInclude(w => w.Ubigeo)
                 .FirstOrDefaultAsync(g => g.GuiaRemisionId == id);
+
+            return data;
+        }
+
+        public async Task<GuiaRemision?> GetByIdWithoutRelations(int id, bool strict)
+        {
+            var data = await _context.GuiaRemision
+                .Where(g => g.GuiaRemisionId == id)
+                .FirstOrDefaultAsync();
+
+            if(strict && data is null)
+            {
+                throw new Exception("No se encontro la guía de remisión en los registros.");
+            }
 
             return data;
         }
@@ -814,15 +898,18 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         //Actualizar guía de remisión remitente
         public async Task<GuiaRemision> UpdateAsync(GuiaRemision guiaRemision)
         {
-            if (guiaRemision == null)
+            try
             {
-                throw new ArgumentNullException(nameof(guiaRemision), "La guía de remisión remitente no puede ser nula");
-            }
-            //_context.GuiaRemision.Update(guiaRemision);
-            await _context.SaveChangesAsync();
-            await _context.Entry(guiaRemision).ReloadAsync();
+                _context.GuiaRemision.Update(guiaRemision);
+                await _context.SaveChangesAsync();
 
-            return guiaRemision;
+                return guiaRemision;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            
         }
         public async Task DeleteAsync(int id)
         {

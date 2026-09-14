@@ -5,7 +5,6 @@ using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 
 namespace MUTZI.GUIA.INFRASTRUCTURE.Interceptors
 {
-
     public class GuiaRemisionInterceptor : SaveChangesInterceptor
     {
         public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -14,81 +13,39 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Interceptors
             CancellationToken cancellationToken = default)
         {
             var context = eventData.Context as LogisticaContext;
+
+            // Solo entradas modificadas donde realmente cambió el EstadoId
             var cambios = context.ChangeTracker.Entries<GuiaRemision>()
-                .Where(e => e.State == EntityState.Modified);
+                .Where(e => e.State == EntityState.Modified &&
+                            !Equals(e.OriginalValues["EstadoId"], e.CurrentValues["EstadoId"]));
 
             foreach (var entry in cambios)
             {
                 var original = (int)entry.OriginalValues["EstadoId"];
                 var nuevo = (int)entry.CurrentValues["EstadoId"];
 
-                var permisos = await context.GuiaRemisionEstadoPermiso
-                    .Where(p => p.GuiaRemisionEstadoId == nuevo)
-                    .ToListAsync(cancellationToken);
+                // Validar si existe permiso directo para la transición
+                var existePermiso = await context.GuiaRemisionEstadoPermiso
+                    .AnyAsync(p => p.GuiaRemisionEstadoId == nuevo &&
+                                   p.GuiaRemisionEstadoIdPermitido == original,
+                              cancellationToken);
 
-                if (permisos.Any() && !permisos.Any(p => p.GuiaRemisionEstadoIdPermitido == original))
+                if (!existePermiso)
                 {
-                    // Obtener nombres de estados
-                    var estadoOriginal = await context.GuiaRemisionEstado
-                        .Where(e => e.GuiaRemisionEstadoId == original)
-                        .Select(e => e.Nombre)
-                        .FirstOrDefaultAsync(cancellationToken);
+                    // Obtener nombres de ambos estados en una sola consulta
+                    var estados = await context.GuiaRemisionEstado
+                        .Where(e => e.GuiaRemisionEstadoId == original || e.GuiaRemisionEstadoId == nuevo)
+                        .ToDictionaryAsync(e => e.GuiaRemisionEstadoId, e => e.Nombre, cancellationToken);
 
-                    var estadoNuevo = await context.GuiaRemisionEstado
-                        .Where(e => e.GuiaRemisionEstadoId == nuevo)
-                        .Select(e => e.Nombre)
-                        .FirstOrDefaultAsync(cancellationToken);
+                    var estadoOriginal = estados.ContainsKey(original) ? estados[original] : $"Id:{original}";
+                    var estadoNuevo = estados.ContainsKey(nuevo) ? estados[nuevo] : $"Id:{nuevo}";
 
-                    if(estadoNuevo != estadoOriginal)
-                    {
-                        throw new InvalidOperationException($"Operación inválida, cambio de estado '{estadoOriginal}' a '{estadoNuevo}'");
-                    }
-                }
-            }
-
-            // Aquí puedes validar cambios directamente con el mismo contexto
-            return await base.SavingChangesAsync(eventData, result, cancellationToken);
-        }
-    }
-
-    /*public class GuiaRemisionInterceptor : SaveChangesInterceptor
-    {
-        private readonly IDbContextFactory<LogisticaContext> _contextFactory;
-
-        public GuiaRemisionInterceptor(IDbContextFactory<LogisticaContext> contextFactory)
-        {
-            _contextFactory = contextFactory;
-        }
-
-        public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
-            DbContextEventData eventData,
-            InterceptionResult<int> result,
-            CancellationToken cancellationToken = default)
-        {
-            var cambios = eventData.Context.ChangeTracker.Entries<GuiaRemision>()
-                .Where(e => e.State == EntityState.Modified);
-
-            using var consultaContext = _contextFactory.CreateDbContext();
-
-            foreach (var entry in cambios)
-            {
-                var original = (int)entry.OriginalValues["EstadoId"];
-                var nuevo = (int)entry.CurrentValues["EstadoId"];
-
-                var permisos = await consultaContext.GuiaRemisionEstadoPermiso
-                    .Where(p => p.GuiaRemisionEstadoId == nuevo)
-                    .ToListAsync(cancellationToken);
-
-                if (permisos.Any() && !permisos.Any(p => p.GuiaRemisionEstadoIdPermitido == original))
-                {
                     throw new InvalidOperationException(
-                        $"Transición inválida de estado {original} a {nuevo}");
+                        $"Operación inválida, cambio de estado '{estadoOriginal}' a '{estadoNuevo}'");
                 }
             }
 
             return await base.SavingChangesAsync(eventData, result, cancellationToken);
         }
     }
-
-    */
 }

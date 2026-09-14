@@ -110,6 +110,9 @@ public partial class GuiaRemision
 
     // Relaciones
 
+    [ForeignKey(nameof(EntityId))]
+    public virtual Entity? Entity { get; set; }
+
     [ForeignKey(nameof(Ruc))]
     public virtual VentaConfig RucNavigation { get; set; } = null!;
 
@@ -135,7 +138,7 @@ public partial class GuiaRemision
     public virtual Transportista? RemiteTransportista { get; set; }
 
     public virtual ICollection<GuiaRemisionDatoEnvio> DatosEnvios { get; set; } = new List<GuiaRemisionDatoEnvio>();
-
+    public virtual ICollection<GuiaRemisionEntityCarrier> GuiaRemisionEntityCarriers { get; set; } = new List<GuiaRemisionEntityCarrier>();
     public virtual ICollection<GuiaRemisionOrigen> Origens { get; set; } = new List<GuiaRemisionOrigen>();
 
     public virtual ICollection<GuiaRemisionDestino> Destinos { get; set; } = new List<GuiaRemisionDestino>();
