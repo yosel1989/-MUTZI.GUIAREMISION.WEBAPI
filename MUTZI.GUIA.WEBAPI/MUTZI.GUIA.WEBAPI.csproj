@@ -23,6 +23,7 @@
     <PackageReference Include="NSwag.Annotations" Version="14.6.0" />
     <PackageReference Include="NSwagen.Annotations" Version="0.1.5" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="QRCoder" Version="1.8.0" />
     <PackageReference Include="QuestPDF" Version="2026.9.0" />
     <PackageReference Include="RestSharp" Version="112.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />

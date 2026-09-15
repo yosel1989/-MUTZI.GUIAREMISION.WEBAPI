@@ -53,7 +53,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve el id de la entidad transportista", Nullable = true)]
         public int? EntityCarrierId { get; set; }
 
-        [JsonPropertyName("entity_carrier_id")]
+        [JsonPropertyName("entity_carrier")]
         [SwaggerSchema("Devuelve el objeto de la entidad transportista", Nullable = true)]
         public EntityDTO? EntityCarrier { get; set; }
 
