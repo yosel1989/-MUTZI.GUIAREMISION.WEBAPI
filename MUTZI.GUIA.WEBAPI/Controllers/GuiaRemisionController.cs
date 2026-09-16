@@ -501,9 +501,16 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> GetPdfInternal(int guiaRemisionId, int entityId)
         {
-            byte[] archivo = await _guiasRemisionBDService.GetDocumentInternalAsync(guiaRemisionId, entityId);
-
-            return File(archivo, "application/pdf", $"aaa.pdf");
+            try
+            {
+                byte[] archivo = await _guiasRemisionBDService.GetDocumentInternalAsync(guiaRemisionId, entityId);
+                return File(archivo, "application/pdf", $"aaa.pdf");
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            
 
             /*if (exito && archivo != null)
                 return File(archivo, "application/pdf", $"{numeroGuia}.pdf");

@@ -101,7 +101,7 @@ builder.Services.AddSwaggerGen();
 
 // Registrar el DbContext con la cadena de conexión desde appsettings.json
 // Registrar el interceptor
-//builder.Services.AddScoped<GuiaRemisionInterceptor>();
+builder.Services.AddScoped<GuiaRemisionInterceptor>();
 
 
 var connectionString = builder.Configuration.GetConnectionString("cs_logistica");
@@ -110,7 +110,7 @@ builder.Services.AddDbContext<LogisticaContext>((sp,options) =>
     options.UseMySql( connectionString, ServerVersion.AutoDetect(connectionString),
         opt => opt.CommandTimeout(120)
     );
-    //options.AddInterceptors(sp.GetRequiredService<GuiaRemisionInterceptor>());
+    options.AddInterceptors(sp.GetRequiredService<GuiaRemisionInterceptor>());
 });
 
 

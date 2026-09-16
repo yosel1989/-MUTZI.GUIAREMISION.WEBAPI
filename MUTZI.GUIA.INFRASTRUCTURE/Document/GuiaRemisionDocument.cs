@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office.CustomUI;
-using MUTZI.GUIA.DOMAIN.Entities;
+﻿using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Interfaces.Document;
 using QRCoder;
 using QuestPDF.Fluent;
@@ -23,13 +22,18 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
 
         public void Compose(IDocumentContainer container)
         {
-            var textXXS = 7f;
-            var textXS = 7.5f;
-            var textMD = 8f;
-            var textLG = 9f;
+            var textXXXXXXS = 4f;
+            var textXXXXXS = 4.5f;
+            var textXXXXS = 5f;
+            var textXXXS = 5.5f;
+            var textXXS = 6f;
+            var textXS = 6.5f;
+            var textMD = 7f;
+            var textLG = 8f;
             var textColor = "#60615b";
             var borderColor = "#bababa";
             var borderSize = 1f;
+            var titleSize = textXXXXS;
 
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode("https://e-factura.sunat.gob.pe/v1/contribuyente/gre/comprobantes/descargaqr?hashqr=", QRCodeGenerator.ECCLevel.H);
@@ -48,11 +52,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
             container.Page(page =>
             {
                 page.Margin(20);
-                page.Size(PageSizes.A4.Landscape());
+                page.Size(PageSizes.A4.Portrait());
                 page.DefaultTextStyle(x => x
                     .FontColor(textColor)
                     .FontFamily("Arial")
-                    .FontSize(textXXS)
+                    .FontSize(textXXXXXS)
                 );
 
                 page.Header()
@@ -107,10 +111,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                             });
 
                         headerCol.Item()
-                            .Border(borderSize)
+                            .Border(borderSize / 2)
                             .BorderColor(borderColor)
                             .CornerRadius(0)
-                            .Padding(10)
+                            .Padding(8)
                             .Column(col =>
                             {
                                 col.Spacing(5);
@@ -118,52 +122,52 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                 col.Item()
                                 .Row(row =>
                                 {
-                                    row.ConstantItem(80)
+                                    row.ConstantItem(50)
                                         .Column(leftCol =>
                                         {
-                                            leftCol.Item().Text("Cliente:").FontSize(textXS).SemiBold();
+                                            leftCol.Item().Text("CLIENTE:").SemiBold();
                                         });
                                     row.RelativeItem()
                                         .Column(rightCol =>
                                         {
                                             rightCol.Spacing(5);
-                                            rightCol.Item().Text(_dto.Destinatario.Entity?.Name != null ? _dto.Destinatario.Entity.Name : $"{_dto.Destinatario.Entity.FirstName} {_dto.Destinatario.Entity.LastName}").FontSize(textXS);
+                                            rightCol.Item().Text(_dto.Destinatario.Entity?.Name != null ? _dto.Destinatario.Entity.Name : $"{_dto.Destinatario.Entity.FirstName} {_dto.Destinatario.Entity.LastName}");
                                         });
                                 });
 
                                 col.Item()
                                 .Row(row =>
                                 {
-                                    row.ConstantItem(80)
+                                    row.ConstantItem(50)
                                         .Column(leftCol =>
                                         {
                                             leftCol.Spacing(5);
-                                            leftCol.Item().Text($"{_dto.Destinatario?.Entity.DocumentType.DescripcionCorta}:").FontSize(textXS).SemiBold();
-                                            leftCol.Item().Text("Fecha de emisión:").FontSize(textXS).SemiBold();
+                                            leftCol.Item().Text($"{_dto.Destinatario?.Entity.DocumentType.DescripcionCorta}:").SemiBold();
+                                            leftCol.Item().Text("FECHA DE EMISIÓN:").SemiBold();
                                         });
 
-                                    row.ConstantItem(140)
+                                    row.ConstantItem(90)
                                         .Column(rightCol =>
                                         {
                                             rightCol.Spacing(5);
-                                            rightCol.Item().Text(_dto.Destinatario.Entity?.DocumentNumber).FontSize(textXS);
-                                            rightCol.Item().Text(_dto.Fecha.ToString("dd-MMM-yyyy", System.Globalization.CultureInfo.InvariantCulture).ToUpper()).FontSize(textXS);
+                                            rightCol.Item().Text(_dto.Destinatario.Entity?.DocumentNumber);
+                                            rightCol.Item().Text(_dto.Fecha.ToString("dd-MMM-yyyy", System.Globalization.CultureInfo.InvariantCulture).ToUpper());
                                         });
 
                                     row.ConstantItem(50)
                                         .Column(leftCol =>
                                         {
                                             leftCol.Spacing(5);
-                                            leftCol.Item().Text("Dirección:").FontSize(textXS).SemiBold();
-                                            leftCol.Item().Text("Ciudad:").FontSize(textXS).SemiBold();
+                                            leftCol.Item().Text("DIRECCIÓN:").SemiBold();
+                                            leftCol.Item().Text("CIUDAD:").SemiBold();
                                         });
 
                                     row.RelativeItem()
                                         .Column(rightCol =>
                                         {
                                             rightCol.Spacing(5);
-                                            rightCol.Item().Text(_dto.Destinatario.Entity?.Address).FontSize(textXS);
-                                            rightCol.Item().Text($"{_dto.Destinatario.Entity?.Ubigeo.Distrito} - {_dto.Destinatario.Entity?.Ubigeo.Provincia} - {_dto.Destinatario.Entity?.Ubigeo.Departamento}").FontSize(textXS);
+                                            rightCol.Item().Text(_dto.Destinatario.Entity?.Address);
+                                            rightCol.Item().Text($"{_dto.Destinatario.Entity?.Ubigeo.Distrito} - {_dto.Destinatario.Entity?.Ubigeo.Provincia} - {_dto.Destinatario.Entity?.Ubigeo.Departamento}");
                                         });
                                 });
 
@@ -228,7 +232,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                             .PaddingBottom(6)
                                                             .AlignMiddle()
                                                             .Text(text)
-                                                            .FontSize(textXXS)
                                                             .FontColor("#FFFFFF")
                                                             .AlignCenter();
 
@@ -251,7 +254,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                             .PaddingLeft(3)
                                                             .PaddingRight(3)
                                                             .Text(text)
-                                                            .FontSize(textXXS)
                                                             .FontColor(textColor)
                                                             ;
 
@@ -296,14 +298,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                     .PaddingBottom(5)
                                     .Column(col =>
                                     {
-                                        col.Item().Text("DETALLE DE LA GUÍA:").FontSize(textXS).SemiBold();
+                                        col.Item().Text("DETALLE DE LA GUÍA:").FontSize(titleSize).SemiBold();
                                     });
 
                                 leftCol.Item()
-                                    .Border(borderSize)
+                                    .Border(borderSize / 2)
                                     .BorderColor(borderColor)
                                     .CornerRadius(0)
-                                    .Padding(10)
+                                    .Padding(8)
                                     .Row(row =>
                                     {
                                         row.Spacing(5);
@@ -313,18 +315,18 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                 col.Spacing(5);
                                                 col.Item().Text(text =>
                                                  {
-                                                     text.Span("Tipo de Transporte: ").FontSize(textXS).SemiBold();
-                                                     text.Span(_dto.TipoTransporte.ToUpper() == "PUBLICO" ? "PÚBLICO" : "PRIVADO").FontSize(textXS);
+                                                     text.Span("TIPO DE TRANSPORTE:   ").SemiBold();
+                                                     text.Span(_dto.TipoTransporte.ToUpper() == "PUBLICO" ? "PÚBLICO" : "PRIVADO");
                                                  });
                                                 col.Item().Text(text =>
                                                 {
-                                                    text.Span("Und. de Medida: ").FontSize(textXS).SemiBold();
-                                                    text.Span(_dto.DatosEnvios.First()?.UnidadMedida?.DescripcionCorta).FontSize(textXS);
+                                                    text.Span("UND. DE MEDIDA:   ").SemiBold();
+                                                    text.Span(_dto.DatosEnvios.First()?.UnidadMedida?.DescripcionCorta);
                                                 });
                                                 col.Item().Text(text =>
                                                 {
-                                                    text.Span("Motivo: ").FontSize(textXS).SemiBold();
-                                                    text.Span(_dto.MotivoTraslado?.Nombre.ToUpper()).FontSize(textXS);
+                                                    text.Span("MOTIVO:   ").SemiBold();
+                                                    text.Span(_dto.MotivoTraslado?.Nombre.ToUpper());
                                                 });
                                             });
 
@@ -332,20 +334,23 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                             .Column(col =>
                                             {
                                                 col.Spacing(5);
+                                                if (_dto.GuiaRemisionEntityCarriers.Count > 0)
+                                                {
+                                                    col.Item().Text(text =>
+                                                    {
+                                                        text.Span("MTC:   ").SemiBold();
+                                                        text.Span(_dto.GuiaRemisionEntityCarriers.First()?.Entity.MtcCode);
+                                                    });
+                                                }
                                                 col.Item().Text(text =>
                                                 {
-                                                    text.Span("MTC: ").FontSize(textXS).SemiBold();
-                                                    text.Span(_dto.GuiaRemisionEntityCarriers.First()?.Entity.MtcCode).FontSize(textXS);
+                                                    text.Span("PESO BRUTO:   ").SemiBold();
+                                                    text.Span((_dto.DatosEnvios.First()?.PesoBruto ?? 0m).ToString("F2"));
                                                 });
                                                 col.Item().Text(text =>
                                                 {
-                                                    text.Span("Peso Bruto: ").FontSize(textXS).SemiBold();
-                                                    text.Span((_dto.DatosEnvios.First()?.PesoBruto ?? 0m).ToString("F2")).FontSize(textXS);
-                                                });
-                                                col.Item().Text(text =>
-                                                {
-                                                    text.Span("Descripción: ").FontSize(textXS).SemiBold();
-                                                    text.Span("--").FontSize(textXS);
+                                                    text.Span("DESCRIPCIÓN:   ").SemiBold();
+                                                    text.Span("--");
                                                 });
                                             });
 
@@ -353,11 +358,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                             .Column(col =>
                                             {
                                                 col.Spacing(5);
-                                                col.Item().Text(text =>
+                                                if(_dto.DatosEnvios.First()?.FechaEntregaTransportista != null)
                                                 {
-                                                    text.Span("Fecha entrega de bienes al transportista: ").FontSize(textXS).SemiBold();
-                                                    text.Span(_dto.DatosEnvios.First()?.FechaEntregaTransportista?.ToString("dd-MMM-yyyy", System.Globalization.CultureInfo.InvariantCulture).ToUpper()).FontSize(textXS);
-                                                });
+                                                    col.Item().Text(text =>
+                                                    {
+                                                        text.Span("FECHA ENTREGA DE BIENES AL TRANSPORTISTA:   ").SemiBold();
+                                                        text.Span(_dto.DatosEnvios.First()?.FechaEntregaTransportista?.ToString("dd-MMM-yyyy", System.Globalization.CultureInfo.InvariantCulture).ToUpper());
+                                                    });
+                                                }
+                                                
                                             });
                                     });
                             });
@@ -378,15 +387,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                     .PaddingBottom(5)
                                                     .Column(col =>
                                                     {
-                                                        col.Item().Text("PUNTO DE PARTIDA:").FontSize(textXS).SemiBold();
+                                                        col.Item().Text("PUNTO DE PARTIDA:").FontSize(titleSize).SemiBold();
                                                     });
 
                                                 col.Item()
-                                                    .Border(borderSize)
+                                                    .Border(borderSize / 2)
                                                     .BorderColor(borderColor)
                                                     .CornerRadius(0)
-                                                    .Padding(10)
-                                                    .MinHeight(36)
+                                                    .Padding(8)
+                                                    .MinHeight(26)
                                                     .Row(row =>
                                                     {
                                                         row.RelativeItem()
@@ -394,15 +403,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                             .Column(col1 =>
                                                             {
                                                                 col1.Item().Text($"{_dto.Remitente?.Address}, {_dto.Remitente?.Ubigeo?.Departamento} - {_dto.Remitente?.Ubigeo?.Provincia} - {_dto.Remitente?.Ubigeo?.Distrito}")
-                                                                    .AlignCenter().FontSize(textXXS);
+                                                                    .AlignCenter();
 
                                                                 if (_dto.Destinatario?.Entity.DocumentTypeId != 1)
                                                                 {
                                                                     col1.Item().Text("");
                                                                     col1.Item().Text(text =>
                                                                     {
-                                                                        text.Span("RUC y Cod. de establecimiento: ").FontSize(textXS).SemiBold();
-                                                                        text.Span($"{_dto.Remitente?.Entity?.DocumentNumber} - {_dto.Remitente?.CodeSunat}").FontSize(textXS);
+                                                                        text.Span("RUC y COD. DE ESTABLECIMIENTO: ").SemiBold();
+                                                                        text.Span($"{_dto.Remitente?.Entity?.DocumentNumber} - {_dto.Remitente?.CodeSunat}");
                                                                     });
                                                                 }
                                                             });
@@ -419,15 +428,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                     .PaddingBottom(5)
                                                     .Column(col =>
                                                     {
-                                                        col.Item().Text("PUNTO DE LLEGADA:").FontSize(textXS).SemiBold();
+                                                        col.Item().Text("PUNTO DE LLEGADA:").FontSize(titleSize).SemiBold();
                                                     });
 
                                                 col.Item()
-                                                    .Border(borderSize)
+                                                    .Border(borderSize / 2)
                                                     .BorderColor(borderColor)
                                                     .CornerRadius(0)
-                                                    .Padding(10)
-                                                    .MinHeight(36)
+                                                    .Padding(8)
+                                                    .MinHeight(26)
                                                     .Row(row =>
                                                     {
                                                         row.RelativeItem()
@@ -435,15 +444,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                             .Column(col1 =>
                                                             {
                                                                 col1.Item().Text($"{_dto.Destinatario?.Address}, {_dto.Destinatario?.Ubigeo?.Departamento} - {_dto.Destinatario?.Ubigeo?.Provincia} - {_dto.Remitente?.Ubigeo?.Distrito}")
-                                                                    .AlignCenter().FontSize(textXXS);
+                                                                    .AlignCenter();
 
                                                                 if (_dto.Destinatario?.Entity.DocumentTypeId != 1)
                                                                 {
                                                                     col1.Item().Text("");
                                                                     col1.Item().Text(text =>
                                                                     {
-                                                                        text.Span("RUC y Cod. de establecimiento: ").FontSize(textXS).SemiBold();
-                                                                        text.Span($"{_dto.Destinatario?.Entity?.DocumentNumber} - {_dto.Destinatario?.CodeSunat}").FontSize(textXS);
+                                                                        text.Span("RUC y COD DE ESTABLECIMIENTO: ").SemiBold();
+                                                                        text.Span($"{_dto.Destinatario?.Entity?.DocumentNumber} - {_dto.Destinatario?.CodeSunat}");
                                                                     });
                                                                 }
                                                             });
@@ -461,14 +470,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                        
                         table.ColumnsDefinition(columns =>
                         {
-                            columns.ConstantColumn(30);   // ITEM
-                            columns.ConstantColumn(44);   // CANTIDAD
-                            columns.ConstantColumn(60);   // UNIDAD
-                            columns.ConstantColumn(65);   // CÓDIGO
+                            columns.ConstantColumn(25);   // ITEM
+                            columns.ConstantColumn(28);   // CANTIDAD
+                            columns.ConstantColumn(40);   // UNIDAD
+                            columns.ConstantColumn(45);   // CÓDIGO
                             columns.RelativeColumn(3);    // DESCRIPCIÓN
-                            columns.ConstantColumn(60);  // COD. DE PRD. SUNAT
-                            columns.ConstantColumn(50);   // GTIN
-                            columns.ConstantColumn(70);  // BIEN NORMALIZADO
+                            columns.ConstantColumn(33);  // COD. DE PRD. SUNAT
+                            columns.ConstantColumn(30);   // GTIN
+                            columns.ConstantColumn(40);  // BIEN NORMALIZADO
                         });
 
                         // Encabezados
@@ -478,15 +487,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                             void HeaderCell(string text) =>
                                 header.Cell()
                                     .Background("#adadad")
-                                    .Border(borderSize)
+                                    .Border(borderSize / 2)
                                     .BorderColor(borderColor)
                                     .PaddingLeft(2)
                                     .PaddingRight(2)
-                                    .PaddingTop(6)
-                                    .PaddingBottom(6)
+                                    .PaddingTop(3)
+                                    .PaddingBottom(3)
                                     .AlignMiddle()
                                     .Text(text)
-                                    .FontSize(textXXS)
                                     .FontColor("#FFFFFF")
                                     .AlignCenter();
 
@@ -508,14 +516,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                             void cell(string text, string align = "left")
                             {
                                 var baseCell = table.Cell()
-                                    .Border(borderSize)
+                                    .Border(borderSize / 2)
                                     .BorderColor(borderColor)
                                     .PaddingTop(5)
                                     .PaddingBottom(5)
                                     .PaddingLeft(3)
                                     .PaddingRight(3)
                                     .Text(text)
-                                    .FontSize(textXXS)
                                     .FontColor(textColor)
                                     ;
 
@@ -550,8 +557,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                     col.Item().Column(colObs =>
                     {
                         colObs.Spacing(2);
-                        colObs.Item().Text("OBSERVACIONES").SemiBold();
-                        colObs.Item().PaddingLeft(textXXS).Text(_dto.Observacion).Justify();
+                        colObs.Item().Text("OBSERVACIONES").SemiBold().FontSize(titleSize);
+                        colObs.Item().PaddingLeft(textXS).Text(_dto.Observacion.ToUpper()).Justify();
                     });
 
 
@@ -561,7 +568,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                         col.Item().Column(colTransportista =>
                         {
                             colTransportista.Spacing(2);
-                            colTransportista.Item().Text("DATOS DEL TRANSPORTISTA").SemiBold();
+                            colTransportista.Item().Text("DATOS DEL TRANSPORTISTA").SemiBold().FontSize(titleSize);
                             colTransportista.Item().Column(colDatosTransportista =>
                             {
                                 colDatosTransportista.Item()
@@ -584,28 +591,28 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                             .Column(leftCol =>
                                             {
                                                 leftCol.Spacing(5);
-                                                leftCol.Item().Text("RUC:").FontSize(textXS).SemiBold();
+                                                leftCol.Item().Text("RUC:").SemiBold();
                                             });
 
                                         row.ConstantItem(140)
                                             .Column(rightCol =>
                                             {
                                                 rightCol.Spacing(5);
-                                                rightCol.Item().Text(_dto.GuiaRemisionEntityCarriers.First()?.Entity.DocumentNumber).FontSize(textXS);
+                                                rightCol.Item().Text(_dto.GuiaRemisionEntityCarriers.First()?.Entity.DocumentNumber);
                                             });
 
                                         row.ConstantItem(60)
                                             .Column(leftCol =>
                                             {
                                                 leftCol.Spacing(5);
-                                                leftCol.Item().Text("Razón Social:").FontSize(textXS).SemiBold();
+                                                leftCol.Item().Text("Razón Social:").SemiBold();
                                             });
 
                                         row.RelativeItem()
                                             .Column(rightCol =>
                                             {
                                                 rightCol.Spacing(5);
-                                                rightCol.Item().Text(_dto.GuiaRemisionEntityCarriers.First()?.Entity.Name).FontSize(textXS);
+                                                rightCol.Item().Text(_dto.GuiaRemisionEntityCarriers.First()?.Entity.Name);
                                             });
                                     });
 

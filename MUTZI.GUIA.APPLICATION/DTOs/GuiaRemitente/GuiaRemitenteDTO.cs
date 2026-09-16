@@ -151,6 +151,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, el estado de la guía de remisión.", Nullable = false)]
         public string Estado { get; set; }
 
+        [JsonPropertyName("estado_color")]
+        [SwaggerSchema("Devuelve un texto, el color del estado de la guía de remisión.", Nullable = false)]
+        public string? EstadoColor { get; set; }
+
         [JsonPropertyName("id_estado")]
         [SwaggerSchema("Devuelve un entero, el ID del estado de la guía de remisión en la bbdd", Nullable = false)]
         public int EstadoId { get; set; }

@@ -446,7 +446,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     if (!guia.DatosEnvio.IndicadorTrasladoVehiculoCategoria)
                     {
                         if (guia.EntityCarrierId == null) { return (false, "Si tipoTransporte es PUBLICO, entonces debes seleccionar una empresa transportista."); }
-                        if (guia.EntityCarrier.DocumentNumber.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
+                        if (guia.EntityCarrier?.DocumentNumber.Length != 11) { return (false, "Si tipoTransporte es PUBLICO, entonces debes completar los 11 dígitos de rucEmpresaCurrier."); }
                         //if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RazonSocial)) { return (false, "Si tipoTransporte es PUBLICO, La razonSocialCurrier no puede estar vacía"); }
                         //if (string.IsNullOrWhiteSpace(guia.DatosEnvio.Transportista.RegistroMTC)) { return (false, "Si tipoTransporte es PUBLICO, el registroMtcCurrier no puede estar vacío"); }
                     }
@@ -499,9 +499,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     if (!guia.DatosEnvio.IndicadorTrasladoVehiculoCategoria)
                     {
                         if (guia.EntityCarrierId == null) { return (false, "Si el tipo de transporte es PUBLICO, entonces debes seleccionar una entidad transportista."); }
-                        if (guia.EntityCarrier.DocumentNumber.Length != 11) { return (false, "Si tipo de transporte es PUBLICO, la entidad transportista debe tener su número de documento en un formato RUC válido."); }
-                        if (string.IsNullOrWhiteSpace(guia.EntityCarrier.Name)) { return (false, "Si el tipo de transporte es PUBLICO, la razón social de la entidad transportista no puede estar vacía"); }
-                        if (string.IsNullOrWhiteSpace(guia.EntityCarrier.MtcCode)) { return (false, "Si tipo de transporte es PUBLICO, la entidad debe tener registrado el código MTC."); }
+                        if (guia.EntityCarrier?.DocumentNumber.Length != 11) { return (false, "Si tipo de transporte es PUBLICO, la entidad transportista debe tener su número de documento en un formato RUC válido."); }
+                        if (string.IsNullOrWhiteSpace(guia.EntityCarrier?.Name)) { return (false, "Si el tipo de transporte es PUBLICO, la razón social de la entidad transportista no puede estar vacía"); }
+                        if (string.IsNullOrWhiteSpace(guia.EntityCarrier?.MtcCode)) { return (false, "Si tipo de transporte es PUBLICO, la entidad debe tener registrado el código MTC."); }
                     }
                     
                 }
@@ -862,10 +862,18 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
         public async Task<byte[]> GetDocumentInternalAsync(int guiaRemisionId, int entityId)
         {
-            var guiaRemision = await _repository.GetByIdAsync(guiaRemisionId);
-            var document = _guiaRemisionDocumentFactory.Create(guiaRemision);
+            try
+            {
+                var guiaRemision = await _repository.GetByIdAsync(guiaRemisionId);
+                var document = _guiaRemisionDocumentFactory.Create(guiaRemision);
 
-            return document.GeneratePdf();
+                return document.GeneratePdf();
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+            
         }
     }
 }

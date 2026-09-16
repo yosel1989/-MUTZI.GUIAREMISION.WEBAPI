@@ -73,7 +73,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             Description = "Obtiene un archivo PDF de la guía emitida. (En tipoGuia solo acepta valores de: 'REMITENTE' ó 'TRANSPORTISTA')",
             OperationId = "ver_pdf_guia_remision"
         )]
-        [Permission("ver_pdf_guia_remision")]
+        //[Permission("ver_pdf_guia_remision")]
         [ProducesResponseType(typeof(EfactResponseDTO), StatusCodes.Status202Accepted)]
         [ProducesResponseType(typeof(FileContentResult), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]

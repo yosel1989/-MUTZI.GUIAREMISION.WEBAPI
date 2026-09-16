@@ -87,7 +87,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
 
         [JsonPropertyName("entity_carrier")]
         [SwaggerSchema("Recibe un objeto, aquí va la entidad transportista.", Nullable = false)]
-        public EntityDTO EntityCarrier { get; set; }
+        public EntityDTO? EntityCarrier { get; set; }
 
 
 
