@@ -157,9 +157,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             };
         }
 
-        public async Task<PagedResult<EntityListDTO>> GetListAsync(int pageNumber, int pageSize, string? search, string? type, string? roles, bool? isInternal, int? excludeId)
+        public async Task<PagedResult<EntityListDTO>> GetListAsync(int pageNumber, int pageSize, string? search, string? type, string? roles, bool? isInternal, int? excludeId, bool? hasBranch)
         {
-            var (totalRecords, data) = await _repository.GetListAsync(pageNumber, pageSize, search, type, roles, isInternal, excludeId);
+            var (totalRecords, data) = await _repository.GetListAsync(pageNumber, pageSize, search, type, roles, isInternal, excludeId, hasBranch);
             var dataDTO = _mapper.Map<List<EntityListDTO>>(data);
             return new PagedResult<EntityListDTO>
             {

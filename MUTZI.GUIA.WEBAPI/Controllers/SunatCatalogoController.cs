@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.MotivoTraslado;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
+using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -13,9 +15,14 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
     public class MotivoTrasladoController : ControllerBase
     {
         private readonly IMotivoTrasladoService _service;
-        public MotivoTrasladoController(IMotivoTrasladoService service)
+        private readonly IInvoiceTypeService _invoiceTypeService;
+        public MotivoTrasladoController(
+            IMotivoTrasladoService service,
+            IInvoiceTypeService invoiceTypeService
+        )
         {
             _service = service;
+            _invoiceTypeService = invoiceTypeService;
         }
 
 
@@ -42,6 +49,35 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
                     Error = "Error al listar los motivos de traslado.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+
+        [HttpGet]
+        [Route("invoice-types")]
+        [SwaggerOperation(
+            Summary = "Listar tipos de documentos comerciales",
+            Description = "Lista todos los documentos comerciales",
+            OperationId = "invoice_type_to_select"
+        )]
+        [ProducesResponseType(typeof(List<InvoiceTypeToSelectDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<InvoiceTypeToSelectDTO>>> GetToSelect()
+        {
+            try
+            {
+                var result = await _invoiceTypeService.GetInvoiceTypeToSelect();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar los documentos comerciales del catalogo.",
                     Detalle = errorMsg
                 });
             }

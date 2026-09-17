@@ -1,5 +1,4 @@
-﻿using MUTZI.GUIA.APPLICATION.DTOs.Transportista;
-using Swashbuckle.AspNetCore.Annotations;
+﻿using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 

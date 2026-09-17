@@ -2,6 +2,7 @@
 using MUTZI.GUIA.APPLICATION.DTOs.Catalogos;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
+using MUTZI.GUIA.DOMAIN.Interfaces.Repositories.Catalogo;
 
 namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
 {
@@ -114,5 +115,6 @@ namespace MUTZI.GUIA.APPLICATION.Services.Catalogos
             var documentosRelacionados = await _documentoRelacionadoRepository.GetAllToSelectAsync(tipo);
             return _mapper.Map<IEnumerable<DocumentoRelacionadoToSelectDTO>>(documentosRelacionados);
         }
+
     }
 }

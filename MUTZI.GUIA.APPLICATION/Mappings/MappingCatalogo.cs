@@ -30,6 +30,11 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
 
             // Paises
             CreateMap<Country, CountryDTO>();
+
+            // Tipos de documentos comerciales
+            CreateMap<InvoiceType, InvoiceTypeDTO>();
+            CreateMap<InvoiceType, InvoiceTypeToSelectDTO>();
+
         }
     }
 }

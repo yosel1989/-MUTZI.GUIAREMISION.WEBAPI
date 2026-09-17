@@ -103,6 +103,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         public virtual Ubigeo Ubigeo { get; set; }
 
         public virtual List<EntityRole> Roles { get; set; } = new List<EntityRole>();
+        public virtual List<EntityBranch> EntityBranchs { get; set; } = new List<EntityBranch>();
 
 
     }

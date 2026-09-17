@@ -175,12 +175,12 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(PagedResult<EntityListDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<EntityListDTO>>> GetList( int pageNumber, int pageSize, [FromQuery] string? search, [FromQuery] string? type, [FromQuery] string? roles, [FromQuery] bool? isInternal, [FromQuery] int? excludeId)
+        public async Task<ActionResult<PagedResult<EntityListDTO>>> GetList( int pageNumber, int pageSize, [FromQuery] string? search, [FromQuery] string? type, [FromQuery] string? roles, [FromQuery] bool? isInternal, [FromQuery] int? excludeId, [FromQuery] bool? hasBranch)
         {
             try
             {
                 var q = Request.Query;
-                var result = await _service.GetListAsync(pageNumber, pageSize, search, type, roles, isInternal, excludeId);
+                var result = await _service.GetListAsync(pageNumber, pageSize, search, type, roles, isInternal, excludeId, hasBranch);
                 return Ok(result);
             }
             catch (Exception ex)

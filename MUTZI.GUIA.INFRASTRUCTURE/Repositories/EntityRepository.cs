@@ -158,7 +158,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
 
 
-        public async Task<(int total, List<Entity>)> GetListAsync(int pageNumber, int pageSize, string? search, string? type, string? roles, bool? isInternal, int? excludeId)
+        public async Task<(int total, List<Entity>)> GetListAsync(int pageNumber, int pageSize, string? search, string? type, string? roles, bool? isInternal, int? excludeId, bool? hasBranch)
         {
             var query = _context.Entities
                 .Where(x => x.Active)
@@ -188,6 +188,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             if (isInternal is not null)
             {
                 query = query.Where(e => e.IsInternal == isInternal);
+            }
+
+            if (hasBranch is not null)
+            {
+                query = query.Where(e => e.EntityBranchs.Any(eb => eb.Active));
             }
 
             if (excludeId is not null)

@@ -293,12 +293,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                             .Column(leftCol =>
                             {
                                 leftCol.Item()
-                                    .PaddingLeft(10)
-                                    .PaddingRight(10)
+                                    .PaddingLeft(8)
+                                    .PaddingRight(8)
                                     .PaddingBottom(5)
                                     .Column(col =>
                                     {
-                                        col.Item().Text("DETALLE DE LA GUÍA:").FontSize(titleSize).SemiBold();
+                                        col.Item().Text("DETALLE DE LA GUÍA:").FontSize(titleSize).Bold();
                                     });
 
                                 leftCol.Item()
@@ -321,7 +321,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                 col.Item().Text(text =>
                                                 {
                                                     text.Span("UND. DE MEDIDA:   ").SemiBold();
-                                                    text.Span(_dto.DatosEnvios.First()?.UnidadMedida?.DescripcionCorta);
+                                                    text.Span(_dto.DatosEnvios.First()?.UnidadMedida?.CodigoSunat);
                                                 });
                                                 col.Item().Text(text =>
                                                 {
@@ -382,8 +382,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                             .Column(col =>
                                             {
                                                 col.Item()
-                                                    .PaddingLeft(10)
-                                                    .PaddingRight(10)
+                                                    .PaddingLeft(8)
+                                                    .PaddingRight(8)
                                                     .PaddingBottom(5)
                                                     .Column(col =>
                                                     {
@@ -423,8 +423,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                             .Column(col =>
                                             {
                                                 col.Item()
-                                                    .PaddingLeft(10)
-                                                    .PaddingRight(10)
+                                                    .PaddingLeft(8)
+                                                    .PaddingRight(8)
                                                     .PaddingBottom(5)
                                                     .Column(col =>
                                                     {
@@ -475,7 +475,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                             columns.ConstantColumn(40);   // UNIDAD
                             columns.ConstantColumn(45);   // CÓDIGO
                             columns.RelativeColumn(3);    // DESCRIPCIÓN
-                            columns.ConstantColumn(33);  // COD. DE PRD. SUNAT
+                            columns.ConstantColumn(50);  // COD. DE PRD. SUNAT
                             columns.ConstantColumn(30);   // GTIN
                             columns.ConstantColumn(40);  // BIEN NORMALIZADO
                         });

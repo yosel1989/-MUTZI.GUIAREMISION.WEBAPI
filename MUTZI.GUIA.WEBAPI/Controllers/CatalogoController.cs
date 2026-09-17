@@ -10,10 +10,10 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
     [Route("catalogos")]
     [ApiController]
     [Authorize]
-    public class CatalogoController : ControllerBase
+    public class InvoiceTypeController : ControllerBase
     {
         private readonly ICatalogoService _service;
-        public CatalogoController(ICatalogoService service)
+        public InvoiceTypeController(ICatalogoService service)
         {
             _service = service;
         }
@@ -242,5 +242,9 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 });
             }
         }
+
+
+      
+        
     }
 }

@@ -35,6 +35,7 @@ using MUTZI.GUIA.DOMAIN.Interfaces;
 using MUTZI.GUIA.DOMAIN.Interfaces.Document;
 using MUTZI.GUIA.DOMAIN.Interfaces.Factories;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
+using MUTZI.GUIA.DOMAIN.Interfaces.Repositories.Catalogo;
 using MUTZI.GUIA.INFRASTRUCTURE;
 using MUTZI.GUIA.INFRASTRUCTURE.Adapters;
 using MUTZI.GUIA.INFRASTRUCTURE.Document;
@@ -133,6 +134,7 @@ builder.Services.AddAutoMapper(typeof(MappingOperacionResponsable).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingEntity).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingIntegrationCredential).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingGuiaRemision).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingEntityBranchSerie).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -147,6 +149,7 @@ builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
 builder.Services.AddScoped<IUbigeoRepository, UbigeoRepository>();
 builder.Services.AddScoped<ITransportistaRepository, TransportistaRepository>();
 builder.Services.AddScoped<IEntityBranchRepository, EntityBranchRepository>();
+builder.Services.AddScoped<IEntityBranchSerieRepository, EntityBranchSerieRepository>();
 builder.Services.AddScoped<IPerfilRepository, PerfilRepository>();
 builder.Services.AddScoped<IPermisoRepository, PermisoRepository>();
 builder.Services.AddScoped<IPerfilPermisoRepository, PerfilPermisoRepository>();
@@ -169,6 +172,7 @@ builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IIntegrationCredentialRepository, IntegrationCredentialRepository>();
 builder.Services.AddScoped<IGuiaRemisionTransportUnitRepository, GuiaRemisionTransportUnitRepository>();
 builder.Services.AddScoped<IGuiaRemisionEntityCarrierRepository, GuiaRemisionEntityCarrierRepository>();
+builder.Services.AddScoped<IInvoiceTypeRepository, InvoiceTypeRepository>();
 
 
 //builder.Services.AddScoped<IGuiaRemisionDocument, GuiaRemisionDocument>();
@@ -195,6 +199,7 @@ builder.Services.AddScoped<IProveedorService, ProveedorService>();
 builder.Services.AddScoped<IUbigeoService, UbigeoService>();
 builder.Services.AddScoped<IS3FileService, S3FileService>();
 builder.Services.AddScoped<IEntityBranchService, EntityBranchService>();
+builder.Services.AddScoped<IEntityBranchSerieService, EntityBranchSerieService>();
 builder.Services.AddScoped<ITransportistaService, TransportistaService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IGuiaRemisionHistorialService, GuiaRemisionHistorialService>();
@@ -208,6 +213,7 @@ builder.Services.AddScoped<IEntityService, EntityService>();
 builder.Services.AddScoped<IEntityInfoService, EntityInfoService>();
 builder.Services.AddScoped<IEntityRoleService, EntityRoleService>();
 builder.Services.AddScoped<IIntegrationCredentialService, IntegrationCredentialService>();
+builder.Services.AddScoped<IInvoiceTypeService, InvoiceTypeService>();
 builder.Services.AddMemoryCache();
 
 builder.Services.AddValidatorsFromAssemblyContaining<EntityCreateValidator>();
