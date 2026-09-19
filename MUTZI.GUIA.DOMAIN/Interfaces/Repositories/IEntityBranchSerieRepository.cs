@@ -12,6 +12,6 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 
         Task<bool> HasSerie(int entityBranchId, int? entityBranchSerieId, string serie);
 
-        Task<(List<EntityBranchSerie>, int)> GetListAsync(int pageNumber, int pageSize, string? search);
+        Task<(List<EntityBranchSerie>, int)> GetListAsync(int entityBranchId, int pageNumber, int pageSize, string? search);
     }
 }

@@ -9,7 +9,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
         Task<int> CreateAsync(EntityBranchSerieCreateDTO request);
         Task<EntityBranchSerieDTO> UpdateAsync(int entityBranchSerieId, EntityBranchSerieUpdateDTO request);
         Task<EntityBranchSerieDTO?> GetByIdAsync(int entityBranchSerieId);
-        Task<PagedResult<EntityBranchSerieDTO>> GetListAsync(int pageNumber, int pageSize, string? search);
+        Task<PagedResult<EntityBranchSerieDTO>> GetListAsync(int entityBranchId, int pageNumber, int pageSize, string? search);
         Task<ToggleActiveResponseDTO> ToggleActiveAsync(int entityBranchSerieId, bool active);
     }
 }

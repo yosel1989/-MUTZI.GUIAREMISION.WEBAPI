@@ -6,7 +6,6 @@ using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.EntityBranchSerie;
 using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
-using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers
@@ -23,7 +22,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         }
 
         [HttpGet]
-        [Route("listar/{pageNumber}/{pageSize}")]
+        [Route("branch/{entityBranchId}/list/{pageNumber}/{pageSize}")]
         [SwaggerOperation(
             Summary = "Listar series",
             Description = "Lista las series por página. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
@@ -33,11 +32,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(PagedResult<EntityBranchSerieDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<EntityBranchSerieDTO>>> GetAll(int pageNumber, int pageSize, [FromQuery] string? search)
+        public async Task<ActionResult<PagedResult<EntityBranchSerieDTO>>> GetAll(int entityBranchId, int pageNumber, int pageSize, [FromQuery] string? search)
         {
             try
             {
-                var remitentes = await _service.GetListAsync(pageNumber, pageSize, search);
+                var remitentes = await _service.GetListAsync(entityBranchId, pageNumber, pageSize, search);
                 return Ok(remitentes);
             }
             catch (Exception ex)

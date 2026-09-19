@@ -75,9 +75,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
         }
 
 
-        public async Task<PagedResult<EntityBranchSerieDTO>> GetListAsync(int pageNumber, int pageSize, string? search)
+        public async Task<PagedResult<EntityBranchSerieDTO>> GetListAsync(int entityBranchId, int pageNumber, int pageSize, string? search)
         {
-            var (data, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize, search);
+            var (data, totalRecords) = await _repository.GetListAsync(entityBranchId, pageNumber, pageSize, search);
 
             return new PagedResult<EntityBranchSerieDTO>
             {

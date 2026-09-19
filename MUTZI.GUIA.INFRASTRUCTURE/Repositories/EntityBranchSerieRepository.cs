@@ -65,7 +65,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task<(List<EntityBranchSerie>, int)> GetListAsync(int pageNumber, int pageSize, string? search)
+        public async Task<(List<EntityBranchSerie>, int)> GetListAsync(int entityBranchId, int pageNumber, int pageSize, string? search)
         {
             try
             {
@@ -85,6 +85,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var totalRecords = await query.CountAsync();
 
                 var data = await query
+                    .Where(x => x.EntityBranchId == entityBranchId)
                     .OrderByDescending(r => r.EntityBranchId)
                     .Skip((pageNumber - 1) * pageSize)
                     .AsNoTracking()
