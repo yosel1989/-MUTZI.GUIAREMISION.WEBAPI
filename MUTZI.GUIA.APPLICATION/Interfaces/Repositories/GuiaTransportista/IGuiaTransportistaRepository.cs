@@ -7,6 +7,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Repositories.GuiaTransportista
         Task<DOMAIN.Entities.GuiaRemision> GetByIdAsync(int id);
         Task<(int GuiaId, string NumeroGuia)> CreateGuiaTransportistaTransactionalAsync(
             EntityBranch remitente,
+            EntityBranchSerie remitenteSerie,
             Entity remiteTransportista,
             EntityBranch destinatario,
             List<DOMAIN.Entities.GuiaRemisionConductor> conductor,

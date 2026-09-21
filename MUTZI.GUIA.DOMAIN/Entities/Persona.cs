@@ -21,5 +21,8 @@ namespace MUTZI.GUIA.DOMAIN.Entities
 
         [Column("cargo")]
         public string? Cargo { get; set; }
+
+        [Column("numero_documento")]
+        public string NumeroDocumento { get; set; }
     }
 }

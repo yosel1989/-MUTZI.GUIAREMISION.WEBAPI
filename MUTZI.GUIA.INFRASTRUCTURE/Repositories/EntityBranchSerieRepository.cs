@@ -71,6 +71,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 var query = _context.EntityBranchSeries
                 .Include(r => r.InvoiceType)
+                .Where(x => x.EntityBranchId == entityBranchId)
                 .AsQueryable();
                 if (!string.IsNullOrEmpty(search))
                 {
@@ -85,7 +86,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var totalRecords = await query.CountAsync();
 
                 var data = await query
-                    .Where(x => x.EntityBranchId == entityBranchId)
                     .OrderByDescending(r => r.EntityBranchId)
                     .Skip((pageNumber - 1) * pageSize)
                     .AsNoTracking()

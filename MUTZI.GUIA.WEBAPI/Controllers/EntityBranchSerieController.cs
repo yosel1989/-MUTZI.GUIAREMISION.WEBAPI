@@ -137,7 +137,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 return Ok(new ResponseDTO<ToggleActiveResponseDTO>
                 {
                     Data = result,
-                    Detalle = $"Se {(result.Active ? "activó" : "desactivó")} el serie COD-{id.ToString("D4")} con éxito."
+                    Detalle = $"Se {(result.Active ? "activó" : "desactivó")} la serie COD-{id.ToString("D4")} con éxito."
                 });
             }
             catch (Exception ex)

@@ -10,6 +10,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
         public MappingEntityBranchSerie()
         {
             CreateMap<EntityBranchSerieCreateDTO, EntityBranchSerie>();
+            CreateMap<EntityBranchSerie, ToggleActiveResponseDTO>();
             CreateMap<EntityBranchSerie, EntityBranchSerieDTO>()
                 .ForMember(dest => dest.InvoiceType, opt => opt.MapFrom(src => src.InvoiceType.Name))
                 ;

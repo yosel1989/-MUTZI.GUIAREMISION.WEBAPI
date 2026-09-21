@@ -135,6 +135,7 @@ builder.Services.AddAutoMapper(typeof(MappingEntity).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingIntegrationCredential).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingGuiaRemision).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingEntityBranchSerie).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingSecurityPerson).Assembly);
 
 builder.Services.AddSignalR();
 
@@ -172,6 +173,7 @@ builder.Services.AddScoped<ICountryRepository, CountryRepository>();
 builder.Services.AddScoped<IIntegrationCredentialRepository, IntegrationCredentialRepository>();
 builder.Services.AddScoped<IGuiaRemisionTransportUnitRepository, GuiaRemisionTransportUnitRepository>();
 builder.Services.AddScoped<IGuiaRemisionEntityCarrierRepository, GuiaRemisionEntityCarrierRepository>();
+builder.Services.AddScoped<ISecurityPersonRepository, SecurityPersonRepository>();
 builder.Services.AddScoped<IInvoiceTypeRepository, InvoiceTypeRepository>();
 
 
@@ -209,6 +211,7 @@ builder.Services.AddScoped<IMotivoTrasladoService, MotivoTrasladoService>();
 builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<IOperacionResponsableService, OperacionResponsableService>();
 builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoService, GuiaRemisionIndicadorTrasladoService>();
+builder.Services.AddScoped<ISecurityPersonService, SecurityPersonService>();
 builder.Services.AddScoped<IEntityService, EntityService>();
 builder.Services.AddScoped<IEntityInfoService, EntityInfoService>();
 builder.Services.AddScoped<IEntityRoleService, EntityRoleService>();

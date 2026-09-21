@@ -41,11 +41,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         //[EmailAddress(ErrorMessage = "El formato del correo es inválido")]
         public string? Email { get; set; }
 
-        [JsonPropertyName("serie")]
-        [SwaggerSchema("Recibe un texto, aquí se coloca la serie que posteriormente se usa en las guías de remisión, ejm: T001, T002", Nullable = false)]
-        [StringLength(4, ErrorMessage = "La serie requiere 4 caracteres")]
-        public string Serie { get; set; }
-
         [JsonPropertyName("code_sunat")]
         [SwaggerSchema("Recibe un texto, aquí se coloca el Código de establecimiento o de la Sucursal", Nullable = true)]
         [StringLength(4, ErrorMessage = "El código de establecimiento requiere 4 caracteres")]
@@ -55,11 +50,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Recibe un texto, se coloca el tipo de establecimiento segpun sunat : 'domicilio_fiscal', 'casa_matriz', 'sucursal', 'agencia', 'local_comercial', 'sede_productiva', 'almacen', 'oficina_administrativa'", Nullable = true)]
         [MaxLength(100)]
         public string Type { get; set; }
-
-        [JsonPropertyName("area")]
-        [SwaggerSchema("Recibe un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
-        [MaxLength(45)]
-        public string? Area { get; set; }
 
         [JsonPropertyName("is_main")]
         [SwaggerSchema("Recibe un boolean, aquí recibe un indicador si es anexo principal", Nullable = false)]

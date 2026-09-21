@@ -22,6 +22,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [Required]
         public int? EntityId { get; set; }
 
+        [JsonPropertyName("entity_branch_serie_id")]
+        [SwaggerSchema("Recibe un número, aquí va el id de la serie asignada o seleccionada de la lista de series asignadas.", Nullable = false)]
+        [Required]
+        public int EntityBranchSerieId { get; set; }
+
 
         [JsonPropertyName("tipo_transporte")]
         [SwaggerSchema("Recibe un texto y solo pueden ser: PUBLICO ó PRIVADO", Nullable = false)]

@@ -269,7 +269,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 
 
         [HttpGet]
-        [Route("buscar-por-id-para-guia/{id}/{tipoGuia}")]
+        [Route("buscar-por-id-para-guia/{id}/{tipoGuia}/{entityBranchSerieId}")]
         [SwaggerOperation(
             Summary = "Buscar establecimiento remitente por ID y por tipo de guía",
             Description = "Buscar objeto por ID y tipo de guía. En 'tipoGuia', colocar: 'REMITENTE' ó 'TRANSPORTISTA'.",
@@ -279,11 +279,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(EstablecimientoRemitenteDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<EstablecimientoRemitenteDTO>> GetForGuiaById(int id, string tipoGuia)
+        public async Task<ActionResult<EstablecimientoRemitenteDTO>> GetForGuiaById(int id, string tipoGuia, int entityBranchSerieId)
         {
             try
             {
-                var establecimientoRemitente = await _service.GetByIdForGuiaAsync(id, tipoGuia);
+                var establecimientoRemitente = await _service.GetByIdForGuiaAsync(id, tipoGuia, entityBranchSerieId);
                 if (establecimientoRemitente == null)
                 {
                     return BadRequest(new BadRequestResponseDTO

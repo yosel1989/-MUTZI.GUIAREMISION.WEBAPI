@@ -45,6 +45,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<(int GuiaId, string NumeroGuia)> CreateGuiaTransportistaTransactionalAsync(
             EntityBranch remitente,
+            EntityBranchSerie remitenteSerie,
             Entity remiteTransportista,
             EntityBranch destinatario,
             List<GuiaRemisionConductor> conductor,
@@ -72,7 +73,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 guiaRemision.EstadoId = 0;
 
                 //string serie = guiaRemision.Serie ?? "V001";
-                string serie = "V" + remitente.Serie.Trim();
+                string serie = "V" + remitenteSerie.Serie.Trim();
 
                 //Buscar el último correlativo para esa serie
                 var lastGuia = await _context.GuiaRemision

@@ -47,7 +47,7 @@ public partial class EntityBranchSerie
     // Relaciones
 
     [ForeignKey(nameof(EntityBranchId))]
-    public virtual EntityBranch EntityBranch { get; set; } = null!;
+    public virtual EntityBranch EntityBranch { get; set; }
 
     [ForeignKey(nameof(InvoiceTypeId))]
     public virtual InvoiceType InvoiceType { get; set; }

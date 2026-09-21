@@ -17,6 +17,11 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaTransportista
         [Required]
         public int EntityId { get; set; }
 
+        [JsonPropertyName("entity_branch_serie_id")]
+        [SwaggerSchema("Recibe un número, el id de la serie asignada o serie seleccionada de las series asignadas.", Nullable = false)]
+        [Required]
+        public int EntityBranchSerieId { get; set; }
+
 
         [JsonPropertyName("fecha")]
         [SwaggerSchema("Recibe un texto de fecha en formato: yyyy-MM-dd; por ejemplo: 2025-09-23", Nullable = false)]

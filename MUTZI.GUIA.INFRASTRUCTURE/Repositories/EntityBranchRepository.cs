@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MUTZI.GUIA.DOMAIN.Entities;
+using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
 
@@ -43,7 +44,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     {
                         EntityBranchId = m.EntityBranchId,
                         Description = m.Description,
-                        Area = m.Area
                     })
                     .OrderBy(e => e.Description)
                     .ToListAsync();
@@ -67,7 +67,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     EntityBranchId = r.EntityBranchId,
                     Description = r.Description,
                     CodeSunat = r.CodeSunat,
-                    Area = r.Area
                 })
                 .ToListAsync();
 
@@ -92,8 +91,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     query = query.Where(c =>
                         (string.IsNullOrEmpty(search) ||
                          c.CodeSunat.Contains(search) ||
-                         c.Description.Contains(search) ||
-                         c.Area.Contains(search)
+                         c.Description.Contains(search)
                         )
                     );
                 }
@@ -106,8 +104,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     EntityBranchId = m.EntityBranchId,
                     Description = m.Description,
                     CodeSunat = m.CodeSunat,
-                    Area = m.Area,
-                    Serie = m.Serie,
                     Entity = new Entity
                     {
                         Name = m.Entity.Name,
@@ -132,6 +128,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
                 var data = await _context.Establecimiento
                     .Include(r => r.Ubigeo)
+                    .Include(r => r.Series)
                     .Include(r => r.Entity)
                         .ThenInclude(r => r.Ubigeo)
                     //.AsNoTracking()
@@ -156,8 +153,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 var query = _context.Establecimiento
-                .Include(r => r.Ubigeo)
-                .Include(e => e.Entity)
+                //.Include(r => r.Ubigeo)
+                //.Include(e => e.Entity)
                 .AsQueryable();
                 if (!string.IsNullOrEmpty(search))
                 {
@@ -173,10 +170,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         x.Ubigeo.Distrito.ToLower().Contains(val) ||
                         x.Address.ToLower().Contains(val) ||
                         x.Email.ToLower().Contains(val) ||
-                        x.Serie.Contains(val) ||
                         x.CodeSunat.ToLower().Contains(val) ||
                         x.CreatedAtUserName.ToLower().Contains(val) ||
-                        x.Area.ToLower().Contains(val) ||
                         x.UpdatedAtUserName.ToLower().Contains(val)
                     );
                 }
@@ -185,8 +180,44 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var data = await query
                     .OrderByDescending(r => r.EntityBranchId)
                     .Skip((pageNumber - 1) * pageSize)
-                    .AsNoTracking()
                     .Take(pageSize)
+                    .Select(x => new EntityBranch
+                    {
+                        EntityBranchId = x.EntityBranchId,
+                        EntityId = x.EntityId,
+                        Entity = new Entity
+                        {
+                            Name = x.Entity.Name,
+                            FirstName = x.Entity.FirstName,
+                            LastName = x.Entity.LastName,
+                            Address = x.Entity.Address,
+                            DocumentNumber = x.Entity.DocumentNumber,
+                            DocumentType = new TipoDocumento
+                            {
+                                Descripcion = x.Entity.DocumentType.Descripcion,
+                                DescripcionCorta = x.Entity.DocumentType.DescripcionCorta
+                            }
+                        },
+                        Description = x.Description,
+                        Address = x.Address,
+                        CodeSunat = x.CodeSunat,
+                        UbigeoId = x.UbigeoId,
+                        Ubigeo = new Ubigeo
+                        {
+                            Departamento = x.Ubigeo.Departamento,
+                            Provincia = x.Ubigeo.Provincia,
+                            Distrito = x.Ubigeo.Distrito,
+                        },
+                        Active = x.Active,
+                        SeriesCount = x.Series.Count(x => x.Active),
+                        CreatedAt = x.CreatedAt,
+                        CreatedAtUser = x.CreatedAtUser,
+                        CreatedAtUserName = x.CreatedAtUserName,
+                        UpdatedAt = x.UpdatedAt,
+                        UpdatedAtUser = x.UpdatedAtUser,
+                        UpdatedAtUserName = x.UpdatedAtUserName
+                    })
+                    .AsNoTracking()
                     .ToListAsync();
 
                 return (data, totalRecords);
@@ -242,12 +273,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
-        public async Task<bool> GetBySerieAsync(int entityId, string serie)
+        public async Task<bool> GetByCodeSunatAsync(int entityId, string codeSunat)
         {
             try
             {
                 var existe = await _context.Establecimiento
-                .AnyAsync(r => r.EntityId == entityId && r.Serie == serie);
+                .AnyAsync(r => r.EntityId == entityId && r.CodeSunat == codeSunat);
                 return existe;
             }
             catch (Exception ex)

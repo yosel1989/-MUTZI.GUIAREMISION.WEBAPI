@@ -52,9 +52,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("email")]
         public string? Email { get; set; }
 
-        [JsonPropertyName("serie")]
-        public string Serie { get; set; } = null!;
-
         [JsonPropertyName("code_sunat")]
         public string CodeSunat { get; set; }
 
@@ -82,10 +79,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("type")]
         public string Type { get; set; }
 
-        [JsonPropertyName("area")]
-        public string? Area { get; set; }
-
         [JsonPropertyName("is_main")]
         public bool IsMain { get; set; } = false;
+
+        [JsonPropertyName("series_count")]
+        public int SeriesCount { get; set; } = 0;
     }
 }

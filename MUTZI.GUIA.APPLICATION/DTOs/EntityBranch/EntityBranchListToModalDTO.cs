@@ -25,12 +25,5 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve el código de establecimiento registrado en SUNAT. Ejem: 0001, 0012", Nullable = false)]
         public string CodeSunat { get; set; }
 
-        [JsonPropertyName("area")]
-        [SwaggerSchema("Devuelve un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
-        public string? Area { get; set; }
-
-        [JsonPropertyName("serie")]
-        [SwaggerSchema("Devuelve un texto, la serie , ejm: T001, T002", Nullable = false)]
-        public string Serie { get; set; }
     }
 }

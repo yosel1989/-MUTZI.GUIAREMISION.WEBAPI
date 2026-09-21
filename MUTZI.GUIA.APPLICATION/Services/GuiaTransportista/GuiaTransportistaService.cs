@@ -15,12 +15,14 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
         private readonly IEntityBranchRepository _establecimientoRepository;
         private readonly IIntegrationCredentialRepository _integrationCredentialRepository;
         private readonly IEntityRepository _entityRepository;
+        private readonly IEntityBranchSerieRepository _entityBranchSerieRepository;
         private readonly IMapper _mapper;
         public GuiaTransportistaService(
             IGuiaTransportistaRepository repository,
             IEntityBranchRepository establecimientoRepository,
             IIntegrationCredentialRepository integrationCredentialRepository,
             IEntityRepository entityRepository,
+            IEntityBranchSerieRepository entityBranchSerieRepository,
             IMapper mapper
         )
         {
@@ -28,6 +30,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
             _establecimientoRepository = establecimientoRepository;
             _integrationCredentialRepository = integrationCredentialRepository;
             _entityRepository = entityRepository;
+            _entityBranchSerieRepository = entityBranchSerieRepository;
             _mapper = mapper;
         }
         public async Task<object> CreateAsync(string ruc, GuiaTransportistaCreateDTO request)
@@ -40,6 +43,7 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
                 try
                 {
                     // Mapear todos los objetos
+                    var entityBranchSerie = await _entityBranchSerieRepository.GetByIdAsync(request.EntityBranchSerieId, strict: true);
                     var remitente = await _establecimientoRepository.GetByIdAsync(request.RemitenteId);
                     var remiteTransportista = await _entityRepository.GetByIdAsync(request.RemiteTransportistaId ?? 0);
                     var destinatario = await _establecimientoRepository.GetByIdAsync(request.DestinatarioId);
@@ -72,8 +76,20 @@ namespace MUTZI.GUIA.APPLICATION.Services.GuiaTransportista
 
                     // Llamar al repositorio
                     var (guiaID, numeroGuia) = await _repository.CreateGuiaTransportistaTransactionalAsync(
-                        remitente, remiteTransportista, destinatario, conductor, transporte,
-                        guiaRemision, datosEnvio, origen, destino, detalles, docRelacionados, emailsDestinatarioGuia, emailsRemiteTransportistaGuia
+                        remitente,
+                        entityBranchSerie,
+                        remiteTransportista, 
+                        destinatario, 
+                        conductor, 
+                        transporte,
+                        guiaRemision, 
+                        datosEnvio, 
+                        origen, 
+                        destino, 
+                        detalles, 
+                        docRelacionados, 
+                        emailsDestinatarioGuia, 
+                        emailsRemiteTransportistaGuia
                     );
                     return new GuiaCreatedResponseDTO
                     {

@@ -46,12 +46,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve un texto, el correo electrónico del remitente", Nullable = true)]
         public string? Email { get; set; }
 
-        [JsonPropertyName("serie")]
-        [SwaggerSchema("Devuelve un texto, la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
-        public string Serie { get; set; }
-
-        [JsonPropertyName("area")]
-        [SwaggerSchema("Devuelve un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
-        public string? Area { get; set; }
+        [JsonPropertyName("series_count")]
+        public int SeriesCount { get; set; } = 0;
     }
 }

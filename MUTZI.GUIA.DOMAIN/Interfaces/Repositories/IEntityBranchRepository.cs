@@ -14,7 +14,7 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
         Task DeleteAsync(int id);
         Task<EntityBranch> UpdateAsync(EntityBranch establecimiento);
         Task CreateAsync(EntityBranch nuevoEstablecimiento);
-        Task<bool> GetBySerieAsync(int entityId, string serie);
+        Task<bool> GetByCodeSunatAsync(int entityId, string serie);
         Task<GuiaRemision?> GetLastBySerieAsync(string serie, int entityId);
     }
 }

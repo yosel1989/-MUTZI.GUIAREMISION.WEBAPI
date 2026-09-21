@@ -53,10 +53,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [SwaggerSchema("Devuelve un texto, el correo electrónico del remitente", Nullable = false)]
         public string Email { get; set; }
 
-        [JsonPropertyName("serie")]
-        [SwaggerSchema("Devuelve un texto, la serie que posteriormente se usa en las guías de remisión, ejm: 001, 002", Nullable = true)]
-        public string Serie { get; set; }
-
         [JsonPropertyName("new_serie")]
         [SwaggerSchema("Devuelve un texto, la nueva serie que se usará en las guías de remisión, ejm: T001, V001", Nullable = true)]
         public string NewSerie { get; set; }
@@ -68,9 +64,5 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("nuevo_numero_guia")]
         [SwaggerSchema("Devuelve un texto, el nuevo número de guía que se usará en las guías de remisión, ejm: T001-00000001", Nullable = true)]
         public string NuevoNumeroGuia { get; set; }
-
-        [JsonPropertyName("area")]
-        [SwaggerSchema("Devuelve un texto, el area al que pertenece la serie , ejm: VENTAS, LOGISTICA", Nullable = true)]
-        public string? Area { get; set; }
     }
 }

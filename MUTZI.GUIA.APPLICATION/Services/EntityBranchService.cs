@@ -86,8 +86,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
         public async Task<int> CreateAsync(EntityBranchCreateDTO createDTO)
         {
             var currentUser = _authService.CurrentUser();
-            var existe = await _repository.GetBySerieAsync(createDTO.EntityId, createDTO.Serie);
-            if (existe) { throw new Exception("La serie ya se encuentra registrada a esa entidad"); }
+            var existe = await _repository.GetByCodeSunatAsync(createDTO.EntityId, createDTO.CodeSunat);
+            if (existe) { throw new Exception("El código de sunat ya se encuentra registrada a esa entidad"); }
             try
             {
                 var establecimiento = _mapper.Map<EntityBranch>(createDTO);
@@ -115,20 +115,18 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 {
                     throw new KeyNotFoundException($"EntityBranch con ID {id} no encontrado.");
                 }
-                if (updateDTO.Serie != existingEstablecimiento.Serie)
+                if (updateDTO.CodeSunat != existingEstablecimiento.CodeSunat)
                 {
-                    var existe = await _repository.GetBySerieAsync(updateDTO.EntityId, updateDTO.Serie);
-                    if (existe) { throw new Exception("La serie ya se encuentra registrada con está entidad"); }
+                    var existe = await _repository.GetByCodeSunatAsync(updateDTO.EntityId, updateDTO.CodeSunat);
+                    if (existe) { throw new Exception("El código de sunat ya se encuentra registrada con está entidad"); }
                 }
 
 
                 existingEstablecimiento.EntityId = updateDTO.EntityId;
                 existingEstablecimiento.Description = updateDTO.Description;
-                existingEstablecimiento.Area = updateDTO.Area;
                 existingEstablecimiento.UbigeoId = updateDTO.UbigeoId;
                 existingEstablecimiento.Address = updateDTO.Address;
                 existingEstablecimiento.Email = updateDTO.Email;
-                existingEstablecimiento.Serie = updateDTO.Serie;
                 existingEstablecimiento.CodeSunat = updateDTO.CodeSunat;
                 existingEstablecimiento.Type = updateDTO.Type;
                 existingEstablecimiento.IsMain = updateDTO.IsMain;
@@ -146,7 +144,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
         }
 
-        public async Task<EstablecimientoRemitenteDTO?> GetByIdForGuiaAsync(int id, string tipoGuia)
+        public async Task<EstablecimientoRemitenteDTO?> GetByIdForGuiaAsync(int id, string tipoGuia, int entityBranchSerieId)
         {
             try
             {
@@ -157,7 +155,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                 // Calcular serie completa según tipo de guía
                 var prefix = string.Equals(tipoGuia, "TRANSPORTISTA", StringComparison.OrdinalIgnoreCase) ? "V" : "T";
-                var serieBase = establecimiento.Serie?.Trim();
+                var serieBase = establecimiento.Series.Find(x => x.EntityBranchSerieId == entityBranchSerieId)?.Serie;
                 if (!string.IsNullOrEmpty(serieBase))
                 {
                     var serieCompleta = prefix + serieBase;

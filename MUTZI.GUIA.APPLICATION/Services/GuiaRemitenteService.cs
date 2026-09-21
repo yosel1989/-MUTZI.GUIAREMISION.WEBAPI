@@ -32,6 +32,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         private readonly IGuiaRemisionTransportUnitRepository _guiaRemisionTransportUnitRepository;
         private readonly IGuiaRemisionEntityCarrierRepository _guiaRemisionEntityCarrierRepository;
         private readonly IEntityBranchRepository _establecimientoRepository;
+        private readonly IEntityBranchSerieRepository _entityBranchSerieRepository;
         private readonly IEntityRepository _entityRepository;
         private readonly IMotivoTrasladoRepository _motivoTrasladoRepository;
         private readonly ITransportistaRepository _transportistaRepository;
@@ -54,6 +55,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             IMotivoTrasladoRepository motivoTrasladoRepository,
             ITransportistaRepository transportistaRepository,
             IEntityBranchRepository establecimientoRepository,
+            IEntityBranchSerieRepository entityBranchSerieRepository,
             IIntegrationCredentialService integrationCredentialService,
             IIntegrationCredentialRepository integrationCredentialRepository,
             IProveedorRepository proveedorRepository,
@@ -75,6 +77,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _transportistaRepository = transportistaRepository;
             _proveedorRepository = proveedorRepository;
             _entityRepository = entityRepository;
+            _entityBranchSerieRepository = entityBranchSerieRepository;
             _ventaConfigRepository = ventaConfigRepository;
             _guiaRemisionDocumentFactory = guiaRemisionDocumentFactory;
             _integrationCredentialService = integrationCredentialService;
@@ -270,9 +273,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var currentUser = _authService.CurrentUser();
                     var currentDate = DateTime.UtcNow;
                     // Mapear todos los objetos
-                    var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(request.MotivoTrasladoId, true);
-                    var remitente = await _establecimientoRepository.GetByIdAsync(request.RemitenteId, true, "Remitente");
-                    var destinatario = await _establecimientoRepository.GetByIdAsync(request.DestinatarioId, true, "Destinatario");
+
+                    var entityBranchSerie = await _entityBranchSerieRepository.GetByIdAsync(request.EntityBranchSerieId, strict: true);
+                    var motivoTraslado = await _motivoTrasladoRepository.GetByIdAsync(request.MotivoTrasladoId, strict: true);
+                    var remitente = await _establecimientoRepository.GetByIdAsync(request.RemitenteId, strict: true, "Remitente");
+                    var destinatario = await _establecimientoRepository.GetByIdAsync(request.DestinatarioId, strict: true, "Destinatario");
                     var destinatarioEmails = request.DestinatarioEmail.Select(p => _mapper.Map<GuiaRemisionEmailDestinatario>(p)).ToList();
                     var proveedor = await _proveedorRepository.GetByIdAsync(request.ProveedorId ?? 0);
                     var conductor = request.DatosEnvio.ConductorId?.Select(p => _mapper.Map<GuiaRemisionConductor>(p)).ToList() ?? [];
@@ -310,7 +315,8 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
                     // Llamar al repositorio
                     var (guia_id, numero_guia) = await _repository.CreateGuiaRemisionTransactionalAsync(
-                        remitente, 
+                        remitente,
+                        entityBranchSerie,
                         destinatario, 
                         proveedor, 
                         conductor,

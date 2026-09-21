@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
@@ -44,6 +45,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<IntegrationCredential> IntegrationCredentials { get; set; }
     public virtual DbSet<GuiaRemisionTransportUnit> GuiaRemisionTransportUnits { get; set; }
     public virtual DbSet<GuiaRemisionEntityCarrier> GuiaRemisionEntityCarriers { get; set; }
+    public virtual DbSet<SecurityPerson> SecurityPersons { get; set; }
 
     // Catalogos
     public virtual DbSet<Area> Area { get; set; }
@@ -116,6 +118,15 @@ public partial class LogisticaContext : DbContext
             .WithMany(e => e.EstadosPermitidosHacia)
             .HasForeignKey(pp => pp.GuiaRemisionEstadoIdPermitido)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Persona>()
+            .HasAlternateKey(x => x.NumeroDocumento);
+
+        modelBuilder.Entity<SecurityPerson>()
+            .HasOne(x => x.Persona)
+            .WithMany()
+            .HasForeignKey(x => x.DocumentNumber)
+            .HasPrincipalKey(x => x.NumeroDocumento);
 
     }
 

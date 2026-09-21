@@ -25,9 +25,6 @@ public partial class EntityBranch
     [Column("email")]
     public string? Email { get; set; }
 
-    [Column("serie")]
-    public string Serie { get; set; } = null!;
-
     [Column("code_sunat")]
     public string CodeSunat { get; set; }
 
@@ -55,8 +52,6 @@ public partial class EntityBranch
     [Column("type")]
     public string Type { get; set; }
 
-    [Column("area")]
-    public string? Area { get; set; }
 
     [Column("is_main")]
     public bool IsMain { get; set; } = false;
@@ -67,7 +62,12 @@ public partial class EntityBranch
     public virtual Ubigeo Ubigeo { get; set; } = null!;
 
     [ForeignKey(nameof(EntityId))]
-    public virtual Entity? Entity { get; set; }
+    public virtual Entity Entity { get; set; }
 
+    public virtual List<EntityBranchSerie> Series { get; set; } = new List<EntityBranchSerie>();
 
+    // Adicionales
+
+    [NotMapped]
+    public int SeriesCount { get; set; } = 0;
 }
