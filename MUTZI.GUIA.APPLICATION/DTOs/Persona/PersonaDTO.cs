@@ -20,7 +20,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Persona
         public string? Cargo { get; set; }
 
         [JsonPropertyName("numero_documento")]
-        public string NumeroDocumento { get; set; }
+        public string? NumeroDocumento { get; set; }
     }
 
 
@@ -39,6 +39,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Persona
         public string? Cargo { get; set; }
 
         [JsonPropertyName("numero_documento")]
-        public string NumeroDocumento { get; set; }
+        public string? NumeroDocumento { get; set; }
     }
 }

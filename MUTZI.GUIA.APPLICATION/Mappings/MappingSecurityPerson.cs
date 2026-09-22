@@ -12,6 +12,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<SecurityPerson, ToggleActiveResponseDTO>();
             CreateMap<SecurityPerson, SecurityPersonDTO>()
                 .ForMember(dest => dest.PersonFullName, opt => opt.MapFrom(src => $"{src.Persona.Nombre} {src.Persona.ApellidoPaterno} {src.Persona.ApellidoMaterno}"))
+                .ForMember(dest => dest.PersonDocumentNumber, opt => opt.MapFrom(src => src.Persona.NumeroDocumento))
+                .ForMember(dest => dest.PersonRole, opt => opt.MapFrom(src => src.Persona.Cargo))
                 ;
         }
     }

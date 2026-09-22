@@ -48,7 +48,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 var currentUser = _authService.CurrentUser();
                 var editSecurityPerson = await _repository.GetByIdAsync(id, strict: true);
 
-                editSecurityPerson!.DocumentNumber = request.DocumentNumber;
+                editSecurityPerson!.PersonId = request.PersonId;
                 editSecurityPerson!.UpdatedAt = DateTime.UtcNow;
                 editSecurityPerson!.UpdatedAtUser = currentUser.UserName;
                 editSecurityPerson!.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();

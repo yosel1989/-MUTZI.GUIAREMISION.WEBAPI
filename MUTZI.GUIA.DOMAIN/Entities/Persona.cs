@@ -11,7 +11,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         public int PersonaId { get; set; }
 
         [Column("nombre")]
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
 
         [Column("apellido_paterno")]
         public string? ApellidoPaterno { get; set; }
@@ -23,6 +23,6 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         public string? Cargo { get; set; }
 
         [Column("numero_documento")]
-        public string NumeroDocumento { get; set; }
+        public string? NumeroDocumento { get; set; }
     }
 }

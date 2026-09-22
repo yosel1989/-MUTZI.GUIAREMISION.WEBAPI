@@ -13,30 +13,39 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Persona>> GetListBySuggestion(string? text, string? cargo)
+        public async Task<IEnumerable<Persona>> GetListBySuggestion(
+            string? text,
+            string? cargo)
         {
             try
             {
-                var query = _context.Persona.AsQueryable();
-                if (!string.IsNullOrEmpty(text))
+                var query = _context.Persona
+                    .AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(text))
                 {
                     query = query.Where(c =>
-                        c.Nombre.Contains(text) ||
-                        c.ApellidoPaterno.Contains(text) ||
-                        c.ApellidoMaterno.Contains(text)
+                        (c.Nombre != null && c.Nombre.Contains(text)) ||
+                        (c.NumeroDocumento != null && c.NumeroDocumento.Contains(text)) ||
+                        (c.ApellidoPaterno != null && c.ApellidoPaterno.Contains(text)) ||
+                        (c.ApellidoMaterno != null && c.ApellidoMaterno.Contains(text))
                     );
                 }
 
-                if (!string.IsNullOrEmpty(cargo))
+                if (!string.IsNullOrWhiteSpace(cargo))
                 {
-                    query = query.Where(c => c.Cargo.Contains(text));
+                    query = query.Where(c =>
+                        c.Cargo != null && c.Cargo.Contains(cargo)
+                    );
                 }
 
-                query = query.Where(x => x.Cargo != null);
-                var data = await query.AsNoTracking().ToListAsync();
+                var data = await query
+                    .AsNoTracking()
+                    .ToListAsync();
+
                 return data;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
                 throw;
             }

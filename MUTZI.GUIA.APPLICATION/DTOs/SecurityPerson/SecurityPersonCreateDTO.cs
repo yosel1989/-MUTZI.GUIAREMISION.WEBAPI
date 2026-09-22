@@ -5,8 +5,8 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.SecurityPerson
 {
     public class SecurityPersonCreateDTO
     {
-        [JsonPropertyName("document_number")]
-        [Description("Número de documento de identidad")]
-        public string DocumentNumber { get; set; }
+        [JsonPropertyName("person_id")]
+        [Description("Identificador único del registro de la tabla PERSONA.")]
+        public int PersonId { get; set; }
     }
 }

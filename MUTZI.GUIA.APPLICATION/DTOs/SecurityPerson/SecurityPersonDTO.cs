@@ -9,17 +9,21 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.SecurityPerson
         [Description("Identificador único del registro de la persona de seguridad del local.")]
         public int SecurityPersonId { get; set; }
 
-        [JsonPropertyName("document_number")]
-        [Description("Número de documento de identidad")]
-        public string DocumentNumber { get; set; }
+        [JsonPropertyName("person_id")]
+        [Description("Identificador único del registro de la tabla persona.")]
+        public int PersonId { get; set; }
 
-        [JsonPropertyName("full_name")]
-        [Description("Número de documento de identidad")]
+        [JsonPropertyName("person_document_number")]
+        [Description("Número de documento de identidad de la persona")]
+        public string? PersonDocumentNumber { get; set; }
+
+        [JsonPropertyName("person_full_name")]
+        [Description("Nombre completo de la persona.")]
         public string PersonFullName { get; set; }
 
-        [JsonPropertyName("role")]
+        [JsonPropertyName("person_role")]
         [Description("Cargo de la persona en la empresa.")]
-        public string Role { get; set; }
+        public string PersonRole { get; set; }
 
         [JsonPropertyName("active")]
         [Description("Estado de la entidad: activa o inactiva")]

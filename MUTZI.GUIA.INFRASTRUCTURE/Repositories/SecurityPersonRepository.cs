@@ -43,11 +43,13 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<(List<SecurityPerson>, int)> GetListAsync(int pageNumber, int pageSize, string? search)
         {
-            var query = _context.SecurityPersons.AsQueryable();
+            var query = _context.SecurityPersons
+                .Include(x => x.Persona)
+                .AsQueryable();
             if (!string.IsNullOrEmpty(search))
             {
                 query = query.Where(x =>
-                    x.DocumentNumber.Contains(search) ||
+                    x.Persona.NumeroDocumento.Contains(search) ||
                     x.Persona.Nombre.Contains(search) ||
                     x.Persona.ApellidoPaterno.Contains(search) ||
                     x.Persona.ApellidoMaterno.Contains(search)

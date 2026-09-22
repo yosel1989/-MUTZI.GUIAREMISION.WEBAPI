@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Entities.Catalogo;
@@ -58,6 +57,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<EntityRole> EntityRoles { get; set; }
     public virtual DbSet<Country> Countries { get; set; }
     public virtual DbSet<InvoiceType> InvoiceTypes { get; set; }
+    public virtual DbSet<SecurityPersonEntityBranch> SecurityPersonEntityBranchs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -104,6 +104,9 @@ public partial class LogisticaContext : DbContext
         modelBuilder.Entity<GuiaRemisionEntityCarrier>()
         .HasKey(pp => new { pp.GuiaRemisionId, pp.EntityId });
 
+        modelBuilder.Entity<SecurityPersonEntityBranch>()
+        .HasKey(pp => new { pp.SecurityPersonId, pp.EntityBranchId });
+
         modelBuilder.Entity<GuiaRemisionEstadoPermiso>()
         .HasKey(pp => new { pp.GuiaRemisionEstadoId, pp.GuiaRemisionEstadoIdPermitido });
 
@@ -118,15 +121,6 @@ public partial class LogisticaContext : DbContext
             .WithMany(e => e.EstadosPermitidosHacia)
             .HasForeignKey(pp => pp.GuiaRemisionEstadoIdPermitido)
             .OnDelete(DeleteBehavior.Restrict);
-
-        modelBuilder.Entity<Persona>()
-            .HasAlternateKey(x => x.NumeroDocumento);
-
-        modelBuilder.Entity<SecurityPerson>()
-            .HasOne(x => x.Persona)
-            .WithMany()
-            .HasForeignKey(x => x.DocumentNumber)
-            .HasPrincipalKey(x => x.NumeroDocumento);
 
     }
 

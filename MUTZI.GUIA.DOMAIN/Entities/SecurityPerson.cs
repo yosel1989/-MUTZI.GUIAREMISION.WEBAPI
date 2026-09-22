@@ -13,9 +13,9 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Description("Identificador único del registro de la persona de seguridad del local.")]
         public int SecurityPersonId { get; set; }
 
-        [Column("document_number")]
-        [Description("Número de documento de identidad")]
-        public string DocumentNumber { get; set; }
+        [Column("person_id")]
+        [Description("Identificador único del registro de la tabla persona.")]
+        public int PersonId { get; set; }
 
         [Column("active")]
         [Description("Estado de la entidad: activa o inactiva")]
@@ -45,11 +45,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Description("Nombre del usuario que modificó el registro")]
         public string? UpdatedAtUserName { get; set; }
 
-
-        // Condicionales
-
-        [ForeignKey(nameof(DocumentNumber))]
+        [ForeignKey(nameof(PersonId))]
         public virtual Persona Persona { get; set; }
-
     }
 }
