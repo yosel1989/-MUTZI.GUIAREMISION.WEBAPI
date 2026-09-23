@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.EntityBranchSerie;
+using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente;
 using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services;
 using MUTZI.GUIA.DOMAIN.Entities;
@@ -104,6 +105,20 @@ namespace MUTZI.GUIA.APPLICATION.Services
             var updated = await _repository.UpdateAsync(existing);
 
             return _mapper.Map<ToggleActiveResponseDTO>(updated);
+        }
+
+        public async Task<List<EntityBranchSerieToSelectDTO>> GetAllByEntityToSelectModal(int entityId)
+        {
+            try
+            {
+                var data = await _repository.GetAllByEntityToSelectModal(entityId);
+                var dataDTO = _mapper.Map<List<EntityBranchSerieToSelectDTO>>(data);
+                return dataDTO;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
 
     }

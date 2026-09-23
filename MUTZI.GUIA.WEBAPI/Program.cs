@@ -32,13 +32,11 @@ using MUTZI.GUIA.APPLICATION.Services.GuiaTransportista;
 using MUTZI.GUIA.APPLICATION.Services.Ubigeo;
 using MUTZI.GUIA.APPLICATION.Validators;
 using MUTZI.GUIA.DOMAIN.Interfaces;
-using MUTZI.GUIA.DOMAIN.Interfaces.Document;
 using MUTZI.GUIA.DOMAIN.Interfaces.Factories;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories.Catalogo;
 using MUTZI.GUIA.INFRASTRUCTURE;
 using MUTZI.GUIA.INFRASTRUCTURE.Adapters;
-using MUTZI.GUIA.INFRASTRUCTURE.Document;
 using MUTZI.GUIA.INFRASTRUCTURE.Factories;
 using MUTZI.GUIA.INFRASTRUCTURE.Interceptors;
 using MUTZI.GUIA.INFRASTRUCTURE.Persistence;
@@ -174,6 +172,8 @@ builder.Services.AddScoped<IIntegrationCredentialRepository, IntegrationCredenti
 builder.Services.AddScoped<IGuiaRemisionTransportUnitRepository, GuiaRemisionTransportUnitRepository>();
 builder.Services.AddScoped<IGuiaRemisionEntityCarrierRepository, GuiaRemisionEntityCarrierRepository>();
 builder.Services.AddScoped<ISecurityPersonRepository, SecurityPersonRepository>();
+builder.Services.AddScoped<ISecurityPersonEntityBranchRepository, SecurityPersonEntityBranchRepository>();
+builder.Services.AddScoped<ISecurityPersonEntityBranchSerieRepository, SecurityPersonEntityBranchSerieRepository>();
 builder.Services.AddScoped<IInvoiceTypeRepository, InvoiceTypeRepository>();
 
 
@@ -212,6 +212,8 @@ builder.Services.AddScoped<IPersonaService, PersonaService>();
 builder.Services.AddScoped<IOperacionResponsableService, OperacionResponsableService>();
 builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoService, GuiaRemisionIndicadorTrasladoService>();
 builder.Services.AddScoped<ISecurityPersonService, SecurityPersonService>();
+builder.Services.AddScoped<ISecurityPersonEntityBranchService, SecurityPersonEntityBranchService>();
+builder.Services.AddScoped<ISecurityPersonEntityBranchSerieService, SecurityPersonEntityBranchSerieService>();
 builder.Services.AddScoped<IEntityService, EntityService>();
 builder.Services.AddScoped<IEntityInfoService, EntityInfoService>();
 builder.Services.AddScoped<IEntityRoleService, EntityRoleService>();

@@ -10,10 +10,11 @@ using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 
 namespace MUTZI.GUIA.APPLICATION.Services
 {
-    public class EntityService: IEntityService
+    public class EntityService : IEntityService
     {
         private readonly IEntityRepository _repository;
         private readonly IEntityRoleRepository _entityRoleRepository;
+        private readonly ISecurityPersonEntityBranchSerieRepository _securityPersonEntityBranchSerieRepository;
         private readonly IMapper _mapper;
         private readonly IAuthService _authService;
         private readonly ILogger<EntityService> _logger;
@@ -22,6 +23,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         public EntityService(
             IEntityRepository repository,
             IEntityRoleRepository entityRoleRepository,
+            ISecurityPersonEntityBranchSerieRepository securityPersonEntityBranchSerieRepository,
             IMapper mapper,
             IAuthService authService,
             IAppDBContext appDBContext
@@ -29,12 +31,13 @@ namespace MUTZI.GUIA.APPLICATION.Services
         {
             _repository = repository;
             _entityRoleRepository = entityRoleRepository;
+            _securityPersonEntityBranchSerieRepository = securityPersonEntityBranchSerieRepository;
             _mapper = mapper;
             _authService = authService;
             _appDBContext = appDBContext;
         }
 
-        
+
         public async Task<EntityDTO> CreateAsync(EntityCreateDTO newEntity)
         {
             await _appDBContext.BeginTransactionAsync();
@@ -47,7 +50,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 if (newEntity.EntityId == 0)
                 {
                     var existingEntity = await _repository.GetByDocumentNumber(newEntity.DocumentNumber);
-                    if(existingEntity is null)
+                    if (existingEntity is null)
                     {
                         var entity = _mapper.Map<Entity>(newEntity);
                         entity.CreatedAt = DateTime.UtcNow;
@@ -67,19 +70,20 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     outputEntity = _mapper.Map<EntityDTO>(existEntity);
                 }
 
-                if(newEntity.Role != "entidad")
+                if (newEntity.Role != "entidad")
                 {
-                    await _entityRoleRepository.AddAsync( 
-                        new EntityRole { 
-                            EntityId = outputEntity.EntityId, 
+                    await _entityRoleRepository.AddAsync(
+                        new EntityRole
+                        {
+                            EntityId = outputEntity.EntityId,
                             Role = newEntity.Role,
                             CreatedAt = DateTime.UtcNow,
                             CreatedAtUser = user.UserName,
                             CreatedAtUserName = $"{user.FirstName} {user.LastName}"
-                        } 
+                        }
                     );
                 }
-                
+
                 await _appDBContext.CommitAsync();
 
                 return outputEntity;
@@ -97,7 +101,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         {
             var user = _authService.CurrentUser();
             var entity = await _repository.GetByIdAsync(id);
-            if(entity is null) { throw new Exception("Entidad no se encontro"); }
+            if (entity is null) { throw new Exception("Entidad no se encontro"); }
 
             entity.Type = updateEntity.Type;
             entity.Name = updateEntity.Name;
@@ -131,7 +135,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
         public async Task<PagedResult<EntityDTO>> GetDataTableAsync(int pageNumber, int pageSize, string? search, string role)
         {
-            var ( totalRecords, data ) = await _repository.GetDataTableAsync(pageNumber, pageSize, search, role);
+            var (totalRecords, data) = await _repository.GetDataTableAsync(pageNumber, pageSize, search, role);
             var dataDTO = _mapper.Map<List<EntityDTO>>(data);
             return new PagedResult<EntityDTO>
             {
@@ -192,6 +196,25 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 return _mapper.Map<EstadoActualizadoResponseDTO>(conductorActualizado);
             }
             catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+
+        public async Task<List<EntityDTO>> GetByEntityBranchSeriesAsigned()
+        {
+            try
+            {
+                var currentUser = _authService.CurrentUser();
+                var entityIds = await _securityPersonEntityBranchSerieRepository.GetAllEntityIdsByAssigned(currentUser.EmployeeId);
+                var entities = await _repository.GetByEntityIdS(entityIds);
+
+                var entitiesDTO = _mapper.Map<List<EntityDTO>>(entities);
+
+                return entitiesDTO;
+            }
+            catch (Exception e)
             {
                 throw;
             }

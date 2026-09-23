@@ -21,8 +21,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return true;
         }
 
-        public async Task<bool> UpdateAsync(SecurityPersonEntityBranch editData)
+        public async Task<bool> DeleteAsync(SecurityPersonEntityBranch model)
         {
+            _context.Remove(model);
             await _context.SaveChangesAsync();
 
             return true;
@@ -31,7 +32,6 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<(List<SecurityPersonEntityBranch>, int)> GetListAsync(int securityPersonId, int pageNumber, int pageSize, string? search)
         {
             var query = _context.SecurityPersonEntityBranchs
-                .Include(x => x.EntityBranch)
                 .Where(x => x.SecurityPersonId == securityPersonId)
                 .AsQueryable();
             if (!string.IsNullOrEmpty(search))
@@ -42,11 +42,30 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 );
             }
             var totalRecords = await query.CountAsync();
-            var securityPersons = await query
+            var data = await query
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
+                .Select(x => new SecurityPersonEntityBranch
+                {
+                    SecurityPersonId = x.SecurityPersonId,
+                    EntityBranchId = x.EntityBranchId,
+                    CreatedAt = x.CreatedAt,
+                    CreatedAtUser = x.CreatedAtUser,
+                    CreatedAtUserName = x.CreatedAtUserName,
+                    EntityBranch = new EntityBranch
+                    {
+                        Address = x.EntityBranch.Address,
+                        Description = x.EntityBranch.Description,
+                        CodeSunat = x.EntityBranch.CodeSunat,
+                        Entity = new Entity
+                        {
+                            Name = x.EntityBranch.Entity.Name,
+                            DocumentNumber = x.EntityBranch.Entity.DocumentNumber
+                        }
+                    }
+                })
                 .ToListAsync();
-            return (securityPersons, totalRecords);
+            return (data, totalRecords);
 
         }
 

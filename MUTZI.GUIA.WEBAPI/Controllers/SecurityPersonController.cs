@@ -25,9 +25,9 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [SwaggerOperation(
             Summary = "Listar personales de seguridad",
             Description = "Lista los personales de seguridad. Para ello se debe ingresar como parámetro: el número de página 'pageNumber' y el número máximo de registros dentro de una página 'pageSize'.",
-            OperationId = "listar_establecimiento"
+            OperationId = "security_person_collection"
         )]
-        [Permission("listar_establecimiento")]
+        //[Permission("security_person_collection")]
         [ProducesResponseType(typeof(PagedResult<SecurityPersonDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
@@ -35,8 +35,8 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         {
             try
             {
-                var remitentes = await _service.GetListAsync(pageNumber, pageSize, search);
-                return Ok(remitentes);
+                var data = await _service.GetListAsync(pageNumber, pageSize, search);
+                return Ok(data);
             }
             catch (Exception ex)
             {

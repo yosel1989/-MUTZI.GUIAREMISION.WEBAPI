@@ -70,6 +70,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         public async Task<PagedResult<SecurityPersonDTO>> GetListAsync(int pageNumber, int pageSize, string? search)
         {
             var (data, totalRecords) = await _repository.GetListAsync(pageNumber, pageSize, search);
+            var dataDTO = _mapper.Map<List<SecurityPersonDTO>>(data);
 
             return new PagedResult<SecurityPersonDTO>
             {
@@ -77,7 +78,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 PageSize = pageSize,
                 TotalRecords = totalRecords,
                 TotalPages = (int)Math.Ceiling(totalRecords / (double)pageSize),
-                Data = _mapper.Map<List<SecurityPersonDTO>>(data)
+                Data = dataDTO
             };
         }
 

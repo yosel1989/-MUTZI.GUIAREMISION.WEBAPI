@@ -50,7 +50,37 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
 
-        
+
+        [HttpGet]
+        [Route("branch/{entityBranchId}/to-select")]
+        [SwaggerOperation(
+            Summary = "Listar series para seleccionar",
+            Description = "Lista las series para seleccionar por entidad. Para ello se debe ingresar como parámetro: entityBranchId",
+            OperationId = "entity_branch_serie_to_select"
+        )]
+        //[Permission("entity_branch_serie_list")]
+        [ProducesResponseType(typeof(List<EntityBranchSerieToSelectDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<EntityBranchSerieToSelectDTO>>> GetAllToSelect(int entityBranchId)
+        {
+            try
+            {
+                var remitentes = await _service.GetAllByEntityToSelectModal(entityBranchId);
+                return Ok(remitentes);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar series.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
+
 
         [HttpGet]
         [Route("{id}")]

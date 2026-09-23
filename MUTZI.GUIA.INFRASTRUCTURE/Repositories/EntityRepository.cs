@@ -225,6 +225,14 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return (totalRecords, data);
         }
 
+        public async Task<List<Entity>> GetByEntityIdS(List<int> entityIds)
+        {
+            var entities = await _context.Entities
+                .Where(e => entityIds.Contains(e.EntityId))
+                .ToListAsync();
+            return entities;
+        }
+
 
 
 

@@ -52,5 +52,35 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.SecurityPerson
         [JsonPropertyName("updated_at_user_name")]
         [Description("Nombre del usuario que modificó el registro")]
         public string? UpdatedAtUserName { get; set; }
+
+        [JsonPropertyName("series")]
+        public List<SecurityPersonSeriesDTO> Series { get; set; } = new List<SecurityPersonSeriesDTO>();
+
+        [JsonPropertyName("entity_branchs")]
+        public List<SecurityPersonEntityBranchsDTO> EntityBranches { get; set; } = new List<SecurityPersonEntityBranchsDTO>();
+    }
+
+    public class SecurityPersonSeriesDTO
+    {
+        [JsonPropertyName("serie")]
+        public string Serie { get; set; }
+
+        [JsonPropertyName("entity_name")]
+        public string EntityName { get; set; }
+
+        [JsonPropertyName("entity_document_number")]
+        public string EntityDocumentNumber { get; set; }
+    }
+
+    public class SecurityPersonEntityBranchsDTO
+    {
+        [JsonPropertyName("alias")]
+        public string Alias { get; set; }
+
+        [JsonPropertyName("entity_name")]
+        public string EntityName { get; set; }
+
+        [JsonPropertyName("entity_document_number")]
+        public string EntityDocumentNumber { get; set; }
     }
 }

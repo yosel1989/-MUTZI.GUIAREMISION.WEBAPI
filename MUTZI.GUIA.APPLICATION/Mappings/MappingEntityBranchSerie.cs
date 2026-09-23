@@ -14,6 +14,10 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<EntityBranchSerie, EntityBranchSerieDTO>()
                 .ForMember(dest => dest.InvoiceType, opt => opt.MapFrom(src => src.InvoiceType.Name))
                 ;
+            CreateMap<EntityBranchSerie, EntityBranchSerieToSelectDTO>()
+                .ForMember(dest => dest.EntityDocumentNumber, opt => opt.MapFrom(src => src.EntityBranch.Entity.DocumentNumber))
+                .ForMember(dest => dest.EntityName, opt => opt.MapFrom(src => src.EntityBranch.Entity.Name))
+                ;
         }
     }
 }

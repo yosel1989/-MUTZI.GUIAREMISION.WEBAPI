@@ -227,5 +227,39 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
 
+
+        [HttpGet]
+        [Route("collection-by-assigned-series")]
+        [SwaggerOperation(
+            Summary = "Obtener entidades asignadas por serie",
+            Description = "Listar solo las entidades que tienen relación con las series asignadas al usuario logeado.",
+            OperationId = "entity_collection_by_assigned_series"
+        )]
+        [ProducesResponseType(typeof(ActionResult<List<EntityByRoleDTO>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<EntityByRoleDTO>>> GetAllByAssignedSeries()
+        {
+            try
+            {
+                var q = Request.Query;
+                var result = await _service.GetByEntityBranchSeriesAsigned();
+                if(result.Count() == 0)
+                {
+                    throw new Exception("No se encontraron empresas asignadas a tu usuario.");
+                }
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al obtener las empresas asignadas.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
     }
 }

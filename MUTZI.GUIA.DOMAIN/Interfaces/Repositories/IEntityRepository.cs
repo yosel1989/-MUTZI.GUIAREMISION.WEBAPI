@@ -45,5 +45,8 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
         /// en caso contrario devuelve <c>false</c>.
         /// </returns>
         Task<bool> HasManyDocumentNumber(string documentNumber);
+
+
+        Task<List<Entity>> GetByEntityIdS(List<int> entityIds);
     }
 }

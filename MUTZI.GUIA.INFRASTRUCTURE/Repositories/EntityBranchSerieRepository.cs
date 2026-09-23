@@ -100,6 +100,38 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
+
+        public async Task<List<EntityBranchSerie>> GetAllByEntityToSelectModal(int entityId)
+        {
+            try
+            {
+                var data = await _context.EntityBranchSeries
+                    .Where(x =>
+                        x.EntityBranch.Active == true &&
+                        x.EntityBranch.EntityId == entityId &&
+                        x.Active == true
+                    )
+                .Select(r => new EntityBranchSerie
+                {
+                    EntityBranchSerieId = r.EntityBranchSerieId,
+                    Serie = r.Serie,
+                    EntityBranch = new EntityBranch { 
+                        Entity = new Entity { 
+                            Name = r.EntityBranch.Entity.Name,
+                            DocumentNumber = r.EntityBranch.Entity.DocumentNumber
+                        }
+                    }
+                })
+                .ToListAsync();
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         // Helpers
 
         public async Task<bool> HasSerie(int entityBranchId, int? entityBranchSerieId, string serie)

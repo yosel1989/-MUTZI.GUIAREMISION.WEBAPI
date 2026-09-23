@@ -20,5 +20,7 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
 
         Task<EstadoActualizadoResponseDTO> ToggleActiveAsync(int id, EstadoActualizadoRequestDTO infoRequestDto);
 
+        Task<List<EntityDTO>> GetByEntityBranchSeriesAsigned();
+
     }
 }

@@ -5,11 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities
 {
-    [Table("segurity_person")]
+    [Table("security_person")]
     public class SecurityPerson
     {
         [Key]
-        [Column("segurity_person_id")]
+        [Column("security_person_id")]
         [Description("Identificador único del registro de la persona de seguridad del local.")]
         public int SecurityPersonId { get; set; }
 
@@ -45,7 +45,14 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Description("Nombre del usuario que modificó el registro")]
         public string? UpdatedAtUserName { get; set; }
 
+        // Relaciones
+
         [ForeignKey(nameof(PersonId))]
         public virtual Persona Persona { get; set; }
+
+        public List<SecurityPersonEntityBranchSerie> SecurityPersonEntityBranchSeries = new List<SecurityPersonEntityBranchSerie>();
+
+        public List<SecurityPersonEntityBranch> SecurityPersonEntityBranchs = new List<SecurityPersonEntityBranch>();
     }
 }
+

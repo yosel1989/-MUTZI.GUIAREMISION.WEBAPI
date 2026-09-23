@@ -58,6 +58,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<Country> Countries { get; set; }
     public virtual DbSet<InvoiceType> InvoiceTypes { get; set; }
     public virtual DbSet<SecurityPersonEntityBranch> SecurityPersonEntityBranchs { get; set; }
+    public virtual DbSet<SecurityPersonEntityBranchSerie> SecurityPersonEntityBranchSeries { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -106,6 +107,9 @@ public partial class LogisticaContext : DbContext
 
         modelBuilder.Entity<SecurityPersonEntityBranch>()
         .HasKey(pp => new { pp.SecurityPersonId, pp.EntityBranchId });
+
+        modelBuilder.Entity<SecurityPersonEntityBranchSerie>()
+        .HasKey(pp => new { pp.SecurityPersonId, pp.EntityBranchSerieId });
 
         modelBuilder.Entity<GuiaRemisionEstadoPermiso>()
         .HasKey(pp => new { pp.GuiaRemisionEstadoId, pp.GuiaRemisionEstadoIdPermitido });

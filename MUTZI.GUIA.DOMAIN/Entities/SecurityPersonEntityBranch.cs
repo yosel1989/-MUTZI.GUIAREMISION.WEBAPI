@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MUTZI.GUIA.DOMAIN.Entities
 {
-    [Table("segurity_person__entity_branch")]
+    [Table("security_person__entity_branch")]
     public class SecurityPersonEntityBranch
     {
-        [Column("segurity_person_id")]
+        [Column("security_person_id")]
         [Description("Identificador único del registro de la persona de seguridad.")]
         public int SecurityPersonId { get; set; }
 
@@ -27,6 +27,9 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         public string CreatedAtUserName { get; set; }
 
         // Relaciones
+
+        [ForeignKey(nameof(SecurityPersonId))]
+        public virtual SecurityPerson SecurityPerson { get; set; }
 
         [ForeignKey(nameof(EntityBranchId))]
         public virtual EntityBranch EntityBranch { get; set; }
