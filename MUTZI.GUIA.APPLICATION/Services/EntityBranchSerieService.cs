@@ -107,11 +107,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
             return _mapper.Map<ToggleActiveResponseDTO>(updated);
         }
 
-        public async Task<List<EntityBranchSerieToSelectDTO>> GetAllByEntityToSelectModal(int entityId)
+        public async Task<List<EntityBranchSerieToSelectDTO>> GetAllByEntityToSelectModal(int entityId, string? search)
         {
             try
             {
-                var data = await _repository.GetAllByEntityToSelectModal(entityId);
+                var data = await _repository.GetAllByEntityToSelectModal(entityId, search);
                 var dataDTO = _mapper.Map<List<EntityBranchSerieToSelectDTO>>(data);
                 return dataDTO;
             }

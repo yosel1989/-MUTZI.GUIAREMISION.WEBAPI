@@ -9,5 +9,6 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
         Task<(List<SecurityPersonEntityBranchSerie>, int)> GetListAsync(int securityPersonId, int pageNumber, int pageSize, string? search);
 
         Task<List<int>> GetAllEntityIdsByAssigned(int employeeId);
+        Task<List<SecurityPersonEntityBranchSerie>> GetListByAssignedAsync(int employeeId);
     }
 }

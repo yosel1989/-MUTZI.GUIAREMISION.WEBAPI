@@ -67,15 +67,15 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     x.EntidadReguladoraVehicular.Descripcion.ToLower().Contains(val) ||
                     x.EntidadReguladoraVehicular.DescripcionCorta.ToLower().Contains(val) ||
                     x.Tarjeta.ToLower().Contains(val) ||
-                    x.UsuarioRegistroNombre.ToLower().Contains(val) ||
-                    x.UsuarioModificoNombre.ToLower().Contains(val)
+                    x.CreatedAtUserName.ToLower().Contains(val) ||
+                    x.UpdatedAtUserName.ToLower().Contains(val)
                 );
                 }
 
                 var totalRecords = await query.CountAsync();
 
                 var data = await query
-                    .OrderByDescending(t => t.FechaRegistro)
+                    .OrderByDescending(t => t.CreatedAt)
                     .Skip((pageNumber - 1) * pageSize)
                     .Take(pageSize)
                     .AsNoTracking()

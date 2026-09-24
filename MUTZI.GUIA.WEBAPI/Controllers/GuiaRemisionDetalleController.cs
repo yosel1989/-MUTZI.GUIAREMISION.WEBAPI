@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
 using MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente.Productos;
 using MUTZI.GUIA.APPLICATION.Interfaces.Services.Catalogos;
-using MUTZI.GUIA.WEBAPI.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace MUTZI.GUIA.WEBAPI.Controllers

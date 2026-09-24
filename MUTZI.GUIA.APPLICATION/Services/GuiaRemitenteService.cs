@@ -197,7 +197,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             cellEstado.Style.Fill.BackgroundColor = XLColor.FromHtml("#e5e7eb");
                         }
 
-                        //worksheet.Cell(row, 17).Value = item.FechaRegistro?.ToString("dd/MM/yyyy hh:mm:ss tt");
+                        //worksheet.Cell(row, 17).Value = item.CreatedAt?.ToString("dd/MM/yyyy hh:mm:ss tt");
                         worksheet.Cell(row, 17).Value = item.FechaRegistro;
                         worksheet.Cell(row, 18).Value = item.UsuarioRegistro;
 
@@ -307,10 +307,11 @@ namespace MUTZI.GUIA.APPLICATION.Services
                         };
                     }
 
-                    guiaRemision.UsuarioRegistro = currentUser.UserName;
-                    guiaRemision.UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}";
+                    guiaRemision.CreatedAtUser = currentUser.UserName;
+                    guiaRemision.CreatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+                    guiaRemision.CreatedAtEmployeeId = currentUser.EmployeeId;
                     guiaRemision.AreaId = currentUser.AreaId;
-                    guiaRemision.FechaRegistro = DateTime.UtcNow;
+                    guiaRemision.CreatedAt = DateTime.UtcNow;
 
 
                     // Llamar al repositorio
@@ -531,9 +532,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             GuiaRemision guiaRemision = await _repository.GetByIdWithoutRelations(id, strict: true);
 
             guiaRemision!.EstadoId = (int)EnumGuiaRemisionEstado.Aprobada;
-            guiaRemision!.UsuarioModifico = currentUser.UserName;
-            guiaRemision!.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-            guiaRemision!.FechaModifico = DateTime.UtcNow;
+            guiaRemision!.UpdatedAtUser = currentUser.UserName;
+            guiaRemision!.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision!.UpdatedAt = DateTime.UtcNow;
 
             await _repository.UpdateAsync(guiaRemision);
 
@@ -566,9 +567,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 throw new InvalidOperationException($"La guía ya se encuentra en estado '{EnumGuiaRemisionEstado.Aprobada.GetDescription()}'");
             }*/
             guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Emitida;
-            guiaRemision.UsuarioModifico = currentUser.UserName;
-            guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-            guiaRemision.FechaModifico = DateTime.UtcNow;
+            guiaRemision.UpdatedAtUser = currentUser.UserName;
+            guiaRemision.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision.UpdatedAt = DateTime.UtcNow;
 
             await _repository.UpdateAsync(guiaRemision);
 
@@ -603,9 +604,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
 
             guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Confirmada;
-            guiaRemision.UsuarioModifico = currentUser.UserName;
-            guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-            guiaRemision.FechaModifico = DateTime.UtcNow;
+            guiaRemision.UpdatedAtUser = currentUser.UserName;
+            guiaRemision.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision.UpdatedAt = DateTime.UtcNow;
             
             await _repository.UpdateAsync(guiaRemision);
 
@@ -639,9 +640,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
 
             guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Anulada;
-            guiaRemision.UsuarioModifico = currentUser.UserName;
-            guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-            guiaRemision.FechaModifico = DateTime.UtcNow;
+            guiaRemision.UpdatedAtUser = currentUser.UserName;
+            guiaRemision.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision.UpdatedAt = DateTime.UtcNow;
 
             await _repository.UpdateAsync(guiaRemision);
 
@@ -676,9 +677,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
 
             guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Rechazada;
-            guiaRemision.UsuarioModifico = currentUser.UserName;
-            guiaRemision.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-            guiaRemision.FechaModifico = DateTime.UtcNow;
+            guiaRemision.UpdatedAtUser = currentUser.UserName;
+            guiaRemision.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+            guiaRemision.UpdatedAt = DateTime.UtcNow;
 
             await _repository.UpdateAsync(guiaRemision);
 
@@ -719,9 +720,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 GuiaRemision guiaRemision = await _repository.GetByIdWithoutRelations(id, strict: true);
 
                 guiaRemision!.EstadoId = (int)EnumGuiaRemisionEstado.Aprobada;
-                guiaRemision!.UsuarioModifico = currentUser.UserName;
-                guiaRemision!.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-                guiaRemision!.FechaModifico = currentDate;
+                guiaRemision!.UpdatedAtUser = currentUser.UserName;
+                guiaRemision!.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+                guiaRemision!.UpdatedAt = currentDate;
 
                 await _repository.UpdateAsync(guiaRemision);
 

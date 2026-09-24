@@ -25,6 +25,14 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.SecurityPersonEntityBranchSerie
         [Description("Número de documento de la entidad")]
         public string EntityDocumentNumber { get; set; }
 
+        [JsonPropertyName("entity_branch_alias")]
+        [Description("Alias del local")]
+        public string EntityBranchAlias { get; set; }
+
+        [JsonPropertyName("entity_branch_address")]
+        [Description("Dirección del local")]
+        public string EntityBranchAddress { get; set; }
+
         [JsonPropertyName("created_at")]
         [Description("Fecha de creación del registro")]
         public DateTime CreatedAt { get; set; }

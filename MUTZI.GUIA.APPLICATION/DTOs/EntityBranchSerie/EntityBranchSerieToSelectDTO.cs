@@ -16,6 +16,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.EntityBranchSerie
         [JsonPropertyName("entity_document_number")]
         public string EntityDocumentNumber { get; set; }
 
+        [JsonPropertyName("entity_branch_alias")]
+        public string EntityBranchAlias { get; set; }
 
+        [JsonPropertyName("entity_branch_address")]
+        public string EntityBranchAddress { get; set; }
     }
 }

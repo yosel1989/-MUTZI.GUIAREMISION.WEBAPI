@@ -62,11 +62,11 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
         [ProducesResponseType(typeof(List<EntityBranchSerieToSelectDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<EntityBranchSerieToSelectDTO>>> GetAllToSelect(int entityBranchId)
+        public async Task<ActionResult<List<EntityBranchSerieToSelectDTO>>> GetAllToSelect(int entityBranchId, [FromQuery] string? search)
         {
             try
             {
-                var remitentes = await _service.GetAllByEntityToSelectModal(entityBranchId);
+                var remitentes = await _service.GetAllByEntityToSelectModal(entityBranchId, search);
                 return Ok(remitentes);
             }
             catch (Exception ex)

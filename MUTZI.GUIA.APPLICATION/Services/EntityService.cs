@@ -220,5 +220,22 @@ namespace MUTZI.GUIA.APPLICATION.Services
             }
         }
 
+        public async Task<List<EntityBySerieAssignedDTO>> GetListBySeriesAsigned()
+        {
+            try
+            {
+                var currentUser = _authService.CurrentUser();
+                var data = await _securityPersonEntityBranchSerieRepository.GetListByAssignedAsync(currentUser.EmployeeId);
+
+                var dataDTO = _mapper.Map<List<EntityBySerieAssignedDTO>>(data);
+
+                return dataDTO;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
     }
 }

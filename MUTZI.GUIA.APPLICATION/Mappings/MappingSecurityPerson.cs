@@ -55,6 +55,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Serie, opt => opt.MapFrom(src => src.EntityBranchSerie.Serie))
                 .ForMember(dest => dest.EntityName, opt => opt.MapFrom(src => src.EntityBranchSerie.EntityBranch.Entity.Name))
                 .ForMember(dest => dest.EntityDocumentNumber, opt => opt.MapFrom(src => src.EntityBranchSerie.EntityBranch.Entity.DocumentNumber))
+                .ForMember(dest => dest.EntityBranchAlias, opt => opt.MapFrom(src => src.EntityBranchSerie.EntityBranch.Description))
+                .ForMember(dest => dest.EntityBranchAddress, opt => opt.MapFrom(src => src.EntityBranchSerie.EntityBranch.Address))
                 ;
         }
     }

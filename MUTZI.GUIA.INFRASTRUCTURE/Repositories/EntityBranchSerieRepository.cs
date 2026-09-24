@@ -101,21 +101,36 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
 
 
-        public async Task<List<EntityBranchSerie>> GetAllByEntityToSelectModal(int entityId)
+        public async Task<List<EntityBranchSerie>> GetAllByEntityToSelectModal(int entityId, string? search)
         {
             try
             {
-                var data = await _context.EntityBranchSeries
+                var query = _context.EntityBranchSeries
                     .Where(x =>
                         x.EntityBranch.Active == true &&
                         x.EntityBranch.EntityId == entityId &&
                         x.Active == true
-                    )
-                .Select(r => new EntityBranchSerie
+                    ).AsQueryable();
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    var val = search.ToLower();
+                    query = query.Where(x =>
+                        x.Serie.Contains(val) ||
+                        x.EntityBranch.Description.ToLower().Contains(val) ||
+                        x.EntityBranch.Address.ToLower().Contains(val) ||
+                        x.UpdatedAtUserName.ToLower().Contains(val)
+                    );
+                }
+
+
+                var data = await query.Select(r => new EntityBranchSerie
                 {
                     EntityBranchSerieId = r.EntityBranchSerieId,
                     Serie = r.Serie,
-                    EntityBranch = new EntityBranch { 
+                    EntityBranch = new EntityBranch {
+                        Description = r.EntityBranch.Description,
+                        Address = r.EntityBranch.Address,
                         Entity = new Entity { 
                             Name = r.EntityBranch.Entity.Name,
                             DocumentNumber = r.EntityBranch.Entity.DocumentNumber

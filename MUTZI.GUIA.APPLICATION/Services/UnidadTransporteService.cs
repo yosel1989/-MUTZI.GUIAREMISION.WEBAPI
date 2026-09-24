@@ -63,9 +63,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
             {
                 var currentUser = _authService.CurrentUser();
                 var transporte = _mapper.Map<TransportUnit>(createDTO);
-                transporte.UsuarioRegistro = currentUser.UserName;
-                transporte.UsuarioRegistroNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-                transporte.FechaRegistro = DateTime.UtcNow;
+                transporte.CreatedAtUser = currentUser.UserName;
+                transporte.CreatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+                transporte.CreatedAt = DateTime.UtcNow;
                 await _repository.CreateAsync(transporte);
                 return transporte.UnidadTransporteId;
             }
@@ -89,9 +89,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     throw new KeyNotFoundException($"UnidadTransporte con ID {id} no encontrado.");
                 }
                 _mapper.Map(updateDTO, existingTransporte);
-                existingTransporte.UsuarioModifico = currentUser.UserName;
-                existingTransporte.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-                existingTransporte.FechaModifico = DateTime.UtcNow;
+                existingTransporte.UpdatedAtUser = currentUser.UserName;
+                existingTransporte.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+                existingTransporte.UpdatedAt = DateTime.UtcNow;
 
                 await _repository.UpdateAsync(existingTransporte);
                 return _mapper.Map<TransportUnitDTO>(existingTransporte);
@@ -128,9 +128,9 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 throw new KeyNotFoundException($"Unidad de UnidadTransporte con ID {id} no encontrado.");
             }
             existing.Active = infoRequestDto.Active;
-            existing.UsuarioModifico = currentUser.UserName;
-            existing.UsuarioModificoNombre = $"{currentUser.FirstName} {currentUser.LastName}";
-            existing.FechaModifico = DateTime.UtcNow;
+            existing.UpdatedAtUser = currentUser.UserName;
+            existing.UpdatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}";
+            existing.UpdatedAt = DateTime.UtcNow;
 
             var unidadTransporteActualizado = await _repository.UpdateAsync(existing);
 

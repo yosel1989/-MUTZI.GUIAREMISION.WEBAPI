@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MUTZI.GUIA.APPLICATION.DTOs;
 using MUTZI.GUIA.APPLICATION.DTOs.DataTable;
 using MUTZI.GUIA.APPLICATION.DTOs.Efact;
@@ -12,7 +13,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 {
     [Route("entities")]
     [ApiController]
-
+    [Authorize]
     public class EntityController : ControllerBase
     {
         private readonly IEntityService _service;
@@ -229,24 +230,24 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
 
 
         [HttpGet]
-        [Route("collection-by-assigned-series")]
+        [Route("list-by-assigned-series")]
         [SwaggerOperation(
             Summary = "Obtener entidades asignadas por serie",
             Description = "Listar solo las entidades que tienen relación con las series asignadas al usuario logeado.",
-            OperationId = "entity_collection_by_assigned_series"
+            OperationId = "entity_list_by_assigned_series"
         )]
-        [ProducesResponseType(typeof(ActionResult<List<EntityByRoleDTO>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ActionResult<List<EntityBySerieAssignedDTO>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<List<EntityByRoleDTO>>> GetAllByAssignedSeries()
+        public async Task<ActionResult<List<EntityBySerieAssignedDTO>>> GetAllByAssignedSeries()
         {
             try
             {
                 var q = Request.Query;
-                var result = await _service.GetByEntityBranchSeriesAsigned();
-                if(result.Count() == 0)
+                var result = await _service.GetListBySeriesAsigned();
+                if (result.Count() == 0)
                 {
-                    throw new Exception("No se encontraron empresas asignadas a tu usuario.");
+                    throw new Exception("No se encontraron series asignadas a tu usuario.");
                 }
                 return Ok(result);
             }
@@ -255,7 +256,7 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
                 string errorMsg = ex.InnerException?.Message ?? ex.Message;
                 return StatusCode(500, new InternalErrorResponseDTO
                 {
-                    Error = "Error al obtener las empresas asignadas.",
+                    Error = "Error al obtener las empresas por series asignadas.",
                     Detalle = errorMsg
                 });
             }

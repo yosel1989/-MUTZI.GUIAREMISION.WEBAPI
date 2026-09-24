@@ -68,7 +68,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     );
                 }
 
-                //var query = _context.Conductor.OrderByDescending(x=>x.FechaRegistro);
+                //var query = _context.Conductor.OrderByDescending(x=>x.CreatedAt);
                 var totalRecords = await query.CountAsync();
                 var data = await query
                     .OrderByDescending(x => x.FechaRegistro)

@@ -40,8 +40,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                     var ini = DateOnly.FromDateTime(iniDt);
                                     var fin = DateOnly.FromDateTime(finDt);
                                     query = query.Where(x =>
-                                        DateOnly.FromDateTime(x.FechaRegistro) >= ini &&
-                                        DateOnly.FromDateTime(x.FechaRegistro) <= fin);
+                                        DateOnly.FromDateTime(x.CreatedAt) >= ini &&
+                                        DateOnly.FromDateTime(x.CreatedAt) <= fin);
                                 }
                                 break;
                             }
@@ -57,8 +57,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                     var ini = DateOnly.FromDateTime(iniDt);
                                     var fin = DateOnly.FromDateTime(finDt);
                                     query = query.Where(x =>
-                                        DateOnly.FromDateTime(x.FechaRegistro) >= ini &&
-                                        DateOnly.FromDateTime(x.FechaRegistro) <= fin);
+                                        DateOnly.FromDateTime(x.CreatedAt) >= ini &&
+                                        DateOnly.FromDateTime(x.CreatedAt) <= fin);
                                 }
                                 break;
                             }
@@ -177,8 +177,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                     x.TipoTransporte.ToLower().Contains(val) ||
                                     x.Origens.FirstOrDefault()!.Ubigeo.Distrito!.ToLower().Contains(val) ||
                                     x.Destinos.FirstOrDefault()!.Ubigeo.Distrito!.ToLower().Contains(val) ||
-                                    x.UsuarioRegistro.ToLower().Contains(val) ||
-                                    (x.UsuarioModifico ?? "").ToLower().Contains(val) ||
+                                    x.CreatedAtUser.ToLower().Contains(val) ||
+                                    (x.UpdatedAtUser ?? "").ToLower().Contains(val) ||
                                     x.Estado.Nombre.Contains(val) ||
                                     x.EstadoSunat.Contains(val)
                                 );
@@ -256,12 +256,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         },
                         Origens = g.Origens.Select(o => new GuiaRemisionOrigen { Ubigeo = o.Ubigeo }).ToList(),
                         Destinos = g.Destinos.Select(d => new GuiaRemisionDestino { Ubigeo = d.Ubigeo }).ToList(),
-                        FechaRegistro = g.FechaRegistro,
-                        UsuarioRegistro = g.UsuarioRegistro,
-                        UsuarioRegistroNombre = g.UsuarioRegistroNombre,
-                        FechaModifico = g.FechaModifico,
-                        UsuarioModifico = g.UsuarioModifico,
-                        UsuarioModificoNombre = g.UsuarioModificoNombre,
+                        CreatedAt = g.CreatedAt,
+                        CreatedAtUser = g.CreatedAtUser,
+                        CreatedAtUserName = g.CreatedAtUserName,
+                        UpdatedAt = g.UpdatedAt,
+                        UpdatedAtUser = g.UpdatedAtUser,
+                        UpdatedAtUserName = g.UpdatedAtUserName,
                         Estado = g.Estado,
                         EstadoId = g.EstadoId,
                         EstadoSunat = g.EstadoSunat,
@@ -621,8 +621,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Pais = d.Pais
                     }).ToList(),
                     DocRelacionados = g.DocRelacionados.ToList(),
-                    FechaRegistro = g.FechaRegistro,
-                    UsuarioRegistro = g.UsuarioRegistro,
+                    CreatedAt = g.CreatedAt,
+                    CreatedAtUser = g.CreatedAtUser,
                     Estado = g.Estado,
                     EstadoId = g.EstadoId,
                     Area = new Area
@@ -893,7 +893,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             guia.EstadoSunatId = (sbyte)idEstadoSunat;
             //guia.Nombre = estadoSunat;
             //guia.EstadoId = (sbyte)idEstadoSunat;
-            guia.FechaModifico = DateTime.UtcNow;
+            guia.UpdatedAt = DateTime.UtcNow;
             await _context.SaveChangesAsync();
         }
         //Actualizar guía de remisión remitente
@@ -984,12 +984,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         },
                         Origens = g.Origens.Select(o => new GuiaRemisionOrigen { Ubigeo = o.Ubigeo }).ToList(),
                         Destinos = g.Destinos.Select(d => new GuiaRemisionDestino { Ubigeo = d.Ubigeo }).ToList(),
-                        FechaRegistro = g.FechaRegistro,
-                        UsuarioRegistro = g.UsuarioRegistro,
-                        UsuarioRegistroNombre = g.UsuarioRegistroNombre,
-                        FechaModifico = g.FechaModifico,
-                        UsuarioModifico = g.UsuarioModifico,
-                        UsuarioModificoNombre = g.UsuarioModificoNombre,
+                        CreatedAt = g.CreatedAt,
+                        CreatedAtUser = g.CreatedAtUser,
+                        CreatedAtUserName = g.CreatedAtUserName,
+                        UpdatedAt = g.UpdatedAt,
+                        UpdatedAtUser = g.UpdatedAtUser,
+                        UpdatedAtUserName = g.UpdatedAtUserName,
                         Estado = g.Estado,
                         EstadoId = g.EstadoId,
                         EstadoSunat = g.EstadoSunat,

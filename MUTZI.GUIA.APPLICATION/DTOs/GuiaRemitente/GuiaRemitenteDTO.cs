@@ -125,27 +125,27 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [JsonPropertyName("transport_units")]
         public List<GuiaRemisionTransportUnitDTO>? TransportUnits { get; set; } = null;
 
-        [JsonPropertyName("fecha_registro")]
-        public DateTime FechaRegistro { get; set; }
+        [JsonPropertyName("created_at")]
+        public DateTime CreatedAt { get; set; }
 
-        [JsonPropertyName("usuario_registro")]
+        [JsonPropertyName("created_at_user")]
         [SwaggerSchema("Devuelve un texto, el usuario que ha registrado la transacción en el sistema", Nullable = false)]
-        public string UsuarioRegistro { get; set; }
+        public string CreatedAtUser { get; set; }
 
         [JsonPropertyName("usuario_registro_nombre")]
         [SwaggerSchema("Devuelve un texto, el nombre del usuario que ha registrado la transacción en el sistema", Nullable = false)]
-        public string UsuarioRegistroNombre { get; set; }
+        public string CreatedAtUserName { get; set; }
 
         [JsonPropertyName("fecha_modifico")]
-        public DateTime? FechaModifico { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
         [JsonPropertyName("usuario_modifico")]
         [SwaggerSchema("Devuelve un texto, el usuario que ha modificado el registro.", Nullable = false)]
-        public string? UsuarioModifico { get; set; }
+        public string? UpdatedAtUser { get; set; }
 
         [JsonPropertyName("usuario_modifico_nombre")]
         [SwaggerSchema("Devuelve un texto, el nombre del usuario que ha modificado el registro.", Nullable = false)]
-        public string? UsuarioModificoNombre { get; set; }
+        public string? UpdatedAtUserName { get; set; }
 
         [JsonPropertyName("estado")]
         [SwaggerSchema("Devuelve un texto, el estado de la guía de remisión.", Nullable = false)]

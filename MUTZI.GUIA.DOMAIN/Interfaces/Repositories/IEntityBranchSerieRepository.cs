@@ -14,6 +14,6 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 
         Task<(List<EntityBranchSerie>, int)> GetListAsync(int entityBranchId, int pageNumber, int pageSize, string? search);
 
-        Task<List<EntityBranchSerie>> GetAllByEntityToSelectModal(int entityId);
+        Task<List<EntityBranchSerie>> GetAllByEntityToSelectModal(int entityId, string? search);
     }
 }

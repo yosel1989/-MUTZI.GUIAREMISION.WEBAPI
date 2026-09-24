@@ -28,6 +28,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         (c.Nombre != null && c.Nombre.Contains(text)) ||
                         (c.NumeroDocumento != null && c.NumeroDocumento.Contains(text)) ||
                         (c.ApellidoPaterno != null && c.ApellidoPaterno.Contains(text)) ||
+                        (c.Cargo != null && c.Cargo.Contains(text)) ||
                         (c.ApellidoMaterno != null && c.ApellidoMaterno.Contains(text))
                     );
                 }

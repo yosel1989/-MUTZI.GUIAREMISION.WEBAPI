@@ -46,29 +46,29 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.UnidadTransporte
         [SwaggerSchema("Devuelve un texto, el número de autorización del transporte", Nullable = true)]
         public string? NroAutorizacion { get; set; }
 
-        [JsonPropertyName("fecha_registro")]
+        [JsonPropertyName("created_at")]
         [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00", Nullable = false)]
-        public DateTime FechaRegistro { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        [JsonPropertyName("usuario_registro")]
+        [JsonPropertyName("created_at_user")]
         [SwaggerSchema("Devuelve un texto, el usuario que ha registrado la transacción en el sistema", Nullable = false)]
-        public string UsuarioRegistro { get; set; }
+        public string CreatedAtUser { get; set; }
 
-        [JsonPropertyName("usuario_registro_nombre")]
+        [JsonPropertyName("created_at_user_name")]
         [SwaggerSchema("Devuelve un texto, el nombre del usuario que ha registrado la transacción en el sistema", Nullable = false)]
-        public string UsuarioRegistroNombre { get; set; }
+        public string CreatedAtUserName { get; set; }
 
-        [JsonPropertyName("fecha_modifico")]
+        [JsonPropertyName("updated_at")]
         [SwaggerSchema("Devuelve un texto de fecha en formato: yyyy-MM-ddTHH:mm:ss; por ejemplo: 2025-09-23T14:35:00, es la fecha de la última edición realizada en la guía", Nullable = true)]
-        public DateTime? FechaModifico { get; set; }
+        public DateTime? UpdatedAt { get; set; }
 
-        [JsonPropertyName("usuario_modifico")]
+        [JsonPropertyName("updated_at_user")]
         [SwaggerSchema("Devuelve en texto, el usuario que ha realizado un cambio en el registro", Nullable = true)]
-        public string? UsuarioModifico { get; set; }
+        public string? UpdatedAtUser { get; set; }
 
-        [JsonPropertyName("usuario_modifico_nombre")]
+        [JsonPropertyName("updated_at_user_name")]
         [SwaggerSchema("Devuelve en texto, el nombre del usuario que ha realizado un cambio en el registro", Nullable = true)]
-        public string? UsuarioModificoNombre { get; set; }
+        public string? UpdatedAtUserName { get; set; }
 
         [JsonPropertyName("active")]
         [SwaggerSchema("Devuelve un bool, el estado del registro activo = true, inactivo = false", Nullable = false)]

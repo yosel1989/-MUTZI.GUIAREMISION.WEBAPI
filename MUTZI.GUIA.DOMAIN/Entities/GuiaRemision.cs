@@ -75,25 +75,30 @@ public partial class GuiaRemision
     [MaxLength(500)]
     public string RespuestaTicket { get; set; } = null!;
 
-    [Column("fecha_registro")]
-    public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
+    [Column("created_at")]
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    [Column("fecha_modifico")]
-    public DateTime? FechaModifico { get; set; }
+    [Column("created_at_user")]
+    public string CreatedAtUser { get; set; }
 
-    [Column("usuario_registro")]
-    public string UsuarioRegistro { get; set; }
-
-    [Column("usuario_registro_nombre")]
+    [Column("created_at_user_name")]
     [MaxLength(150)]
-    public string UsuarioRegistroNombre { get; set; }
+    public string CreatedAtUserName { get; set; }
 
-    [Column("usuario_modifico")]
-    public string? UsuarioModifico { get; set; }
+    [Column("created_at_employee_id")]
+    public int CreatedAtEmployeeId { get; set; }
 
-    [Column("usuario_modifico_nombre")]
-    [MaxLength(100)]
-    public string? UsuarioModificoNombre { get; set; }
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
+
+    [Column("updated_at_user")]
+    public string? UpdatedAtUser { get; set; }
+
+    [Column("updated_at_user_name")]
+    public string? UpdatedAtUserName { get; set; }
+
+    [Column("updated_at_employee_id")]
+    public int UpdatedAtEmployeeId { get; set; }
 
     [Column("estado_id")]
     public int EstadoId { get; set; }

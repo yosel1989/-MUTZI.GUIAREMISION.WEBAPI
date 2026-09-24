@@ -84,5 +84,75 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             return data;
         }
 
+
+        public async Task<List<SecurityPersonEntityBranchSerie>> GetListByAssignedAsync(int employeeId)
+        {
+            try
+            {
+                var data = await _context.SecurityPersonEntityBranchSeries
+                .Where(x =>
+                    x.SecurityPerson.Persona.PersonaId == employeeId &&
+                    x.SecurityPerson.Active &&
+                    x.EntityBranchSerie.Active &&
+                    x.EntityBranchSerie.EntityBranch.Active &&
+                    x.EntityBranchSerie.EntityBranch.Entity.Active
+                )
+                .Select(x => new SecurityPersonEntityBranchSerie
+                {
+                    SecurityPersonId = x.SecurityPersonId,
+                    EntityBranchSerieId = x.EntityBranchSerieId,
+                    CreatedAt = x.CreatedAt,
+                    CreatedAtUser = x.CreatedAtUser,
+                    CreatedAtUserName = x.CreatedAtUserName,
+                    EntityBranchSerie = new EntityBranchSerie
+                    {
+                        EntityBranchSerieId = x.EntityBranchSerie.EntityBranchSerieId,
+                        Serie = x.EntityBranchSerie.Serie,
+                        Area = x.EntityBranchSerie.Area,
+
+                        EntityBranch = new EntityBranch
+                        {
+                            EntityBranchId = x.EntityBranchSerie.EntityBranch.EntityBranchId,
+                            Address = x.EntityBranchSerie.EntityBranch.Address,
+                            Description = x.EntityBranchSerie.EntityBranch.Description,
+                            CodeSunat = x.EntityBranchSerie.EntityBranch.CodeSunat,
+
+                            UbigeoId = x.EntityBranchSerie.EntityBranch.UbigeoId,
+                            Ubigeo = new Ubigeo
+                            {
+                                UbigeoId = x.EntityBranchSerie.EntityBranch.Ubigeo.UbigeoId,
+                                Departamento = x.EntityBranchSerie.EntityBranch.Ubigeo.Departamento,
+                                Provincia = x.EntityBranchSerie.EntityBranch.Ubigeo.Provincia,
+                                Distrito = x.EntityBranchSerie.EntityBranch.Ubigeo.Distrito
+                            },
+
+                            Entity = new Entity
+                            {
+                                EntityId = x.EntityBranchSerie.EntityBranch.Entity.EntityId,
+                                DocumentNumber = x.EntityBranchSerie.EntityBranch.Entity.DocumentNumber,
+                                Name = x.EntityBranchSerie.EntityBranch.Entity.Name,
+                                Address = x.EntityBranchSerie.EntityBranch.Entity.Address,
+                                UbigeoId = x.EntityBranchSerie.EntityBranch.Entity.UbigeoId,
+                                Ubigeo = new Ubigeo
+                                {
+                                    UbigeoId = x.EntityBranchSerie.EntityBranch.Entity.Ubigeo.UbigeoId,
+                                    Departamento = x.EntityBranchSerie.EntityBranch.Entity.Ubigeo.Departamento,
+                                    Provincia = x.EntityBranchSerie.EntityBranch.Entity.Ubigeo.Provincia,
+                                    Distrito = x.EntityBranchSerie.EntityBranch.Entity.Ubigeo.Distrito
+                                },
+                            }
+                        }
+                    }
+                })
+                .ToListAsync();
+
+                return data;
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
     }
 }

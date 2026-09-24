@@ -47,24 +47,24 @@ public class TransportUnit
     public string Tipo { get; set; } = "interno";
 
     [Column("created_at")]
-    public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
-
-    [Column("updated_at")]
-    public DateTime? FechaModifico { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [Column("created_at_user")]
-    public string UsuarioRegistro { get; set; }
+    public string CreatedAtUser { get; set; }
 
     [Column("created_at_user_name")]
     [MaxLength(150)]
-    public string UsuarioRegistroNombre { get; set; }
+    public string CreatedAtUserName { get; set; }
+
+    [Column("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
     [Column("updated_at_user")]
-    public string? UsuarioModifico { get; set; }
+    public string? UpdatedAtUser { get; set; }
 
     [Column("updated_at_user_name")]
     [MaxLength(150)]
-    public string? UsuarioModificoNombre { get; set; }
+    public string? UpdatedAtUserName { get; set; }
 
     [Column("active")]
     public bool Active { get; set; } = true;

@@ -14,6 +14,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
         Task<ToggleActiveResponseDTO> ToggleActiveAsync(int entityBranchSerieId, bool active);
 
 
-        Task<List<EntityBranchSerieToSelectDTO>> GetAllByEntityToSelectModal(int entityId);
+        Task<List<EntityBranchSerieToSelectDTO>> GetAllByEntityToSelectModal(int entityId, string? search);
     }
 }
