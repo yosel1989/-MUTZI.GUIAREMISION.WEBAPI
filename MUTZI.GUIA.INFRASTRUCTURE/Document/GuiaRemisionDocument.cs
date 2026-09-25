@@ -86,11 +86,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                         col.Spacing(5);
                                         col.Item().Text($"{_dto.Entity?.Name ?? "ERROR"}")
                                             .Bold().FontSize(textXS);
-                                        col.Item().Text(_dto.Remitente?.Address ?? "ERROR")
-                                            .FontSize(textXS);
+                                        //col.Item().Text(_dto.Remitente?.Address ?? "ERROR")
+                                            //.FontSize(textXS);
                                         col.Item().Text("");
-                                        col.Item().Text($"{_dto.Remitente?.Ubigeo.Distrito} - {_dto.Remitente?.Ubigeo.Provincia} - {_dto.Remitente?.Ubigeo.Departamento}")
-                                            .FontSize(textXS);
+                                        //col.Item().Text($"{_dto.Remitente?.Ubigeo.Distrito} - {_dto.Remitente?.Ubigeo.Provincia} - {_dto.Remitente?.Ubigeo.Departamento}")
+                                            //.FontSize(textXS);
                                     });
 
                                 row.ConstantItem(200)
@@ -131,7 +131,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                         .Column(rightCol =>
                                         {
                                             rightCol.Spacing(5);
-                                            rightCol.Item().Text(_dto.Destinatario.Entity?.Name != null ? _dto.Destinatario.Entity.Name : $"{_dto.Destinatario.Entity.FirstName} {_dto.Destinatario.Entity.LastName}");
+                                            //rightCol.Item().Text(_dto.Destinatario.Entity?.Name != null ? _dto.Destinatario.Entity.Name : $"{_dto.Destinatario.Entity.FirstName} {_dto.Destinatario.Entity.LastName}");
                                         });
                                 });
 
@@ -142,7 +142,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                         .Column(leftCol =>
                                         {
                                             leftCol.Spacing(5);
-                                            leftCol.Item().Text($"{_dto.Destinatario?.Entity.DocumentType.DescripcionCorta}:").SemiBold();
+                                            //leftCol.Item().Text($"{_dto.Destinatario?.Entity.DocumentType.DescripcionCorta}:").SemiBold();
                                             leftCol.Item().Text("FECHA DE EMISIÓN:").SemiBold();
                                         });
 
@@ -150,7 +150,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                         .Column(rightCol =>
                                         {
                                             rightCol.Spacing(5);
-                                            rightCol.Item().Text(_dto.Destinatario.Entity?.DocumentNumber);
+                                           // rightCol.Item().Text(_dto.Destinatario.Entity?.DocumentNumber);
                                             rightCol.Item().Text(_dto.Fecha.ToString("dd-MMM-yyyy", System.Globalization.CultureInfo.InvariantCulture).ToUpper());
                                         });
 
@@ -166,8 +166,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                         .Column(rightCol =>
                                         {
                                             rightCol.Spacing(5);
-                                            rightCol.Item().Text(_dto.Destinatario.Entity?.Address);
-                                            rightCol.Item().Text($"{_dto.Destinatario.Entity?.Ubigeo.Distrito} - {_dto.Destinatario.Entity?.Ubigeo.Provincia} - {_dto.Destinatario.Entity?.Ubigeo.Departamento}");
+                                            //rightCol.Item().Text(_dto.Destinatario.Entity?.Address);
+                                            //rightCol.Item().Text($"{_dto.Destinatario.Entity?.Ubigeo.Distrito} - {_dto.Destinatario.Entity?.Ubigeo.Provincia} - {_dto.Destinatario.Entity?.Ubigeo.Departamento}");
                                         });
                                 });
 
@@ -402,10 +402,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                             .AlignMiddle() 
                                                             .Column(col1 =>
                                                             {
-                                                                col1.Item().Text($"{_dto.Remitente?.Address}, {_dto.Remitente?.Ubigeo?.Departamento} - {_dto.Remitente?.Ubigeo?.Provincia} - {_dto.Remitente?.Ubigeo?.Distrito}")
-                                                                    .AlignCenter();
+                                                                //col1.Item().Text($"{_dto.Remitente?.Address}, {_dto.Remitente?.Ubigeo?.Departamento} - {_dto.Remitente?.Ubigeo?.Provincia} - {_dto.Remitente?.Ubigeo?.Distrito}")
+                                                                   // .AlignCenter();
 
-                                                                if (_dto.Destinatario?.Entity.DocumentTypeId != 1)
+                                                                /*if (_dto.Destinatario?.Entity.DocumentTypeId != 1)
                                                                 {
                                                                     col1.Item().Text("");
                                                                     col1.Item().Text(text =>
@@ -413,7 +413,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                                         text.Span("RUC y COD. DE ESTABLECIMIENTO: ").SemiBold();
                                                                         text.Span($"{_dto.Remitente?.Entity?.DocumentNumber} - {_dto.Remitente?.CodeSunat}");
                                                                     });
-                                                                }
+                                                                }*/
                                                             });
                                                     });
 
@@ -443,7 +443,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                             .AlignMiddle() 
                                                             .Column(col1 =>
                                                             {
-                                                                col1.Item().Text($"{_dto.Destinatario?.Address}, {_dto.Destinatario?.Ubigeo?.Departamento} - {_dto.Destinatario?.Ubigeo?.Provincia} - {_dto.Remitente?.Ubigeo?.Distrito}")
+                                                                /*col1.Item().Text($"{_dto.Destinatario?.Address}, {_dto.Destinatario?.Ubigeo?.Departamento} - {_dto.Destinatario?.Ubigeo?.Provincia} - {_dto.Remitente?.Ubigeo?.Distrito}")
                                                                     .AlignCenter();
 
                                                                 if (_dto.Destinatario?.Entity.DocumentTypeId != 1)
@@ -454,7 +454,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Document
                                                                         text.Span("RUC y COD DE ESTABLECIMIENTO: ").SemiBold();
                                                                         text.Span($"{_dto.Destinatario?.Entity?.DocumentNumber} - {_dto.Destinatario?.CodeSunat}");
                                                                     });
-                                                                }
+                                                                }*/
                                                             });
                                                     });
                                             });

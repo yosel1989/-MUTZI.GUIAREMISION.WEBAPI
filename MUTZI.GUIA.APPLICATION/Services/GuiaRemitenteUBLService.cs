@@ -471,7 +471,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                             _ = guia.Destinatario.CodeSunat,
                             // Número de RUC asociado al punto de llegada
                             //Si es traslado, se coloca el ruc del remitente, ya que es traslado entre sucursales nomas; si es venta o compra, el numeroDoc del destinatario
-                            //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.NumeroDocumentoRemitente : guia.Destinatario.NumeroDocumento
+                            //listID = guia.TipoTraslado=="TRASLADO"? guia.Remitente.EntitySenderDocumentNumber : guia.Destinatario.NumeroDocumento
                             listID = guia.Destinatario.EntityDocumentNumber
                         }},
                         // Urbanización
@@ -849,7 +849,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             //Se está guardando en la carpeta ahora mismo. Actualización, se pasó a producción y ahora se guarda en AWS
             var nombreArchivo = guia.MotivoTrasladoCodigo != "07" ? getNombreDocumentoFile(guia, guia.Remitente.EntityDocumentNumber) : getNombreDocumentoFile(guia, guia.Destinatario.EntityDocumentNumber);
-            //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.NumeroDocumentoRemitente));//Ya no se usa
+            //Helper.GuardarJSON(guiaJson, RutaDocPendiente(guia, guia.Remitente.EntitySenderDocumentNumber));//Ya no se usa
 
             // Convertir el string JSON a un stream de memoria
             var jsonBytes = System.Text.Encoding.UTF8.GetBytes(guiaJson);

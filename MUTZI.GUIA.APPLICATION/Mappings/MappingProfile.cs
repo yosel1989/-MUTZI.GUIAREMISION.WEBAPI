@@ -30,14 +30,14 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.MotivoTrasladoCodigo, opt => opt.MapFrom(src => src.MotivoTraslado.CodigoSunat))
                 .ForMember(dest => dest.SerieCorrelativo, opt => opt.MapFrom(src => src.NumeroGuia))
                 .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src => src.Fecha.ToString("yyyy-MM-dd")))
-                .ForMember(dest => dest.EmailFacturador, opt => opt.MapFrom(src => src.RucNavigation.EmailPrincipal))
-                .ForMember(dest => dest.Remitente, opt => opt.MapFrom(src => src.Remitente))
-                .ForMember(dest => dest.Destinatario, opt => opt.MapFrom(src => src.Destinatario))
+                //.ForMember(dest => dest.EmailFacturador, opt => opt.MapFrom(src => src.RucNavigation.EmailPrincipal))
+                //.ForMember(dest => dest.Remitente, opt => opt.MapFrom(src => src.Remitente))
+                //.ForMember(dest => dest.Destinatario, opt => opt.MapFrom(src => src.Destinatario))
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.Nombre))
                 .ForMember(dest => dest.EstadoColor, opt => opt.MapFrom(src => src.Estado.ColorHex))
                 .ForMember(dest => dest.DatosEnvio, opt => opt.MapFrom(src => src.DatosEnvios.FirstOrDefault()))
-                .ForMember(dest => dest.Empresa, opt => opt.MapFrom(src => src.RucNavigation))
-                .ForMember(dest => dest.Empresa, opt => opt.MapFrom(src => src.RucNavigation))
+                //.ForMember(dest => dest.Empresa, opt => opt.MapFrom(src => src.RucNavigation))
+                //.ForMember(dest => dest.Empresa, opt => opt.MapFrom(src => src.RucNavigation))
                 //Mapear conductor y transporte dentro de DatosEnvio
                 //.ForMember(dest => dest.DatosEnvio.GuiaRemisionConductores, opt => opt.MapFrom(src => src.DatosEnvios.FirstOrDefault().GuiaRemisionConductores))
                 //.ForMember(dest=>dest.DatosEnvio.GuiaRemisionUnidadesTransporte, opt=>opt.MapFrom(src=>src.DatosEnvios.FirstOrDefault().GuiaRemisionUnidadesTransporte))
@@ -57,16 +57,22 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.FechaEmision, opt => opt.MapFrom(src => src.Fecha.ToString("yyyy-MM-dd")))
                 //.ForMember(dest => dest.HoraEmision, opt => opt.MapFrom(src => src.Hora.ToString(@"hh\:mm\:ss")))
                 .ForMember(dest => dest.HoraEmision, opt => opt.MapFrom(src => src.Hora))
-                .ForMember(dest => dest.EntidadRemitente, opt => opt.MapFrom(src => src.Remitente.Entity.Name))
-                .ForMember(dest => dest.NumeroDocumentoRemitente, opt => opt.MapFrom(src => src.Remitente.Entity.DocumentNumber))
-                .ForMember(dest => dest.EstablecimientoRemitente, opt => opt.MapFrom(src => src.Remitente.Description))
-                .ForMember(dest => dest.EntidadDestinatario, opt => opt.MapFrom(src => src.Destinatario.Entity.Name))
-                .ForMember(dest => dest.EstablecimientoDestinatario, opt => opt.MapFrom(src => src.Destinatario.Description))
-                .ForMember(dest => dest.NumeroDocumentoDestinatario, opt => opt.MapFrom(src => src.Destinatario.Entity.DocumentNumber))
-                .ForMember(dest => dest.EntidadRemitente, opt => opt.MapFrom(src => src.RucNavigation.Empresa))
+
+                .ForMember(dest => dest.EntityName, opt => opt.MapFrom(src => src.Entity.Name))
+                .ForMember(dest => dest.EntityDocumentNumber, opt => opt.MapFrom(src => src.Entity.DocumentNumber))
+
+
+
+
+                .ForMember(dest => dest.EntityBranchSenderEntityName, opt => opt.MapFrom(src => src.EntityBranchSender.Entity.Name))
+                .ForMember(dest => dest.EntityBranchSenderAddress, opt => opt.MapFrom(src => src.EntityBranchSender.Address))
+
+                .ForMember(dest => dest.EntityBranchReceivedEntityName, opt => opt.MapFrom(src => src.EntityBranchReceiver.Entity.Name))
+                .ForMember(dest => dest.EntityBranchReceivedAddress, opt => opt.MapFrom(src => src.EntityBranchReceiver.Address))
+                .ForMember(dest => dest.EntityBranchReceivedAlias, opt => opt.MapFrom(src => src.EntityBranchReceiver.Description))
+
+
                 .ForMember(dest => dest.DistritoOrigen, opt => opt.MapFrom(src => src.Origens.FirstOrDefault().Ubigeo.Distrito))
-                .ForMember(dest => dest.DireccionOrigen, opt => opt.MapFrom(src => src.Remitente.Address))
-                .ForMember(dest => dest.DireccionDestino, opt => opt.MapFrom(src => src.Destinatario.Address))
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.Nombre))
                 .ForMember(dest => dest.EstadoColor, opt => opt.MapFrom(src => src.Estado.ColorHex))
                 .ForMember(dest => dest.DistritoDestino, opt => opt.MapFrom(src => src.Destinos.FirstOrDefault().Ubigeo.Distrito))
@@ -77,8 +83,8 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                     .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src =>
                 string.IsNullOrEmpty(src.Fecha) ? (DateOnly?)null : DateOnly.Parse(src.Fecha)
             ))
-                    .ForMember(dest => dest.Remitente, opt => opt.Ignore())
-                    .ForMember(dest => dest.Destinatario, opt => opt.Ignore())
+                    //.ForMember(dest => dest.Remitente, opt => opt.Ignore())
+                    //.ForMember(dest => dest.Destinatario, opt => opt.Ignore())
                     .ForMember(dest => dest.Proveedor, opt => opt.Ignore())
                     ;
 
@@ -94,7 +100,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 ;
             //GuiaRemision de remisión por ticket
             CreateMap<GuiaRemision, GuiaPorTicketDTO>()
-                .ForMember(dest => dest.Ruc, opt => opt.MapFrom(src => src.Remitente.Entity.DocumentNumber))
+                //.ForMember(dest => dest.Ruc, opt => opt.MapFrom(src => src.Remitente.Entity.DocumentNumber))
                 ;
             CreateMap<GuiaRemisionDatosEnvioUpdateDTO, GuiaRemisionDatoEnvio>()
                 .ForMember(dest => dest.FechaEnvio, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.FechaEnvio) ? (DateOnly?)null : DateOnly.Parse(src.FechaEnvio)))
@@ -122,9 +128,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<GuiaRemision, GuiaTransportistaDTO>()
                 .ForMember(dest => dest.SerieCorrelativo, opt => opt.MapFrom(src => src.NumeroGuia))
                 .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src => src.Fecha.ToString("yyyy-MM-dd")))
-                .ForMember(dest => dest.Remitente, opt => opt.MapFrom(src => src.Remitente))
-                .ForMember(dest => dest.RemiteTransportista, opt => opt.MapFrom(src => src.RemiteTransportista))
-                .ForMember(dest => dest.Destinatario, opt => opt.MapFrom(src => src.Destinatario))
+                //.ForMember(dest => dest.Remitente, opt => opt.MapFrom(src => src.Remitente))
+                //.ForMember(dest => dest.RemiteTransportista, opt => opt.MapFrom(src => src.RemiteTransportista))
+                //.ForMember(dest => dest.Destinatario, opt => opt.MapFrom(src => src.Destinatario))
                 .ForMember(dest => dest.DatosEnvio, opt => opt.MapFrom(src => src.DatosEnvios.FirstOrDefault()))
                 .ForMember(dest => dest.Origen, opt => opt.MapFrom(src => src.Origens.FirstOrDefault()))
                 .ForMember(dest => dest.Destino, opt => opt.MapFrom(src => src.Destinos))
@@ -134,9 +140,10 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src =>
                 string.IsNullOrEmpty(src.Fecha) ? (DateOnly?)null : DateOnly.Parse(src.Fecha)
             ))
-                .ForMember(dest => dest.Remitente, opt => opt.Ignore())
-                .ForMember(dest => dest.RemiteTransportista, opt => opt.Ignore())
-                .ForMember(dest => dest.Destinatario, opt => opt.Ignore());
+                //.ForMember(dest => dest.Remitente, opt => opt.Ignore())
+                //.ForMember(dest => dest.RemiteTransportista, opt => opt.Ignore())
+                //.ForMember(dest => dest.Destinatario, opt => opt.Ignore())
+                ;
             CreateMap<GuiaTransportistaUpdateDTO, GuiaRemision>()
                 .ForMember(dest => dest.Fecha, opt => opt.MapFrom(src =>
                 string.IsNullOrEmpty(src.Fecha) ? (DateOnly?)null : DateOnly.Parse(src.Fecha)))

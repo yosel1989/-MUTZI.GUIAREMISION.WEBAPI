@@ -14,18 +14,26 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un identificador privado de la guía.", Nullable = false)]
         public Guid GuiaRemisionUuid { get; set; }
 
+        [JsonPropertyName("ruc")]
+        [SwaggerSchema("Devuelve un texto, el RUC al cual pertenece la guía.", Nullable = false)]
+        public string Ruc { get; set; }
+
+
+
         [JsonPropertyName("entity_id")]
         [SwaggerSchema("Devuelve un número, es el id de la entidad emisora a la que pertenece la guía de remisión.", Nullable = false)]
         public int? EntityId { get; set; }
 
-        [JsonPropertyName("entidad_remitente")]
-        [SwaggerSchema("Devuelve un texto, es el nombre o razón social a la que pertenece la guía de remisión", Nullable = false)]
-        public string EntidadRemitente { get; set; }
+        [JsonPropertyName("entity_name")]
+        [SwaggerSchema("Devuelve un texto, es el nombre o razón social de la entidad a la que pertenece la guía de remisión", Nullable = false)]
+        public string EntityName { get; set; }
 
-        [JsonPropertyName("numero_documento_remitente")]
-        [SwaggerSchema("Devuelve un texto, es el número de documento de la empresa a la que pertenece la guía de remisión", Nullable = false)]
-        public string NumeroDocumentoRemitente { get; set; }
+        [JsonPropertyName("entity_document_number")]
+        [SwaggerSchema("Devuelve un texto, es el número de documento de la entidad a la que pertenece la guía de remisión", Nullable = false)]
+        public string EntityDocumentNumber { get; set; }
 
+
+        
         [JsonPropertyName("serie")]
         [SwaggerSchema("Devuelve un texto, es la seríe a la que pertenece la guía", Nullable = false)]
         public string Serie { get; set; }
@@ -34,9 +42,33 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve un texto, es el número a la que pertenece la guía", Nullable = false)]
         public string Correlativo { get; set; }
 
-        [JsonPropertyName("establecimiento_remitente")]
-        [SwaggerSchema("Devuelve un texto, es la razón social del remitente de la guía de remisión", Nullable = false)]
-        public string EstablecimientoRemitente { get; set; }
+
+
+        [JsonPropertyName("entity_branch_sender_address")]
+        [SwaggerSchema("Devuelve un texto, es la dirección del establecimiento de origen de envio del producto o paquete.", Nullable = false)]
+        public string EntityBranchSenderAddress { get; set; }
+
+        [JsonPropertyName("entity_branch_sender_alias")]
+        [SwaggerSchema("Devuelve un texto, es el alias del establecimiento de origen de envio del producto o paquete.", Nullable = false)]
+        public string EntityBranchSenderAlias { get; set; }
+
+        [JsonPropertyName("entity_branch_sender_entity_name")]
+        [SwaggerSchema("Devuelve un texto, es el nombre o razón social de la entidad a la que pertenece el establecimiento de origen.", Nullable = false)]
+        public string EntityBranchSenderEntityName { get; set; }
+
+        [JsonPropertyName("entity_branch_received_address")]
+        [SwaggerSchema("Devuelve un texto, es la dirección del establecimiento de destino del envio del producto o paquete.", Nullable = false)]
+        public string EntityBranchReceivedAddress { get; set; }
+
+        [JsonPropertyName("entity_branch_received_alias")]
+        [SwaggerSchema("Devuelve un texto, es el alias del establecimiento de destino del envio del producto o paquete.", Nullable = false)]
+        public string EntityBranchReceivedAlias { get; set; }
+
+        [JsonPropertyName("entity_branch_received_entity_name")]
+        [SwaggerSchema("Devuelve un texto, es el nombre o razón social de la entidad a la que pertenece el establecimiento de origen.", Nullable = false)]
+        public string EntityBranchReceivedEntityName { get; set; }
+
+
 
         [JsonPropertyName("tipo_guia")]
         [SwaggerSchema("Devuelve en texto el tipo de guía de remisión, solo puede ser: REMITENTE o TRANSPORTISTA", Nullable = false)]
@@ -66,9 +98,6 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.GuiaRemitente
         [SwaggerSchema("Devuelve en texto el número de ticket de respuesta del facturador", Nullable = true)]
         public string? RespuestaTicket { get; set; }
 
-        [JsonPropertyName("establecimiento_destinatario")]
-        [SwaggerSchema("Devuelve un texto, es la razón social del destinatario de la guía de remisión", Nullable = false)]
-        public string EstablecimientoDestinatario { get; set; }
 
         [JsonPropertyName("entidad_destinatario")]
         [SwaggerSchema("Devuelve un texto, es nombre o razón social del destinatario.", Nullable = false)]

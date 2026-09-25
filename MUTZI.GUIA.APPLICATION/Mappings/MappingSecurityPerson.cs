@@ -1,6 +1,7 @@
 ﻿using MUTZI.GUIA.APPLICATION.DTOs.SecurityPerson;
 using MUTZI.GUIA.APPLICATION.DTOs.SecurityPersonEntityBranch;
 using MUTZI.GUIA.APPLICATION.DTOs.SecurityPersonEntityBranchSerie;
+using MUTZI.GUIA.APPLICATION.DTOs.SecurityPersonReasonForTransfer;
 using MUTZI.GUIA.APPLICATION.DTOs.Shared;
 using MUTZI.GUIA.DOMAIN.Entities;
 
@@ -57,6 +58,13 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.EntityDocumentNumber, opt => opt.MapFrom(src => src.EntityBranchSerie.EntityBranch.Entity.DocumentNumber))
                 .ForMember(dest => dest.EntityBranchAlias, opt => opt.MapFrom(src => src.EntityBranchSerie.EntityBranch.Description))
                 .ForMember(dest => dest.EntityBranchAddress, opt => opt.MapFrom(src => src.EntityBranchSerie.EntityBranch.Address))
+                ;
+
+            CreateMap<SecurityPersonReasonForTransferCreateDTO, SecurityPersonReasonForTransfer>();
+            CreateMap<SecurityPersonReasonForTransferDeleteDTO, SecurityPersonReasonForTransfer>();
+            CreateMap<SecurityPersonReasonForTransfer, SecurityPersonReasonForTransferDTO>()
+                .ForMember(dest => dest.ReasonForTransferName, opt => opt.MapFrom(src => src.ReasonForTransfer.Nombre))
+                .ForMember(dest => dest.ReasonForTransferCodeSunat, opt => opt.MapFrom(src => src.ReasonForTransfer.CodigoSunat))
                 ;
         }
     }

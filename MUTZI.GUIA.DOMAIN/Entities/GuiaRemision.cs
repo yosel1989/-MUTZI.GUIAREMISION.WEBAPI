@@ -14,9 +14,6 @@ public partial class GuiaRemision
     [Column("guia_remision_uuid")]
     public Guid GuiaRemisionUuid { get; set; } = Guid.NewGuid();
 
-    [Column("entity_id")]
-    public int? EntityId { get; set; }
-
     [Column("numero_guia")]
     [MaxLength(15)]
     public string NumeroGuia { get; set; } = null!;
@@ -24,6 +21,12 @@ public partial class GuiaRemision
     [Column("ruc")]
     [MaxLength(11)]
     public string Ruc { get; set; } = null!;
+
+    [Column("entity_id")]
+    public int EntityId { get; set; }
+
+    [Column("entity_branch_serie_id")]
+    public int EntityBranchSerieId { get; set; }
 
     [Column("serie")]
     [MaxLength(4)]
@@ -41,10 +44,10 @@ public partial class GuiaRemision
     [MaxLength(10)]
     public string TipoTransporte { get; set; } = null!;
 
-    [Column("fecha")]
+    [Column("fecha_emision")]
     public DateOnly Fecha { get; set; }
 
-    [Column("hora")]
+    [Column("hora_emision")]
     [MaxLength(10)]
     public string Hora { get; set; } = null!;
 
@@ -52,17 +55,17 @@ public partial class GuiaRemision
     [MaxLength(100)]
     public string? Observacion { get; set; }
 
-    [Column("remitente_id")]
-    public int RemitenteId { get; set; }
+    [Column("entity_branch_sender_id")]
+    public int EntityBranchSenderId { get; set; }
 
-    [Column("remite_transportista_id")]
-    public int? RemiteTransportistaId { get; set; }
+    [Column("entity_branch_receiver_id")]
+    public int EntityBranchReceiverId { get; set; }
 
-    [Column("destinatario_id")]
-    public int DestinatarioId { get; set; }
+    [Column("entity_carrier_id")]
+    public int? EntityCarrierId { get; set; }
 
-    [Column("proveedor_id")]
-    public int? ProveedorId { get; set; }
+    [Column("entity_provider_id")]
+    public int? EntityProviderId { get; set; }
 
     [Column("area_id")]
     public int AreaId { get; set; }
@@ -118,17 +121,24 @@ public partial class GuiaRemision
     [ForeignKey(nameof(EntityId))]
     public virtual Entity? Entity { get; set; }
 
-    [ForeignKey(nameof(Ruc))]
-    public virtual VentaConfig RucNavigation { get; set; } = null!;
+    [ForeignKey(nameof(EntityBranchSerieId))]
+    public virtual EntityBranchSerie EntityBranchSerie { get; set; }
 
-    [ForeignKey(nameof(RemitenteId))]
-    public EntityBranch Remitente { get; set; } = null!;
+    [ForeignKey(nameof(EntityBranchSenderId))]
+    public virtual EntityBranch EntityBranchSender { get; set; }
 
-    [ForeignKey(nameof(DestinatarioId))]
-    public EntityBranch Destinatario { get; set; } = null!;
+    [ForeignKey(nameof(EntityBranchReceiverId))]
+    public virtual EntityBranch EntityBranchReceiver { get; set; }
 
-    [ForeignKey(nameof(ProveedorId))]
+    [ForeignKey(nameof(EntityProviderId))]
     public virtual Proveedor? Proveedor { get; set; }
+
+    [ForeignKey(nameof(EntityCarrierId))]
+    public virtual Entity? EntityCarrier { get; set; }
+
+
+
+
 
     [ForeignKey(nameof(EstadoId))]
     public virtual GuiaRemisionEstado Estado { get; set; }
@@ -138,9 +148,6 @@ public partial class GuiaRemision
 
     [ForeignKey(nameof(MotivoTrasladoId))]
     public virtual MotivoTraslado MotivoTraslado { get; set; }
-
-    [ForeignKey(nameof(RemiteTransportistaId))]
-    public virtual Transportista? RemiteTransportista { get; set; }
 
     public virtual ICollection<GuiaRemisionDatoEnvio> DatosEnvios { get; set; } = new List<GuiaRemisionDatoEnvio>();
     public virtual ICollection<GuiaRemisionEntityCarrier> GuiaRemisionEntityCarriers { get; set; } = new List<GuiaRemisionEntityCarrier>();

@@ -59,6 +59,7 @@ public partial class LogisticaContext : DbContext
     public virtual DbSet<InvoiceType> InvoiceTypes { get; set; }
     public virtual DbSet<SecurityPersonEntityBranch> SecurityPersonEntityBranchs { get; set; }
     public virtual DbSet<SecurityPersonEntityBranchSerie> SecurityPersonEntityBranchSeries { get; set; }
+    public virtual DbSet<SecurityPersonReasonForTransfer> SecurityPersonReasonForTransfers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

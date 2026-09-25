@@ -18,12 +18,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<GuiaRemision> GetByIdAsync(int id)
         {
             return await _context.GuiaRemision
-                .Include(r => r.Remitente)
+                /*.Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
                 .Include(rt => rt.RemiteTransportista)
                     .ThenInclude(re => re.Ubigeo)
                 .Include(d => d.Destinatario)
-                    .ThenInclude(des => des.Ubigeo)
+                    .ThenInclude(des => des.Ubigeo)*/
                 .Include(dest => dest.Destinos)
                     .ThenInclude(de => de.Ubigeo)
                 .Include(o => o.Origens)
@@ -65,10 +65,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             {
 
                 // Guía
-                guiaRemision.RemitenteId = remitente.EntityBranchId;
+                guiaRemision.EntityBranchSenderId = remitente.EntityBranchId;
                 guiaRemision.Ruc = remitente.Entity.DocumentNumber;
-                guiaRemision.DestinatarioId = destinatario.EntityBranchId;
-                guiaRemision.RemiteTransportistaId = remiteTransportista.EntityId;
+                guiaRemision.EntityBranchReceiverId = destinatario.EntityBranchId;
+                guiaRemision.EntityCarrierId = remiteTransportista.EntityId;
                 //guiaRemision.Nombre = "REGISTRADO";
                 guiaRemision.EstadoId = 0;
 

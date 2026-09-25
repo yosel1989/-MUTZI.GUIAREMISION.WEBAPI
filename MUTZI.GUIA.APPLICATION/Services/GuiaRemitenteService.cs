@@ -154,7 +154,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     var worksheet = workbook.Worksheets.Add("Reporte de Guías");
 
                     string[] headers = {
-                        "#", "Código", "EntidadRemitente", "RUC EntidadRemitente", "Remitente / Local",
+                        "#", "Código", "EntitySenderName", "RUC EntitySenderName", "Remitente / Local",
                         "Tipo Guía", "N° Guía", "T. Traslado", "T. UnidadTransporte",
                         "F. Emisión", "H. Emisión", "Destinatario", "N° Doc. Destinatario",
                         "Origen", "Destino", "Estado", "F. Registro", "U. Registro"
@@ -170,16 +170,16 @@ namespace MUTZI.GUIA.APPLICATION.Services
                     {
                         worksheet.Cell(row, 1).Value = row - 1;
                         worksheet.Cell(row, 2).Value = $"COD-{item.GuiaRemisionId.ToString("D4")}";
-                        worksheet.Cell(row, 3).Value = item.EntidadRemitente;
-                        worksheet.Cell(row, 4).Value = item.NumeroDocumentoRemitente;
-                        worksheet.Cell(row, 5).Value = item.EstablecimientoRemitente;
+                        //worksheet.Cell(row, 3).Value = item.EntitySenderName;
+                        //worksheet.Cell(row, 4).Value = item.EntitySenderDocumentNumber;
+                        //worksheet.Cell(row, 5).Value = item.EstablecimientoRemitente;
                         worksheet.Cell(row, 6).Value = item.TipoGuia;
                         worksheet.Cell(row, 7).Value = item.NumeroGuia;
                         worksheet.Cell(row, 8).Value = item.MotivoTrasladoNombre;
                         worksheet.Cell(row, 9).Value = item.TipoTransporte;
                         worksheet.Cell(row, 10).Value = item.FechaEmision;
                         worksheet.Cell(row, 11).Value = item.HoraEmision;
-                        worksheet.Cell(row, 12).Value = item.EstablecimientoDestinatario;
+                        //worksheet.Cell(row, 12).Value = item.EstablecimientoDestinatario;
                         worksheet.Cell(row, 13).Value = item.NumeroDocumentoDestinatario;
                         worksheet.Cell(row, 14).Value = item.DistritoOrigen;
                         worksheet.Cell(row, 15).Value = item.DistritoDestino;

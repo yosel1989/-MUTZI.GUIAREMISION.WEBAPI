@@ -174,6 +174,7 @@ builder.Services.AddScoped<IGuiaRemisionEntityCarrierRepository, GuiaRemisionEnt
 builder.Services.AddScoped<ISecurityPersonRepository, SecurityPersonRepository>();
 builder.Services.AddScoped<ISecurityPersonEntityBranchRepository, SecurityPersonEntityBranchRepository>();
 builder.Services.AddScoped<ISecurityPersonEntityBranchSerieRepository, SecurityPersonEntityBranchSerieRepository>();
+builder.Services.AddScoped<ISecurityPersonReasonForTransferRepository, SecurityPersonReasonForTransferRepository>();
 builder.Services.AddScoped<IInvoiceTypeRepository, InvoiceTypeRepository>();
 
 
@@ -214,6 +215,7 @@ builder.Services.AddScoped<IGuiaRemisionIndicadorTrasladoService, GuiaRemisionIn
 builder.Services.AddScoped<ISecurityPersonService, SecurityPersonService>();
 builder.Services.AddScoped<ISecurityPersonEntityBranchService, SecurityPersonEntityBranchService>();
 builder.Services.AddScoped<ISecurityPersonEntityBranchSerieService, SecurityPersonEntityBranchSerieService>();
+builder.Services.AddScoped<ISecurityPersonReasonForTransferService, SecurityPersonReasonForTransferService>();
 builder.Services.AddScoped<IEntityService, EntityService>();
 builder.Services.AddScoped<IEntityInfoService, EntityInfoService>();
 builder.Services.AddScoped<IEntityRoleService, EntityRoleService>();

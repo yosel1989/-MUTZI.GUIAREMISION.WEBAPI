@@ -65,7 +65,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
                         case "remitente":
                             {
-                                query = query.Where(x => x.Remitente.Entity.DocumentNumber == val);
+                                //query = query.Where(x => x.Remitente.Entity.DocumentNumber == val);
                                 break;
                             }
 
@@ -76,16 +76,16 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                                 .ToList();
 
                                 if (ids.Count == 1)
-                                    query = query.Where(x => x.RemitenteId == ids[0]);
+                                    query = query.Where(x => x.EntityBranchSenderId == ids[0]);
                                 else if (ids.Count > 1)
-                                    query = query.Where(x => ids.Contains(x.RemitenteId));
+                                    query = query.Where(x => ids.Contains(x.EntityBranchSenderId));
 
                                 break;
                             }
 
                         case "destinatario":
                             {
-                                query = query.Where(x => x.Destinatario.Entity.DocumentNumber == val);
+                                //query = query.Where(x => x.Destinatario.Entity.DocumentNumber == val);
                                 break;
                             }
 
@@ -96,9 +96,9 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                                 .ToList();
 
                                 if (ids.Count == 1)
-                                    query = query.Where(x => x.DestinatarioId == ids[0]);
+                                    query = query.Where(x => x.EntityBranchReceiverId == ids[0]);
                                 else if (ids.Count > 1)
-                                    query = query.Where(x => ids.Contains(x.DestinatarioId));
+                                    query = query.Where(x => ids.Contains(x.EntityBranchReceiverId));
 
                                 break;
                             }
@@ -168,10 +168,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         case "search":
                             {
                                 query = query.Where(x =>
-                                    x.Remitente.Description.ToLower().Contains(val) ||
-                                    x.Remitente.Entity.DocumentNumber.ToLower().Contains(val) ||
-                                    x.Destinatario.Description.ToLower().Contains(val) ||
-                                    x.Destinatario.Entity.DocumentNumber.ToLower().Contains(val) ||
+                                    //x.Remitente.Description.ToLower().Contains(val) ||
+                                    //x.Remitente.Entity.DocumentNumber.ToLower().Contains(val) ||
+                                    //x.Destinatario.Description.ToLower().Contains(val) ||
+                                    //x.Destinatario.Entity.DocumentNumber.ToLower().Contains(val) ||
                                     x.NumeroGuia.Contains(val) ||
                                     x.MotivoTraslado.Nombre.ToLower().Contains(val) ||
                                     x.TipoTransporte.ToLower().Contains(val) ||
@@ -206,11 +206,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         EntityId = g.EntityId,
                         TipoGuia = g.TipoGuia,
                         Ruc = g.Ruc,
-                        RucNavigation = new VentaConfig
+                        /*RucNavigation = new VentaConfig
                         {
                             EmailPrincipal = g.RucNavigation.EmailPrincipal,
                             Empresa = g.RucNavigation.Empresa
-                        },
+                        },*/
                         TipoTransporte = g.TipoTransporte,
                         MotivoTraslado = g.MotivoTraslado,
                         NumeroGuia = g.NumeroGuia,
@@ -219,7 +219,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Fecha = g.Fecha,
                         Hora = g.Hora,
                         RespuestaTicket = g.RespuestaTicket,
-                        Remitente = new EntityBranch {
+                        /*Remitente = new EntityBranch {
                             EntityBranchId = g.Remitente.EntityBranchId,
                             EntityId = g.Remitente.EntityId,
                             Description = g.Remitente.Description,
@@ -232,8 +232,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 DocumentTypeId = g.Remitente.Entity.DocumentTypeId,
                                 DocumentNumber = g.Remitente.Entity.DocumentNumber
                             }
-                        },
-                        Destinatario = new EntityBranch
+                        },*/
+                        /*Destinatario = new EntityBranch
                         {
                             EntityBranchId = g.Destinatario.EntityBranchId,
                             EntityId = g.Destinatario.EntityId,
@@ -247,7 +247,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 DocumentTypeId = g.Destinatario.Entity.DocumentTypeId,
                                 DocumentNumber = g.Destinatario.Entity.DocumentNumber
                             }
-                        },
+                        },*/
                         Proveedor = g.Proveedor == null ? null : new Proveedor
                         {
                             TipoDocumento = g.Proveedor.TipoDocumento,
@@ -285,12 +285,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<List<GuiaRemision>> GetAllAsync()
         {
             return await _context.GuiaRemision
-                .Include(r => r.Remitente)
+                /*.Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
                 .Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Entity)
                 .Include(d => d.Destinatario)
-                    .ThenInclude(des => des.Ubigeo)
+                    .ThenInclude(des => des.Ubigeo)*/
                 .Include(p => p.Proveedor)
                     .ThenInclude(pro => pro.Ubigeo)
                 .Include(dest => dest.Destinos)
@@ -313,7 +313,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         }
         public async Task<GuiaRemision> GetByTicketAsync(string ticket)
         {
-            return await _context.GuiaRemision.Include(r => r.Remitente)
+            return await _context.GuiaRemision
+                //.Include(r => r.Remitente)
                 .FirstOrDefaultAsync(g => g.RespuestaTicket == ticket);
         }
 
@@ -324,7 +325,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 var guiaRemision = await _context.GuiaRemision
                 .Include(g => g.MotivoTraslado)
 
-                .Include(g => g.Remitente)
+                /*.Include(g => g.Remitente)
                     .ThenInclude(h => h.Ubigeo)
                 .Include(g => g.Destinatario)
 
@@ -333,7 +334,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .ThenInclude(h => h.Entity)
 
                 .Include(g => g.RemiteTransportista)
-                .Include(g => g.RucNavigation)
+                .Include(g => g.RucNavigation)*/
 
                 .Include(g => g.Proveedor)
                     .ThenInclude(h => h.TipoDocumento)
@@ -426,10 +427,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     },
                     TipoGuia = g.TipoGuia,
                     Ruc = g.Ruc,
-                    RucNavigation = new VentaConfig
+                    /*RucNavigation = new VentaConfig
                     {
                         EmailPrincipal = g.RucNavigation.EmailPrincipal
-                    },
+                    },*/
 
                     MotivoTrasladoId = g.MotivoTrasladoId,
                     MotivoTraslado = g.MotivoTraslado,
@@ -443,7 +444,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     Observacion = g.Observacion,
 
 
-                    RemiteTransportista = g.RemiteTransportista == null ? null : new Transportista
+                    /*RemiteTransportista = g.RemiteTransportista == null ? null : new Transportista
                     {
                         TransportistaId = g.RemiteTransportista.TransportistaId,
                         TipoDocumento = g.RemiteTransportista.TipoDocumento,
@@ -459,8 +460,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         FechaModifico = g.RemiteTransportista.FechaModifico,
                         UsuarioModifico = g.RemiteTransportista.UsuarioModifico,
                         EmailRemiteTransportistaGuids = g.EmailRemiteTransportistaGuids,
-                    },
-                    Remitente = new EntityBranch
+                    },*/
+                    /*Remitente = new EntityBranch
                     {
                         EntityBranchId = g.Remitente.EntityBranchId,
                         EntityId = g.Remitente.EntityId,
@@ -473,8 +474,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         UpdatedAt = g.Remitente.UpdatedAt,
                         UpdatedAtUser = g.Remitente.UpdatedAtUser,
                         Entity = g.Remitente.Entity
-                    },
-                    Destinatario = new EntityBranch
+                    },*/
+                    /*Destinatario = new EntityBranch
                     {
                         EntityBranchId = g.Destinatario.EntityBranchId,
                         EntityId = g.Destinatario.EntityId,
@@ -508,7 +509,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 Distrito = g.Destinatario.Entity.Ubigeo.Distrito,
                             }
                         }
-                    },
+                    },*/
 
                     Proveedor = g.Proveedor == null ? null : new Proveedor
                     {
@@ -684,12 +685,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
         public async Task<GuiaRemision> GetByIdAsync2(int id)
         {
             var data = await _context.GuiaRemision
-                .Include(r => r.Remitente)
+                /*.Include(r => r.Remitente)
                     .ThenInclude(rem => rem.Ubigeo)
                 .Include(rt => rt.RemiteTransportista)
                     .ThenInclude(rtu => rtu.Ubigeo)
                 .Include(d => d.Destinatario)
-                    .ThenInclude(des => des.Ubigeo)
+                    .ThenInclude(des => des.Ubigeo)*/
                 .Include(p => p.Proveedor)
                     .ThenInclude(pro => pro.Ubigeo)
                 .Include(dest => dest.Destinos)
@@ -752,12 +753,12 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             try
             {
                 // Guía
-                guiaRemision.RemitenteId = remitente.EntityBranchId;
+                guiaRemision.EntityBranchSenderId = remitente.EntityBranchId;
                 guiaRemision.Ruc = remitente.Entity.DocumentNumber;
-                guiaRemision.DestinatarioId = destinatario.EntityBranchId;
+                guiaRemision.EntityBranchReceiverId = destinatario.EntityBranchId;
                 //guiaRemision.Nombre = EnumGuiaRemisionEstado.Registrada.GetDescription();
                 guiaRemision.EstadoId = (int)EnumGuiaRemisionEstado.Registrada;
-                //if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.ProveedorId = proveedor.ProveedorId; }
+                //if (guiaRemision.TipoTraslado == "COMPRA") { guiaRemision.EntityProviderId = proveedor.EntityProviderId; }
 
                 //string serie = guiaRemision.Serie ?? "T001";
                 string serie = remitenteSerie.Serie.Trim();
@@ -848,7 +849,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     guiaRemision.MotivoTraslado.Nombre == "13" // otros
                 ) 
                 {
-                    guiaRemision.ProveedorId = proveedor.ProveedorId;
+                    guiaRemision.EntityProviderId = proveedor.ProveedorId;
                 }
 
                 //Origen
@@ -933,11 +934,11 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         GuiaRemisionUuid = g.GuiaRemisionUuid,
                         TipoGuia = g.TipoGuia,
                         Ruc = g.Ruc,
-                        RucNavigation = new VentaConfig
+                        /*RucNavigation = new VentaConfig
                         {
                             EmailPrincipal = g.RucNavigation.EmailPrincipal,
                             Empresa = g.RucNavigation.Empresa
-                        },
+                        },*/
                         TipoTransporte = g.TipoTransporte,
                         MotivoTraslado = g.MotivoTraslado,
                         NumeroGuia = g.NumeroGuia,
@@ -946,7 +947,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         Fecha = g.Fecha,
                         Hora = g.Hora,
                         RespuestaTicket = g.RespuestaTicket,
-                        Remitente = new EntityBranch
+                        /*Remitente = new EntityBranch
                         {
                             EntityBranchId = g.Remitente.EntityBranchId,
                             EntityId = g.Remitente.EntityId,
@@ -960,8 +961,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 DocumentTypeId = g.Remitente.Entity.DocumentTypeId,
                                 DocumentNumber = g.Remitente.Entity.DocumentNumber
                             }
-                        },
-                        Destinatario = new EntityBranch
+                        },*/
+                        /*Destinatario = new EntityBranch
                         {
                             EntityBranchId = g.Destinatario.EntityBranchId,
                             EntityId = g.Destinatario.EntityId,
@@ -975,7 +976,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                                 DocumentTypeId = g.Destinatario.Entity.DocumentTypeId,
                                 DocumentNumber = g.Destinatario.Entity.DocumentNumber
                             }
-                        },
+                        },*/
                         Proveedor = g.Proveedor == null ? null : new Proveedor
                         {
                             TipoDocumento = g.Proveedor.TipoDocumento,
