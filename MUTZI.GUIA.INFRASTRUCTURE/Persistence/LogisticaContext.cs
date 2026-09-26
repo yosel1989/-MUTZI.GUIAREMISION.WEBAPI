@@ -115,6 +115,9 @@ public partial class LogisticaContext : DbContext
         modelBuilder.Entity<GuiaRemisionEstadoPermiso>()
         .HasKey(pp => new { pp.GuiaRemisionEstadoId, pp.GuiaRemisionEstadoIdPermitido });
 
+        modelBuilder.Entity<SecurityPersonReasonForTransfer>()
+        .HasKey(pp => new { pp.SecurityPersonId, pp.ReasonForTransferId });
+
         modelBuilder.Entity<GuiaRemisionEstadoPermiso>()
             .HasOne(pp => pp.EstadoOrigen)
             .WithMany(e => e.EstadosPermitidosDesde)

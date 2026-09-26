@@ -12,6 +12,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Establecimiento
         [JsonPropertyName("description")]
         public string Description { get; set; }
 
+        [JsonPropertyName("address")]
+        public string Address { get; set; }
+
         [JsonPropertyName("entity_id")]
         public int? EntityId { get; set; }
 

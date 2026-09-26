@@ -15,10 +15,21 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<bool> CreateAsync(SecurityPersonEntityBranch newData)
         {
-            await _context.SecurityPersonEntityBranchs.AddAsync(newData);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SecurityPersonEntityBranchs.AddAsync(newData);
+                await _context.SaveChangesAsync();
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException.Message.Contains("security_person__entity_branch.PRIMARY"))
+                {
+                    throw new Exception("El personal ya tiene el establecimiento asignado.");
+                }
+                throw;
+            }
         }
 
         public async Task<bool> DeleteAsync(SecurityPersonEntityBranch model)

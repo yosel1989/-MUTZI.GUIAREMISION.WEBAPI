@@ -38,8 +38,17 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                         })
                     )
                 )
+                .ForMember(
+                    dest => dest.ReasonForTransfers,
+                    opt => opt.MapFrom(src =>
+                        src.SecurityPersonReasonForTransfers.Select(x => new SecurityPersonReasonForTransferDTO
+                        {
+                            Name = x.ReasonForTransfer.Nombre,
+                            
+                        })
+                    )
+                )
                 ;
-            
 
             CreateMap<SecurityPersonEntityBranchCreateDTO, SecurityPersonEntityBranch>();
             CreateMap<SecurityPersonEntityBranchDeleteDTO, SecurityPersonEntityBranch>();
@@ -54,6 +63,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
             CreateMap<SecurityPersonEntityBranchSerieDeleteDTO, SecurityPersonEntityBranchSerie>();
             CreateMap<SecurityPersonEntityBranchSerie, SecurityPersonEntityBranchSerieDTO>()
                 .ForMember(dest => dest.Serie, opt => opt.MapFrom(src => src.EntityBranchSerie.Serie))
+                .ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.EntityBranchSerie.Area))
                 .ForMember(dest => dest.EntityName, opt => opt.MapFrom(src => src.EntityBranchSerie.EntityBranch.Entity.Name))
                 .ForMember(dest => dest.EntityDocumentNumber, opt => opt.MapFrom(src => src.EntityBranchSerie.EntityBranch.Entity.DocumentNumber))
                 .ForMember(dest => dest.EntityBranchAlias, opt => opt.MapFrom(src => src.EntityBranchSerie.EntityBranch.Description))

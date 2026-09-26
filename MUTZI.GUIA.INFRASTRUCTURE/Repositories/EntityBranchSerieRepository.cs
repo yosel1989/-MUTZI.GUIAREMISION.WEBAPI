@@ -128,6 +128,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                 {
                     EntityBranchSerieId = r.EntityBranchSerieId,
                     Serie = r.Serie,
+                    Area = r.Area,
                     EntityBranch = new EntityBranch {
                         Description = r.EntityBranch.Description,
                         Address = r.EntityBranch.Address,

@@ -145,6 +145,22 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     .AsNoTracking()
                     .ToListAsync();
 
+                // Obtener los motivos de traslados de cada registros
+                var reasonForTransfers = await _context.SecurityPersonReasonForTransfers
+                    .Where(x => securityPersonIds.Contains(x.SecurityPersonId))
+                    .Select(x => new SecurityPersonReasonForTransfer
+                    {
+                        SecurityPersonId = x.SecurityPersonId,
+
+                        ReasonForTransfer = new MotivoTraslado
+                        {
+                            Nombre = x.ReasonForTransfer.Nombre,
+                            CodigoSunat = x.ReasonForTransfer.CodigoSunat
+                        }
+                    })
+                    .AsNoTracking()
+                    .ToListAsync();
+
                 foreach (var person in securityPersons)
                 {
                     person.SecurityPersonEntityBranchSeries = series
@@ -152,6 +168,10 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         .ToList();
 
                     person.SecurityPersonEntityBranchs = entityBranches
+                        .Where(x => x.SecurityPersonId == person.SecurityPersonId)
+                        .ToList();
+
+                    person.SecurityPersonReasonForTransfers = reasonForTransfers
                         .Where(x => x.SecurityPersonId == person.SecurityPersonId)
                         .ToList();
                 }

@@ -32,6 +32,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 newSecurityPersonReasonForTransfer.CreatedAtUser = currentUser.UserName;
                 newSecurityPersonReasonForTransfer.CreatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
                 newSecurityPersonReasonForTransfer.CreatedAt = DateTime.UtcNow;
+                newSecurityPersonReasonForTransfer.CretedAtEmployeeId = currentUser.EmployeeId;
                 return await _repository.CreateAsync(newSecurityPersonReasonForTransfer);
             }
             catch (Exception ex)

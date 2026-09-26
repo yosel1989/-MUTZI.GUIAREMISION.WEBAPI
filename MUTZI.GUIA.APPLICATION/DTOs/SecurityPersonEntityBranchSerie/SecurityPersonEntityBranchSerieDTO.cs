@@ -17,6 +17,10 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.SecurityPersonEntityBranchSerie
         [Description("Serie del establecimiento.")]
         public string Serie { get; set; }
 
+        [JsonPropertyName("area")]
+        [Description("Serie del establecimiento.")]
+        public string Area { get; set; }
+
         [JsonPropertyName("entity_name")]
         [Description("Nombre de la entidad")]
         public string EntityName { get; set; }

@@ -26,6 +26,10 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         [Description("Nombre del usuario que creó el registro")]
         public string CreatedAtUserName { get; set; }
 
+        [Column("created_at_employee_id")]
+        [Description("Identificador único del empleado que realizó el registro.")]
+        public int CreatedAtEmployeeId { get; set; }
+
         // Relaciones
 
         [ForeignKey(nameof(SecurityPersonId))]

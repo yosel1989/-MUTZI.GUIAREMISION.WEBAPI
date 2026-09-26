@@ -15,10 +15,22 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<bool> CreateAsync(SecurityPersonEntityBranchSerie newData)
         {
-            await _context.SecurityPersonEntityBranchSeries.AddAsync(newData);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SecurityPersonEntityBranchSeries.AddAsync(newData);
+                await _context.SaveChangesAsync();
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException.Message.Contains("security_person__entity_branch_serie.PRIMARY"))
+                {
+                    throw new Exception("El personal ya tiene la serie asignada.");
+                }
+                throw;
+            }
+            
         }
 
         public async Task<bool> DeleteAsync(SecurityPersonEntityBranchSerie model)
@@ -54,6 +66,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     EntityBranchSerie = new EntityBranchSerie
                     {
                         Serie = x.EntityBranchSerie.Serie,
+                        Area = x.EntityBranchSerie.Area,
                         EntityBranch = new EntityBranch
                         {
                             Address = x.EntityBranchSerie.EntityBranch.Address,

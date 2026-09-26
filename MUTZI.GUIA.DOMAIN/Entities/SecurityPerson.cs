@@ -53,6 +53,8 @@ namespace MUTZI.GUIA.DOMAIN.Entities
         public List<SecurityPersonEntityBranchSerie> SecurityPersonEntityBranchSeries = new List<SecurityPersonEntityBranchSerie>();
 
         public List<SecurityPersonEntityBranch> SecurityPersonEntityBranchs = new List<SecurityPersonEntityBranch>();
+
+        public List<SecurityPersonReasonForTransfer> SecurityPersonReasonForTransfers = new List<SecurityPersonReasonForTransfer>();
     }
 }
 

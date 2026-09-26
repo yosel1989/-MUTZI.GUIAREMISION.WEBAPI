@@ -15,10 +15,22 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
 
         public async Task<bool> CreateAsync(SecurityPersonReasonForTransfer newData)
         {
-            await _context.SecurityPersonReasonForTransfers.AddAsync(newData);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SecurityPersonReasonForTransfers.AddAsync(newData);
+                await _context.SaveChangesAsync();
 
-            return true;
+                return true;
+            }
+            catch (Exception e)
+            {
+                if (e.InnerException.Message.Contains("security_person__reason_for_transfer.PRIMARY"))
+                {
+                    throw new Exception("El personal ya tiene el motivo de traslado asignado.");
+                }
+                throw;
+            }
+            
         }
 
         public async Task<bool> DeleteAsync(SecurityPersonReasonForTransfer model)

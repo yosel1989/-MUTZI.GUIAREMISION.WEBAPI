@@ -10,6 +10,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.EntityBranchSerie
         [JsonPropertyName("serie")]
         public string Serie { get; set; }
 
+        [JsonPropertyName("area")]
+        public string Area { get; set; }
+
         [JsonPropertyName("entity_name")]
         public string EntityName { get; set; }
 

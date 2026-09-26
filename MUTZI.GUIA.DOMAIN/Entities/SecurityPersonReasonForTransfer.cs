@@ -28,7 +28,7 @@ namespace MUTZI.GUIA.DOMAIN.Entities
 
         [Column("created_at_employee_id")]
         [Description("Identificador único del personal en la tabla seguridad.PERSONA")]
-        public string CretedAtEmployeeId { get; set; }
+        public int CretedAtEmployeeId { get; set; }
 
         // Relaciones
 

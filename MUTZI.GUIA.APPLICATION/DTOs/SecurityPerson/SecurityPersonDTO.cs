@@ -58,6 +58,9 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.SecurityPerson
 
         [JsonPropertyName("entity_branchs")]
         public List<SecurityPersonEntityBranchsDTO> EntityBranches { get; set; } = new List<SecurityPersonEntityBranchsDTO>();
+
+        [JsonPropertyName("entity_branchs")]
+        public List<SecurityPersonReasonForTransferDTO> ReasonForTransfers { get; set; } = new List<SecurityPersonReasonForTransferDTO>();
     }
 
     public class SecurityPersonSeriesDTO
@@ -82,5 +85,15 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.SecurityPerson
 
         [JsonPropertyName("entity_document_number")]
         public string EntityDocumentNumber { get; set; }
+    }
+
+    public class SecurityPersonReasonForTransfersDTO
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
+
+        [JsonPropertyName("code_sunat")]
+        public string CodeSunat { get; set; }
+
     }
 }

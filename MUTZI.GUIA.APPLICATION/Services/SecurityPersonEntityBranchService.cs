@@ -32,6 +32,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 newSecurityPersonEntityBranch.CreatedAtUser = currentUser.UserName;
                 newSecurityPersonEntityBranch.CreatedAtUserName = $"{currentUser.FirstName} {currentUser.LastName}".ToUpper();
                 newSecurityPersonEntityBranch.CreatedAt = DateTime.UtcNow;
+                newSecurityPersonEntityBranch.CreatedAtEmployeeId = currentUser.EmployeeId;
                 return await _repository.CreateAsync(newSecurityPersonEntityBranch);
             }
             catch (Exception ex)

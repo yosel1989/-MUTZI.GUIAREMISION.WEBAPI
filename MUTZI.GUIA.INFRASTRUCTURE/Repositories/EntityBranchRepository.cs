@@ -67,6 +67,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     EntityBranchId = r.EntityBranchId,
                     Description = r.Description,
                     CodeSunat = r.CodeSunat,
+                    Address = r.Address,
                 })
                 .ToListAsync();
 
@@ -104,6 +105,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     EntityBranchId = m.EntityBranchId,
                     Description = m.Description,
                     CodeSunat = m.CodeSunat,
+                    Address = m.Address,
                     Entity = new Entity
                     {
                         Name = m.Entity.Name,
