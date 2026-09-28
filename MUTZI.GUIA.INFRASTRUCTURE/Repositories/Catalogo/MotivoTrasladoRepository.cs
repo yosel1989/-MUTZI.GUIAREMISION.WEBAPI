@@ -50,5 +50,22 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories.Catalogo
 
         }
 
+        public async Task<List<MotivoTraslado>> GetByIdsAsync(List<int> ids)
+        {
+            try
+            {
+                var data = await _context.MotivoTraslado
+                    .Where(m => ids.Contains(m.MotivoTrasladoId))
+                    .ToListAsync();
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+
     }
 }

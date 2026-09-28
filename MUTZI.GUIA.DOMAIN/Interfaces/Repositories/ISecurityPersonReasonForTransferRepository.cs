@@ -1,9 +1,4 @@
 ﻿using MUTZI.GUIA.DOMAIN.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
 {
@@ -14,5 +9,10 @@ namespace MUTZI.GUIA.DOMAIN.Interfaces.Repositories
         Task<(List<SecurityPersonReasonForTransfer>, int)> GetListAsync(int securityPersonId, int pageNumber, int pageSize, string? search);
         Task<List<int>> GetAllReasonForTransferIdsByAssigned(int employeeId);
         Task<List<SecurityPersonReasonForTransfer>> GetListByAssignedAsync(int employeeId);
+        Task<List<int>> GetAllReasonIdsByAssigned(int employeeId);
+
+        // Validators
+
+        Task<bool> HasAssigned(int employeeId, int reasonForTransferId);
     }
 }

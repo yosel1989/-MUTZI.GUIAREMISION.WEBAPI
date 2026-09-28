@@ -54,6 +54,34 @@ namespace MUTZI.GUIA.WEBAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("reason-for-transfers-assigned")]
+        [SwaggerOperation(
+            Summary = "Listar los motivos de traslado asignados",
+            Description = "Lista los motivos de traslados asignados para seleccionar",
+            OperationId = "listar_motivos_traslados_asignados"
+        )]
+        [ProducesResponseType(typeof(List<MotivoTrasladoToSelectDTO>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BadRequestResponseDTO), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(InternalErrorResponseDTO), StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<MotivoTrasladoToSelectDTO>>> GetAllAssignedToSelect()
+        {
+            try
+            {
+                var motivosTraslado = await _service.ListToSelectByAssignedAsync();
+                return Ok(motivosTraslado);
+            }
+            catch (Exception ex)
+            {
+                string errorMsg = ex.InnerException?.Message ?? ex.Message;
+                return StatusCode(500, new InternalErrorResponseDTO
+                {
+                    Error = "Error al listar los motivos de traslado asignados.",
+                    Detalle = errorMsg
+                });
+            }
+        }
+
 
         [HttpGet]
         [Route("invoice-types")]

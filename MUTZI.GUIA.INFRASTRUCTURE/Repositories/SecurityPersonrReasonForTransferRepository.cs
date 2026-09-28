@@ -121,5 +121,28 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
             }
         }
 
+        public async Task<List<int>> GetAllReasonIdsByAssigned(int employeeId)
+        {
+            var data = _context.SecurityPersonReasonForTransfers
+                .Where(x => x.SecurityPerson.PersonId == employeeId)
+                .Select(x => x.ReasonForTransferId)
+                .Distinct()
+                .ToList();
+
+            return data;
+        }
+
+
+        // Validators
+
+        public async Task<bool> HasAssigned(int employeeId, int reasonForTransferId)
+        {
+            var data = await _context.SecurityPersonReasonForTransfers
+                .Where(x => x.SecurityPerson.PersonId == employeeId && x.ReasonForTransferId == reasonForTransferId)
+                .AnyAsync();
+
+            return data;
+        }
+
     }
 }

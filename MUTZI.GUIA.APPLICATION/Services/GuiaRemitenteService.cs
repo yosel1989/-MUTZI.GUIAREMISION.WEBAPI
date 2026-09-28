@@ -14,11 +14,9 @@ using MUTZI.GUIA.APPLICATION.Interfaces.Services.GuiaRemitente;
 using MUTZI.GUIA.DOMAIN.Entities;
 using MUTZI.GUIA.DOMAIN.Enums;
 using MUTZI.GUIA.DOMAIN.Interfaces;
-using MUTZI.GUIA.DOMAIN.Interfaces.Document;
 using MUTZI.GUIA.DOMAIN.Interfaces.Factories;
 using MUTZI.GUIA.DOMAIN.Interfaces.Repositories;
 using QuestPDF.Fluent;
-using System;
 using System.Text.Json;
 
 namespace MUTZI.GUIA.APPLICATION.Services
@@ -31,6 +29,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
         private readonly IIntegrationCredentialRepository _integrationCredentialRepository;
         private readonly IGuiaRemisionTransportUnitRepository _guiaRemisionTransportUnitRepository;
         private readonly IGuiaRemisionEntityCarrierRepository _guiaRemisionEntityCarrierRepository;
+        private readonly ISecurityPersonReasonForTransferRepository _securityPersonReasonForTransferRepository;
         private readonly IEntityBranchRepository _establecimientoRepository;
         private readonly IEntityBranchSerieRepository _entityBranchSerieRepository;
         private readonly IEntityRepository _entityRepository;
@@ -49,6 +48,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             IGuiaRemisionHistorialRepository guiaRemisionHistorialRepository,
             IGuiaRemisionTransportUnitRepository guiaRemisionTransportUnitRepository,
             IGuiaRemisionEntityCarrierRepository guiaRemisionEntityCarrierRepository,
+            ISecurityPersonReasonForTransferRepository securityPersonReasonForTransferRepository,
             IGuiaRemitenteUBLService guiaRemitenteUBLService,
             IEnvioService envioService,
             IVentaConfigRepository ventaConfigRepository,
@@ -70,6 +70,7 @@ namespace MUTZI.GUIA.APPLICATION.Services
             _guiaRemisionHistorialRepository = guiaRemisionHistorialRepository;
             _guiaRemisionTransportUnitRepository = guiaRemisionTransportUnitRepository;
             _guiaRemisionEntityCarrierRepository = guiaRemisionEntityCarrierRepository;
+            _securityPersonReasonForTransferRepository = securityPersonReasonForTransferRepository;
             _guiaRemitenteUBLService = guiaRemitenteUBLService;
             _envioService = envioService;
             _establecimientoRepository = establecimientoRepository;
@@ -267,10 +268,19 @@ namespace MUTZI.GUIA.APPLICATION.Services
 
             try
             {
+                var currentUser = _authService.CurrentUser();
+
+                // Validators
+
+                if (!await _securityPersonReasonForTransferRepository.HasAssigned(currentUser.EmployeeId, request.MotivoTrasladoId))
+                {
+                    throw new Exception("No tiene asignado el motivo de traslado para poder emitir la guía de remisión.");
+                }
+
+                throw new Exception("dd");
 
                 try
                 {
-                    var currentUser = _authService.CurrentUser();
                     var currentDate = DateTime.UtcNow;
                     // Mapear todos los objetos
 

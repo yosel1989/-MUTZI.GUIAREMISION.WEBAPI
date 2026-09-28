@@ -5,5 +5,6 @@ namespace MUTZI.GUIA.APPLICATION.Interfaces.Services
     public interface IMotivoTrasladoService
     {
         Task<List<MotivoTrasladoToSelectDTO>> ListToSelectAsync();
+        Task<List<MotivoTrasladoToSelectDTO>> ListToSelectByAssignedAsync();
     }
 }

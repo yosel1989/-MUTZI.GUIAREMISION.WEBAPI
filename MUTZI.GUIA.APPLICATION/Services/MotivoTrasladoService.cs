@@ -9,16 +9,19 @@ namespace MUTZI.GUIA.APPLICATION.Services
     {
         private readonly IAuthService _authService;
         private readonly IMotivoTrasladoRepository _repository;
+        private readonly ISecurityPersonReasonForTransferRepository _securityPersonReasonForTransferRepository;
         private readonly IMapper _mapper;
         public MotivoTrasladoService(
             IMotivoTrasladoRepository repository, 
             IMapper mapper,
-            IAuthService authService
+            IAuthService authService,
+            ISecurityPersonReasonForTransferRepository securityPersonReasonForTransferRepository
         )
         {
             _repository = repository;
             _mapper = mapper;
             _authService = authService;
+            _securityPersonReasonForTransferRepository = securityPersonReasonForTransferRepository;
         }
 
         public async Task<List<MotivoTrasladoToSelectDTO>> ListToSelectAsync()
@@ -26,6 +29,22 @@ namespace MUTZI.GUIA.APPLICATION.Services
             try
             {
                 var data = await _repository.GetListToSelectAsync();
+                return _mapper.Map<List<MotivoTrasladoToSelectDTO>>(data);
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.InnerException?.Message ?? ex.Message;
+                throw new Exception(msg);
+            }
+        }
+
+        public async Task<List<MotivoTrasladoToSelectDTO>> ListToSelectByAssignedAsync()
+        {
+            try
+            {
+                var currentUser = _authService.CurrentUser();
+                var ids = await _securityPersonReasonForTransferRepository.GetAllReasonIdsByAssigned(currentUser.EmployeeId);
+                var data = await _repository.GetByIdsAsync(ids);
                 return _mapper.Map<List<MotivoTrasladoToSelectDTO>>(data);
             }
             catch (Exception ex)

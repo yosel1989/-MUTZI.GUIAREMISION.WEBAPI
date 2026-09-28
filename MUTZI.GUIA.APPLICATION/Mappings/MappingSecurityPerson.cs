@@ -41,10 +41,10 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(
                     dest => dest.ReasonForTransfers,
                     opt => opt.MapFrom(src =>
-                        src.SecurityPersonReasonForTransfers.Select(x => new SecurityPersonReasonForTransferDTO
+                        src.SecurityPersonReasonForTransfers.Select(x => new SecurityPersonReasonForTransfersDTO
                         {
                             Name = x.ReasonForTransfer.Nombre,
-                            
+                            CodeSunat = x.ReasonForTransfer.CodigoSunat
                         })
                     )
                 )
