@@ -45,7 +45,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Origen, opt => opt.MapFrom(src => src.Origens.FirstOrDefault()))
                 .ForMember(dest => dest.Destino, opt => opt.MapFrom(src => src.Destinos))
                 .ForMember(dest => dest.Productos, opt => opt.MapFrom(src => src.GuiaDetalles))
-                .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Descripcion))
+                .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Name))
                 .ForMember(dest => dest.EntityCarrierId, opt => opt.MapFrom(src => src.GuiaRemisionEntityCarriers.Select(x => x.EntityId).FirstOrDefault()))
                 .ForMember(dest => dest.EntityCarrier, opt => opt.MapFrom(src => src.GuiaRemisionEntityCarriers.Select(x => x.Entity).FirstOrDefault()));
 
@@ -76,7 +76,7 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
                 .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.Nombre))
                 .ForMember(dest => dest.EstadoColor, opt => opt.MapFrom(src => src.Estado.ColorHex))
                 .ForMember(dest => dest.DistritoDestino, opt => opt.MapFrom(src => src.Destinos.FirstOrDefault().Ubigeo.Distrito))
-                .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Descripcion))
+                .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Name))
                 .ForMember(dest => dest.MotivoTrasladoNombre, opt => opt.MapFrom(src => src.MotivoTraslado.Nombre))
                 ;
             CreateMap<GuiaRemitenteCreateDTO, GuiaRemision>()

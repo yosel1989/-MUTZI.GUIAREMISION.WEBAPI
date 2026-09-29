@@ -8,9 +8,9 @@ namespace MUTZI.GUIA.APPLICATION.Mappings
         public MappingGuiaRemisionHistorial()
         {
             CreateMap<GuiaRemisionHistorial, GuiaRemisionHistorialDTO>()
-                .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Descripcion));
+                .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Name));
             CreateMap<GuiaRemisionHistorial, GuiaRemisionHistorialListDTO>()
-                .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Descripcion));
+                .ForMember(dest => dest.AreaNombre, opt => opt.MapFrom(src => src.Area.Name));
         }
     }
 }

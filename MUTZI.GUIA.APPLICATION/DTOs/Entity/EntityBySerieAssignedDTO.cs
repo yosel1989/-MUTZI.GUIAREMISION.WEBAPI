@@ -109,7 +109,7 @@ namespace MUTZI.GUIA.APPLICATION.DTOs.Entity
         public string Serie { get; set; }
 
         [JsonPropertyName("area")]
-        [Description("Area asignada a la serie")]
+        [Description("VWArea asignada a la serie")]
         public string Area { get; set; }
     }
 

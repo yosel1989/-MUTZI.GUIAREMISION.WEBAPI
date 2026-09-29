@@ -25,11 +25,13 @@ namespace MUTZI.GUIA.APPLICATION.Services
             var conductors = await _repository.GetAllAsync();
             return _mapper.Map<List<ConductorDTO>>(conductors);
         }
+
         public async Task<List<ConductorListDTO>> GetListBySuggestion(string numeroDoc)
         {
             var conductors = await _repository.GetListBySuggestion(numeroDoc);
             return _mapper.Map<List<ConductorListDTO>>(conductors);
         }
+
         public async Task<PagedResult<ConductorDTO>> GetListAsync(int pageNumber, int pageSize, string? search)
         {
 
@@ -44,16 +46,19 @@ namespace MUTZI.GUIA.APPLICATION.Services
                 Data = conductorDTO
             };
         }
+
         public async Task<ConductorDTO?> GetByIdAsync(int id)
         {
             var conductor = await _repository.GetByIdAsync(id);
             return conductor == null ? null : _mapper.Map<ConductorDTO>(conductor);
         }
+
         public async Task<ConductorDTO?> GetByNumeroDocumentoAsync(string numeroDocumento)
         {
             var conductor = await _repository.GetByNumeroDocumentoAsync(numeroDocumento);
             return conductor == null ? null : _mapper.Map<ConductorDTO>(conductor);
         }
+
         public async Task<int> CreateAsync(ConductorCreateDTO createDTO)
         {
             try

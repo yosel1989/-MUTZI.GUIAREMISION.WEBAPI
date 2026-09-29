@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace MUTZI.GUIA.DOMAIN.Entities.Catalogo
 {
     [Table("vw_rrhh_area")]
-    public partial class Area
+    public partial class VWArea
     {
         [Key]
         [Column("Id")]

@@ -134,6 +134,7 @@ builder.Services.AddAutoMapper(typeof(MappingIntegrationCredential).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingGuiaRemision).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingEntityBranchSerie).Assembly);
 builder.Services.AddAutoMapper(typeof(MappingSecurityPerson).Assembly);
+builder.Services.AddAutoMapper(typeof(MappingArea).Assembly);
 
 builder.Services.AddSignalR();
 

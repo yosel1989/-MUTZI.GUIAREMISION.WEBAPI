@@ -268,7 +268,7 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         EstadoSunatId = g.EstadoSunatId,
                         AreaId = g.AreaId,
                         Area = new Area {
-                            Descripcion = g.Area.Descripcion
+                            Name = g.Area.Name
                         },
                         //GuiaRemisionEntityCarriers = g.GuiaRemisionEntityCarriers
                     })
@@ -628,8 +628,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                     EstadoId = g.EstadoId,
                     Area = new Area
                     {
-                        Id = g.Area.Id,
-                        Descripcion = g.Area.Descripcion
+                        AreaId = g.Area.AreaId,
+                        Name = g.Area.Name
                     },
 
                     // Unidades de transporte solo si el tipo de transporte fue PRIVADA
@@ -997,8 +997,8 @@ namespace MUTZI.GUIA.INFRASTRUCTURE.Repositories
                         EstadoSunatId = g.EstadoSunatId,
                         Area = new Area
                         {
-                            Id = g.Area.Id,
-                            Descripcion = g.Area.Descripcion
+                            AreaId = g.Area.AreaId,
+                            Name = g.Area.Name
                         }
                     })
                     .AsNoTracking()
